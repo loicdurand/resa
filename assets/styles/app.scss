@@ -35,14 +35,17 @@
             border: none;
             background: unset;
             min-height: 60px;
+            display: block;
 
             & .icon {
 
-                width: 30px;
                 height: 30px;
                 stroke: var(--grey-0);
                 fill: var(--grey-0);
                 stroke-width: 0;
+                width: 100%;
+                margin-top: 12px;
+                margin-bottom: 9px;
 
             }
         }
