@@ -89,7 +89,7 @@
 								<a class="fr-nav__link" aria-current="{{ app.request.pathinfo == "/historique" ? 'true' : 'false' }}" href="#" target="_self">Historique</a>
 							</li>
 							<li class="fr-nav__item">
-								<a class="fr-nav__link" aria-current="{{ app.request.pathinfo == "/compte" ? 'true' : 'false' }}" href="#" target="_self">Compte</a>
+								<a class="fr-nav__link" aria-current="{{ app.request.pathinfo == "/compte" ? 'true' : 'false' }}" href="/compte" target="_self">Compte</a>
 							</li>
 						</ul>
 					</nav>
@@ -122,7 +122,7 @@
 				</a>
 			</div>
 			<div class="col s4 cs-menu cs-menu-compte">
-				<a aria-current="{{ app.request.pathinfo == "/compte" ? 'true' : 'false' }}" href="#" target="_self"
+				<a aria-current="{{ app.request.pathinfo == "/compte" ? 'true' : 'false' }}" href="/compte" target="_self"
 					class="cs-menu__item" style="--bgColorItem: #e0b115;">
 					{# icone "account" #}
 					<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor">

@@ -7,18 +7,18 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
-class AccueilController extends AbstractController
+class CompteController extends AbstractController
 {
     private $app_const;
 
-    #[Route('/')]
-    public function accueil(): Response
+    #[Route('/compte')]
+    public function compte(): Response
     {
         $this->setAppConst();
 
         $number = random_int(0, 100);
 
-        return $this->render('lucky/number.html.twig', array_merge($this->getAppConst(), [
+        return $this->render('compte/compte.html.twig', array_merge($this->getAppConst(), [
             'number' => $number,
         ]));
     }
