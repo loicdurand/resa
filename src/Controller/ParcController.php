@@ -28,6 +28,20 @@ class ParcController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findAll();
 
+        //dd($vehicules);
+
+        return $this->render('parc/afficher.html.twig', array_merge($this->getAppConst(), [
+            'vehicules' => $vehicules,
+        ]));
+    }
+
+    #[Route('/parc/ajouter')]
+    public function ajouter(ManagerRegistry $doctrine): Response
+    {
+        $this->setAppConst();
+
+        $em = $doctrine->getManager();
+        
         $genre = $em
         ->getRepository(GenreVehicule::class)
         ->findOneBy(['code'=>'VP']);
@@ -38,8 +52,7 @@ class ParcController extends AbstractController
 
         //dd($vehicules);
 
-        return $this->render('parc/afficher.html.twig', array_merge($this->getAppConst(), [
-            'vehicules' => $vehicules,
+        return $this->render('parc/ajouter.html.twig', array_merge($this->getAppConst(), [
             'form' => $form
         ]));
     }
