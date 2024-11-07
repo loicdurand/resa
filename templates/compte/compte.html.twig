@@ -6,12 +6,12 @@
 		<div class="fr-container">
 
 			{% for role in roles %}
-				<div class="fr-notice__body">
+				<div class="fr-notice__body fr-mt-4w">
 					<p>
-						<span class="fr-notice__title">Rôle "{{role.nom}}"</span>
+						<span class="fr-notice__title">Rôle "{{role.libelle}}"</span>
 						<span class="fr-notice__desc">Les champs ci-dessous ne sont accessibles qu'aux personnels ayant ce rôle particulier.</span>
 					</p>
-					<button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
+					<button title="Masquer le message" onclick="const notice = this.parentNode; notice.style.display = 'none';" class="fr-btn--close fr-btn">Masquer le message</button>
 				</div>
 
 				<div class="fr-accordions-group">
