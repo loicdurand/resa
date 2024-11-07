@@ -6,17 +6,27 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Role;
+use App\Entity\Action;
+
 
 class CompteController extends AbstractController
 {
     private $app_const;
 
     #[Route('/compte')]
-    public function compte(): Response
+    public function compte(ManagerRegistry $doctrine): Response
     {
         $this->setAppConst();
 
-        $number = random_int(0, 100);
+        $em = $doctrine->getManager();
+        $roles =$em
+                ->getRepository(Role::class)
+                ->findAll();
+
+                dd($roles);
+        
 
         return $this->render('compte/compte.html.twig', array_merge($this->getAppConst(), [
             'number' => $number,
