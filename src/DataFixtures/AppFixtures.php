@@ -80,6 +80,23 @@ class AppFixtures extends Fixture
             ]
         ];
 
+        foreach ($actions as $action) {
+            $entity = new Action();
+            $entity->setNom($action['nom']);
+            $entity->setLibelle($action['libelle']);
+            $entity->setTemplate($action['template']);
+            $manager->persist($entity);
+            $manager->flush();
+
+            foreach ($action['defaut'] as $def) {
+                $perm = new Permission();
+                $perm->setAction($entity);
+                $perm->setRole($roles[$def]['role']);
+                $manager->persist($perm);
+                $manager->flush();
+            }
+        }
+
         // GESTION DES VÉHICULES
 
         $genres = [

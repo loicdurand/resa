@@ -18,7 +18,7 @@ class AccueilController extends AbstractController
 
         $number = random_int(0, 100);
 
-        return $this->render('lucky/number.html.twig', array_merge($this->getAppConst(), [
+        return $this->render('accueil/liste.html.twig', array_merge($this->getAppConst(), [
             'number' => $number,
         ]));
     }
