@@ -9,10 +9,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Role;
 use App\Entity\Action;
+use App\Entity\GenreVehicule;
 use App\Entity\Permission;
 use App\Entity\Vehicule;
-
-
+use App\Form\VehiculeType;
 
 class ParcController extends AbstractController
 {
@@ -28,10 +28,19 @@ class ParcController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findAll();
 
+        $genre = $em
+        ->getRepository(GenreVehicule::class)
+        ->findOneBy(['code'=>'VP']);
+        $vl = new Vehicule();
+        $vl->setGenre($genre);
+
+        $form = $this->createForm(VehiculeType::class, $vl);
+
         //dd($vehicules);
 
         return $this->render('parc/afficher.html.twig', array_merge($this->getAppConst(), [
-            'vehicules' => $vehicules
+            'vehicules' => $vehicules,
+            'form' => $form
         ]));
     }
 
