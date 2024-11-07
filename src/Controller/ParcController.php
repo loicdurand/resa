@@ -10,6 +10,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Role;
 use App\Entity\Action;
 use App\Entity\Permission;
+use App\Entity\Vehicule;
+
 
 
 class ParcController extends AbstractController
@@ -22,17 +24,14 @@ class ParcController extends AbstractController
         $this->setAppConst();
 
         $em = $doctrine->getManager();
-        $roles = $em
-            ->getRepository(Role::class)
+        $vehicules = $em
+            ->getRepository(Vehicule::class)
             ->findAll();
 
-        //dd($roles[0]->getPermissions()[0]->getAction()->getNom());
-
+        //dd($vehicules);
 
         return $this->render('parc/afficher.html.twig', array_merge($this->getAppConst(), [
-            'roles' => $roles,
-            'number' =>13,
-            'page'=> 'lucky/number.html.twig'
+            'vehicules' => $vehicules
         ]));
     }
 

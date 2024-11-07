@@ -4,9 +4,9 @@ namespace App\DataFixtures;
 
 use App\Entity\Role;
 use App\Entity\Action;
+use App\Entity\GenreVehicule;
 use App\Entity\Permission;
 
-use App\Entity\Type;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -83,39 +83,40 @@ class AppFixtures extends Fixture
         // GESTION DES VÉHICULES
 
         $genres = [
-            ['CTTE', 'Camionnettes (jusqu’è 3.500 kg, autre que tracteur routier)'],
-            ['CAM',    'Camions (plus de 3.500 kg, autre que tracteur routier et camionnette)'],
-            ['CL',    'Cyclomoteurs à deux roues ou cyclo-moteurs non carrossés à 3 roues'],
-            ['CYCL',    'Cyclomoteurs à trois roues'],
-            ['MAGA',    'Machines agricoles automotrices'],
-            ['MTL',    'Motocyclettes légères'],
-            ['MIAR',    'Machines et instruments remorqués'],
-            ['MTT1',    'Motocyclettes autres que motocyclettes légères, dont la puissance maximale nette CE <= 25 kW'],
-            ['MTT2',    'Autres motocyclettes'],
-            ['QM', 'Quadricycles à moteur'],
-            ['REA',    'Remorques agricoles'],
-            ['RETC',    'Remorques pour transports combinés'],
-            ['REM',    'Remorques routières'],
-            ['RESP',    'Remorques spécialisées'],
-            ['SREA',    'Semi-remorques agricoles'],
-            ['SRAT',    'Semi-remorques avant-train'],
-            ['SRTC',    'Semi-remorques pour transports combinés'],
-            ['SREM',    'Semi-remorques routières'],
-            ['SRSP',    'Semi-remorques spécialisées'],
-            ['TRA',    'Tracteurs agricoles'],
-            ['TRR', 'Tracteurs routiers'],
-            ['TCP',    'Transports en commun de personnes'],
-            ['TM',    'Tricycles à moteur'],
-            ['VASP',    'Véhicules automoteur spécialisés'],
-            ['VP',    'Voitures particulières'],
-            ['VTSU',    'Véhicules très spécialisés à usage divers']
+            ['CTTE', 'Camionnettes (jusqu’è 3.500 kg, autre que tracteur routier)', 100],
+            ['CAM',    'Camions (plus de 3.500 kg, autre que tracteur routier et camionnette)', 100],
+            ['CL',    'Cyclomoteurs à deux roues ou cyclo-moteurs non carrossés à 3 roues', 100],
+            ['CYCL',    'Cyclomoteurs à trois roues', 100],
+            ['MAGA',    'Machines agricoles automotrices', 100],
+            ['MTL',    'Motocyclettes légères', 100],
+            ['MIAR',    'Machines et instruments remorqués', 100],
+            ['MTT1',    'Motocyclettes autres que motocyclettes légères, dont la puissance maximale nette CE <= 25 kW', 100],
+            ['MTT2',    'Autres motocyclettes', 100],
+            ['QM', 'Quadricycles à moteur', 100],
+            ['REA',    'Remorques agricoles', 100],
+            ['RETC',    'Remorques pour transports combinés', 100],
+            ['REM',    'Remorques routières', 100],
+            ['RESP',    'Remorques spécialisées', 100],
+            ['SREA',    'Semi-remorques agricoles', 100],
+            ['SRAT',    'Semi-remorques avant-train', 100],
+            ['SRTC',    'Semi-remorques pour transports combinés', 100],
+            ['SREM',    'Semi-remorques routières', 100],
+            ['SRSP',    'Semi-remorques spécialisées', 100],
+            ['TRA',    'Tracteurs agricoles', 100],
+            ['TRR', 'Tracteurs routiers', 100],
+            ['TCP',    'Transports en commun de personnes', 100],
+            ['TM',    'Tricycles à moteur', 100],
+            ['VASP',    'Véhicules automoteur spécialisés', 100],
+            ['VP',    'Voitures particulières', 0],
+            ['VTSU',    'Véhicules très spécialisés à usage divers',100]
         ];
 
         foreach ($genres as $genre) {
-            [$code, $libelle] = $genre;
-            $entity = new Type();
+            [$code, $libelle, $ordre] = $genre;
+            $entity = new GenreVehicule();
             $entity->setCode($code);
             $entity->setLibelle($libelle);
+            $entity->setOrdre($ordre);
             $manager->persist($entity);
             $manager->flush();
         }

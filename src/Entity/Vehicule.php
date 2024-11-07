@@ -43,7 +43,7 @@ class Vehicule
     #[ORM\Column(nullable: true)]
     private ?int $nb_places = null;
 
-    #[ORM\Column(length: 8)]
+    #[ORM\Column(length: 9)]
     private ?string $immatriculation = null;
 
     /**
@@ -58,12 +58,12 @@ class Vehicule
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'vehicule_id', orphanRemoval: true)]
     private Collection $reservations;
 
-    #[ORM\OneToOne(inversedBy: 'vehicule', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Type $type = null;
-
     #[ORM\Column]
     private ?bool $serigraphie = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?GenreVehicule $genre = null;
 
     public function __construct()
     {
@@ -256,18 +256,6 @@ class Vehicule
         return $this;
     }
 
-    public function getType(): ?Type
-    {
-        return $this->type;
-    }
-
-    public function setType(Type $type): static
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     public function isSerigraphie(): ?bool
     {
         return $this->serigraphie;
@@ -279,5 +267,18 @@ class Vehicule
 
         return $this;
     }
+
+    public function getGenre(): ?GenreVehicule
+    {
+        return $this->genre;
+    }
+
+    public function setGenre(?GenreVehicule $genre): static
+    {
+        $this->genre = $genre;
+
+        return $this;
+    }
+
 
 }
