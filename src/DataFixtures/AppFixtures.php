@@ -55,21 +55,25 @@ class AppFixtures extends Fixture
             [
                 'nom' => 'GERER_HORAIRES',
                 'libelle' => 'Gérer les horaires de l\'atelier',
+                'template' => null, //'horaires_atelier',
                 'defaut' => ['CSAG']
             ],
             [
                 'nom' => 'GERER_VL',
                 'libelle' => 'Gérer le parc de véhicules',
+                'template' => 'compte/gestion_parc.html.twig',
                 'defaut' => ['SOLC', 'CSAG']
             ],
             [
                 'nom' => 'VALIDER_RESAS',
                 'libelle' => 'Valider les réservations de véhicules',
+                'template' => null, //'validation_reservation',
                 'defaut' => ['CSAG', 'CDT']
             ],
             [
                 'nom' => 'RESERVER_VL',
                 'libelle' => 'Réserver un véhicule',
+                'template' => null, //'reservation_vehicule',
                 'defaut' => ['USR', 'CSAG', 'CDT', 'SOLC']
             ]
         ];
@@ -78,6 +82,7 @@ class AppFixtures extends Fixture
             $entity = new Action();
             $entity->setNom($action['nom']);
             $entity->setLibelle($action['libelle']);
+            $entity->setTemplate($action['template']);
             $manager->persist($entity);
             $manager->flush();
 

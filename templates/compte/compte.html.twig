@@ -16,16 +16,24 @@
 
 				<div class="fr-accordions-group">
 
-					{% for perm in role.permissions %}
+					{% for key, perm in role.permissions %}
 						<section class="fr-accordion">
 							<h3 class="fr-accordion__title">
-								<button class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-114">{{perm.action.libelle}}</button>
+								<button class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-{{key}}">{{perm.action.libelle}}</button>
 							</h3>
 							<div
-								class="fr-collapse" id="accordion-114">
+								class="fr-collapse" id="accordion-{{key}}">
 								<!-- données de test -->
-								<h4 class="fr-h4">Contenu
-								</h4>
+								{% if perm.action.template is null %}
+
+									<h4 class="fr-h4">Pas encore de contenu</h4>
+
+								{% else %}
+
+									{{ include(perm.action.template) }}
+
+								{% endif %}
+
 								<p>Lorem ipsum dolor sit amet, consectetur adipiscing,
 									<a href="#test" target="_blank">link test</a>
 									incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>

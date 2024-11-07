@@ -31,6 +31,8 @@ class CompteController extends AbstractController
 
         return $this->render('compte/compte.html.twig', array_merge($this->getAppConst(), [
             'roles' => $roles,
+            'number' =>13,
+            'page'=> 'lucky/number.html.twig'
         ]));
     }
 

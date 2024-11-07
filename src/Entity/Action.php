@@ -21,6 +21,9 @@ class Action
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $template = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -46,6 +49,18 @@ class Action
     public function setLibelle(string $libelle): static
     {
         $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    public function getTemplate(): ?string
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(?string $template): static
+    {
+        $this->template = $template;
 
         return $this;
     }
