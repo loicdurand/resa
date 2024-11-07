@@ -83,8 +83,8 @@ class AppFixtures extends Fixture
 
             foreach ($action['defaut'] as $def) {
                 $perm = new Permission();
-                $perm->setAction($entity->getId());
-                $perm->setRole($roles[$def]['role']->getId());
+                $perm->setRole($roles[$def]['role']);
+                $perm->setAction($entity);
                 $manager->persist($perm);
                 $manager->flush();
             }

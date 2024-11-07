@@ -26,21 +26,11 @@ class CompteController extends AbstractController
             ->getRepository(Role::class)
             ->findAll();
 
-        foreach ($roles as $role) {
-            $perms = $em
-                ->getRepository(Permission::class)
-                ->findByRole($role->getId());
-
-            foreach ($perms as $perm) {
-                $role->addPermission(permission: $perm);
-            }
-        }
-
-        dd($roles);
+        //dd($roles[0]->getPermissions()[0]->getAction()->getNom());
 
 
         return $this->render('compte/compte.html.twig', array_merge($this->getAppConst(), [
-            'number' => $number,
+            'roles' => $roles,
         ]));
     }
 

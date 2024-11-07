@@ -24,6 +24,17 @@ class Role
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
+    /**
+     * @var Collection<int, Permission>
+     */
+    #[ORM\OneToMany(targetEntity: Permission::class, mappedBy: 'role', orphanRemoval: true)]
+    private Collection $permissions;
+
+    public function __construct()
+    {
+        $this->permissions = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -65,14 +76,32 @@ class Role
         return $this;
     }
 
-    public function getAction(): ?Action
+    /**
+     * @return Collection<int, Permission>
+     */
+    public function getPermissions(): Collection
     {
-        return $this->action;
+        return $this->permissions;
     }
 
-    public function setAction(?Action $action): static
+    public function addPermission(Permission $permission): static
     {
-        $this->action = $action;
+        if (!$this->permissions->contains($permission)) {
+            $this->permissions->add($permission);
+            $permission->setRole($this);
+        }
+
+        return $this;
+    }
+    
+    public function removePermission(Permission $permission): static
+    {
+        if ($this->permissions->removeElement($permission)) {
+            // set the owning side to null (unless already changed)
+            if ($permission->getRole() === $this) {
+                $permission->setRole(null);
+            }
+        }
 
         return $this;
     }
