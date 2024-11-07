@@ -13,11 +13,14 @@ class Type
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 25)]
+    #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
     #[ORM\OneToOne(mappedBy: 'type', cascade: ['persist', 'remove'])]
     private ?Vehicule $vehicule = null;
+
+    #[ORM\Column(length: 4)]
+    private ?string $code = null;
 
     public function getId(): ?int
     {
@@ -49,6 +52,18 @@ class Type
         }
 
         $this->vehicule = $vehicule;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): static
+    {
+        $this->code = $code;
 
         return $this;
     }

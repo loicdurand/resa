@@ -6,6 +6,8 @@ use App\Entity\Role;
 use App\Entity\Action;
 use App\Entity\Permission;
 
+use App\Entity\Type;
+
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -78,21 +80,44 @@ class AppFixtures extends Fixture
             ]
         ];
 
-        foreach ($actions as $action) {
-            $entity = new Action();
-            $entity->setNom($action['nom']);
-            $entity->setLibelle($action['libelle']);
-            $entity->setTemplate($action['template']);
+        // GESTION DES VÉHICULES
+
+        $genres = [
+            ['CTTE', 'Camionnettes (jusqu’è 3.500 kg, autre que tracteur routier)'],
+            ['CAM',    'Camions (plus de 3.500 kg, autre que tracteur routier et camionnette)'],
+            ['CL',    'Cyclomoteurs à deux roues ou cyclo-moteurs non carrossés à 3 roues'],
+            ['CYCL',    'Cyclomoteurs à trois roues'],
+            ['MAGA',    'Machines agricoles automotrices'],
+            ['MTL',    'Motocyclettes légères'],
+            ['MIAR',    'Machines et instruments remorqués'],
+            ['MTT1',    'Motocyclettes autres que motocyclettes légères, dont la puissance maximale nette CE <= 25 kW'],
+            ['MTT2',    'Autres motocyclettes'],
+            ['QM', 'Quadricycles à moteur'],
+            ['REA',    'Remorques agricoles'],
+            ['RETC',    'Remorques pour transports combinés'],
+            ['REM',    'Remorques routières'],
+            ['RESP',    'Remorques spécialisées'],
+            ['SREA',    'Semi-remorques agricoles'],
+            ['SRAT',    'Semi-remorques avant-train'],
+            ['SRTC',    'Semi-remorques pour transports combinés'],
+            ['SREM',    'Semi-remorques routières'],
+            ['SRSP',    'Semi-remorques spécialisées'],
+            ['TRA',    'Tracteurs agricoles'],
+            ['TRR', 'Tracteurs routiers'],
+            ['TCP',    'Transports en commun de personnes'],
+            ['TM',    'Tricycles à moteur'],
+            ['VASP',    'Véhicules automoteur spécialisés'],
+            ['VP',    'Voitures particulières'],
+            ['VTSU',    'Véhicules très spécialisés à usage divers']
+        ];
+
+        foreach ($genres as $genre) {
+            [$code, $libelle] = $genre;
+            $entity = new Type();
+            $entity->setCode($code);
+            $entity->setLibelle($libelle);
             $manager->persist($entity);
             $manager->flush();
-
-            foreach ($action['defaut'] as $def) {
-                $perm = new Permission();
-                $perm->setRole($roles[$def]['role']);
-                $perm->setAction($entity);
-                $manager->persist($perm);
-                $manager->flush();
-            }
         }
     }
 }

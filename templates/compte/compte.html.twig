@@ -5,7 +5,7 @@
 	<div class="fr-notice fr-notice--info">
 		<div class="fr-container">
 
-			{% for role in roles %}
+			{% for role_key, role in roles %}
 				<div class="fr-notice__body fr-mt-4w">
 					<p>
 						<span class="fr-notice__title">Rôle "{{role.libelle}}"</span>
@@ -16,40 +16,27 @@
 
 				<div class="fr-accordions-group">
 
-					{% for key, perm in role.permissions %}
+					{% for perm_key, perm in role.permissions %}
 						<section class="fr-accordion">
 							<h3 class="fr-accordion__title">
-								<button class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-{{key}}">{{perm.action.libelle}}</button>
+								<button class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-{{role_key ~ perm_key}}">{{perm.action.libelle}}</button>
 							</h3>
 							<div
-								class="fr-collapse" id="accordion-{{key}}">
+								class="fr-collapse" id="accordion-{{role_key ~ perm_key}}">
 								<!-- données de test -->
 								{% if perm.action.template is null %}
 
 									<h4 class="fr-h4">Pas encore de contenu</h4>
+									<p class="fr-mt-2w">
+									Cette page est en cours de conctruction. Nous vous invitons à revenir ultérieurement.
+								</p>
 
 								{% else %}
 
 									{{ include(perm.action.template) }}
 
 								{% endif %}
-
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing,
-									<a href="#test" target="_blank">link test</a>
-									incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing,
-									<a href="#test" target="_blank">link test</a>
-									incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>
-								<ul>
-									<li>list item</li>
-									<li>list item</li>
-									<li>list item<ul>
-											<li>list item niveau 2</li>
-											<li>list item niveau 2</li>
-											<li>list item niveau 2</li>
-										</ul>
-									</li>
-								</ul>
+								
 							</div>
 						</section>
 					{% endfor %}
