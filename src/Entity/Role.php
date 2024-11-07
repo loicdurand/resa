@@ -24,20 +24,6 @@ class Role
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
-    #[ORM\ManyToOne(inversedBy: 'permission')]
-    private ?Action $action = null;
-
-    /**
-     * @var Collection<int, Permission>
-     */
-    #[ORM\OneToMany(targetEntity: Permission::class, mappedBy: 'role')]
-    private Collection $permissions;
-
-    public function __construct()
-    {
-        $this->permissions = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -87,36 +73,6 @@ class Role
     public function setAction(?Action $action): static
     {
         $this->action = $action;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Permission>
-     */
-    public function getPermissions(): Collection
-    {
-        return $this->permissions;
-    }
-
-    public function addPermission(Permission $permission): static
-    {
-        if (!$this->permissions->contains($permission)) {
-            $this->permissions->add($permission);
-            $permission->setRoleId($this);
-        }
-
-        return $this;
-    }
-
-    public function removePermission(Permission $permission): static
-    {
-        if ($this->permissions->removeElement($permission)) {
-            // set the owning side to null (unless already changed)
-            if ($permission->getRoleId() === $this) {
-                $permission->setRoleId(null);
-            }
-        }
 
         return $this;
     }

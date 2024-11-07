@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Role;
 use App\Entity\Action;
+use App\Entity\Permission;
 
 
 class CompteController extends AbstractController
@@ -21,12 +22,22 @@ class CompteController extends AbstractController
         $this->setAppConst();
 
         $em = $doctrine->getManager();
-        $roles =$em
-                ->getRepository(Role::class)
-                ->findAll();
+        $roles = $em
+            ->getRepository(Role::class)
+            ->findAll();
 
-                dd($roles);
-        
+        foreach ($roles as $role) {
+            $perms = $em
+                ->getRepository(Permission::class)
+                ->findByRole($role->getId());
+
+            foreach ($perms as $perm) {
+                $role->addPermission(permission: $perm);
+            }
+        }
+
+        dd($roles);
+
 
         return $this->render('compte/compte.html.twig', array_merge($this->getAppConst(), [
             'number' => $number,
