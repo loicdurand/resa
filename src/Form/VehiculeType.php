@@ -79,7 +79,6 @@ class VehiculeType extends AbstractType
                 'attr' => ['class' => 'fr-select'],
                 'label_attr' => ['class' => 'fr-label']
             ])
-            ->add('submit')
         ;
     }
 
