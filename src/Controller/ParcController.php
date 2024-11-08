@@ -38,7 +38,7 @@ class ParcController extends AbstractController
     }
 
 
-    #[Route('/parc/afficher')]
+    #[Route('/parc/')]
     public function afficher(ManagerRegistry $doctrine): Response
     {
         $this->setAppConst();

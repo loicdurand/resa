@@ -2,11 +2,53 @@
 
 {% block body %}
 
-	<h2 class="fr-mt-4w">Ajouter un véhicule</h2>
+	{# Fil d'Arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d’Ariane</button>
+		<div class="fr-collapse" id="breadcrumb-1">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" href="/">Accueil</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" href="/compte/">Compte</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" href="/parc/">Parc</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" aria-current="page">Ajouter un véhicule</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
 
-	<div class="fr-grid-row">
+	<h2 class="fr-mt-2w">Ajouter un véhicule</h2>
+
+	<p class="fr-text--sm">
+		Le formulaire suivant permet d'ajouter un véhicule, quelle que soit sa catégorie (VL, PL, moto, etc...), à votre parc.
+		<br/>
+		Les seuls champs obligatoires sont la marque, le modèle et l'immatriculation du véhicule.
+		<br/>
+		Les champs facultatifs permettront aux utilisateurs de rechercher un véhicule en fonction de leur besoin, via les filtres de recherche.
+	</p>
+
+	<div class="fr-mt-2w fr-grid-row">
 
 		{{ form_start(form, { 'attr' : { 'class': 'fr-grid-row fr-grid-row--gutters' } } ) }}
+
+		<fieldset class="fr-col-sm-12 fr-fieldset" id="checkboxes" aria-labelledby="checkboxes-legend checkboxes-messages">
+			<legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="checkboxes-legend">
+				Sérigraphie
+			</legend>
+			<div class="fr-fieldset__element">
+				<div class="fr-checkbox-group">
+					{{ form_widget(form.serigraphie) }}
+					{{ form_label(form.serigraphie) }}
+					<div class="fr-messages-group" id="checkboxes-1-messages" aria-live="assertive"></div>
+				</div>
+			</div>
+		</fieldset>
 
 
 		{{ form_rest(form) }}

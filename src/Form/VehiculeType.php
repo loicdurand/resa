@@ -56,33 +56,36 @@ class VehiculeType extends AbstractType
                 'label' =>  'Nombre de places',
             ])
             ->add('serigraphie', null, [
-                'label' => 'Sérigraphie',
-                'row_attr' => ['class' => 'fr-col-sm-12'],
+                'label' => 'Véhicule sérigraphié',
             ])
 
             ->add('genre', EntityType::class, [
                 'class' => GenreVehicule::class,
                 'choice_label' => 'code',
                 'row_attr' => ['class' => 'fr-select-group fr-col-sm-3'],
-                'label_attr' => ['class' => 'fr-label']
+                'label_attr' => ['class' => 'fr-label'],
+                'help_attr' => ['content' => 'Faculatif.'],
             ])
             ->add('categorie', EntityType::class, [
                 'class' => CategorieVehicule::class,
                 'choice_label' => 'libelle',
                 'row_attr' => ['class' => 'fr-select-group fr-col-sm-3'],
-                'label_attr' => ['class' => 'fr-label']
+                'label_attr' => ['class' => 'fr-label'],
+                'help_attr' => ['content' => 'Faculatif.'],
             ])
             ->add('transmission', EntityType::class, [
                 'class' => TransmissionVehicule::class,
                 'choice_label' => 'libelle',
                 'row_attr' => ['class' => 'fr-select-group fr-col-sm-3'],
-                'label_attr' => ['class' => 'fr-label']
+                'label_attr' => ['class' => 'fr-label'],
+                'help_attr' => ['content' => 'Faculatif.'],
             ])
             ->add('carburant', EntityType::class, [
                 'class' => CarburantVehicule::class,
                 'choice_label' => 'libelle',
                 'row_attr' => ['class' => 'fr-select-group fr-col-sm-3'],
-                'label_attr' => ['class' => 'fr-label']
+                'label_attr' => ['class' => 'fr-label'],
+                'help_attr' => ['content' => 'Faculatif.']
             ])
            
         ;
