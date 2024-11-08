@@ -1,0 +1,127 @@
+{# Widgets #}
+
+{%- block form_widget -%}
+    {% if compound %}
+        {{- block('form_widget_compound') -}}
+    {% else %}
+        {{- block('form_widget_simple') -}}
+    {% endif %}
+{%- endblock form_widget -%}
+
+{%- block form_widget_simple -%}
+    {%- set type = type|default('text') -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} class="fr-input" {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock form_widget_simple -%}
+
+{%- block form_widget_compound -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- if form is rootform -%}
+            {{ form_errors(form) }}
+        {%- endif -%}
+        {{- block('form_rows') -}}
+        {{- form_rest(form) -}}
+    </div>
+{%- endblock form_widget_compound -%}
+
+{# Help #}
+
+{% block form_help -%}
+    {%- if help is not empty -%}
+        {%- set help_attr = help_attr|merge({class: (help_attr.class|default('fr-hint-text')) |trim}) -%}
+        <{{ element|default('span') }} id="{{ id }}_help"{% with { attr: help_attr } %}{{ block('attributes') }}{% endwith %}>
+            {{- block('form_help_content') -}}
+        </{{ element|default('span') }}>
+    {%- endif -%}
+{%- endblock form_help %}
+
+{% block form_help_content -%}
+    {%- if translation_domain is same as(false) -%}
+        {%- if help_html is same as(false) -%}
+            {{- help -}}
+        {%- else -%}
+            {{- help|raw -}}
+        {%- endif -%}
+    {%- else -%}
+        {%- if help_html is same as(false) -%}
+            {{- help|trans(help_translation_parameters, translation_domain) -}}
+        {%- else -%}
+            {{- help|trans(help_translation_parameters, translation_domain)|raw -}}
+        {%- endif -%}
+    {%- endif -%}
+{%- endblock form_help_content %}
+
+{# Labels #}
+
+{%- block form_label -%}
+    {% if label is not same as(false) -%}
+        {% if not compound -%}
+            {% set label_attr = label_attr|merge({'for': id, 'class': (label_attr.class|default('fr-label'))|trim}) %}
+        {%- endif -%}
+        {% if required -%}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('fr-label') ~ ' required')|trim}) %}
+        {%- endif -%}
+        
+        <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>
+            {{- block('form_label_content') -}}
+           {% if help_attr -%}
+              {% set help_attr = help_attr|merge({'for': id, 'class': (help_attr.class|default('fr-hint-text'))|trim}) %}
+              <{{ element|default('span') }} {% if help_attr %}{% with { attr: help_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>
+                {{ help_attr.content }}
+              </{{ element|default('span') }}
+            {%- endif -%}
+        </{{ element|default('label') }}>
+    {%- endif -%}
+{%- endblock form_label -%}
+
+{%- block form_label_content -%}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- else -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    {%- if translation_domain is same as(false) -%}
+        {%- if label_html is same as(false) -%}
+            {{- label -}}
+        {%- else -%}
+            {{- label|raw -}}
+        {%- endif -%}
+    {%- else -%}
+        {%- if label_html is same as(false) -%}
+            {{- label|trans(label_translation_parameters, translation_domain) -}}
+        {%- else -%}
+            {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
+        {%- endif -%}
+    {%- endif -%}
+{%- endblock form_label_content -%}
+
+{%- block button_label -%}{%- endblock -%}
+
+{# Rows #}
+
+{%- block repeated_row -%}
+    {#
+    No need to render the errors here, as all errors are mapped
+    to the first child (see RepeatedTypeValidatorExtension).
+    #}
+    {{- block('form_rows') -}}
+{%- endblock repeated_row -%}
+
+{%- block form_row -%}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %} class="fr-input-group">
+        {{- form_label(form) -}}
+        {{- form_widget(form, widget_attr) -}}
+    </div>
+{%- endblock form_row -%}

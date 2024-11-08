@@ -19,7 +19,8 @@ class VehiculeType extends AbstractType
         $builder
             ->add('marque', null, [
                 'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
+                'label_attr' => ['class' => 'fr-label'],
+                'help_attr' => ['content' => 'Obligatoire (255 caractères maximum).']
             ])
             ->add('modele', null, [
                 'attr' => ['class' => 'fr-input'],
