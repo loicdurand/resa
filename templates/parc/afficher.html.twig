@@ -2,23 +2,23 @@
 
 {% block body %}
 
-{# Fil d'Arianne #}
-<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
-    <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d’Ariane</button>
-    <div class="fr-collapse" id="breadcrumb-1">
-        <ol class="fr-breadcrumb__list">
-            <li>
-                <a class="fr-breadcrumb__link" href="/">Accueil</a>
-            </li>
-						<li>
-                <a class="fr-breadcrumb__link" href="/compte/">Compte</a>
-            </li>
-            <li>
-                <a class="fr-breadcrumb__link" aria-current="page">Parc</a>
-            </li>
-        </ol>
-    </div>
-</nav>
+	{# Fil d'Arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d’Ariane</button>
+		<div class="fr-collapse" id="breadcrumb-1">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" href="/">Accueil</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" href="/compte/">Compte</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" aria-current="page">Parc</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
 
 	<div class="fr-table">
 		<div class="fr-table__wrapper">
@@ -35,7 +35,7 @@
 									</a>
 								</li>
 								<li>
-									<button class="fr-btn fr-btn--secondary">
+									<button {% if vehicules is empty %} disabled {% endif %} class="fr-btn fr-btn--secondary">
 										Supprimer un véhicule
 									</button>
 								</li>
@@ -62,7 +62,7 @@
 									Contrôle technique
 								</th>
 								<th scope="col">
-									Nombre places
+									Places
 								</th>
 								<th scope="col">
 									Sérigraphié
@@ -91,7 +91,7 @@
 										{{ vl.modele ~ ' ' ~ vl.motorisation ~ ' ' ~ vl.finition }}
 									</td>
 									<td>
-										{{vl.carburant.code }}
+										<abbr title="{{vl.carburant.libelle }}">{{vl.carburant.code }}</abbr>
 									</td>
 									<td>
 										{{ vl.controletechnique | date('d/m/Y') }}
@@ -123,4 +123,4 @@
 		</div>
 	</div>
 
-	{% endblock %}
+{% endblock %}

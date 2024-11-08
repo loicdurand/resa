@@ -38,7 +38,7 @@ class ParcController extends AbstractController
     }
 
 
-    #[Route('/parc/')]
+    #[Route('/parc/', name: 'parc')]
     public function afficher(ManagerRegistry $doctrine): Response
     {
         $this->setAppConst();
@@ -91,11 +91,12 @@ class ParcController extends AbstractController
 
         $form->handleRequest($this->request);
         if ($form->isSubmitted() && $form->isValid()) {
-            //if (!$vehicule->getId()) {
-            $em->persist($form->getData());
-            // }
+            $vehicule = $form->getData();
+            if (!$vehicule->getId()) {
+                $em->persist($vehicule);
+            }
             $em->flush();
-            die;
+            return $this->redirectToRoute('parc');
         }
 
         return $this->render('parc/ajouter.html.twig', array_merge($this->getAppConst(), [
