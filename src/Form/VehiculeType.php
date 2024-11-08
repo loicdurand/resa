@@ -2,12 +2,13 @@
 
 namespace App\Form;
 
+use App\Entity\CarburantVehicule;
+use App\Entity\CategorieVehicule;
 use App\Entity\GenreVehicule;
+use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,56 +17,31 @@ class VehiculeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('categorie')
-            ->add('marque', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
-            ])
-            ->add('modele', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
-            ])
-            ->add('motorisation', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
-            ])
-            ->add('finition', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
-            ])
-            ->add('carburant', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
-            ])
-            ->add('transmission', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
-            ])
+            ->add('marque')
+            ->add('modele')
+            ->add('motorisation')
+            ->add('finition')
             ->add('controle_technique', null, [
                 'widget' => 'single_text',
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
             ])
-            ->add('nb_places', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
-            ])
-            ->add('immatriculation', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
-            ])
+            ->add('nb_places')
+            ->add('immatriculation')
             ->add('serigraphie')
             ->add('genre', EntityType::class, [
                 'class' => GenreVehicule::class,
-                'choice_label' => 'code',
+                'choice_label' => 'id',
             ])
-            // ->add('reset', ResetType::class, [
-            //     'label' => 'Annuler',
-            //     'attr' => ['class' => 'fr-btn fr-btn--secondary']
-            // ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Ajouter',
-                'attr' => ['class' => 'fr-btn fr-btn--secondary']
+            ->add('categorie', EntityType::class, [
+                'class' => CategorieVehicule::class,
+                'choice_label' => 'id',
+            ])
+            ->add('carburant', EntityType::class, [
+                'class' => CarburantVehicule::class,
+                'choice_label' => 'id',
+            ])
+            ->add('transmission', EntityType::class, [
+                'class' => TransmissionVehicule::class,
+                'choice_label' => 'id',
             ])
         ;
     }

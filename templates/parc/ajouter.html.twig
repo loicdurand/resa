@@ -4,6 +4,30 @@
 
 	<h2 class="fr-mt-4w">Ajouter un véhicule</h2>
 
-	{{ form(form) }}
-	
-	{% endblock %}
+	{{ form_start(form) }}
+
+	<div class="fr-input-group">
+		{{ form_label(form.immatriculation) }}
+		<span class="fr-hint-text">Champ obligatoire (9 caractères maximum).</span>
+	</label>
+	{{ form_widget(form.immatriculation) }}
+</div>
+
+	<div class="fr-input-group">
+		{{ form_label(form.marque) }}
+		<span class="fr-hint-text">Champ obligatoire (255 caractères maximum).</span>
+	</label>
+	{{ form_widget(form.marque) }}
+</div>
+
+<div class="fr-input-group">
+		{{ form_label(form.modele) }}
+		<span class="fr-hint-text">Champ obligatoire (255 caractères maximum).</span>
+	</label>
+	{{ form_widget(form.modele) }}
+</div>
+
+
+{{ form_rest(form) }}
+
+{{ form_end(form) }}{% endblock %}

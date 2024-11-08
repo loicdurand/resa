@@ -16,9 +16,6 @@ class Vehicule
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 5, nullable: true)]
-    private ?string $categorie = null;
-
     #[ORM\Column(length: 255)]
     private ?string $marque = null;
 
@@ -31,11 +28,6 @@ class Vehicule
     #[ORM\Column(length: 25, nullable: true)]
     private ?string $finition = null;
 
-    #[ORM\Column(length: 25, nullable: true)]
-    private ?string $carburant = null;
-
-    #[ORM\Column(length: 3)]
-    private ?string $transmission = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $controle_technique = null;
@@ -65,6 +57,15 @@ class Vehicule
     #[ORM\JoinColumn(nullable: false)]
     private ?GenreVehicule $genre = null;
 
+    #[ORM\ManyToOne]
+    private ?CategorieVehicule $categorie = null;
+
+    #[ORM\ManyToOne]
+    private ?CarburantVehicule $carburant = null;
+
+    #[ORM\ManyToOne]
+    private ?TransmissionVehicule $transmission = null;
+
     public function __construct()
     {
         $this->photos = new ArrayCollection();
@@ -74,18 +75,6 @@ class Vehicule
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCategorie(): ?string
-    {
-        return $this->categorie;
-    }
-
-    public function setCategorie(?string $categorie): static
-    {
-        $this->categorie = $categorie;
-
-        return $this;
     }
 
     public function getMarque(): ?string
@@ -132,30 +121,6 @@ class Vehicule
     public function setFinition(?string $finition): static
     {
         $this->finition = $finition;
-
-        return $this;
-    }
-
-    public function getCarburant(): ?string
-    {
-        return $this->carburant;
-    }
-
-    public function setCarburant(?string $carburant): static
-    {
-        $this->carburant = $carburant;
-
-        return $this;
-    }
-
-    public function getTransmission(): ?string
-    {
-        return $this->transmission;
-    }
-
-    public function setTransmission(string $transmission): static
-    {
-        $this->transmission = $transmission;
 
         return $this;
     }
@@ -276,6 +241,42 @@ class Vehicule
     public function setGenre(?GenreVehicule $genre): static
     {
         $this->genre = $genre;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?CategorieVehicule
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?CategorieVehicule $categorie): static
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getCarburant(): ?CarburantVehicule
+    {
+        return $this->carburant;
+    }
+
+    public function setCarburant(?CarburantVehicule $carburant): static
+    {
+        $this->carburant = $carburant;
+
+        return $this;
+    }
+
+    public function getTransmission(): ?TransmissionVehicule
+    {
+        return $this->transmission;
+    }
+
+    public function setTransmission(?TransmissionVehicule $transmission): static
+    {
+        $this->transmission = $transmission;
 
         return $this;
     }

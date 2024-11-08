@@ -2,12 +2,13 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\CategorieVehicule;
 use App\Entity\Role;
 use App\Entity\Action;
 use App\Entity\GenreVehicule;
 use App\Entity\Permission;
-
-
+use App\Entity\CarburantVehicule;
+use App\Entity\TransmissionVehicule;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -125,7 +126,7 @@ class AppFixtures extends Fixture
             ['TM',    'Tricycles à moteur', 100],
             ['VASP',    'Véhicules automoteur spécialisés', 100],
             ['VP',    'Voitures particulières', 0],
-            ['VTSU',    'Véhicules très spécialisés à usage divers',100]
+            ['VTSU',    'Véhicules très spécialisés à usage divers', 100]
         ];
 
         foreach ($genres as $genre) {
@@ -134,6 +135,67 @@ class AppFixtures extends Fixture
             $entity->setCode($code);
             $entity->setLibelle($libelle);
             $entity->setOrdre($ordre);
+            $manager->persist($entity);
+            $manager->flush();
+        }
+
+        $categories = [
+            'Citadine',
+            'Berline',
+            '4x4',
+            'Utilitaire',
+            'Minibus'
+        ];
+
+        foreach ($categories as $categorie) {
+            $entity = new CategorieVehicule();
+            $entity->setLibelle($categorie);
+            $manager->persist($entity);
+            $manager->flush();
+        }
+
+        $carburants = [
+            [
+                'code' => 'GO',
+                'libelle' => 'Diesel'
+            ],
+            [
+                'code' => 'SP',
+                'libelle' => 'essence'
+            ],
+            [
+                'code' => 'DIV',
+                'libelle' => 'Autre (GPL, éthanol, GNV, etc...)'
+            ],
+            [
+                'code' => 'ELEC',
+                'libelle' => 'Électrique'
+            ]
+        ];
+
+        foreach ($carburants as $carburant) {
+            $entity = new CarburantVehicule();
+            $entity->setCode($carburant['code']);
+            $entity->setLibelle($carburant['libelle']);
+            $manager->persist($entity);
+            $manager->flush();
+        }
+
+        $transmissions = [
+            [
+                'code' => 'BVM',
+                'libelle' => 'Boite de vitesses manuelle'
+            ],
+            [
+                'code' => 'BVA',
+                'libelle' => 'Boite de vitesses automatique'
+            ]
+        ];
+
+        foreach ($transmissions as $transmission) {
+            $entity = new TransmissionVehicule();
+            $entity->setCode($transmission['code']);
+            $entity->setLibelle($transmission['libelle']);
             $manager->persist($entity);
             $manager->flush();
         }
