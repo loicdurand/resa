@@ -14,9 +14,26 @@ use App\Entity\Permission;
 use App\Entity\Vehicule;
 use App\Form\VehiculeType;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+
 class ParcController extends AbstractController
 {
     private $app_const;
+    private $request;
+    private $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->request = Request::createFromGlobals();
+        $this->requestStack = $requestStack;
+        // $this->session = $this->requestStack->getSession();
+        // /* paramètres session */
+        // $this->nigend = $this->session->get('HTTP_NIGEND');
+        // $this->unite =  $this->addZeros($this->session->get('HTTP_UNITE'), 8);
+        // $this->profil = $this->session->get('HTTP_PROFIL');
+    }
+
 
     #[Route('/parc/afficher')]
     public function afficher(ManagerRegistry $doctrine): Response
@@ -36,21 +53,28 @@ class ParcController extends AbstractController
     }
 
     #[Route('/parc/ajouter')]
-    public function ajouter(ManagerRegistry $doctrine): Response
+    public function ajouter(?Vehicule $vehicule, Request $request, ManagerRegistry $doctrine): Response
     {
         $this->setAppConst();
 
         $em = $doctrine->getManager();
-        
+
         $genre = $em
-        ->getRepository(GenreVehicule::class)
-        ->findOneBy(['code'=>'VP']);
+            ->getRepository(GenreVehicule::class)
+            ->findOneBy(['code' => 'VP']);
         $vl = new Vehicule();
         $vl->setGenre($genre);
 
         $form = $this->createForm(VehiculeType::class, $vl);
 
-        //dd($vehicules);
+        $form->handleRequest($this->request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            //if (!$vehicule->getId()) {
+                $em->persist($form->getData());
+           // }
+            $em->flush();
+            die;
+        }
 
         return $this->render('parc/ajouter.html.twig', array_merge($this->getAppConst(), [
             'form' => $form
