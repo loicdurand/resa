@@ -76,7 +76,7 @@ class ParcController extends AbstractController
             die;
         }
 
-        return $this->render('parc/add.html.twig', array_merge($this->getAppConst(), [
+        return $this->render('parc/ajouter.html.twig', array_merge($this->getAppConst(), [
             'form' => $form
         ]));
     }

@@ -18,47 +18,51 @@ class VehiculeType extends AbstractType
     {
         $builder
             ->add('marque', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label'],
+                'row_attr'=> ['class'=>'fr-col-sm-12'],
                 'help_attr' => ['content' => 'Obligatoire (255 caractères maximum).']
             ])
             ->add('modele', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
+                'row_attr'=> ['class'=>'fr-col-sm-12'],
+                'help_attr' => ['content' => 'Obligatoire (255 caractères maximum).']
             ])
             ->add('motorisation', null, [
+                'row_attr'=> ['class'=>'fr-col-sm-6'],
+                'help_attr' => ['content' => 'Facultatif (25 caractères maximum).'],
                 'attr' => [
-                    'class' => 'fr-input',
                     'placeholder' => '200CDI, 30D, 1.5DCi 75, etc...'
-                ],
-                'label_attr' => ['class' => 'fr-label']
+                ]
             ])
             ->add('finition', null, [
+                'row_attr'=> ['class'=>'fr-col-sm-6'],
+                'help_attr' => ['content' => 'Faculatif (25 caractères maximum).'],
                 'attr' => [
-                    'class' => 'fr-input',
                     'placeholder' => 'Privilège, Elegance, etc...'
                 ],
-                'label_attr' => ['class' => 'fr-label']
-            ])
-            ->add('controle_technique', null, [
-                'widget' => 'single_text',
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
-            ])
-            ->add('NbPlaces', null, [
-                'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
             ])
             ->add('immatriculation', null, [
+                'row_attr'=> ['class'=>'fr-col-sm-4'],
                 'attr' => ['class' => 'fr-input'],
-                'label_attr' => ['class' => 'fr-label']
+                'help_attr' => ['content' => 'Obligatoire (9 caractères maximum).']
+            ])
+            ->add('controle_technique', null, [
+                'row_attr'=> ['class'=>'fr-col-sm-4'],
+                'widget' => 'single_text',
+                'help_attr' => ['content' => 'Facultatif (format: JJ/MM/AAAA).'],
+            ])
+            ->add('NbPlaces', null, [
+                'row_attr'=> ['class'=>'fr-col-sm-4'],
+                'help_attr' => ['content' => 'Faculatif.'],
+                'label' =>  'Nombre de places',
+                'data'=>5
             ])
             ->add('serigraphie', null, [
-                'label_attr' => ['class' => 'fr-label']
+                'label' => 'Sérigraphie'
             ])
+            
             ->add('genre', EntityType::class, [
                 'class' => GenreVehicule::class,
                 'choice_label' => 'code',
+                'row_attr'=> ['class'=>'fr-select-group fr-col-sm-4'],
                 'attr' => ['class' => 'fr-select'],
                 'label_attr' => ['class' => 'fr-label']
             ])
