@@ -9,8 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Role;
 use App\Entity\Action;
+use App\Entity\CarburantVehicule;
+use App\Entity\CategorieVehicule;
 use App\Entity\GenreVehicule;
 use App\Entity\Permission;
+use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
 use App\Form\VehiculeType;
 
@@ -62,16 +65,35 @@ class ParcController extends AbstractController
         $genre = $em
             ->getRepository(GenreVehicule::class)
             ->findOneBy(['code' => 'VP']);
+
+        $categ = $em
+            ->getRepository(CategorieVehicule::class)
+            ->findOneBy(['libelle' => 'Berline']);
+
+        $carb = $em
+            ->getRepository(CarburantVehicule::class)
+            ->findOneBy(['code' => 'GO']);
+
+        $transm = $em
+            ->getRepository(TransmissionVehicule::class)
+            ->findOneBy(['code' => 'BVM']);
+
         $vl = new Vehicule();
-        $vl->setGenre($genre);
+        $vl
+            ->setNbPlaces(5)
+            ->setSerigraphie(0)
+            ->setGenre($genre)
+            ->setCategorie($categ)
+            ->setCarburant($carb)
+            ->setTransmission($transm);
 
         $form = $this->createForm(VehiculeType::class, $vl);
 
         $form->handleRequest($this->request);
         if ($form->isSubmitted() && $form->isValid()) {
             //if (!$vehicule->getId()) {
-                $em->persist($form->getData());
-           // }
+            $em->persist($form->getData());
+            // }
             $em->flush();
             die;
         }

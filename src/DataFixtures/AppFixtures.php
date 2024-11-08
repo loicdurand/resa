@@ -156,12 +156,12 @@ class AppFixtures extends Fixture
 
         $carburants = [
             [
-                'code' => 'GO',
-                'libelle' => 'Diesel'
+                'code' => 'SP',
+                'libelle' => 'Essence'
             ],
             [
-                'code' => 'SP',
-                'libelle' => 'essence'
+                'code' => 'GO',
+                'libelle' => 'Diesel'
             ],
             [
                 'code' => 'DIV',
@@ -183,12 +183,12 @@ class AppFixtures extends Fixture
 
         $transmissions = [
             [
-                'code' => 'BVM',
-                'libelle' => 'Boite de vitesses manuelle'
-            ],
-            [
                 'code' => 'BVA',
                 'libelle' => 'Boite de vitesses automatique'
+            ],
+            [
+                'code' => 'BVM',
+                'libelle' => 'Boite de vitesses manuelle'
             ]
         ];
 
