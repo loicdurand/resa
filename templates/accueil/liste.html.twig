@@ -2,7 +2,7 @@
 
 {% block body %}
 
-{# Fil d'Arianne #}
+	{# Fil d'Arianne #}
 	<nav role="navigation" class="hide-s fr-breadcrumb" aria-label="vous êtes ici :">
 		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d’Ariane</button>
 		<div class="fr-collapse" id="breadcrumb-1">
@@ -14,6 +14,50 @@
 		</div>
 	</nav>
 
-<h2>Accueil</h2>
+	<div class="fr-grid-row fr-grid-row--gutters">
+
+    <p class="cs-nb-vehicules fr-col-sm-12 fr-h6">{{ vehicules|length }}&nbsp;véhicules disponibles.</p>
+
+		{% for vehicule in vehicules %}
+
+			<div class="cs-card fr-col-sm-12 fr-mb-2w bordered hoverable shadow">
+				<figure class="cs-img-container left">
+					<img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée"/>
+					<figcaption class="hidden">Renault 4l sérigraphiée</figcaption>
+				</figure>
+
+				<div class="left cs-descr-container">
+					<dl>
+						<dt class="cs-marque fr-h6">{{vehicule.marque}}&nbsp;<span class="cs-modele">{{vehicule.modele}}</span>
+						</dt>
+						{% if (vehicule.motorisation ~ vehicule.finition) is empty %}
+							<br/>
+						{% else %}
+							<dd>{{vehicule.motorisation ~ ' ' ~ vehicule.finition}}</dd>
+						{% endif %}
+						<dd>
+							<ul class="fr-tags-group cs-tags">
+								<li>
+									<p class="fr-tag fr-tag--sm">{{vehicule.transmission.code}}</p>
+								</li>
+								<li>
+									<p class="fr-tag fr-tag--sm">{{vehicule.carburant.libelle}}</p>
+								</li>
+								<li>
+									<p class="fr-tag fr-tag--sm">{{vehicule.categorie.libelle}}</p>
+								</li>
+							</ul>
+						</dd>
+						<dd>
+							{% for i in range(1, vehicule.NbPlaces) %}
+								<i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
+							{% endfor %}
+						</dd>
+					</dl>
+				</div>
+			</div>
+		{% endfor %}
+
+	</div>
 
 {% endblock %}

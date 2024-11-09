@@ -53,3 +53,61 @@
 }
 
 /* FOOTER */
+
+/* AFFICHAGE DES VÉHICULES */
+
+.cs-nb-vehicules {
+    font-weight: 400 !important;
+    text-transform: uppercase;
+    margin-inline-start: -8px;
+}
+
+// CARD
+
+.cs-card {
+    border-radius: 6px;
+    padding: 0 !important;
+    max-height: 140px;
+    width: 100%;
+
+    & .cs-img-container {
+        width: 35%;
+        max-width: 126px;
+        height: 100%;
+        position: relative;
+        z-index: -1;
+
+        & .cs-img {
+            width: 150%;
+            height: auto;
+            border-radius: 6px 0 0 6px;
+            max-height: 140px;
+        }
+    }
+
+    & .cs-descr-container {
+        background-color: var(--grey-0);
+        height: 100%;
+        padding: .5rem;
+        width: 65%;
+        max-width: 65%;
+        border-radius: 0 6px 6px 0;
+
+        & .cs-marque {
+            padding-left: 16px;
+            margin-bottom: 0;
+        }
+
+        & .cs-tags{
+            margin-bottom: -8px;
+        }
+
+        & .cs-user-icon {
+            width: 12px;
+            padding: 0px;
+            margin: -12px -2px;
+            background-color: transparent;
+            color: var(--text-default-grey);
+        }
+    }
+}
