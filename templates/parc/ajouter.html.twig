@@ -28,53 +28,59 @@
 	<p class="fr-text--sm">
 		Le formulaire suivant permet d'ajouter un véhicule, quelle que soit sa catégorie (VL, PL, moto, etc...), à votre parc.
 		<span class="hide-s">
-		<br/>
-		Les seuls champs obligatoires sont la marque, le modèle et l'immatriculation du véhicule.
-		<br/>
-		Les champs facultatifs permettront aux utilisateurs de rechercher un véhicule en fonction de leur besoin, via les filtres de recherche.
+			<br/>
+			Les seuls champs obligatoires sont la marque, le modèle et l'immatriculation du véhicule.
+			<br/>
+			Les champs facultatifs permettront aux utilisateurs de rechercher un véhicule en fonction de leur besoin, via les filtres de recherche.
 		</span>
 	</p>
 
-	<div class="fr-mt-2w fr-grid-row">
+	{{ form_start(form) }}
 
-		{{ form_start(form, { 'attr' : { 'class': 'fr-grid-row fr-grid-row--gutters' } } ) }}
+	<div class="fr-container">
 
-		<fieldset class="fr-col-sm-12 fr-fieldset" id="checkboxes" aria-labelledby="checkboxes-legend checkboxes-messages">
-			<legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="checkboxes-legend">
-				Sérigraphie
-			</legend>
-			<div class="fr-fieldset__element">
-				<div class="fr-checkbox-group">
-					{{ form_widget(form.serigraphie) }}
-					{{ form_label(form.serigraphie) }}
-					<div class="fr-messages-group" id="checkboxes-1-messages" aria-live="assertive"></div>
+		<div class="fr-mt-2w fr-grid-row fr-grid-row--gutters">
+
+			<fieldset class="fr-col-12 fr-col-sm-12 fr-fieldset" id="checkboxes" aria-labelledby="checkboxes-legend checkboxes-messages">
+				<legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="checkboxes-legend">
+					Sérigraphie
+				</legend>
+				<div class="fr-fieldset__element">
+					<div class="fr-checkbox-group">
+						{{ form_widget(form.serigraphie) }}
+						{{ form_label(form.serigraphie) }}
+						<div class="fr-messages-group" id="checkboxes-1-messages" aria-live="assertive"></div>
+					</div>
 				</div>
-			</div>
-		</fieldset>
+			</fieldset>
 
 
-		{{ form_rest(form) }}
+			{{ form_rest(form) }}
 
-		<ul class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
+			<ul class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
 
-			<li>
-				<!-- Bouton d'ouverture de la modale -->
-				<button class="fr-btn fr-btn--secondary" data-fr-opened="false" aria-controls="fr-modal--reset-ajouter">
-					Réinitialiser le formulaire
-				</button>
+				<li>
+					<!-- Bouton d'ouverture de la modale -->
+					<button class="fr-btn fr-btn--secondary" data-fr-opened="false" aria-controls="fr-modal--reset-ajouter">
+						Réinitialiser le formulaire
+					</button>
 
-			</li>
+				</li>
 
-			<li>
-				<button type="submit" class="fr-btn">
-					Ajouter le véhicule
-				</button>
-			</li>
+				<li>
+					<button type="submit" class="fr-btn">
+						Ajouter le véhicule
+					</button>
+				</li>
 
-		</ul>
+			</ul>
 
-		{{ form_end(form) }}
+		</div>
+
 	</div>
+
+	{{ form_end(form) }}
+
 
 	{# MODALE DE CONFIRMATION DE RÉINITIALISATION DU FORMULAIRE #}
 	<dialog aria-labelledby="fr-modal--reset-ajouter-title" id="fr-modal--reset-ajouter" class="fr-modal" role="dialog">
