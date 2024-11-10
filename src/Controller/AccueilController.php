@@ -24,12 +24,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class AccueilController extends AbstractController
 {
+
     private $app_const;
 
     #[Route('/')]
     public function accueil(ManagerRegistry $doctrine): Response
     {
         $this->setAppConst();
+
+
 
         $em = $doctrine->getManager();
         $vehicules = $em
