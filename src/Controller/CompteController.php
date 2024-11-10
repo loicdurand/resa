@@ -26,13 +26,8 @@ class CompteController extends AbstractController
             ->getRepository(Role::class)
             ->findAll();
 
-        //dd($roles[0]->getPermissions()[0]->getAction()->getNom());
-
-
         return $this->render('compte/compte.html.twig', array_merge($this->getAppConst(), [
             'roles' => $roles,
-            'number' =>13,
-            'page'=> 'lucky/number.html.twig'
         ]));
     }
 
