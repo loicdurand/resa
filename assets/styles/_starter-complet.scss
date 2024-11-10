@@ -4,8 +4,6 @@
 
 * {
 	box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	/* repères */
 	/*border: 1px solid black;
 	background: rgba(0,0,0,.2);
@@ -78,7 +76,7 @@ figure {
 /* effets d'ombrage */
 
 .shadow {
-	box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.16), 0px 0px 0px 1px rgba(0, 0, 0, 0.12)
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.12)
 }
 
 .shadow-1,
@@ -95,7 +93,7 @@ figure {
 }
 
 .hoverable:hover {
-	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 1px 2px 6px 0px rgba(0, 0, 0, 0.12);
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 1px 2px 6px 0 rgba(0, 0, 0, 0.12);
 }
 
 .hoverable-1:hover {
@@ -104,7 +102,7 @@ figure {
 
 .hoverable {
 	transition: box-shadow 0.25s;
-	box-shadow: 0;
+	box-shadow: none;
 
 	&:hover {
 		transition: box-shadow 0.25s;
@@ -204,7 +202,7 @@ figure {
 
 	& .modal-content {
 		position: fixed;
-		bottom: 0px;
+		bottom: 0;
 		width: 100% !important;
 		/* height: 35%; */
 		-webkit-animation-name: animatebottom;
@@ -383,7 +381,6 @@ figure {
 	left: 50%;
 	top: 50%;
 	position: fixed;
-	-webkit-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 	z-index: 1000;
 }
@@ -392,60 +389,23 @@ figure {
 	box-sizing: border-box;
 	stroke: #673ab7;
 	stroke-width: 3px;
-	-webkit-transform-origin: 50%;
 	transform-origin: 50%;
-	-webkit-animation: line 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite, rotate 1.6s linear infinite;
 	animation: line 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite, rotate 1.6s linear infinite;
-}
-
-@-webkit-keyframes rotate {
-	from {
-		-webkit-transform: rotate(0);
-		transform: rotate(0);
-	}
-
-	to {
-		-webkit-transform: rotate(450deg);
-		transform: rotate(450deg);
-	}
 }
 
 @keyframes rotate {
 	from {
-		-webkit-transform: rotate(0);
 		transform: rotate(0);
 	}
 
 	to {
-		-webkit-transform: rotate(450deg);
 		transform: rotate(450deg);
-	}
-}
-
-@-webkit-keyframes line {
-	0% {
-		stroke-dasharray: 2, 85.964;
-		-webkit-transform: rotate(0);
-		transform: rotate(0);
-	}
-
-	50% {
-		stroke-dasharray: 65.973, 21.9911;
-		stroke-dashoffset: 0;
-	}
-
-	100% {
-		stroke-dasharray: 2, 85.964;
-		stroke-dashoffset: -65.973;
-		-webkit-transform: rotate(90deg);
-		transform: rotate(90deg);
 	}
 }
 
 @keyframes line {
 	0% {
 		stroke-dasharray: 2, 85.964;
-		-webkit-transform: rotate(0);
 		transform: rotate(0);
 	}
 
@@ -457,7 +417,6 @@ figure {
 	100% {
 		stroke-dasharray: 2, 85.964;
 		stroke-dashoffset: -65.973;
-		-webkit-transform: rotate(90deg);
 		transform: rotate(90deg);
 	}
 }
@@ -466,7 +425,6 @@ figure {
 
 table {
 	border-collapse: collapse;
-	border-spacing: 0;
 	background-color: transparent;
 	width: 100%;
 	text-align: center;
