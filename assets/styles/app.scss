@@ -11,6 +11,11 @@
 //         Helvetica, Arial, Courier New, sans-serif;
 // }
 
+//
+.fr-select-group:not(:last-child), .fr-input-group:not(:last-child) {
+    width: 100%;
+}
+
 /* FOOTER */
 
 .cs-footer {
