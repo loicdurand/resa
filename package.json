@@ -9,12 +9,13 @@
         "sass-loader": "^16.0.3",
         "webpack": "^5.74.0",
         "webpack-cli": "^5.1.0",
+        "webpack-dev-server": "^5.1.0",
         "webpack-notifier": "^1.15.0"
     },
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
-        "dev-server": "encore dev-server",
+        "dev-server": "encore dev-server --live-reload",
         "dev": "encore dev",
         "watch": "encore dev --watch --progress",
         "build": "encore production --progress",

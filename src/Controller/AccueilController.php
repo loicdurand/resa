@@ -36,7 +36,7 @@ class AccueilController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findAll();
 
-        return $this->render('accueil/liste.html.twig', array_merge($this->getAppConst(), [
+        return $this->render('accueil/accueil.html.twig', array_merge($this->getAppConst(), [
             'vehicules' => $vehicules,
         ]));
     }
