@@ -6,6 +6,8 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
 
+const BrowserSyncPlugin = require("browser-sync-webpack-plugin"); // Line to add
+
 Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
@@ -68,6 +70,34 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
-;
+
+    .addPlugin(new BrowserSyncPlugin(
+        {
+            host: "localhost",
+            port: 3000,
+            proxy: process.env.PROXY,
+            files: [
+                {
+                    match: ["src/*.php"],
+                },
+                {
+                    match: ["templates/*.twig"],
+                },
+                {
+                    match: ["assets/*.js"],
+                },
+                {
+                    match: ["assets/*.css"],
+                },
+            ],
+            notify: false,
+        },
+
+        {
+
+            reload: true,
+        }
+    ))
+    ;
 
 module.exports = Encore.getWebpackConfig();
