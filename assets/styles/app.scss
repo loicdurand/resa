@@ -11,6 +11,19 @@
 //         Helvetica, Arial, Courier New, sans-serif;
 // }
 
+/* FILTRES DE RECHERCHE */
+
+.cs-filtres-container {
+    top: 0;
+    left: 0;
+    color: red;
+    height: 180px;
+    width: 100%;
+    border: 1px solid;
+    position: fixed;
+    background: var(--grey-0);
+}
+
 /* FOOTER */
 
 .cs-footer {
@@ -65,6 +78,7 @@
 // CARD
 
 .cs-card {
+    border: 1px solid var(--grey-4);
     border-radius: 6px;
     padding: 0 !important;
     max-height: 140px;
@@ -96,9 +110,12 @@
         & .cs-marque {
             padding-left: 16px;
             margin-bottom: 0;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+            line-height: 1rem !important;
         }
 
-        & .cs-tags{
+        & .cs-tags {
             margin-bottom: -8px;
         }
 
@@ -109,5 +126,12 @@
             background-color: transparent;
             color: var(--text-default-grey);
         }
+    }
+}
+
+@media all and (min-width: 992px) {
+
+    .cs-filtres-container {
+        display: none;
     }
 }
