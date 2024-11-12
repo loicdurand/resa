@@ -15,7 +15,7 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
-        "dev-server": "encore dev-server --live-reload",
+        "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch --progress",
         "build": "encore production --progress",
