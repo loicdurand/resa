@@ -15,18 +15,32 @@
 	</nav>
 
 	{# Filtres de recherche #}
-	<div class="cs-filtres-container">
-		<div class="cs-date-ctnr">
-			<button class="cs-btn cs-btn--left hoverable">
+	<div id="hideOnScroll"
+		class="cs-filtres-container">
+
+		{# DE ... -> À ... #}
+		<div class="cs-btn-ctnr cs-date-ctnr">
+			<button class="cs-btn cs-btn-from-to cs-btn--left">
 				<span class="cs-from-to">DE</span>
 				<span class="cs-from-to-value">AUJ.</span>
 			</button>
 			<div class="separator"></div>
-			<button class="cs-btn cs-btn--right hoverable">
+			<button class="cs-btn cs-btn-from-to cs-btn--right">
 				<span class="cs-from-to">AU</span>
 				<span class="cs-from-to-value">DEMAIN</span>
 			</button>
 		</div>
+
+		{# TAGS #}
+		<div class="cs-btn-ctnr cs-tags-ctnr">
+			<button class="cs-btn cs-btn-tag cs-btn-tag--left">
+				<span class="cs-tag">Catégorie</span>
+			</button>
+			<button class="cs-btn cs-btn-tag cs-btn-tag--right">
+				<span class="cs-tag">transmission</span>
+			</button>
+		</div>
+
 	</div>
 
 	<div class="fr-grid-row fr-grid-row--gutters cs-main">

@@ -20,20 +20,32 @@
     width: 100%;
     border-bottom: 1px solid var(--grey-4);
     position: fixed;
-    background: var(--grey-0);
+    background: transparent;
     padding: 8px;
     z-index: 1;
+    transition: all 350ms cubic-bezier(.70, 0, .34, 1);
 
-    & .cs-date-ctnr {
-        height: 5rem;
+    &.hiddenOnScroll{
+        top: -10rem;
+    }
+
+    & .cs-btn-ctnr {
         position: relative;
+
+        &.cs-date-ctnr {
+            height: 5rem;
+        }
+
+        &.cs-tags-ctnr {
+            height: 3rem;
+            margin-top: 1rem;
+        }
 
         & .cs-btn {
             float: left;
-            width: 50%;
             border: 1px solid var(--grey-5);
             height: 100%;
-            line-height: 4.5rem;
+            background-color: var(--grey-0);
             font-size: 1rem;
             text-align: center;
             font-weight: 500;
@@ -41,6 +53,23 @@
             transition: all 0.3s ease;
             box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
             outline: none;
+            position: relative;
+
+            &.cs-btn-from-to {
+                line-height: 4.5rem;
+                width: 50%;
+
+            }
+
+            &.cs-btn-tag {
+                width: 45%;
+                margin-left: 2.5%;
+                border-radius: 6px;
+
+                &.cs-btn-tag--right {
+                    margin-left: 5%;
+                }
+            }
 
             &:after {
                 position: absolute;
@@ -60,7 +89,7 @@
             }
 
             &:hover {
-                color: #000;
+                color: var(--grey-10);
             }
 
             &:hover:after {
@@ -107,7 +136,9 @@
             position: absolute;
             left: 50%;
             top: 20%;
+            z-index: 1;
         }
+
     }
 }
 
