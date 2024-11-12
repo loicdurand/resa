@@ -3,7 +3,7 @@
 {% block body %}
 
 	{# Fil d'Arianne #}
-	<nav role="navigation" class="hide-s fr-breadcrumb" aria-label="vous êtes ici :">
+	<nav role="navigation" class="hide-s hide-m fr-breadcrumb" aria-label="vous êtes ici :">
 		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d’Ariane</button>
 		<div class="fr-collapse" id="breadcrumb-1">
 			<ol class="fr-breadcrumb__list">
@@ -15,8 +15,18 @@
 	</nav>
 
 	{# Filtres de recherche #}
-	<div class="cs-filtres-container hidden">
-		test
+	<div class="cs-filtres-container">
+		<div class="cs-date-ctnr">
+			<button class="cs-btn cs-btn--left">
+				<span class="cs-from-to">DE</span>
+				<span class="cs-from-to-value">AUJ.</span>
+			</button>
+			<div class="separator"></div>
+			<button class="cs-btn cs-btn--right">
+				<span class="cs-from-to">AU</span>
+				<span class="cs-from-to-value">DEMAIN</span>
+			</button>
+		</div>
 	</div>
 
 	<div class="fr-grid-row fr-grid-row--gutters cs-main">

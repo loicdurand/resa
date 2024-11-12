@@ -16,16 +16,68 @@
 .cs-filtres-container {
     top: 0;
     left: 0;
-    color: red;
     height: 10rem;
     width: 100%;
-    border: 1px solid;
+    border-bottom: 1px solid var(--grey-4);
     position: fixed;
     background: var(--grey-0);
+    padding: 8px;
+    z-index: 1;
+
+    & .cs-date-ctnr {
+        height: 5rem;
+        position: relative;
+
+        & .cs-btn {
+            float: left;
+            width: 50%;
+            border: 1px solid;
+            height: 100%;
+            line-height: 4.5rem;
+            font-size: 1rem;
+            text-align: center;
+            font-weight: 500;
+
+            &.cs-btn--left {
+                border-right: none;
+                border-radius: 6px 0 0 6px;
+            }
+
+            &.cs-btn--right {
+                border-left: none;
+                border-radius: 0px 6px 6px 0px;
+            }
+
+            & .cs-from-to {
+                height: 100%;
+                float: left;
+                width: 30%;
+                margin-left: -6px;
+                font-size: .8rem;
+                font-style: italic;
+            }
+
+            & .cs-from-to-value {
+                font-size: 1.2rem;
+                font-weight: 900;
+            }
+        }
+
+        & .separator {
+            content: "";
+            width: 2px;
+            height: 60%;
+            display: block;
+            background: var(--grey-5);
+            position: absolute;
+            left: 50%;
+            top: 20%;
+        }
+    }
 }
 
-.cs-main{
-    margin-top: 20.5rem !important;
+.cs-main {
+    margin-top: 10.5rem !important;
 }
 
 /* FOOTER */
@@ -136,6 +188,14 @@
 @media all and (min-width: 992px) {
 
     .cs-filtres-container {
-        display: none;
+        position: relative;
+        display: block;
+        margin-top: 1rem;
+        padding: 0;
+        border: none;
+    }
+
+    .cs-main {
+        margin-top: 1rem !important;
     }
 }
