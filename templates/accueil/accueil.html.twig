@@ -17,12 +17,12 @@
 	{# Filtres de recherche #}
 	<div class="cs-filtres-container">
 		<div class="cs-date-ctnr">
-			<button class="cs-btn cs-btn--left">
+			<button class="cs-btn cs-btn--left hoverable">
 				<span class="cs-from-to">DE</span>
 				<span class="cs-from-to-value">AUJ.</span>
 			</button>
 			<div class="separator"></div>
-			<button class="cs-btn cs-btn--right">
+			<button class="cs-btn cs-btn--right hoverable">
 				<span class="cs-from-to">AU</span>
 				<span class="cs-from-to-value">DEMAIN</span>
 			</button>
@@ -31,7 +31,8 @@
 
 	<div class="fr-grid-row fr-grid-row--gutters cs-main">
 
-		<p class="cs-nb-vehicules fr-col-sm-12 fr-h6">{{ vehicules|length }}&nbsp;véhicules disponibles.</p>
+		<p class="cs-nb-vehicules fr-col-sm-12 fr-h6">{{ vehicules|length }}&nbsp;véhicule{{ vehicules|length > 1 ? 's' : '' }}
+			disponible{{ vehicules|length>1 ? 's' : '' }}.</p>
 
 		{% for vehicule in vehicules %}
 
@@ -60,7 +61,7 @@
 								</li>
 							</ul>
 						</dd>
-						<dd>
+						<dd title="{{vehicule.NbPlaces}} place{{vehicule.NbPlaces > 1 ? 's' : ''}}">
 							{% for i in range(1, vehicule.NbPlaces) %}
 								<i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
 							{% endfor %}

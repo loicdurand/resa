@@ -84,7 +84,7 @@ class Vehicule
 
     public function setMarque(string $marque): static
     {
-        $this->marque = $marque;
+        $this->marque = strtoupper($marque);
 
         return $this;
     }
