@@ -90,16 +90,16 @@ Encore
             proxy: process.env.PROXY,
             files: [
                 {
-                    match: ["src/*.php"],
+                    match: ["src/**/*.php"],
                 },
                 {
-                    match: ["templates/*.twig"],
+                    match: ["templates/**/*.twig"],
                 },
                 {
-                    match: ["assets/*.js"],
+                    match: ["assets/**/*.js"],
                 },
                 {
-                    match: ["assets/*.css"],
+                    match: ["assets/**/*.css"],
                 },
             ],
             notify: false,

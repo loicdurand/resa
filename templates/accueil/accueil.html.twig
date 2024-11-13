@@ -20,7 +20,7 @@
 
 		{# DE ... -> À ... #}
 		<div class="cs-btn-ctnr cs-date-ctnr">
-			<button class="cs-btn cs-btn-from-to cs-btn--left" data-fr-opened="false" aria-controls="fr-modal--from-to">
+			<button class="cs-btn cs-btn-from-to cs-btn--left" data-fr-opened="true" aria-controls="fr-modal--from-to">
 				<span class="cs-from-to">DE</span>
 				<span class="cs-from-to-value">AUJ.</span>
 			</button>
@@ -96,26 +96,62 @@
 			<div class="fr-grid-row fr-grid-row--center">
 				<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
 					<div class="fr-modal__body">
-						<div class="fr-modal__header">
-							<button class="fr-btn--close fr-btn" aria-controls="fr-modal--from-to">Fermer</button>
-						</div>
-						<div class="fr-modal__content">
-							<h1 id="fr-modal--from-to-title" class="fr-modal__title">
-								<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
-								Confirmer
-							</h1>
-							<p>
-								Vous allez réinitialiser le formulaire.
-								<br/>
-								Tous les champs remplis précédemment vont être effacés.
-								<br/>
-								Cliquez sur le bouton ci-dessous pour confirmer cette action.
-							</p>
+
+						<div
+							class="fr-mt-2w fr-modal__content">
+							{# stepper #}
+							<div id="fr-modal--from-to-title" class="fr-stepper">
+								<h2 class="fr-stepper__title">
+									Début de la réservation
+									<span class="fr-stepper__state">Étape 1 sur 2</span>
+								</h2>
+								<div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="2"></div>
+								<p class="fr-stepper__details">
+									<span class="fr-text--bold">Étape suivante :</span>
+									Fin de la réservation
+								</p>
+							</div>
+							{# fin stepper #}
+
+							<div class="fr-grid-row">
+								<div class="fr-select-group fr-col-sm-12">
+									<label class="fr-label" for="select-hint">Date
+									</label>
+									<select class="fr-select" id="select-hint" name="select-hint">
+										<option value="{{'now'| date('Y-m-d')}}" selected disabled hidden>Aujourd'hui</option>
+										{% set tomorrow = 'now'|date_modify("+1 day") %}
+										<option value="{{ tomorrow|date('Y-m-d') }}">Demain</option>
+										{% for i in range(0, 4) %}
+											{% set tomorrow = tomorrow|date_modify("+1 day") %}
+											<option value="{{ tomorrow|date('Y-m-d') }}">{{ tomorrow|date('d/m/Y') }}</option>
+										{% endfor %}
+
+									</select>
+								</div>
+								<div class="fr-select-group fr-col-sm-6 fr-pl-1w">
+									<label class="fr-label" for="select-hint">Heure
+									</label>
+									<select class="fr-select" id="select-hint" name="select-hint">
+										<option value="1" selected>08</option>
+										<option value="2">09</option>
+										<option value="3">10</option>
+										<option value="4">11</option>
+									</select>
+								</div>
+								<div class="fr-select-group fr-select-group--disabled fr-col-sm-6 fr-pl-1w cs-select-minutes">
+									<label class="fr-label" for="select-hint">&nbsp;
+									</label>
+									<select disabled class="fr-select" id="select-hint" name="select-hint">
+										<option value="00" selected disabled hidden>00</option>
+									</select>
+								</div>
+							</div>
+
 						</div>
 						<div class="fr-modal__footer">
-							<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-								<button type="reset" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary" aria-controls="fr-modal--from-to">
-									Réinitialiser le formulaire
+							<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-right">
+								<button type="button" class="fr-btn--close fr-btn fr-icon-arrow-right-line fr-btn--icon-right fr-btn--secondary">
+									Suivant
 								</button>
 
 							</div>

@@ -25,7 +25,7 @@
     z-index: 1;
     transition: all 350ms cubic-bezier(.70, 0, .34, 1);
 
-    &.hiddenOnScroll{
+    &.hiddenOnScroll {
         top: -10rem;
     }
 
@@ -248,6 +248,24 @@
             background-color: transparent;
             color: var(--text-default-grey);
         }
+    }
+}
+
+// MODALES 
+
+.cs-select-minutes {
+    & .fr-select:disabled {
+        color: var(--text-default-grey) !important;
+        background: none;
+        opacity: 1;
+    }
+
+    &:before {
+        content: ":";
+        position: absolute;
+        left: 0;
+        top: 2.5rem;
+        font-weight: 900;
     }
 }
 
