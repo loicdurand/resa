@@ -1,5 +1,7 @@
 const Encore = require('@symfony/webpack-encore');
 const path = require('path');
+const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
+require("dotenv").config();
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -81,6 +83,33 @@ Encore
             paths: ['src/**/*.php', 'templates/**/*'],
         };
     })
+    .addPlugin(new BrowserSyncPlugin(
+        {
+            host: "localhost",
+            port: 3000,
+            proxy: process.env.PROXY,
+            files: [
+                {
+                    match: ["src/*.php"],
+                },
+                {
+                    match: ["templates/*.twig"],
+                },
+                {
+                    match: ["assets/*.js"],
+                },
+                {
+                    match: ["assets/*.css"],
+                },
+            ],
+            notify: false,
+        },
+
+        {
+
+            reload: true,
+        }
+    ))
     ;
 
 module.exports = Encore.getWebpackConfig();
