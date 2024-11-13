@@ -9,6 +9,10 @@ use App\Entity\GenreVehicule;
 use App\Entity\Permission;
 use App\Entity\CarburantVehicule;
 use App\Entity\TransmissionVehicule;
+use App\Entity\Atelier;
+use App\Entity\HoraireOuverture;
+
+use App\Entity\Vehicule;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -129,6 +133,8 @@ class AppFixtures extends Fixture
             ['VTSU',    'Véhicules très spécialisés à usage divers', 100]
         ];
 
+        $genrs = [];
+
         foreach ($genres as $genre) {
             [$code, $libelle, $ordre] = $genre;
             $entity = new GenreVehicule();
@@ -137,6 +143,8 @@ class AppFixtures extends Fixture
             $entity->setOrdre($ordre);
             $manager->persist($entity);
             $manager->flush();
+            if ($code === 'CTTE' || $code === 'VP')
+                $genrs[] = $entity;
         }
 
         $categories = [
@@ -147,11 +155,14 @@ class AppFixtures extends Fixture
             'Minibus'
         ];
 
+        $cats = [];
+
         foreach ($categories as $categorie) {
             $entity = new CategorieVehicule();
             $entity->setLibelle($categorie);
             $manager->persist($entity);
             $manager->flush();
+            $cats[] = $entity;
         }
 
         $carburants = [
@@ -173,12 +184,15 @@ class AppFixtures extends Fixture
             ]
         ];
 
+        $carbs = [];
+
         foreach ($carburants as $carburant) {
             $entity = new CarburantVehicule();
             $entity->setCode($carburant['code']);
             $entity->setLibelle($carburant['libelle']);
             $manager->persist($entity);
             $manager->flush();
+            $carbs[] = $entity;
         }
 
         $transmissions = [
@@ -192,11 +206,69 @@ class AppFixtures extends Fixture
             ]
         ];
 
+        $transms = [];
+
         foreach ($transmissions as $transmission) {
             $entity = new TransmissionVehicule();
             $entity->setCode($transmission['code']);
             $entity->setLibelle($transmission['libelle']);
             $manager->persist($entity);
+            $manager->flush();
+            $transms[] = $entity;
+        }
+
+        $atelier = new Atelier();
+        $atelier->setCodeUnite('00056751');
+        $atelier->setNomCourt('CSAG 971');
+        $atelier->setNomLong('Centre de Soutien Automobile de la Gendarmerie de Baie-Mahault');
+        $manager->persist($atelier);
+        $manager->flush();
+
+        $jours_ouvrables = ['LU', 'MA', 'ME', 'JE', 'VE'];
+        foreach ($jours_ouvrables as $jour) {
+            for ($i = 0; $i <= 1; $i++) {
+                $horaire = new HoraireOuverture();
+                $horaire->setCodeUnite($atelier);
+                $horaire->setJour($jour);
+                if ($i === 0) {
+                    $horaire->setCreneau('MA');
+                    $horaire->setDebut('08:00');
+                    $horaire->setFin('12:00');
+                } else {
+                    $horaire->setCreneau('AP');
+                    $horaire->setDebut('14:00');
+                    $horaire->setFin('17:00');
+                }
+                $manager->persist($horaire);
+                $manager->flush();
+            }
+        }
+
+
+        $vls = [
+            [$genrs[1], $cats[4], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'AB-123-CD', 0],
+            [$genrs[1], $cats[1], $carbs[1], $transms[0], 'MERCEDES', 'GLA', '200 CDI', 'ELEGANCE', '2025-03-11', 5, 'AB-123-CE', 0],
+            [$genrs[1], $cats[0], $carbs[0], $transms[1], 'RENAULT', 'Clio', '1.0 SCe 60', null, '2024-12-11', 5, 'AB-123-CF', 1],
+            [$genrs[1], $cats[2], $carbs[1], $transms[0], 'BMW', 'X4', '30D', null, '2025-07-12', 4, 'AB-123-CG', 0],
+            [$genrs[0], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', null, null, '2025-03-06', 3, 'AB-123-CH', 0]
+        ];
+
+        foreach ($vls as $vl) {
+            [$gre, $cat, $carb, $tr, $marque, $modele, $mot, $finit, $ct, $pl, $immat, $serig] = $vl;
+            $VL = new Vehicule();
+            $VL->setGenre($gre);
+            $VL->setCategorie($cat);
+            $VL->setCarburant($carb);
+            $VL->setTransmission($tr);
+            $VL->setMarque($marque);
+            $VL->setModele($modele);
+            $VL->setMotorisation($mot);
+            $VL->setFinition($finit);
+            $VL->setControleTechnique(\DateTime::createFromFormat('Y-m-d H:i:s', $ct . ' 23:59:59'));
+            $VL->setNbPlaces($pl);
+            $VL->setImmatriculation($immat);
+            $VL->setSerigraphie($serig);
+            $manager->persist($VL);
             $manager->flush();
         }
     }
