@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-namespace App\Controller; 
+namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -12,11 +12,12 @@ use App\Entity\Action;
 use App\Entity\CarburantVehicule;
 use App\Entity\CategorieVehicule;
 use App\Entity\GenreVehicule;
+use App\Entity\HoraireOuverture;
 use App\Entity\Permission;
 use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
 use App\Form\VehiculeType;
-
+use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -36,8 +37,29 @@ class AccueilController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findAll();
 
+        $horaires = $em
+            ->getRepository(HoraireOuverture::class)
+            ->findAll();
+
+
+        $dates = [];
+        $now = new \DateTime('now');
+        $max = new \DateTime('now');
+        $max->modify('+ 3 months');
+        for ($i = 0; $now->format("Y-m-d") !== $max->format("Y-m-d"); $i++) {
+            $fr_date = $this->FR($now->format('Y-m-d'));
+            $atelier_ouvert = $this->getHorairesByDay(substr($fr_date, 0, 2), $horaires);
+            $dates[] = [
+                'en' => $now->format('Y-m-d'),
+                'fr' => $i === 0 ? 'Aujourd\'hui' : $fr_date,
+                'horaires' => $atelier_ouvert
+            ];
+            $now->modify('+ 1 days');
+        }
+
         return $this->render('accueil/accueil.html.twig', array_merge($this->getAppConst(), [
             'vehicules' => $vehicules,
+            'dates' => $dates
         ]));
     }
 
@@ -53,9 +75,34 @@ class AccueilController extends AbstractController
     private function setAppConst()
     {
         $this->app_const = [];
-        foreach (['app.name', 'app.tagline', 'app.slug'] as $param) {
+        foreach (['app.name', 'app.tagline', 'app.slug', 'app.max_nb_mois_reservation'] as $param) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
+    }
+
+    private function FR(String $date)
+    {
+        $days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+        $months = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+        $dt = new \DateTime($date . ' 08:00:00');
+        $dow = intval($dt->format('w'));
+        $d  = $dt->format('d');
+        $m = intval($dt->format('m'));
+        $Y = $dt->format('Y');
+        return $days[$dow] . ' ' . $d . ' ' . $months[$m] . ' ' . $Y;
+    }
+
+    private function getHorairesByDay(String $day, array $horaires)
+    {
+        $out = [];
+        $day = strtoupper($day);
+        foreach ($horaires as $horaire) {
+            if ($day == $horaire->getJour()) {
+                $out[$horaire->getCreneau()] = $horaire->getDebut().'-'.$horaire->getFin();
+            }
+        }
+
+        return $out;
     }
 }

@@ -231,11 +231,11 @@ class AppFixtures extends Fixture
                 $horaire->setCodeUnite($atelier);
                 $horaire->setJour($jour);
                 if ($i === 0) {
-                    $horaire->setCreneau('MA');
+                    $horaire->setCreneau('AM');
                     $horaire->setDebut('08:00');
                     $horaire->setFin('12:00');
                 } else {
-                    $horaire->setCreneau('AP');
+                    $horaire->setCreneau('PM');
                     $horaire->setDebut('14:00');
                     $horaire->setFin('17:00');
                 }

@@ -1,6 +1,6 @@
-import '@gouvfr/dsfr/dist/dsfr.css';
-import "@gouvfr/dsfr/dist/utility/icons/icons.main.min.css";
-import "@gouvfr/dsfr/dist/dsfr/dsfr.module";
+import '/node_modules/@gouvfr/dsfr/dist/dsfr.css';
+import "/node_modules/@gouvfr/dsfr/dist/utility/icons/icons.main.min.css";
+import "/node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module";
 
 import './styles/app.scss';
 
@@ -12,7 +12,7 @@ const //
     return document.querySelector(selector);
   };
 
-// bouton "retour en haut de page"
+// masquage des filtres de recherche au SCROLL
 onReady('#hideOnScroll').then(elt => {
 
   elt.addEventListener('click', () => {
@@ -35,5 +35,15 @@ onReady('#hideOnScroll').then(elt => {
     }
   });
 
-
 });
+
+onReady('#select-from-date').then(elt => {
+  elt.addEventListener('change', ({ target }) => {
+    const // 
+      option = target.options[target.selectedIndex],
+      { text, value, dataset: { AM, PM } } = option,
+      trigger = document.getElementById('select-from-date--target');
+    trigger.innerText = text;
+
+  })
+})
