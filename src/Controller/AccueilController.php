@@ -51,7 +51,8 @@ class AccueilController extends AbstractController
             $atelier_ouvert = $this->getHorairesByDay(substr($fr_date, 0, 2), $horaires);
             $dates[] = [
                 'en' => $now->format('Y-m-d'),
-                'fr' => $i === 0 ? 'Aujourd\'hui' : $fr_date,
+                'fr' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' : $fr_date),
+                'short' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' :/*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
                 'horaires' => $atelier_ouvert
             ];
             $now->modify('+ 1 days');
@@ -99,7 +100,7 @@ class AccueilController extends AbstractController
         $day = strtoupper($day);
         foreach ($horaires as $horaire) {
             if ($day == $horaire->getJour()) {
-                $out[$horaire->getCreneau()] = $horaire->getDebut().'-'.$horaire->getFin();
+                $out[$horaire->getCreneau()] = $horaire->getDebut() . '-' . $horaire->getFin();
             }
         }
 

@@ -21,13 +21,17 @@
 		{# DE ... -> À ... #}
 		<div class="cs-btn-ctnr cs-date-ctnr">
 			<button class="cs-btn cs-btn-from-to cs-btn--left" data-fr-opened="true" aria-controls="fr-modal--from-to">
-				<span class="cs-from-to">DE</span>
-				<span id="select-from-date--target" class="cs-from-to-value">Aujourd'hui</span>
+				<span class="cs-from-to">Début</span>
+				<span id="select-from-date--target" class="cs-from-to-value">
+					<span class="hide-s hide-m">Aujourd'hui</span>
+					<span class="hide-l hide-xl">Aujourd'hui</span>
+					<span id="select-from-heure--target"></span>
+				</span>
 			</button>
 			<div class="separator"></div>
 			<button class="cs-btn cs-btn-from-to cs-btn--right" data-fr-opened="false" aria-controls="fr-modal--from-to">
-				<span class=" cs-from-to">AU</span>
-				<span id="select-to-date--target" class="cs-from-to-value">DEMAIN</span>
+				<span class=" cs-from-to">Fin</span>
+				<span id="select-to-date--target" class="cs-from-to-value">Demain</span>
 			</button>
 		</div>
 
@@ -106,21 +110,15 @@
 									<span class="fr-stepper__state">Étape 1 sur 2</span>
 								</h2>
 								<div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="2"></div>
-								{# <p class="fr-stepper__details">
-																																									<span class="fr-text--bold">Étape suivante :</span>
-																																									Fin de la réservation
-																																								</p> #}
 							</div>
-							{# fin stepper #}
 
-							<div class="fr-grid-row">
+							<div class="fr-grid-row fr-mt-1w">
 								<div class="fr-select-group fr-col-6 fr-col-sm-6">
 									<label class="fr-label" for="select-from-date">Date
 									</label>
 									<select class="fr-select" id="select-from-date" name="select-from-date">
 										{% for i, date in dates %}
-
-											<option data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="Le CSAG n\'est pas ouvert à cette date"':''}} value="{{ date.en }} ">
+											<option data-short={{date.short}} data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':''}} value="{{ date.en }} ">
 												{{ date.fr }}
 											</option>
 										{% endfor %}
@@ -128,20 +126,17 @@
 									</select>
 								</div>
 								<div class=" fr-select-group fr-col fr-col-sm-3 fr-pl-1w">
-									<label class="fr-label" for="select-from-date">Heure
+									<label class="fr-label" for="select-from-heure">Heure
 									</label>
-									<select class="fr-select" id="select-hint" name="select-hint">
-										<option value="1" selected>08</option>
-										<option value="2">09</option>
-										<option value="3">10</option>
-										<option value="4">11</option>
+									<select class="fr-select" id="select-from-heure" name="select-from-heure">
+										<option value="08" selected>08</option>
 									</select>
 								</option>
 							</div>
 							<div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-3 fr-pl-1w cs-select-minutes">
-								<label class="fr-label" for="select-hint">&nbsp;
+								<label class="fr-label" for="select-from-minute">&nbsp;
 								</label>
-								<select disabled class="fr-select" id="select-hint" name="select-hint">
+								<select disabled class="fr-select" id="select-from-minute" name="select-from-minute">
 									<option value="00" selected disabled hidden>00</option>
 								</select>
 							</div>
