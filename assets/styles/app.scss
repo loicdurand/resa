@@ -269,6 +269,12 @@
     }
 }
 
+.cs-btns-group {
+    position: absolute;
+    bottom: 0;
+    right: 1rem;
+}
+
 @media all and (min-width: 992px) {
 
     .cs-filtres-container {

@@ -43,13 +43,28 @@ class AccueilController extends AbstractController
 
 
         $dates = [];
+        $dates_fin = [];
         $now = new \DateTime('now');
         $max = new \DateTime('now');
         $max->modify('+ 3 months');
+        $max_date = $max->format("Y-m-d");
+        $max->modify('+ 3 weeks');
+        $ok = false;
         for ($i = 0; $now->format("Y-m-d") !== $max->format("Y-m-d"); $i++) {
             $fr_date = $this->FR($now->format('Y-m-d'));
             $atelier_ouvert = $this->getHorairesByDay(substr($fr_date, 0, 2), $horaires);
-            $dates[] = [
+            if ($now->format("Y-m-d") === $max_date)
+                $ok = true;
+
+            if (!$ok)
+                $dates[] = [
+                    'en' => $now->format('Y-m-d'),
+                    'fr' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' : $fr_date),
+                    'short' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' :/*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
+                    'horaires' => $atelier_ouvert
+                ];
+
+            $dates_fin[] = [
                 'en' => $now->format('Y-m-d'),
                 'fr' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' : $fr_date),
                 'short' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' :/*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
@@ -60,7 +75,8 @@ class AccueilController extends AbstractController
 
         return $this->render('accueil/accueil.html.twig', array_merge($this->getAppConst(), [
             'vehicules' => $vehicules,
-            'dates' => $dates
+            'dates' => $dates,
+            'dates_fin' => $dates_fin
         ]));
     }
 
