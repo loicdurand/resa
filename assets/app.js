@@ -187,10 +187,7 @@ onReady('#select-from-date').then(elt => {
 
     };
 
-  // simule une sélection de date pour MAJ des créneaux horaires
-  //manage_select_from({ target: select_from_date }, 'aujourd_hui');
   init();
-
 
   select_from_date.addEventListener('change', ({ target }) => {
     const option = target.options[target.selectedIndex];
@@ -198,11 +195,13 @@ onReady('#select-from-date').then(elt => {
     targets.date_debut[0].innerText = option.innerText;
     targets.date_debut[1].innerText = option.dataset.short;
   });
-  // select_to_date.addEventListener('change', ({ target }) => {
-  //   const option = target.options[target.selectedIndex];
-  //   add_options(option);
-  // });
 
+  select_to_date.addEventListener('change', ({ target }) => {
+    const option = target.options[target.selectedIndex];
+    add_options(option);
+    targets.date_fin[0].innerText = option.innerText;
+    targets.date_fin[1].innerText = option.dataset.short;
+  });
 
   select_from_heure.addEventListener('change', ({ target }) => {
     const // 
