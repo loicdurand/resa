@@ -23,8 +23,8 @@
 			<button class="cs-btn cs-btn-from-to cs-btn--left" data-fr-opened="true" aria-controls="fr-modal--from-to">
 				<span class="cs-from-to">Début</span>
 				<span id="select-from-date--target" class="cs-from-to-value">
-					<span class="hide-s hide-m">Aujourd'hui</span>
-					<span class="hide-l hide-xl">Aujourd'hui</span>
+					<span class="hidden">Aujourd'hui</span>
+					<span class="">Aujourd'hui</span>
 					<span id="select-from-heure--target"></span>
 				</span>
 			</button>
@@ -32,8 +32,8 @@
 			<button class="cs-btn cs-btn-from-to cs-btn--right" data-fr-opened="false" aria-controls="fr-modal--from-to">
 				<span class=" cs-from-to">Fin</span>
 				<span id="select-to-date--target" class="cs-from-to-value">
-					<span class="hide-s hide-m">Demain</span>
-					<span class="hide-l hide-xl">Demain</span>
+					<span class="hidden">Demain</span>
+					<span class="">Demain</span>
 					<span id="select-to-heure--target"></span>
 				</span>
 			</button>
@@ -175,7 +175,7 @@
 								</label>
 								<select class="fr-select" id="select-to-date" name="select-to-date">
 									{% for i, date in dates_fin %}
-										<option data-short={{date.short}} data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':''}} value="{{ date.en }} ">
+										<option data-short={{date.short}} data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':''}} value="{{ date.en }}">
 											{{ date.fr }}
 										</option>
 									{% endfor %}

@@ -101,7 +101,8 @@ onReady('#select-from-date').then(elt => {
           targets.heure_debut.innerText = opt.innerText + ':00';
           targets.heure_fin.innerText = addZeros(+opt.value + 1, 2) + ':00';
         }
-        select_heure.appendChild(opt);
+        if (from_ou_to === 'from')
+          select_heure.appendChild(opt);
 
         const opt_to = document.createElement('option');
         opt_to.value = i + 1;
@@ -189,11 +190,49 @@ onReady('#select-from-date').then(elt => {
 
   init();
 
-  select_from_date.addEventListener('change', ({ target }) => {
-    const option = target.options[target.selectedIndex];
-    add_options(option);
-    targets.date_debut[0].innerText = option.innerText;
-    targets.date_debut[1].innerText = option.dataset.short;
+  [select_from_date/*, select_from_heure*/].forEach(elt => {
+    elt.addEventListener('change', ({ target }) => {
+      console.log('change');
+      const // 
+        [, , date_ou_heure] = target.id.split(/_/g),
+        option = select_from_date.options[select_from_date.selectedIndex];
+      if (date_ou_heure == 'date')
+        add_options(option);
+      targets.date_debut[0].innerText = option.innerText;
+      targets.date_debut[1].innerText = option.dataset.short;
+      // si je change la date de début, je décalle la date de fin pour qu'elle ne soit jamais antérieure
+      const //
+        { value } = option,
+        next_date = select_to_date.options[select_to_date.selectedIndex].value,
+        next_heure = addZeros(select_to_heure.options[select_to_heure.selectedIndex].value, 2),
+        iNext = +`${next_date.replace(/-/g, '')}${next_heure.replace(/:/g, '')}`,
+        curr_date = option.value,
+        curr_heure = addZeros(select_to_heure.options[select_to_heure.selectedIndex].value, 2),
+        iCurr = +`${curr_date.replace(/-/g, '')}${curr_heure.replace(/:/g, '')}`;
+
+      if (iNext >= iCurr)
+        return true;
+
+      let done = false;
+      [...select_to_date.options].forEach(opt => {
+        if (opt.value === value) {
+          opt.setAttribute('selected', 'selected');
+          const // 
+            heure_debut = select_from_heure.options[select_from_heure.selectedIndex],
+            heure_mini = +heure_debut.value;
+          [...select_to_heure.options].forEach(heure => {
+            if (+heure.value < heure_mini) {
+              heure.removeAttribute('selected');
+            } else if (!done) {
+              heure.setAttribute('selected', 'selected');
+              done = true;
+            }
+          })
+        } else {
+          opt.removeAttribute('selected');
+        }
+      });
+    })
   });
 
   select_to_date.addEventListener('change', ({ target }) => {
@@ -201,6 +240,42 @@ onReady('#select-from-date').then(elt => {
     add_options(option);
     targets.date_fin[0].innerText = option.innerText;
     targets.date_fin[1].innerText = option.dataset.short;
+    // si je change la date de fin, je décalle la date de début pour qu'elle ne soit jamais postérieure
+    const //
+      { value } = option,
+      prev_date = select_from_date.options[select_from_date.selectedIndex].value,
+      prev_heure = addZeros(select_from_heure.options[select_from_heure.selectedIndex].value, 2),
+      iPrev = +`${prev_date.replace(/-/g, '')}${prev_heure.replace(/:/g, '')}`,
+      curr_date = option.value,
+      curr_heure = addZeros(select_to_heure.options[select_to_heure.selectedIndex].value, 2),
+      iCurr = +`${curr_date.replace(/-/g, '')}${curr_heure.replace(/:/g, '')}`;
+
+    if (iPrev < iCurr)
+      return true;
+
+    let done = false;
+    [...select_from_date.options].forEach(opt => {
+      if (opt.value === value) {
+        opt.setAttribute('selected', 'selected');
+        const // 
+          heure_fin = select_to_heure.options[select_to_heure.selectedIndex],
+          heure_maxi = +heure_fin.value - 1;
+        [...select_from_heure.options].forEach(heure => {
+          if (+heure.value >= heure_maxi) {
+            heure.removeAttribute('selected');
+          } else if (!done) {
+            heure.setAttribute('selected', 'selected');
+            done = true;
+          }
+        });
+      } else {
+        opt.removeAttribute('selected');
+      }
+    });
+    if (!done) {
+      select_from_date.options[select_from_date.selectedIndex - 1].setAttribute('selected', 'selected');
+      select_from_heure.options[select_from_heure.length - 1].setAttribute('selected', 'selected')
+    }
   });
 
   select_from_heure.addEventListener('change', ({ target }) => {

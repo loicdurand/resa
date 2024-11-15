@@ -60,14 +60,14 @@ class AccueilController extends AbstractController
                 $dates[] = [
                     'en' => $now->format('Y-m-d'),
                     'fr' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' : $fr_date),
-                    'short' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' :/*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
+                    'short' => $i === 0 ? 'Auj.' : ($i === 1 ? 'Demain' :/*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
                     'horaires' => $atelier_ouvert
                 ];
 
             $dates_fin[] = [
                 'en' => $now->format('Y-m-d'),
                 'fr' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' : $fr_date),
-                'short' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' :/*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
+                'short' => $i === 0 ? 'Auj.' : ($i === 1 ? 'Demain' :/*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
                 'horaires' => $atelier_ouvert
             ];
             $now->modify('+ 1 days');
