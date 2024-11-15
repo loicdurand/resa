@@ -83,33 +83,33 @@ Encore
             paths: ['src/**/*.php', 'templates/**/*'],
         };
     })
-    .addPlugin(new BrowserSyncPlugin(
-        {
-            host: "localhost",
-            port: 3000,
-            proxy: process.env.PROXY,
-            files: [
-                {
-                    match: ["src/**/*.php"],
-                },
-                {
-                    match: ["templates/**/*.twig"],
-                },
-                {
-                    match: ["assets/**/*.js"],
-                },
-                {
-                    match: ["assets/**/*.css"],
-                },
-            ],
-            notify: false,
-        },
+    // .addPlugin(new BrowserSyncPlugin(
+    //     {
+    //         host: "localhost",
+    //         port: 3000,
+    //         proxy: process.env.PROXY,
+    //         files: [
+    //             {
+    //                 match: ["src/**/*.php"],
+    //             },
+    //             {
+    //                 match: ["templates/**/*.twig"],
+    //             },
+    //             {
+    //                 match: ["assets/**/*.js"],
+    //             },
+    //             {
+    //                 match: ["assets/**/*.css"],
+    //             },
+    //         ],
+    //         notify: false,
+    //     },
 
-        {
+    //     {
 
-            reload: true,
-        }
-    ))
+    //         reload: true,
+    //     }
+    // ))
     ;
 
 module.exports = Encore.getWebpackConfig();

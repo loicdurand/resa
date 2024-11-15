@@ -4,7 +4,9 @@ import "/node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module";
 
 import './styles/app.scss';
 
-import { addZeros } from './js/utils';
+import { addZeros, time, add1Day } from './js/utils';
+
+console.clear();
 
 const //
   scrollLen = 160,
@@ -67,20 +69,52 @@ onReady('#select-from-date').then(elt => {
     step1 = document.getElementById('step-1'),
     step2 = document.getElementById('step-2'),
 
-    manage_select_from = ({ target }, aujourd_hui = false) => {
+    // add_options
+    add_options = (option) => {
       const // 
-        option = target.options[target.selectedIndex],
-        { text, value, dataset: { am, pm, short } } = option,
-        [big_screens, small_screens] = targets.date_debut;
-      big_screens.innerText = text;
-      small_screens.innerText = short;
-      // MAJ du sélecteur d'heure
-      select_from_heure.innerHTML = '';
+        select = option.parentElement,
+        select_id = select.getAttribute('id'),
+        [, from_ou_to,] = select_id.split(/-/),
+        select_heure = document.getElementById(`select-${from_ou_to}-heure`),
+        select_to_heure = document.getElementById(`select-to-heure`),
+        { Y, M, D, H, m, s } = time(),
+        value = option.value,
+        now = `${Y}-${M}-${D}`,
+        heures_ouverture = get_heures_ouverture(option),
+        first_index = value === now ? heures_ouverture.findIndex(h => +h === +H) : 0;
 
-      const heures_ouverture = [];
+      select_heure.innerHTML = '';
+      select_to_heure.innerHTML = '';
 
-      if (!aujourd_hui)
-        manage_select_to({ text, value, am, pm, short });
+      let selected = false
+
+      for (let i = heures_ouverture[first_index]; i <= heures_ouverture[heures_ouverture.length - 1]; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = addZeros(i, 2);
+        if (!heures_ouverture.includes(i)) {
+          opt.disabled = true;
+          opt.title = "En dehors des horaires d'ouverture du CSAG";
+        } else if (!selected) {
+          opt.setAttribute('selected', 'selected');
+          selected = true;
+          targets.heure_debut.innerText = opt.innerText + ':00';
+          targets.heure_fin.innerText = addZeros(+opt.value + 1, 2) + ':00';
+        }
+        select_heure.appendChild(opt);
+
+        const opt_to = document.createElement('option');
+        opt_to.value = i + 1;
+        opt_to.innerText = addZeros(i + 1, 2);
+        select_to_heure.appendChild(opt_to);
+      }
+    },
+
+    // heures_ouverture = [],
+    get_heures_ouverture = (option) => {
+      const // 
+        heures_ouverture = [],
+        { dataset: { am = '', pm = '' } } = option;
 
       [am, pm].forEach(creneau => {
         if (creneau) {
@@ -94,79 +128,80 @@ onReady('#select-from-date').then(elt => {
           }
         }
       });
-
-      let //
-        heure_now = new Date().getHours() + 1,
-        first_index = aujourd_hui ? heures_ouverture.findIndex(idx => idx === heure_now) : 0;
-      if (first_index < 0) {
-        const opts = [...select_from_date.children];
-        let done = false;
-        opts.forEach((opt, i, all) => {
-          if (done)
-            return false;
-          if (!opt.disabled) {
-            opt.disabled = true;
-            if (!all[i + 1].disabled) {
-              all[i + 1].setAttribute('selected', 'selected');
-              console.log(all[i + 1]);
-              manage_select_from({ target });
-              done = true;
-            }
-          }
-
-        })
-      }
-
-      for (let i = heures_ouverture[first_index]; i <= heures_ouverture[heures_ouverture.length - 1] + 1; i++) {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.innerText = addZeros(i, 2);
-        if (!heures_ouverture.includes(i)) {
-          opt.disabled = true;
-          opt.title = "En dehors des horaires d'ouverture du CSAG";
-        }
-        select_from_heure.appendChild(opt);
-      }
-
-      const // 
-        h_ouverture_option = select_from_heure.options[select_from_heure.selectedIndex],
-        val = h_ouverture_option.innerText;
-      targets.heure_debut.innerText = ` - ${val}:00`;
-
-
+      return heures_ouverture;
     },
 
-    manage_select_to = ({ text, value, am, pm, short }) => {
+    init = () => {
+      const // 
+        { Y, M, D, H, m, s } = time(),
+        now = `${Y}-${M}-${D}`,
+        select_date_debut = document.getElementById('select-from-date'),
+        select_date_fin = document.getElementById('select-to-date');
 
-      console.log(select_from_heure);
-      console.log({ text, value, am, pm, short });
-      // const options = [...select_to_date.children];
-      // let found = 0;
-      // options.forEach(opt => {
-      //   if (!found) {
-      //     if (opt.value !== value) {
-      //       opt.hidden = true;
-      //       opt.disabled = true;
-      //       opt.removeAttribute('selected');
-      //     } else {
-      //       found = 1;
-      //       opt.setAttribute('selected', 'selected');
+      let // 
+        trouve = 0,
+        curr_date = now + ' 00:00:00',
+        CSAG_ferme = [...select_date_debut.options].filter((option, i) => {
 
-      //     }
-      //   } else {
-      //     opt.hidden = false;
-      //     opt.disabled = false;
-      //   }
-      // })
+          option.dataset.index = i;
+
+          const //
+            nDate = +(option.value.replace(/-/g, '')),
+            nNow = +`${Y}${M}${D}`;
+
+          if (nDate < nNow)
+            return true;
+
+          const heures_ouverture = get_heures_ouverture(option);
+          if (!heures_ouverture.length)
+            return true;
+
+          if (nDate == nNow && heures_ouverture.findIndex(h => +h >= +H + 1) < 0)
+            return true;
+
+          if (!trouve) {
+            option.setAttribute('selected', 'selected');
+            trouve = 1;
+
+            add_options(option);
+            select_date_fin.children[i].setAttribute('selected', 'selected');
+
+            targets.date_debut[0].innerText = option.innerText;
+            targets.date_debut[1].innerText = option.dataset.short;
+            targets.date_fin[0].innerText = option.innerText;
+            targets.date_fin[1].innerText = option.dataset.short;
+
+          }
+
+          return false;
+
+        });
+
+      CSAG_ferme.forEach(opt => {
+        opt.removeAttribute('selected');
+        opt.disabled = true;
+        const opt_to = select_date_fin.children[opt.dataset.index];
+        opt_to.removeAttribute('selected');
+        opt_to.disabled = true;
+      })
 
     };
 
   // simule une sélection de date pour MAJ des créneaux horaires
-  manage_select_from({ target: select_from_date }, 'aujourd_hui');
+  //manage_select_from({ target: select_from_date }, 'aujourd_hui');
+  init();
 
 
-  select_from_date.addEventListener('change', manage_select_from);
-  select_to_date.addEventListener('change', manage_select_to);
+  select_from_date.addEventListener('change', ({ target }) => {
+    const option = target.options[target.selectedIndex];
+    add_options(option);
+    targets.date_debut[0].innerText = option.innerText;
+    targets.date_debut[1].innerText = option.dataset.short;
+  });
+  // select_to_date.addEventListener('change', ({ target }) => {
+  //   const option = target.options[target.selectedIndex];
+  //   add_options(option);
+  // });
 
 
   select_from_heure.addEventListener('change', ({ target }) => {
@@ -180,7 +215,7 @@ onReady('#select-from-date').then(elt => {
     const // 
       option = target.options[target.selectedIndex],
       { value } = option;
-    targets.heure_to.innerText = ` - ${value}:00`;
+    targets.heure_fin.innerText = ` - ${value}:00`;
   });
 
   btns.to_step2.addEventListener('click', e => {

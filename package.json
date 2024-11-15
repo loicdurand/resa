@@ -21,7 +21,7 @@
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "serve": "symfony serve",
-        "watch": "encore dev --watch --progress",
+        "watch": "encore dev --watch",
         "build": "encore production --progress",
         "ngrok": "ngrok http http://resa:80"
     },
