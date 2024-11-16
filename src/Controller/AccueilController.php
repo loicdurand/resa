@@ -51,7 +51,7 @@ class AccueilController extends AbstractController
         $max->modify('+ 3 weeks');
         $ok = false;
         for ($i = 0; $now->format("Y-m-d") !== $max->format("Y-m-d"); $i++) {
-            $fr_date = $this->FR($now->format('Y-m-d'));
+            $fr_date =  $this->FR($now->format('Y-m-d'));
             $atelier_ouvert = $this->getHorairesByDay(substr($fr_date, 0, 2), $horaires);
             if ($now->format("Y-m-d") === $max_date)
                 $ok = true;
