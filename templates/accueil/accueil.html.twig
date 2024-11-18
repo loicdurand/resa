@@ -41,7 +41,7 @@
 
 		{# TAGS #}
 		<div class="cs-btn-ctnr cs-tags-ctnr">
-			<button class="cs-btn cs-btn-tag cs-btn-tag--left">
+			<button class="cs-btn cs-btn-tag cs-btn-tag--left" data-fr-opened="true" aria-controls="fr-modal--categorie">
 				<span class="cs-tag">Catégorie</span>
 			</button>
 			<button class="cs-btn cs-btn-tag cs-btn-tag--right">
@@ -98,7 +98,40 @@
 
 	{# MODALES #}
 
-	{# modal -> from #}
+	{# modal ->  Catégorie: _ _ #}
+	<dialog aria-labelledby="fr-modal--categorie" role="dialog" id="fr-modal--categorie" class="fr-modal cs-modal-from-left">
+		<div class="fr-container fr-container--fluid">
+			<div class="fr-grid-row fr-grid-row--center">
+				<div class="fr-col-12">
+					<div class="fr-modal__body">
+						<div class="fr-modal__header">
+							<button class="fr-btn--close fr-btn" title="Fermer la fenêtre modale" aria-controls="fr-modal-1"></button>
+						</div>
+						<div class="fr-modal__content">
+							<h1 id="fr-modal--categorie" class="fr-modal__title">
+								<span class="fr-icon-arrow-right-line fr-icon--lg"></span>Catégorie</h1>
+							<ul class="fr-btns-group">
+								{% for categorie in categories | sort((a, b) => a.id <=> b.id) %}
+									<li>
+										<button class="cs-btn" data-categorie="{{categorie.libelle}}" onclick="console.log">
+											<figure>
+												<img src="{{ asset('images/icons/'~categorie.illustration) }}" alt="{{categorie.libelle}}">
+												<figcaption>
+													{{categorie.libelle}}
+												</figcaption>
+											</figure>
+										</button>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</dialog>
+
+	{# modal -> Début:_ _ | Fin: _ _ #}
 	<dialog aria-labelledby="fr-modal--from-to-title" id="fr-modal--from-to" class="fr-modal" role="dialog">
 		<div class="fr-container fr-container--fluid fr-container-md">
 			<div class="fr-grid-row fr-grid-row--center">
@@ -124,7 +157,7 @@
 									</label>
 									<select class="fr-select" id="select-from-date" name="select-from-date">
 										{% for i, date in dates %}
-											<option {{i==0 ? 'selected':''}} data-short={{date.short}} data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':''}} value="{{ date.en }}">
+											<option {{i==0 ? 'selected':''}} data-short={{date.short}} data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':''}} value="{{ date.en }} ">
 												{{ date.fr }}
 											</option>
 										{% endfor %}
@@ -137,81 +170,81 @@
 									<select class="fr-select" id="select-from-heure" name="select-from-heure">
 										<option value="08" selected>08</option>
 									</select>
+								</div>
+								<div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-3 fr-pl-1w cs-select-minutes">
+									<label class="fr-label" for="select-from-minute">&nbsp;
+									</label>
+									<select disabled class="fr-select" id="select-from-minute" name="select-from-minute">
+										<option value="00" selected disabled hidden>00</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="cs-btns-group fr-btns-group">
+								<button type="button" id="btn-go-step2" class="fr-btn fr-btn--tertiary-no-outline">
+									Date de fin &#8594;
+								</button>
+							</div>
+
+						</div>
+						{# fin étape DÉBUT #}
+
+						{# étape FIN #}
+						<div
+							id="step-2" class="fr-mt-1w fr-modal__content fr-grid-row hidden">
+							{# stepper #}
+							<div id="fr-modal--from-to-title" class="fr-stepper">
+								<h2 class="fr-stepper__title">
+									Fin de la réservation
+									<span class="fr-stepper__state">Étape 2 sur 2</span>
+								</h2>
+								<div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="2"></div>
+							</div>
+
+							<div id="step-2-form-content" class="fr-grid-row fr-mb-2w">
+								<div class="fr-select-group fr-col-6 fr-col-sm-6">
+									<label class="fr-label" for="select-to-date">Date
+									</label>
+									<select class="fr-select" id="select-to-date" name="select-to-date">
+										{% for i, date in dates_fin %}
+											<option data-short={{date.short}} data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':''}} value="{{ date.en }} ">
+												{{ date.fr }}
+											</option>
+										{% endfor %}
+
+									</select>
+								</div>
+								<div class=" fr-select-group fr-col fr-col-sm-3 fr-pl-1w">
+									<label class="fr-label" for="select-to-heure">Heure
+									</label>
+									<select class="fr-select" id="select-to-heure" name="select-to-heure">
+										<option value="08" selected>09</option>
+									</select>
 								</option>
 							</div>
 							<div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-3 fr-pl-1w cs-select-minutes">
-								<label class="fr-label" for="select-from-minute">&nbsp;
+								<label class="fr-label" for="select-to-minute">&nbsp;
 								</label>
-								<select disabled class="fr-select" id="select-from-minute" name="select-from-minute">
+								<select disabled class="fr-select" id="select-to-minute" name="select-to-minute">
 									<option value="00" selected disabled hidden>00</option>
 								</select>
 							</div>
 						</div>
 
-						<div class="cs-btns-group fr-btns-group">
-							<button type="button" id="btn-go-step2" class="fr-btn fr-btn--tertiary-no-outline">
-								Date de fin &#8594;
+						<div class="cs-btns-group fr-btns-group fr-btns-group--inline fr-btns-group--icon-right">
+							<button type="button" id="btn-go-step1" class="fr-btn fr-btn--tertiary-no-outline">
+								&#8592; Date de début
+							</button>
+							<button type="button" id="btn-appliquer" aria-controls="fr-modal--from-to" class="fr-btn fr-icon-checkbox-circle-line fr-btn--secondary">
+								Appliquer
 							</button>
 						</div>
 
 					</div>
-					{# fin étape DÉBUT #}
-
-					{# étape FIN #}
-					<div
-						id="step-2" class="fr-mt-1w fr-modal__content fr-grid-row hidden">
-						{# stepper #}
-						<div id="fr-modal--from-to-title" class="fr-stepper">
-							<h2 class="fr-stepper__title">
-								Fin de la réservation
-								<span class="fr-stepper__state">Étape 2 sur 2</span>
-							</h2>
-							<div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="2"></div>
-						</div>
-
-						<div id="step-2-form-content" class="fr-grid-row fr-mb-2w">
-							<div class="fr-select-group fr-col-6 fr-col-sm-6">
-								<label class="fr-label" for="select-to-date">Date
-								</label>
-								<select class="fr-select" id="select-to-date" name="select-to-date">
-									{% for i, date in dates_fin %}
-										<option data-short={{date.short}} data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':''}} value="{{ date.en }}">
-											{{ date.fr }}
-										</option>
-									{% endfor %}
-
-								</select>
-							</div>
-							<div class=" fr-select-group fr-col fr-col-sm-3 fr-pl-1w">
-								<label class="fr-label" for="select-to-heure">Heure
-								</label>
-								<select class="fr-select" id="select-to-heure" name="select-to-heure">
-									<option value="08" selected>09</option>
-								</select>
-							</option>
-						</div>
-						<div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-3 fr-pl-1w cs-select-minutes">
-							<label class="fr-label" for="select-to-minute">&nbsp;
-							</label>
-							<select disabled class="fr-select" id="select-to-minute" name="select-to-minute">
-								<option value="00" selected disabled hidden>00</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="cs-btns-group fr-btns-group fr-btns-group--inline fr-btns-group--icon-right">
-						<button type="button" id="btn-go-step1" class="fr-btn fr-btn--tertiary-no-outline">
-							&#8592; Date de début
-						</button>
-						<button type="button" id="btn-appliquer" aria-controls="fr-modal--from-to" class="fr-btn fr-icon-checkbox-circle-line fr-btn--secondary">
-							Appliquer
-						</button>
-					</div>
-
+					{# fin étape FIN #}
 				</div>
-				{# fin étape FIN #}
-			</div>
 
+			</div>
 		</div>
 	</div>
-</div></div></dialog>{% endblock %}
+</div></dialog>{% endblock %}

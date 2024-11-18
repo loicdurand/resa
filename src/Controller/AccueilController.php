@@ -37,6 +37,17 @@ class AccueilController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findAll();
 
+        $categories = [];
+        $category_ids = [];
+        foreach ($vehicules as $vl) {
+            $cat = $vl->getCategorie();
+            $id = $cat->getId();
+            if (!in_array($id, $category_ids)) {
+                $category_ids[] = $id;
+                $categories[] = $cat;
+            }
+        }
+
         $horaires = $em
             ->getRepository(HoraireOuverture::class)
             ->findAll();
@@ -75,6 +86,7 @@ class AccueilController extends AbstractController
 
         return $this->render('accueil/accueil.html.twig', array_merge($this->getAppConst(), [
             'vehicules' => $vehicules,
+            'categories' => $categories,
             'dates' => $dates,
             'dates_fin' => $dates_fin
         ]));

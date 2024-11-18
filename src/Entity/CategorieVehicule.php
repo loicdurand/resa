@@ -16,6 +16,9 @@ class CategorieVehicule
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
+    #[ORM\Column(length: 25, nullable: true)]
+    private ?string $illustration = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +32,18 @@ class CategorieVehicule
     public function setLibelle(string $libelle): static
     {
         $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    public function getIllustration(): ?string
+    {
+        return $this->illustration;
+    }
+
+    public function setIllustration(?string $illustration): static
+    {
+        $this->illustration = $illustration;
 
         return $this;
     }

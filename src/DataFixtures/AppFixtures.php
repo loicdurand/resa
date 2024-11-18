@@ -148,18 +148,19 @@ class AppFixtures extends Fixture
         }
 
         $categories = [
-            'Citadine',
-            'Berline',
-            '4x4',
-            'Utilitaire',
-            'Minibus'
+            'Citadine' => 'sedan.png',
+            'Berline' => 'sedan.png',
+            '4x4' => 'suv.png',
+            'Utilitaire' => 'utilitaire.png',
+            'Minibus' => 'mpv.png'
         ];
 
         $cats = [];
 
-        foreach ($categories as $categorie) {
+        foreach ($categories as $categorie => $illustration) {
             $entity = new CategorieVehicule();
             $entity->setLibelle($categorie);
+            $entity->setIllustration($illustration);
             $manager->persist($entity);
             $manager->flush();
             $cats[] = $entity;
