@@ -1,9 +1,9 @@
-import { addZeros, time, subMinutes } from './utils';
+import { addZeros, time, subMinutes, Emitter } from './utils';
 
 const { Y, M, D, H, m, s } = time()
 
 
-export default class Update {
+export default class Updater extends Emitter {
 
   heures_ouverture = [];
 
@@ -32,7 +32,11 @@ export default class Update {
     }
   };
 
+  update = new Event("update");
+
   constructor() {
+
+    super();
 
     let //
       CSAG_ouvert_auj = true,
@@ -51,7 +55,7 @@ export default class Update {
     // ex: je suis sur le site à 22H. Le CSAG était ouvert aujourd'hui, pourtant il est fermé
     if (now_apres_fermeture_CSAG) {
       option.disabled = true;
-      return new Update();
+      return new Updater();
     }
 
     ['debut', 'fin'].forEach(creneau => {
@@ -81,6 +85,8 @@ export default class Update {
         this.set_ref_debut();
         this.addDays(target);
         this.removeErrorText();
+        this.evtEmitter.dataset.debut = this.get_ref_debut();
+        this.evtEmitter.dispatchEvent(this.update);
       });
     });
 
@@ -89,6 +95,8 @@ export default class Update {
         this.removeErrorText();
         this.set_ref_fin('show_error');
         this.addDays(target);
+        this.evtEmitter.dataset.fin = this.get_ref_fin();
+        this.evtEmitter.dispatchEvent(this.update);
       });
     });
 
@@ -191,13 +199,17 @@ export default class Update {
   update_filtres_debut(text, short, heure) {
     this.filtres.debut.date.children[0].innerText = text;
     this.filtres.debut.date.children[1].innerText = short;
-    this.filtres.debut.heure.innerText = heure
+    this.filtres.debut.heure.innerText = heure;
+    this.evtEmitter.dataset.debut = this.get_ref_debut();
+    this.evtEmitter.dataset.fin = this.get_ref_fin();
   }
 
   update_filtres_fin(text, short, heure) {
     this.filtres.fin.date.children[0].innerText = text;
     this.filtres.fin.date.children[1].innerText = short;
-    this.filtres.fin.heure.innerText = heure
+    this.filtres.fin.heure.innerText = heure;
+    this.evtEmitter.dataset.debut = this.get_ref_debut();
+    this.evtEmitter.dataset.fin = this.get_ref_fin();
   }
 
   get_heures_ouverture = (option) => {

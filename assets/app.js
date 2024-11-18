@@ -4,7 +4,7 @@ import "/node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module";
 
 import './styles/app.scss';
 
-import TimeUpdate from './js/time_update';
+import TimeUpdate from './js/Updater';
 
 console.clear();
 
@@ -45,23 +45,34 @@ onReady('#select-from-date').then(() => {
 
   const // 
     /* passage de l'étape 1 à 2 */
-    btns = {
-      to_step2: document.getElementById('btn-go-step2'),
-      to_step1: document.getElementById('btn-go-step1')
-    },
     step1 = document.getElementById('step-1'),
     step2 = document.getElementById('step-2');
 
-    new TimeUpdate();
-
-  btns.to_step2.addEventListener('click', e => {
-    step1.classList.toggle('hidden');
-    step2.classList.toggle('hidden');
+  const updater = new TimeUpdate();
+  updater.addEventListener('update', ({ target: { dataset } }) => {
+    const { debut, fin } = dataset;
+    console.log({ debut, fin });
   });
 
-  btns.to_step1.addEventListener('click', e => {
-    step1.classList.toggle('hidden');
-    step2.classList.toggle('hidden');
+  [
+    document.getElementById('to-step-2-btn'), // bouton "Début" dans les filtres
+    document.getElementById('btn-go-step2') // 
+  ].forEach(btn => {
+    btn.addEventListener('click', e => {
+      step1.classList.add('hidden');
+      step2.classList.remove('hidden');
+    });
+  });
+
+  [
+    document.getElementById('to-step-1-btn'),
+    document.getElementById('btn-appliquer'),
+    document.getElementById('btn-go-step1')
+  ].forEach(btn => {
+    btn.addEventListener('click', e => {
+      step1.classList.remove('hidden');
+      step2.classList.add('hidden');
+    });
   });
 
 });

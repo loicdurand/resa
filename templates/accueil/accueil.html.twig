@@ -20,7 +20,7 @@
 
 		{# DE ... -> À ... #}
 		<div class="cs-btn-ctnr cs-date-ctnr">
-			<button class="cs-btn cs-btn-from-to cs-btn--left" data-fr-opened="false" aria-controls="fr-modal--from-to">
+			<button id="to-step-1-btn" class="cs-btn cs-btn-from-to cs-btn--left" data-fr-opened="false" aria-controls="fr-modal--from-to">
 				<span class="cs-from-to">Début</span>
 				<span id="select-from-date--target" class="cs-from-to-value">
 					<span class="hidden">Aujourd'hui</span>
@@ -29,7 +29,7 @@
 				</span>
 			</button>
 			<div class="separator"></div>
-			<button class="cs-btn cs-btn-from-to cs-btn--right" data-fr-opened="false" aria-controls="fr-modal--from-to">
+			<button id="to-step-2-btn" class="cs-btn cs-btn-from-to cs-btn--right" data-fr-opened="false" aria-controls="fr-modal--from-to">
 				<span class=" cs-from-to">Fin</span>
 				<span id="select-to-date--target" class="cs-from-to-value">
 					<span class="hidden">Demain</span>
@@ -150,7 +150,7 @@
 
 						<div class="cs-btns-group fr-btns-group">
 							<button type="button" id="btn-go-step2" class="fr-btn fr-btn--tertiary-no-outline">
-								Suivant &#8594;
+								Date de fin &#8594;
 							</button>
 						</div>
 
@@ -201,9 +201,9 @@
 
 					<div class="cs-btns-group fr-btns-group fr-btns-group--inline fr-btns-group--icon-right">
 						<button type="button" id="btn-go-step1" class="fr-btn fr-btn--tertiary-no-outline">
-							&#8592; Retour
+							&#8592; Date de début
 						</button>
-						<button type="button" aria-controls="fr-modal--from-to" class="fr-btn fr-icon-checkbox-circle-line fr-btn--secondary">
+						<button type="button" id="btn-appliquer" aria-controls="fr-modal--from-to" class="fr-btn fr-icon-checkbox-circle-line fr-btn--secondary">
 							Appliquer
 						</button>
 					</div>

@@ -17,7 +17,7 @@
     top: 0;
     left: 0;
     height: 10rem;
-    width: 100%; 
+    width: 100%;
     border-bottom: 1px solid var(--grey-4);
     position: fixed;
     background: transparent;
@@ -205,6 +205,7 @@
     padding: 0 !important;
     max-height: 140px;
     width: 100%;
+    cursor: pointer;
 
     & .cs-img-container {
         width: 35%;

@@ -43,4 +43,17 @@ export const //
         if (intDebut > limiteHaute)
             return false;
         return true;
+    };
+
+export class Emitter {
+
+    evtEmitter = document.createElement('div');
+
+    constructor() {
+        return this;
     }
+
+    addEventListener(listenerName, cb) {
+        this.evtEmitter.addEventListener(listenerName, cb);
+    }
+}
