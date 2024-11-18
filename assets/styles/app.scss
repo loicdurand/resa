@@ -288,6 +288,10 @@
         &.hiddenOnScroll {
             top: 0;
         }
+
+        & .cs-btn-ctnr .cs-from-to-value span {
+            font-size: 1rem;
+        }
     }
 
     .cs-main {
