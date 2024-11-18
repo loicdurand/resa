@@ -79,13 +79,15 @@ export default class Update {
     ['date', 'heure'].forEach(part => {
       this.modale.debut[part].addEventListener('change', target => {
         this.set_ref_debut();
-        this.addDays(target)
+        this.addDays(target);
+        this.removeErrorText();
       });
     });
 
     ['date', 'heure'].forEach(part => {
       this.modale.fin[part].addEventListener('change', target => {
-        this.set_ref_fin();
+        this.removeErrorText();
+        this.set_ref_fin('show_error');
         this.addDays(target);
       });
     });
@@ -145,9 +147,11 @@ export default class Update {
     return `${date_selectionnee} ${heure_selectionnee}:00:00`;
   }
 
-  set_ref_fin(str = this.get_ref_fin()) {
+  set_ref_fin(show_message_err = false) {
 
-    const old = this.ref_fin;
+    const // 
+      str = this.get_ref_fin(),
+      old = this.ref_fin;
     this.ref_fin = str;
 
     const // 
@@ -161,7 +165,14 @@ export default class Update {
 
       date_fin.selected = true;
       heure_fin.selected = true;
-      this.set_ref_fin();
+
+      this.set_ref_fin(show_message_err);
+      if (show_message_err) {
+        this.showErrorText();
+        setTimeout(() => {
+          this.removeErrorText();
+        }, 3000);
+      }
     }
 
     const // 
@@ -239,6 +250,30 @@ export default class Update {
     }
     this.set_ref_debut();
     this.set_ref_fin();
+  }
+
+  removeErrorText() {
+    const error_text = document.querySelector('#step-2-form-content .fr-error-text');
+    if (error_text !== null)
+      error_text.outerHTML = '';
+  }
+
+  showErrorText() {
+    const // 
+      error_text = document.querySelector('#step-2-form-content .fr-error-text');
+    if (error_text !== null)
+      return false;
+    const p = document.createElement('p');
+    ['fr-col-12', 'fr-error-text', 'fr-mt-1w'].forEach(cls => p.classList.add(cls));
+    p.innerHTML = /*html*/`
+    <span>
+      <span class="bold">
+        Changement non pris en compte:
+      </span>
+      &nbsp;date de fin < date de début!
+    </span>
+    `;
+    document.getElementById('step-2-form-content').appendChild(p);
   }
 
 }
