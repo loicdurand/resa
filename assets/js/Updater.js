@@ -1,4 +1,4 @@
-import { addZeros, time, subMinutes, Emitter } from './utils';
+import { addZeros, time, Emitter } from './utils';
 
 const { Y, M, D, H, m, s } = time()
 
@@ -81,9 +81,9 @@ export default class Updater extends Emitter {
     this.set_ref_fin();
 
     ['date', 'heure'].forEach(part => {
-      this.modale.debut[part].addEventListener('change', target => {
+      this.modale.debut[part].addEventListener('change', e => {
         this.set_ref_debut();
-        this.addDays(target);
+        this.addDays(e);
         this.removeErrorText();
         this.evtEmitter.dataset.debut = this.get_ref_debut();
         this.evtEmitter.dispatchEvent(this.update);
@@ -91,14 +91,33 @@ export default class Updater extends Emitter {
     });
 
     ['date', 'heure'].forEach(part => {
-      this.modale.fin[part].addEventListener('change', target => {
+      this.modale.fin[part].addEventListener('change', e => {
         this.removeErrorText();
         this.set_ref_fin('show_error');
-        this.addDays(target);
+        this.addDays(e);
         this.evtEmitter.dataset.fin = this.get_ref_fin();
         this.evtEmitter.dispatchEvent(this.update);
       });
     });
+
+    [...document.querySelectorAll('[data-categorie]')].forEach((btn, i, btns) => {
+      btn.addEventListener('click', ({ currentTarget: target }) => {
+        btns.forEach(btn => btn.classList.remove('selected'));
+        target.classList.add('selected');
+        this.evtEmitter.dataset.categorie = target.dataset.categorie;
+        this.evtEmitter.dispatchEvent(this.update);
+      })
+    });
+
+    ['serigraphie', 'transmission'].forEach(field => {
+      [...document.getElementsByName(`radio--${field}`)].forEach(radio => {
+        radio.addEventListener('change', ({ target: { value } }) => {
+          this.evtEmitter.dataset[field] = value;
+          this.evtEmitter.dispatchEvent(this.update);
+        });
+      });
+    });
+
 
     return this;
   }
@@ -140,7 +159,7 @@ export default class Updater extends Emitter {
       [H, m] = time.split(/:/),
       heure = `${addZeros(H, 2)}:${addZeros(m, 2)}`;
 
-    this.update_filtres_debut(text, short, heure);
+    this.update_filtres(text, short, heure);
 
     return this;
   }
@@ -191,25 +210,20 @@ export default class Updater extends Emitter {
       [H, m] = time.split(/:/),
       heure = `${addZeros(H, 2)}:${addZeros(m, 2)}`;
 
-    this.update_filtres_fin(text, short, heure);
+    this.update_filtres(text, short, heure);
 
     return this;
   }
 
-  update_filtres_debut(text, short, heure) {
+  update_filtres(text, short, heure) {
     this.filtres.debut.date.children[0].innerText = text;
     this.filtres.debut.date.children[1].innerText = short;
     this.filtres.debut.heure.innerText = heure;
     this.evtEmitter.dataset.debut = this.get_ref_debut();
     this.evtEmitter.dataset.fin = this.get_ref_fin();
-  }
-
-  update_filtres_fin(text, short, heure) {
-    this.filtres.fin.date.children[0].innerText = text;
-    this.filtres.fin.date.children[1].innerText = short;
-    this.filtres.fin.heure.innerText = heure;
-    this.evtEmitter.dataset.debut = this.get_ref_debut();
-    this.evtEmitter.dataset.fin = this.get_ref_fin();
+    ['categorie', 'serigraphie', 'transmission'].forEach(field => {
+      this.evtEmitter.dataset[field] = '*';
+    });
   }
 
   get_heures_ouverture = (option) => {

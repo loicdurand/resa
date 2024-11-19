@@ -1,67 +1,67 @@
-{% extends 'base.html.twig' %}
+	{% extends 'base.html.twig' %}
 
-{% block body %}
-
-
-	{# Fil d'Arianne #}
-	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
-		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d’Ariane</button>
-		<div class="fr-collapse" id="breadcrumb-1">
-			<ol class="fr-breadcrumb__list">
-				<li>
-					<a class="fr-breadcrumb__link" href="/">Accueil</a>
-				</li>
-				<li>
-					<a class="fr-breadcrumb__link" aria-current="page">Compte</a>
-				</li>
-			</ol>
-		</div>
-	</nav>
-
-	{% for role_key, role in roles %}
+	{% block body %}
 
 
-		<div class="fr-notice fr-notice--info fr-mt-4w">
-			<div class="fr-container">
+		{# Fil d'Arianne #}
+		<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+			<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d’Ariane</button>
+			<div class="fr-collapse" id="breadcrumb-1">
+				<ol class="fr-breadcrumb__list">
+					<li>
+						<a class="fr-breadcrumb__link" href="/">Accueil</a>
+					</li>
+					<li>
+						<a class="fr-breadcrumb__link" aria-current="page">Compte</a>
+					</li>
+				</ol>
+			</div>
+		</nav>
 
-				<div class="fr-notice__body">
-					<p>
-						<span class="fr-notice__title">Rôle "{{role.libelle}}"</span>
-						<span class="fr-notice__desc">Les champs ci-dessous ne sont accessibles qu'aux personnels ayant ce rôle particulier.</span>
-						<button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode.parentNode; notice.style.display = 'none';" class="fr-btn--close fr-btn">Masquer le message</button>
-					</p>
+		{% for role_key, role in roles %}
+
+
+			<div class="fr-notice fr-notice--info fr-mt-4w">
+				<div class="fr-container">
+
+					<div class="fr-notice__body">
+						<p>
+							<span class="fr-notice__title">Rôle "{{role.libelle}}"</span>
+							<span class="fr-notice__desc">Les champs ci-dessous ne sont accessibles qu'aux personnels ayant ce rôle particulier.</span>
+							<button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode.parentNode; notice.style.display = 'none';" class="fr-btn--close fr-btn">Masquer le message</button>
+						</p>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="fr-accordions-group">
+			<div class="fr-accordions-group">
 
-			{% for perm_key, perm in role.permissions %}
-				<section class="fr-accordion">
-					<h3 class="fr-accordion__title">
-						<button class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-{{role_key ~ perm_key}}">{{perm.action.libelle}}</button>
-					</h3>
-					<div
-						class="fr-collapse" id="accordion-{{role_key ~ perm_key}}">
-						<!-- données de test -->
-						{% if perm.action.template is null %}
+				{% for perm_key, perm in role.permissions %}
+					<section class="fr-accordion">
+						<h3 class="fr-accordion__title">
+							<button class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-{{role_key ~ perm_key}}">{{perm.action.libelle}}</button>
+						</h3>
+						<div
+							class="fr-collapse" id="accordion-{{role_key ~ perm_key}}">
+							<!-- données de test -->
+							{% if perm.action.template is null %}
 
-							<h4 class="fr-h4">Pas encore de contenu</h4>
-							<p class="fr-mt-2w">
-								Cette page est en cours de conctruction. Nous vous invitons à revenir ultérieurement.
-							</p>
+								<h4 class="fr-h4">Pas encore de contenu</h4>
+								<p class="fr-mt-2w">
+									Cette page est en cours de conctruction. Nous vous invitons à revenir ultérieurement.
+								</p>
 
-						{% else %}
+							{% else %}
 
-							{{ include(perm.action.template) }}
+								{{ include(perm.action.template) }}
 
-						{% endif %}
+							{% endif %}
 
-					</div>
-				</section>
-			{% endfor %}
-		</div>
+						</div>
+					</section>
+				{% endfor %}
+			</div>
 
-	{% endfor %}
+		{% endfor %}
 
-{% endblock %}
+	{% endblock %}

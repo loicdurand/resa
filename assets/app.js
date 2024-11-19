@@ -50,8 +50,8 @@ onReady('#select-from-date').then(() => {
 
   const updater = new TimeUpdate();
   updater.addEventListener('update', ({ target: { dataset } }) => {
-    const { debut, fin } = dataset;
-    console.log({ debut, fin });
+    const { ...data } = dataset;
+    console.log(data);
   });
 
   [

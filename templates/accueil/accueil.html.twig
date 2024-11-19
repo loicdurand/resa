@@ -45,10 +45,10 @@
 
 		{# TAGS #}
 		<div class="cs-btn-ctnr cs-tags-ctnr">
-			<button class="cs-btn cs-btn-tag cs-btn-tag--left" data-fr-opened="true" aria-controls="fr-modal--categorie">
+			<button class="cs-btn cs-btn-tag cs-btn-tag--left" data-fr-opened="false" aria-controls="fr-modal--categorie">
 				<span class="cs-tag">Catégorie</span>
 			</button>
-			<button class="cs-btn cs-btn-tag cs-btn-tag--right">
+			<button class="cs-btn cs-btn-tag cs-btn-tag--right" data-fr-opened="false" aria-controls="fr-modal--autres-filtres">
 				<span class="cs-tag fr-btn--icon-left fr-icon-equalizer-line">
 					Filtres
 				</span>
@@ -113,7 +113,7 @@
 				<div class="fr-col-12">
 					<div class="fr-modal__body">
 						<div class="fr-modal__header">
-							<button class="fr-btn--close fr-btn" title="Fermer la fenêtre modale" aria-controls="fr-modal-1"></button>
+							<button class="fr-btn--close fr-btn" title="Fermer la fenêtre modale" aria-controls="fr-modal--categorie"></button>
 						</div>
 						<div class="fr-modal__content">
 							<h1 id="fr-modal--categorie" class="fr-modal__title">
@@ -121,9 +121,19 @@
 								Catégorie
 							</h1>
 							<ul class="fr-btns-group">
+									<li>
+									<button class="cs-btn" data-categorie="*" aria-controls="fr-modal--categorie">
+										<figure>
+											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5.46257 4.43262C7.21556 2.91688 9.5007 2 12 2C17.5228 2 22 6.47715 22 12C22 14.1361 21.3302 16.1158 20.1892 17.7406L17 12H20C20 7.58172 16.4183 4 12 4C9.84982 4 7.89777 4.84827 6.46023 6.22842L5.46257 4.43262ZM18.5374 19.5674C16.7844 21.0831 14.4993 22 12 22C6.47715 22 2 17.5228 2 12C2 9.86386 2.66979 7.88416 3.8108 6.25944L7 12H4C4 16.4183 7.58172 20 12 20C14.1502 20 16.1022 19.1517 17.5398 17.7716L18.5374 19.5674Z"></path></svg>
+											<figcaption>
+												Toutes les catégories
+											</figcaption>
+										</figure>
+									</button>
+									</li>
 								{% for categorie in categories | sort((a, b) => a.id <=> b.id) %}
 									<li>
-										<button class="cs-btn" data-categorie="{{categorie.libelle}}" onclick="console.log">
+										<button class="cs-btn" data-categorie="{{categorie.libelle}}" aria-controls="fr-modal--categorie">
 											<figure>
 												<img src="{{ asset('images/icons/'~categorie.illustration) }}" alt="{{categorie.libelle}}">
 												<figcaption>
@@ -140,6 +150,90 @@
 			</div>
 		</div>
 	</dialog>
+
+{# modal -> Autres filtres: _ _ #}
+<dialog aria-labelledby="fr-modal--autres-filtres" role="dialog" id="fr-modal--autres-filtres" class="fr-modal cs-modal-from-right">
+	<div class="fr-container fr-container--fluid">
+		<div class="fr-grid-row fr-grid-row--center">
+			<div class="fr-col-12">
+				<div class="fr-modal__body">
+					<div class="fr-modal__header">
+						<button class="fr-btn--close fr-btn" title="Fermer la fenêtre modale" aria-controls="fr-modal--autres-filtres"></button>
+					</div>
+					<div class="fr-modal__content">
+						<h1 id="fr-modal--autres-filtres" class="fr-modal__title">
+							<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+							Filtres
+						</h1>
+
+								<fieldset class="fr-fieldset" id="radio--serigraphie" aria-labelledby="radio--serigraphie-legend">
+									<legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="radio--serigraphie-legend">
+										Sérigraphie
+									</legend>
+									<div class="fr-fieldset__element">
+										<div class="fr-radio-group">
+											<input type="radio" id="radio--serigraphie-1" checked name="radio--serigraphie" value="*">
+											<label class="fr-label" for="radio--serigraphie-1">
+												Indifférent
+											</label>
+										</div>
+									</div>
+									<div class="fr-fieldset__element">
+										<div class="fr-radio-group">
+											<input type="radio" id="radio--serigraphie-2" name="radio--serigraphie" value="Oui">
+											<label class="fr-label" for="radio--serigraphie-2">
+												Oui
+											</label>
+										</div>
+									</div>
+									<div class="fr-fieldset__element">
+										<div class="fr-radio-group">
+											<input type="radio" id="radio--serigraphie-3" name="radio--serigraphie" value="Non">
+											<label class="fr-label" for="radio--serigraphie-3">
+												Non
+											</label>
+										</div>
+									</div>
+									<div class="fr-messages-group" id="radio--serigraphie-messages" aria-live="assertive"></div>
+								</fieldset>
+
+																<fieldset class="fr-fieldset" id="radio--transmission" aria-labelledby="radio--transmission-legend">
+									<legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="radio--transmission-legend">
+										Transmission
+									</legend>
+									<div class="fr-fieldset__element">
+										<div class="fr-radio-group">
+											<input type="radio" id="radio--transmission-1" checked name="radio--transmission" value="*">
+											<label class="fr-label" for="radio--transmission-1">
+												Indifférent
+											</label>
+										</div>
+									</div>
+									<div class="fr-fieldset__element">
+										<div class="fr-radio-group">
+											<input type="radio" id="radio--transmission-2" name="radio--transmission" value="BVA">
+											<label class="fr-label" for="radio--transmission-2">
+												Boite de vitesses automatique
+											</label>
+										</div>
+									</div>
+									<div class="fr-fieldset__element">
+										<div class="fr-radio-group">
+											<input type="radio" id="radio--transmission-3" name="radio--transmission" value="BVM">
+											<label class="fr-label" for="radio--transmission-3">
+												Boite de vitesses manuelle
+											</label>
+										</div>
+									</div>
+									<div class="fr-messages-group" id="radio--transmission-messages" aria-live="assertive"></div>
+								</fieldset>
+							
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</dialog>
 
 	{# modal -> Début:_ _ | Fin: _ _ #}
 	<dialog aria-labelledby="fr-modal--from-to-title" id="fr-modal--from-to" class="fr-modal" role="dialog">
