@@ -167,7 +167,7 @@ export default class Updater extends Emitter {
       int_ref_fin = +this.ref_fin.replace(/[^\d]/g, '');
 
     if (int_ref_debut >= int_ref_fin) {
-      const // 
+      let // 
         date_fin = this.modale.fin.date.querySelector(`option[value="${old.replace(/\s.*/g, '')}"]`),
         heure_fin = this.modale.fin.heure.querySelector(`option[value="${+old.replace(/.*\s[0]?|:.*/g, '')}"]`);
 

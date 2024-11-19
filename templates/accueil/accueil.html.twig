@@ -4,11 +4,15 @@
 
 	{# Fil d'Arianne #}
 	<nav role="navigation" class="hide-s hide-m fr-breadcrumb" aria-label="vous êtes ici :">
-		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d’Ariane</button>
+		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+			Voir le fil d’Ariane
+		</button>
 		<div class="fr-collapse" id="breadcrumb-1">
 			<ol class="fr-breadcrumb__list">
 				<li>
-					<a class="fr-breadcrumb__link" aria-current="page">Accueil</a>
+					<a class="fr-breadcrumb__link" aria-current="page">
+						Accueil
+					</a>
 				</li>
 			</ol>
 		</div>
@@ -46,7 +50,8 @@
 			</button>
 			<button class="cs-btn cs-btn-tag cs-btn-tag--right">
 				<span class="cs-tag fr-btn--icon-left fr-icon-equalizer-line">
-					Filtres</span>
+					Filtres
+				</span>
 			</button>
 		</div>
 
@@ -54,20 +59,23 @@
 
 	<div class="fr-grid-row fr-grid-row--gutters cs-main">
 
-		<p class="cs-nb-vehicules fr-col-sm-12 fr-h6">{{ vehicules|length }}&nbsp;véhicule{{ vehicules|length > 1 ? 's' : '' }}
-			disponible{{ vehicules|length>1 ? 's' : '' }}.</p>
+		<p class="cs-nb-vehicules fr-col-sm-12 fr-h6">
+			{{ vehicules|length }}&nbsp;véhicule{{ vehicules|length > 1 ? 's' : '' }}
+			disponible{{ (vehicules|length)>1 ? 's' : '' }}.
+		</p>
 
 		{% for vehicule in vehicules %}
-
 			<div class="cs-card fr-col-sm-12 fr-mb-2w hoverable shadow">
 				<figure class="cs-img-container left">
-					<img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée"/>
+					<img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée">
 					<figcaption class="hidden">Renault 4l sérigraphiée</figcaption>
 				</figure>
 
 				<div class="left cs-descr-container">
 					<dl>
-						<dt class="cs-marque">{{vehicule.marque}}&nbsp;<span class="cs-modele">{{vehicule.modele}}</span>
+						<dt class="cs-marque">
+							{{vehicule.marque}}&nbsp;
+							<span class="cs-modele">{{vehicule.modele}}</span>
 						</dt>
 						{% if (vehicule.motorisation ~ vehicule.finition) is empty %}
 							<br/>
@@ -109,7 +117,9 @@
 						</div>
 						<div class="fr-modal__content">
 							<h1 id="fr-modal--categorie" class="fr-modal__title">
-								<span class="fr-icon-arrow-right-line fr-icon--lg"></span>Catégorie</h1>
+								<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+								Catégorie
+							</h1>
 							<ul class="fr-btns-group">
 								{% for categorie in categories | sort((a, b) => a.id <=> b.id) %}
 									<li>
@@ -157,15 +167,15 @@
 									</label>
 									<select class="fr-select" id="select-from-date" name="select-from-date">
 										{% for i, date in dates %}
-											<option {{i==0 ? 'selected':''}} data-short={{date.short}} data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':''}} value="{{ date.en }} ">
+											<option value="{{ date.en }}" {{i==0 ? 'selected':''}} data-short="{{date.short}}" data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':""}}>
 												{{ date.fr }}
 											</option>
 										{% endfor %}
-
 									</select>
 								</div>
 								<div class=" fr-select-group fr-col fr-col-sm-3 fr-pl-1w">
-									<label class="fr-label" for="select-from-heure">Heure
+									<label class="fr-label" for="select-from-heure">
+										Heure
 									</label>
 									<select class="fr-select" id="select-from-heure" name="select-from-heure">
 										<option value="08" selected>08</option>
@@ -191,7 +201,7 @@
 
 						{# étape FIN #}
 						<div
-							id="step-2" class="fr-mt-1w fr-modal__content fr-grid-row hidden">
+							id="step-2" class="fr-mt-1w fr-modal__content fr-grid-row hijdden">
 							{# stepper #}
 							<div id="fr-modal--from-to-title" class="fr-stepper">
 								<h2 class="fr-stepper__title">
@@ -207,11 +217,10 @@
 									</label>
 									<select class="fr-select" id="select-to-date" name="select-to-date">
 										{% for i, date in dates_fin %}
-											<option data-short={{date.short}} data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':''}} value="{{ date.en }} ">
+											<option value="{{ date.en }}" data-short={{date.short}} data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':''}}>
 												{{ date.fr }}
 											</option>
 										{% endfor %}
-
 									</select>
 								</div>
 								<div class=" fr-select-group fr-col fr-col-sm-3 fr-pl-1w">
@@ -220,31 +229,31 @@
 									<select class="fr-select" id="select-to-heure" name="select-to-heure">
 										<option value="08" selected>09</option>
 									</select>
-								</option>
+								</div>
+								<div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-3 fr-pl-1w cs-select-minutes">
+									<label class="fr-label" for="select-to-minute">&nbsp;
+									</label>
+									<select disabled class="fr-select" id="select-to-minute" name="select-to-minute">
+										<option value="00" selected disabled hidden>00</option>
+									</select>
+								</div>
 							</div>
-							<div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-3 fr-pl-1w cs-select-minutes">
-								<label class="fr-label" for="select-to-minute">&nbsp;
-								</label>
-								<select disabled class="fr-select" id="select-to-minute" name="select-to-minute">
-									<option value="00" selected disabled hidden>00</option>
-								</select>
+
+							<div class="cs-btns-group fr-btns-group fr-btns-group--inline fr-btns-group--icon-right">
+								<button type="button" id="btn-go-step1" class="fr-btn fr-btn--tertiary-no-outline">
+									&#8592; Date de début
+								</button>
+								<button type="button" id="btn-appliquer" aria-controls="fr-modal--from-to" class="fr-btn fr-icon-checkbox-circle-line fr-btn--secondary">
+									Appliquer
+								</button>
 							</div>
-						</div>
 
-						<div class="cs-btns-group fr-btns-group fr-btns-group--inline fr-btns-group--icon-right">
-							<button type="button" id="btn-go-step1" class="fr-btn fr-btn--tertiary-no-outline">
-								&#8592; Date de début
-							</button>
-							<button type="button" id="btn-appliquer" aria-controls="fr-modal--from-to" class="fr-btn fr-icon-checkbox-circle-line fr-btn--secondary">
-								Appliquer
-							</button>
 						</div>
-
+						{# fin étape FIN #}
 					</div>
-					{# fin étape FIN #}
-				</div>
 
+				</div>
 			</div>
 		</div>
-	</div>
-</div></dialog>{% endblock %}
+	</dialog>
+{% endblock %}
