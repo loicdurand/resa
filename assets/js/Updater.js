@@ -159,7 +159,7 @@ export default class Updater extends Emitter {
       [H, m] = time.split(/:/),
       heure = `${addZeros(H, 2)}:${addZeros(m, 2)}`;
 
-    this.update_filtres(text, short, heure);
+    this.update_filtres('debut', text, short, heure);
 
     return this;
   }
@@ -210,15 +210,15 @@ export default class Updater extends Emitter {
       [H, m] = time.split(/:/),
       heure = `${addZeros(H, 2)}:${addZeros(m, 2)}`;
 
-    this.update_filtres(text, short, heure);
+    this.update_filtres('fin', text, short, heure);
 
     return this;
   }
 
-  update_filtres(text, short, heure) {
-    this.filtres.debut.date.children[0].innerText = text;
-    this.filtres.debut.date.children[1].innerText = short;
-    this.filtres.debut.heure.innerText = heure;
+  update_filtres(DEBUT_OU_FIN, text, short, heure) {
+    this.filtres[DEBUT_OU_FIN].date.children[0].innerText = text;
+    this.filtres[DEBUT_OU_FIN].date.children[1].innerText = short;
+    this.filtres[DEBUT_OU_FIN].heure.innerText = heure;
     this.evtEmitter.dataset.debut = this.get_ref_debut();
     this.evtEmitter.dataset.fin = this.get_ref_fin();
     ['categorie', 'serigraphie', 'transmission'].forEach(field => {

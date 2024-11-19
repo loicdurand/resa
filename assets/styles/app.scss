@@ -300,33 +300,50 @@
         & .fr-modal__body {
             max-height: 100vh !important;
 
-            & .fr-modal__content .cs-btn {
-                border: 1px solid var(--grey-5);
-                border-radius: 6px;
-                margin: 3px 15%;
-                background-color: var(--grey-0);
-                cursor: pointer;
-                transition: all 0.3s ease;
-                box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-                outline: none;
-                position: relative;
-                width: 70%;
-                text-align: center;
 
-                &.selected {
-                    border-color: var(--blue-5);
-                    border-width: 2px;
-                    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px var(--blue-1), 4px 4px 5px 0px var(--blue-2);
+
+            & .fr-modal__content {
+                & .fr-input[value='0']+.cs-nb-label {
+                    display: none;
                 }
 
-                & img,
-                & svg {
-                    width: 50%;
-                    max-height: 97px;
+                & .fr-input+.cs-nb-label {
+                    display: inline-block;
+                    position: absolute;
+                    top: 2.5rem;
+                    left: 0;
+                    font-weight: 400;
+                    text-align: center;
                 }
 
-                & svg {
-                    max-height: 80px;
+                & .cs-btn {
+                    border: 1px solid var(--grey-5);
+                    border-radius: 6px;
+                    margin: 3px 15%;
+                    background-color: var(--grey-0);
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+                    outline: none;
+                    position: relative;
+                    width: 70%;
+                    text-align: center;
+
+                    &.selected {
+                        border-color: var(--blue-5);
+                        border-width: 2px;
+                        box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px var(--blue-1), 4px 4px 5px 0px var(--blue-2);
+                    }
+
+                    & img,
+                    & svg {
+                        width: 50%;
+                        max-height: 97px;
+                    }
+
+                    & svg {
+                        max-height: 55px;
+                    }
                 }
             }
         }
