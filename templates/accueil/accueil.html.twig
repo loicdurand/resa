@@ -203,29 +203,22 @@
 									</legend>
 									<div class="fr-fieldset__element">
 										<div class="fr-radio-group">
-											<input type="radio" id="radio--transmission-1" checked name="radio--transmission" value="*">
-											<label class="fr-label" for="radio--transmission-1">
+											<input type="radio" id="radio--transmission-any" checked name="radio--transmission" value="*">
+											<label class="fr-label" for="radio--transmission-any">
 												Indifférent
 											</label>
 										</div>
 									</div>
+									{% for i, transmission in transmissions %}
 									<div class="fr-fieldset__element">
 										<div class="fr-radio-group">
-											<input type="radio" id="radio--transmission-2" name="radio--transmission" value="BVA">
-											<label class="fr-label" for="radio--transmission-2">
-												Boite de vitesses automatique
+											<input type="radio" id="radio--transmission-{{i}}" name="radio--transmission" value="{{transmission.code}}">
+											<label class="fr-label" for="radio--transmission-{{i}}">
+												{{transmission.libelle}}
 											</label>
 										</div>
 									</div>
-									<div class="fr-fieldset__element">
-										<div class="fr-radio-group">
-											<input type="radio" id="radio--transmission-3" name="radio--transmission" value="BVM">
-											<label class="fr-label" for="radio--transmission-3">
-												Boite de vitesses manuelle
-											</label>
-										</div>
-									</div>
-									<div class="fr-messages-group" id="radio--transmission-messages" aria-live="assertive"></div>
+									{% endfor %}
 								</fieldset>
 							
 					</div>
@@ -272,7 +265,7 @@
 										Heure
 									</label>
 									<select class="fr-select" id="select-from-heure" name="select-from-heure">
-										<option value="08" selected>08</option>
+										<option value="8" selected>08</option>
 									</select>
 								</div>
 								<div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-3 fr-pl-1w cs-select-minutes">
@@ -295,7 +288,7 @@
 
 						{# étape FIN #}
 						<div
-							id="step-2" class="fr-mt-1w fr-modal__content fr-grid-row hijdden">
+							id="step-2" class="fr-mt-1w fr-modal__content fr-grid-row hidden">
 							{# stepper #}
 							<div id="fr-modal--from-to-title" class="fr-stepper">
 								<h2 class="fr-stepper__title">

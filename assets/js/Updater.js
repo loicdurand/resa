@@ -61,6 +61,7 @@ export default class Updater extends Emitter {
     ['debut', 'fin'].forEach(creneau => {
       this.modale[creneau].heure.length = 0;
       const heures = heures_ouverture[creneau];
+
       for (let i = heures[0]; i <= heures[heures.length - 1] && i < 50; i++) {
         const opt = document.createElement('option');
         opt.value = i;
@@ -74,6 +75,10 @@ export default class Updater extends Emitter {
       }
 
     });
+
+    // PATCH
+    if(this.modale['debut'].heure.selectedIndex < 0)
+      this.modale['debut'].heure.options[0].setAttribute('selected', 'selected')
 
     option.setAttribute('selected', 'selected');
 
@@ -123,6 +128,8 @@ export default class Updater extends Emitter {
   }
 
   get_ref_debut() {
+    console.log(this.modale.debut.heure.options);
+
     const //
       debut = this.modale.debut,
       iDate = debut.date.options[debut.date.selectedIndex].value,

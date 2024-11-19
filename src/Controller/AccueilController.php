@@ -38,20 +38,31 @@ class AccueilController extends AbstractController
             ->findAll();
 
         $categories = [];
+        $transmissions = [];
         $category_ids = [];
+        $transmission_ids = [];
         foreach ($vehicules as $vl) {
             $cat = $vl->getCategorie();
-            $id = $cat->getId();
-            if (!in_array($id, $category_ids)) {
-                $category_ids[] = $id;
+            $cat_id = $cat->getId();
+            $trans = $vl->getTransmission();
+            $trans_id = $trans->getId();
+
+            if (!in_array($cat_id, $category_ids)) {
+                $category_ids[] = $cat_id;
                 $categories[] = $cat;
+            }
+            if (!in_array($trans_id, $transmission_ids)) {
+                $transmission_ids[] = $trans_id;
+                $transmissions[] = [
+                    'code' => $trans->getCode(),
+                    'libelle' => $trans->getLibelle()
+                ];
             }
         }
 
         $horaires = $em
             ->getRepository(HoraireOuverture::class)
             ->findAll();
-
 
         $dates = [];
         $dates_fin = [];
@@ -87,6 +98,7 @@ class AccueilController extends AbstractController
         return $this->render('accueil/accueil.html.twig', array_merge($this->getAppConst(), [
             'vehicules' => $vehicules,
             'categories' => $categories,
+            'transmissions' => $transmissions,
             'dates' => $dates,
             'dates_fin' => $dates_fin
         ]));

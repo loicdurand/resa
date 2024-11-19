@@ -303,18 +303,6 @@
 
 
             & .fr-modal__content {
-                & .fr-input[value='0']+.cs-nb-label {
-                    display: none;
-                }
-
-                & .fr-input+.cs-nb-label {
-                    display: inline-block;
-                    position: absolute;
-                    top: 2.5rem;
-                    left: 0;
-                    font-weight: 400;
-                    text-align: center;
-                }
 
                 & .cs-btn {
                     border: 1px solid var(--grey-5);
