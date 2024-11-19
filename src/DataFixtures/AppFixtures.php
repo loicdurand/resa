@@ -148,7 +148,7 @@ class AppFixtures extends Fixture
         }
 
         $categories = [
-            'Citadine' => 'sedan.png',
+            // 'Citadine' => 'sedan.png',
             'Berline' => 'sedan.png',
             '4x4' => 'suv.png',
             'Utilitaire' => 'utilitaire.png',
@@ -243,15 +243,15 @@ class AppFixtures extends Fixture
                 $manager->persist($horaire);
                 $manager->flush();
             }
-        }
+        };
 
 
         $vls = [
-            [$genrs[1], $cats[4], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'AB-123-CD', 0],
-            [$genrs[1], $cats[1], $carbs[1], $transms[0], 'MERCEDES', 'GLA', '200 CDI', 'ELEGANCE', '2025-03-11', 5, 'AB-123-CE', 0],
+            [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'AB-123-CD', 0],
+            [$genrs[1], $cats[0], $carbs[1], $transms[0], 'MERCEDES', 'GLA', '200 CDI', 'ELEGANCE', '2025-03-11', 5, 'AB-123-CE', 0],
             [$genrs[1], $cats[0], $carbs[0], $transms[1], 'RENAULT', 'Clio', '1.0 SCe 60', null, '2024-12-11', 5, 'AB-123-CF', 1],
-            [$genrs[1], $cats[2], $carbs[1], $transms[0], 'BMW', 'X4', '30D', null, '2025-07-12', 4, 'AB-123-CG', 0],
-            [$genrs[0], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', null, null, '2025-03-06', 3, 'AB-123-CH', 0]
+            [$genrs[1], $cats[1], $carbs[1], $transms[0], 'BMW', 'X4', '30D', null, '2025-07-12', 4, 'AB-123-CG', 0],
+            [$genrs[0], $cats[2], $carbs[1], $transms[1], 'RENAULT', 'Master', null, null, '2025-03-06', 3, 'AB-123-CH', 0]
         ];
 
         foreach ($vls as $vl) {
