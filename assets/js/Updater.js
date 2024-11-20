@@ -148,7 +148,7 @@ export default class Updater extends Emitter {
           input.value = base;
           tmp_value = base;
         }
-        this.evtEmitter.dataset.nb_places = input.value === 'Indifférent' ? '*' : input.value;
+        this.evtEmitter.dataset.nbplaces = input.value === 'Indifférent' ? '*' : input.value;
         this.evtEmitter.dispatchEvent(this.update);
       });
     });
@@ -265,7 +265,7 @@ export default class Updater extends Emitter {
     this.filtres[DEBUT_OU_FIN].heure.innerText = heure;
     this.evtEmitter.dataset.debut = this.get_ref_debut();
     this.evtEmitter.dataset.fin = this.get_ref_fin();
-    ['categorie', 'serigraphie', 'nb_places', 'transmission'].forEach(field => {
+    ['categorie', 'serigraphie', 'nbplaces', 'transmission'].forEach(field => {
       this.evtEmitter.dataset[field] = '*';
     });
   }

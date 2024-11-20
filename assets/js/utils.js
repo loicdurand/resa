@@ -1,5 +1,6 @@
 export const // 
 
+    /* String utils */
     addZeros = (str, maxlen = 2) => {
         str = '' + str;
         while (str.length < maxlen)
@@ -7,6 +8,9 @@ export const //
         return str;
     },
 
+    pluralize = (nb, sing = '', plur = '') => (isNaN(nb) || +nb > 1) ? plur || (sing + 's') : sing,
+
+    /* Date utils */
     time = (t = 0) => {
 
         const // 
@@ -26,24 +30,7 @@ export const //
 
     subMinutes = (date, n) => time(+new Date(Date.parse(date) - (60 * 1000 * n))),
 
-    addMinutes = (date, n) => time(+new Date(Date.parse(date) + (60 * 1000 * n))),
-
-    isBetween = (limiteDebut, limiteFin) => (sDebut) => {
-        const // 
-            Debut = typeof sDebut === 'string' ? sDebut : sDebut.debut,
-            Fin = typeof sDebut === 'string' ? sDebut : (sDebut.fin || sDebut.debut),
-            limiteBasse = +limiteDebut.split('-').join(''),
-            limiteHaute = +limiteFin.split('-').join(''),
-            [debut] = Debut.split(/\s|T/),
-            [fin] = Fin.split(/\s|T/),
-            intDebut = +debut.split('-').join(''),
-            intFin = +fin.split('-').join('');
-        if (intFin < limiteBasse)
-            return false;
-        if (intDebut > limiteHaute)
-            return false;
-        return true;
-    };
+    addMinutes = (date, n) => time(+new Date(Date.parse(date) + (60 * 1000 * n)));
 
 export class Emitter {
 

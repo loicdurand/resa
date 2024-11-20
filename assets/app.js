@@ -4,6 +4,7 @@ import "/node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module";
 
 import './styles/app.scss';
 
+import { pluralize } from './js/utils';
 import TimeUpdate from './js/Updater';
 
 console.clear();
@@ -50,8 +51,42 @@ onReady('#select-from-date').then(() => {
 
   const updater = new TimeUpdate();
   updater.addEventListener('update', ({ target: { dataset } }) => {
-    const { ...data } = dataset;
-    console.log(data);
+    const //
+      mem = [],
+      { debut, fin, ...data } = dataset,
+      nb_vls = document.getElementById('X-vls-dispos'),
+      vls = [...document.getElementsByClassName('vehicule-card')];
+    console.log({ data });
+
+    let count_vls = vls.length;
+
+    vls.forEach(vl => {
+      const vl_idx = vl.dataset.index;
+      vl.classList.remove('hidden');
+      for (let field in data) {
+        if (data[field] !== '*') {
+          console.log({ field });
+          if (field === 'nbplaces') {
+            if (+data[field] > +vl.dataset[field]) {
+              console.log(data[field], vl.dataset[field]);
+              vl.classList.add('hidden');
+              if (!mem.includes(vl_idx)) {
+                count_vls--;
+                mem.push(vl_idx);
+              }
+            }
+          } else if (vl.dataset[field] !== data[field]) {
+            vl.classList.add('hidden');
+            if (!mem.includes(vl_idx)) {
+              count_vls--;
+              mem.push(vl_idx);
+            }
+          }
+        }
+      }
+      nb_vls.innerText = `${count_vls} vehicule${pluralize(count_vls)} disponible${pluralize(count_vls)}`;
+    });
+
   });
 
   [
