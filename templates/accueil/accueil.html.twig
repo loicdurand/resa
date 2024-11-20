@@ -255,7 +255,7 @@
 									<select class="fr-select" id="select-from-date" name="select-from-date">
 										{% for i, date in dates %}
 											<option value="{{ date.en }}" {{i==0 ? 'selected':''}} data-short="{{date.short}}" data-am="{{date.horaires.AM is defined ? date.horaires.AM:''}}" data-pm="{{date.horaires.PM is defined ? date.horaires.PM:''}}" class="center" {{date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':""}}>
-												{{ date.fr }}
+												{{ date.fr }} ({{date.horaires|length}})
 											</option>
 										{% endfor %}
 									</select>

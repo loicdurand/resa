@@ -39,10 +39,12 @@ export default class Updater extends Emitter {
     super();
 
     let //
+      starts_auj = true,
       CSAG_ouvert_auj = true,
       CSAG_horaire_depasse = false,
       option = this.modale.debut.date.querySelector('option');
     while (option.disabled) {
+      starts_auj = false;
       CSAG_ouvert_auj = false;
       option.removeAttribute('selected');
       option = option.nextElementSibling;
@@ -50,10 +52,15 @@ export default class Updater extends Emitter {
 
     const // 
       heures_ouverture = this.get_heures_ouverture(option),
-      now_apres_fermeture_CSAG = CSAG_ouvert_auj && (+H > Math.max(...heures_ouverture.debut, ...heures_ouverture.fin));
+      min = Math.min(...heures_ouverture.debut, ...heures_ouverture.fin),
+      max = Math.max(...heures_ouverture.debut, ...heures_ouverture.fin),
+      now_hors_horaires_CSAG = (!starts_auj || +H < min) ? heures_ouverture[0] : +H > max;
+
+    console.log(option.value, H, min);
+
 
     // ex: je suis sur le site à 22H. Le CSAG était ouvert aujourd'hui, pourtant il est fermé
-    if (now_apres_fermeture_CSAG) {
+    if (now_hors_horaires_CSAG) {
       option.disabled = true;
       return new Updater();
     }
@@ -77,7 +84,7 @@ export default class Updater extends Emitter {
     });
 
     // PATCH
-    if(this.modale['debut'].heure.selectedIndex < 0)
+    if (this.modale['debut'].heure.selectedIndex < 0)
       this.modale['debut'].heure.options[0].setAttribute('selected', 'selected')
 
     option.setAttribute('selected', 'selected');
@@ -128,8 +135,6 @@ export default class Updater extends Emitter {
   }
 
   get_ref_debut() {
-    console.log(this.modale.debut.heure.options);
-
     const //
       debut = this.modale.debut,
       iDate = debut.date.options[debut.date.selectedIndex].value,

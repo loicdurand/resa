@@ -66,8 +66,9 @@ class AccueilController extends AbstractController
 
         $dates = [];
         $dates_fin = [];
-        $now = new \DateTime('now');
-        $max = new \DateTime('now');
+        $timezone = new \DateTimeZone('America/Guadeloupe');
+        $now = new \DateTime('now', $timezone);
+        $max = new \DateTime('now', $timezone);
         $max->modify('+ 3 months');
         $max_date = $max->format("Y-m-d");
         $max->modify('+ 3 weeks');
