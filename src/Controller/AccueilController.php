@@ -5,7 +5,6 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Role;
 use App\Entity\Action;
@@ -20,8 +19,6 @@ use App\Form\VehiculeType;
 use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-
-
 
 class AccueilController extends AbstractController
 {
@@ -76,21 +73,23 @@ class AccueilController extends AbstractController
         for ($i = 0; $now->format("Y-m-d") !== $max->format("Y-m-d"); $i++) {
             $fr_date =  $this->FR($now->format('Y-m-d'));
             $atelier_ouvert = $this->getHorairesByDay(substr($fr_date, 0, 2), $horaires);
-            if ($now->format("Y-m-d") === $max_date)
+            if ($now->format("Y-m-d") === $max_date) {
                 $ok = true;
+            }
 
-            if (!$ok)
+            if (!$ok) {
                 $dates[] = [
                     'en' => $now->format('Y-m-d'),
                     'fr' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' : $fr_date),
-                    'short' => $i === 0 ? 'Auj.' : ($i === 1 ? 'Demain' :/*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
+                    'short' => $i === 0 ? 'Auj.' : ($i === 1 ? 'Demain' : /*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
                     'horaires' => $atelier_ouvert
                 ];
+            }
 
             $dates_fin[] = [
                 'en' => $now->format('Y-m-d'),
                 'fr' => $i === 0 ? 'Aujourd\'hui' : ($i === 1 ? 'Demain' : $fr_date),
-                'short' => $i === 0 ? 'Auj.' : ($i === 1 ? 'Demain' :/*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
+                'short' => $i === 0 ? 'Auj.' : ($i === 1 ? 'Demain' : /*preg_replace('#\s.*#', ' ', $fr_date).*/ $now->format('d/m')),
                 'horaires' => $atelier_ouvert
             ];
             $now->modify('+ 1 days');

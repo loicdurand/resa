@@ -252,6 +252,34 @@
     }
 }
 
+// Bouton nombre de places
+.cs-nb-places--container {
+    position: relative;
+
+    & .cs-nb-places--button,
+    & .cs-nb-places--input {
+        float: left;
+    }
+
+    & .cs-nb-places--button {
+        width: 20%;
+        &.cs-nb-places--button-subtract{
+            border-radius: 6px 0 0 6px;
+        }
+        &.cs-nb-places--button-add{
+            border-radius: 0 6px 6px 0;
+        }
+    }
+
+    & .cs-nb-places--input {
+        width: 60%;
+        text-align: center;
+        border: 1px solid;
+        border-radius: 0;
+        color: inherit;
+    }
+}
+
 // MODALES 
 
 .cs-select-minutes {
@@ -299,8 +327,6 @@
 
         & .fr-modal__body {
             max-height: 100vh !important;
-
-
 
             & .fr-modal__content {
 

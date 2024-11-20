@@ -56,9 +56,6 @@ export default class Updater extends Emitter {
       max = Math.max(...heures_ouverture.debut, ...heures_ouverture.fin),
       now_hors_horaires_CSAG = (!starts_auj || +H < min) ? heures_ouverture[0] : +H > max;
 
-    console.log(option.value, H, min);
-
-
     // ex: je suis sur le site à 22H. Le CSAG était ouvert aujourd'hui, pourtant il est fermé
     if (now_hors_horaires_CSAG) {
       option.disabled = true;
@@ -119,6 +116,41 @@ export default class Updater extends Emitter {
         this.evtEmitter.dataset.categorie = target.dataset.categorie;
         this.evtEmitter.dispatchEvent(this.update);
       })
+    });
+
+    let // 
+      base = 5,
+      tmp_value = 4;
+    ['subtract', 'add'].forEach(field => {
+      const // 
+        input = document.getElementById('input--nb-places'),
+        btn = document.getElementById(`cs-nb-places--button-${field}`),
+        min = 2,
+        max = 9;
+      btn.addEventListener('click', e => {
+        if (input.value !== 'Indifférent') {
+          if (field === 'add') {
+            tmp_value = tmp_value + 1;
+            if (tmp_value <= max) {
+              input.value = tmp_value;
+            } else {
+              input.value = 'Indifférent';
+            }
+          } else {
+            tmp_value = tmp_value - 1;
+            if (tmp_value >= min) {
+              input.value = tmp_value;
+            } else {
+              input.value = 'Indifférent';
+            }
+          }
+        } else {
+          input.value = base;
+          tmp_value = base;
+        }
+        this.evtEmitter.dataset.nb_places = input.value === 'Indifférent' ? '*' : input.value;
+        this.evtEmitter.dispatchEvent(this.update);
+      });
     });
 
     ['serigraphie', 'transmission'].forEach(field => {
@@ -233,7 +265,7 @@ export default class Updater extends Emitter {
     this.filtres[DEBUT_OU_FIN].heure.innerText = heure;
     this.evtEmitter.dataset.debut = this.get_ref_debut();
     this.evtEmitter.dataset.fin = this.get_ref_fin();
-    ['categorie', 'serigraphie', 'transmission'].forEach(field => {
+    ['categorie', 'serigraphie', 'nb_places', 'transmission'].forEach(field => {
       this.evtEmitter.dataset[field] = '*';
     });
   }
