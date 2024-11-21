@@ -109,8 +109,9 @@ export default class Updater extends Emitter {
       });
     });
 
-    [...document.querySelectorAll('[data-categorie]')].forEach((btn, i, btns) => {
+    [...document.querySelectorAll('#fr-modal--categorie [data-categorie]')].forEach((btn, i, btns) => {
       btn.addEventListener('click', ({ currentTarget: target }) => {
+        console.log('ici');
         btns.forEach(btn => btn.classList.remove('selected'));
         target.classList.add('selected');
         this.evtEmitter.dataset.categorie = target.dataset.categorie;

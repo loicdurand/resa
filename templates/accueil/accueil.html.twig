@@ -79,83 +79,93 @@
 			.
 		</p>
 
-		{% for n, vehicule in vehicules %}
-			<div	class="vehicule-card vehicule-card--result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow"	data-index="{{ n }}"	data-categorie="{{ vehicule.categorie.libelle }}"	data-serigraphie="{{ vehicule.serigraphie ? 'Oui' : 'Non' }}"	data-transmission="{{ vehicule.transmission.code }}"	data-nbplaces="{{ vehicule.NbPlaces }}">
-				<figure	class="cs-img-container left">
-					<img	class="cs-img"	src="{{ asset('images/4L.jpg') }}"	alt="Renault 4l sérigraphiée">
-						<figcaption	class="hidden">
-							Renault 4l sérigraphiée
-						</figcaption>
-					</figure>
+		{# carte affichée si aucun véhicule disponible #}
+		<div	id="no-result"	class="hidden vehicule-card vehicule-card--no-result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow">
+			<figure	class="cs-img-container left">
+				<img	class="cs-img"	src="{{ asset('images/4L.jpg') }}"	alt="Renault 4l sérigraphiée">
+					<figcaption	class="hidden">
+						Renault 4l sérigraphiée
+					</figcaption>
+				</figure>
 
-					<div	class="left cs-descr-container">
-						<dl>
-							<dt	class="cs-marque">
-								{{ vehicule.marque }}
-								&nbsp;
-								<span	class="cs-modele">
-									{{ vehicule.modele }}
-								</span>
-							</dt>
-							{% if (vehicule.motorisation ~ vehicule.finition) is empty %}
-								<br/>
-							{% else %}
-								<dd>
-									{{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
-								</dd>
-							{% endif %}
+				<div	class="left cs-descr-container">
+					<dl>
+						<dt	class="cs-marque">
+							Aucun résultat.
+						</dt>
+						{% if vehicules|length %}
 							<dd>
-								<ul	class="fr-tags-group cs-tags">
-									<li>
-										<p	class="fr-tag fr-tag--sm">
-											{{ vehicule.transmission.code }}
-										</p>
-									</li>
-									<li>
-										<p	class="fr-tag fr-tag--sm">
-											{{ vehicule.carburant.libelle }}
-										</p>
-									</li>
-								</ul>
-							</dd>
-							<dd	title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
-								{% for i in range(1, vehicule.NbPlaces) %}
-									<i	class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
-								{% endfor %}
-							</dd>
-						</dl>
-					</div>
-				</div>
-			{% endfor %}
-
-			<div	id="no-result"	class="hidden vehicule-card vehicule-card--no-result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow">
-				<figure	class="cs-img-container left">
-					<img	class="cs-img"	src="{{ asset('images/4L.jpg') }}"	alt="Renault 4l sérigraphiée">
-						<figcaption	class="hidden">
-							Renault 4l sérigraphiée
-						</figcaption>
-					</figure>
-
-					<div	class="left cs-descr-container">
-						<dl>
-							<dt	class="cs-marque">
-								Aucun véhicule disponible.
-							</dt>
-							{% if vehicules|length %}
-								<dd>
-									{{ vehicules|length }}
-									{{ vehicules|length > 1 ? 'véhicules' : 'véhicule' }}
+								{{ vehicules|length }}
+								{{ vehicules|length > 1 ? 'véhicules' : 'véhicule' }}
+								<span	class="hide-s">
 									{{ (vehicules|length)>1 ? 'pourraient' : 'pourrait' }}
 									vous être
 									{{ (vehicules|length)>1 ? 'proposés' : 'proposés' }}
-									en élargissant vos critères de recherche.
-									.
-								</dd>
-							{% endif %}
+								</span>
+								en élargissant vos critères de recherche.
+								.
+							</dd>
+							<dd	class="cs-sm-text">
+								<span	class="underline">
+									Voir les filtres appliqués
+								</span>
+								<ul	id="filtres_appliques"></ul>
+							</dd>
+						{% endif %}
 
-						</dl>
-					</div>
+					</dl>
 				</div>
+			</div>
+
+			{# Affichage des véhicules #}
+			{% for n, vehicule in vehicules %}
+				<div	class="vehicule-card vehicule-card--result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow"	data-index="{{ n }}"	data-categorie="{{ vehicule.categorie.libelle }}"	data-serigraphie="{{ vehicule.serigraphie ? 'Oui' : 'Non' }}"	data-transmission="{{ vehicule.transmission.code }}"	data-nbplaces="{{ vehicule.NbPlaces }}">
+					<figure	class="cs-img-container left">
+						<img	class="cs-img"	src="{{ asset('images/4L.jpg') }}"	alt="Renault 4l sérigraphiée">
+							<figcaption	class="hidden">
+								Renault 4l sérigraphiée
+							</figcaption>
+						</figure>
+
+						<div	class="left cs-descr-container">
+							<dl>
+								<dt	class="cs-marque">
+									{{ vehicule.marque }}
+									&nbsp;
+									<span	class="cs-modele">
+										{{ vehicule.modele }}
+									</span>
+								</dt>
+								{% if (vehicule.motorisation ~ vehicule.finition) is empty %}
+									<br/>
+								{% else %}
+									<dd>
+										{{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
+									</dd>
+								{% endif %}
+								<dd>
+									<ul	class="fr-tags-group cs-tags">
+										<li>
+											<p	class="fr-tag fr-tag--sm">
+												{{ vehicule.transmission.code }}
+											</p>
+										</li>
+										<li>
+											<p	class="fr-tag fr-tag--sm">
+												{{ vehicule.carburant.libelle }}
+											</p>
+										</li>
+									</ul>
+								</dd>
+								<dd	title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
+									{% for i in range(1, vehicule.NbPlaces) %}
+										<i	class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
+									{% endfor %}
+								</dd>
+							</dl>
+						</div>
+					</div>
+				{% endfor %}
 
 			</div>
 

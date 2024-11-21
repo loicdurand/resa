@@ -54,21 +54,43 @@ onReady('#select-from-date').then(() => {
     const //
       mem = [],
       { debut, fin, ...data } = dataset,
+      FR = en_date => {
+        const  // 
+          [date, heure] = en_date.split(/\s|T|\+/),
+          [YYYY, MM, DD] = date.split('-'),
+          [hh, mm] = heure.split(/:/);
+        return `${DD}/${MM}/${YYYY} ${hh}:${mm}`;
+      },
+      filtres_appliques = [`<li>Du ${FR(debut)} au ${FR(fin)}</li>`],
+      filtres_elt = document.getElementById('filtres_appliques'),
       nb_vls = document.getElementById('X-vls-dispos'),
       vls = [...document.getElementsByClassName('vehicule-card--result')],
       no_result = document.getElementById('no-result');
-    console.log({ data });
+    console.log({ data, debut, fin });
 
+    filtres_elt.innerText = '';
     no_result.classList.add('hidden');
 
     let count_vls = vls.length;
+
+    const fields = {
+      nbplaces: 'Nb places',
+      categorie: 'Catégorie',
+      serigraphie: 'Sérigraphie',
+      transmission: 'Transmission'
+    };
+
+    for (let field in data) {
+      if (data[field] !== '*') {
+        filtres_appliques.push(`<li>${fields[field]}:${data[field]}</li>`);
+      }
+    }
 
     vls.forEach(vl => {
       const vl_idx = vl.dataset.index;
       vl.classList.remove('hidden');
       for (let field in data) {
         if (data[field] !== '*') {
-          console.log({ field });
           if (field === 'nbplaces') {
             if (+data[field] > +vl.dataset[field]) {
               console.log(data[field], vl.dataset[field]);
@@ -90,6 +112,7 @@ onReady('#select-from-date').then(() => {
       nb_vls.innerText = `${count_vls} vehicule${pluralize(count_vls)} disponible${pluralize(count_vls)}`;
       if (!count_vls) {
         no_result.classList.remove('hidden');
+        filtres_elt.innerHTML = filtres_appliques.join('');
       }
     });
 
