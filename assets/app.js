@@ -55,8 +55,11 @@ onReady('#select-from-date').then(() => {
       mem = [],
       { debut, fin, ...data } = dataset,
       nb_vls = document.getElementById('X-vls-dispos'),
-      vls = [...document.getElementsByClassName('vehicule-card')];
+      vls = [...document.getElementsByClassName('vehicule-card--result')],
+      no_result = document.getElementById('no-result');
     console.log({ data });
+
+    no_result.classList.add('hidden');
 
     let count_vls = vls.length;
 
@@ -85,6 +88,9 @@ onReady('#select-from-date').then(() => {
         }
       }
       nb_vls.innerText = `${count_vls} vehicule${pluralize(count_vls)} disponible${pluralize(count_vls)}`;
+      if (!count_vls) {
+        no_result.classList.remove('hidden');
+      }
     });
 
   });
