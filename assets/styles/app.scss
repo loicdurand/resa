@@ -249,31 +249,15 @@
             background-color: transparent;
             color: var(--text-default-grey);
         }
-
-        & .cs-sm-text {
-            font-size: .8rem;
-
-            & ul,
-            & li {
-                display: none;
-            }
-
-            &:hover {
-                background: var(--grey-0);
-                border: 1px solid var(--grey-5);
-                border-radius: 6px;
-
-                & ul {
-                    display: block;
-                }
-
-                & ul li {
-                    display: list-item;
-                    list-style-type: circle;
-                }
-            }
-        }
     }
+}
+
+.cs-filtres-appliques {
+
+    & .fr-tag {
+        background: var(--grey-4);
+    }
+
 }
 
 // Bouton nombre de places

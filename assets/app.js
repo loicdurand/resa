@@ -59,9 +59,9 @@ onReady('#select-from-date').then(() => {
           [date, heure] = en_date.split(/\s|T|\+/),
           [YYYY, MM, DD] = date.split('-'),
           [hh, mm] = heure.split(/:/);
-        return `${DD}/${MM}/${YYYY} ${hh}:${mm}`;
+        return `${DD}/${MM} ${hh}:${mm}`;
       },
-      filtres_appliques = [`<li>Du ${FR(debut)} au ${FR(fin)}</li>`],
+      filtres_appliques = [`<li><p class="fr-tag fr-tag--sm">${FR(debut)}&nbsp;&rarr;&nbsp;${FR(fin)}</p></li>`],
       filtres_elt = document.getElementById('filtres_appliques'),
       nb_vls = document.getElementById('X-vls-dispos'),
       vls = [...document.getElementsByClassName('vehicule-card--result')],
@@ -74,15 +74,15 @@ onReady('#select-from-date').then(() => {
     let count_vls = vls.length;
 
     const fields = {
-      nbplaces: 'Nb places',
-      categorie: 'Catégorie',
-      serigraphie: 'Sérigraphie',
-      transmission: 'Transmission'
+      nbplaces: 'Nb places: ',
+      categorie: '',
+      serigraphie: 'Sérigraphie: ',
+      transmission: ''
     };
 
     for (let field in data) {
       if (data[field] !== '*') {
-        filtres_appliques.push(`<li>${fields[field]}:${data[field]}</li>`);
+        filtres_appliques.push(`<li><p class="fr-tag fr-tag--sm">${fields[field]}${data[field]}</p></li>`);
       }
     }
 
@@ -110,10 +110,10 @@ onReady('#select-from-date').then(() => {
         }
       }
       nb_vls.innerText = `${count_vls} vehicule${pluralize(count_vls)} disponible${pluralize(count_vls)}`;
-      if (!count_vls) {
+      //if (!count_vls) {
         no_result.classList.remove('hidden');
         filtres_elt.innerHTML = filtres_appliques.join('');
-      }
+      //}
     });
 
   });
