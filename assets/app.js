@@ -48,7 +48,78 @@ onReady('#select-from-date').then(() => {
     /* passage de l'étape 1 à 2 */
     step1 = document.getElementById('step-1'),
     step2 = document.getElementById('step-2'),
-    addTag = (msg = '', field = '') => {
+
+    filter = (e) => {
+      const //
+        { target } = e,
+        { dataset } = target,
+        mem = [],
+        { debut, fin, ...data } = dataset,
+        FR = en_date => {
+          const  // 
+            [date, heure] = en_date.split(/\s|T|\+/),
+            [YYYY, MM, DD] = date.split('-'),
+            [hh, mm] = heure.split(/:/);
+          return `${DD}/${MM} ${hh}:${mm}`;
+        },
+        filtres_appliques = [addTag(`${FR(debut)}&nbsp;&rarr;&nbsp;${FR(fin)}`)],
+        filtres_elt = document.getElementById('filtres_appliques'),
+        nb_vls = document.getElementById('X-vls-dispos'),
+        vls = [...document.getElementsByClassName('vehicule-card--result')],
+        no_result = document.getElementById('no-result');
+      console.log({ data, debut, fin });
+
+      filtres_elt.innerText = '';
+      no_result.classList.add('hidden');
+
+      let count_vls = vls.length;
+
+      const fields = {
+        nbplaces: 'Nb places: ',
+        categorie: '',
+        serigraphie: 'Sérigraphie: ',
+        transmission: ''
+      };
+
+      for (let field in data) {
+        if (data[field] !== '*') {
+          filtres_appliques.push(addTag(`${fields[field]}${data[field]}`, field, target));
+        }
+      }
+
+      vls.forEach(vl => {
+        const vl_idx = vl.dataset.index;
+        vl.classList.remove('hidden');
+        for (let field in data) {
+          if (data[field] !== '*') {
+            if (field === 'nbplaces') {
+              if (+data[field] > +vl.dataset[field]) {
+                console.log(data[field], vl.dataset[field]);
+                vl.classList.add('hidden');
+                if (!mem.includes(vl_idx)) {
+                  count_vls--;
+                  mem.push(vl_idx);
+                }
+              }
+            } else if (vl.dataset[field] !== data[field]) {
+              vl.classList.add('hidden');
+              if (!mem.includes(vl_idx)) {
+                count_vls--;
+                mem.push(vl_idx);
+              }
+            }
+          }
+        }
+        nb_vls.innerText = `${count_vls} vehicule${pluralize(count_vls)} disponible${pluralize(count_vls)}`;
+        //if (!count_vls) {
+        no_result.classList.remove('hidden');
+        filtres_appliques.forEach(tag => filtres_elt.appendChild(tag));
+        //}
+      });
+
+    },
+
+    addTag = (msg = '', field = '', updater) => {
       const  // 
         li = document.createElement('li'),
         p = document.createElement('p'),
@@ -64,8 +135,8 @@ onReady('#select-from-date').then(() => {
       if (!field)
         return li;
 
-      li.dataset.field = field;
-      li.addEventListener('click', (e) => {
+      p.dataset.field = field;
+      p.addEventListener('click', (e) => {
         const // 
           target = e.currentTarget,
           field = target.dataset.field;
@@ -86,80 +157,18 @@ onReady('#select-from-date').then(() => {
           default:
             break;
         }
+        updater.dataset[field] = '*';
+        filter({ target: updater });
+
         if (target.parentNode !== null)
           target.outerHTML = '';
       });
       return li;
     },
+
     updater = new TimeUpdate();
 
-  updater.addEventListener('update', ({ target: { dataset } }) => {
-    const //
-      mem = [],
-      { debut, fin, ...data } = dataset,
-      FR = en_date => {
-        const  // 
-          [date, heure] = en_date.split(/\s|T|\+/),
-          [YYYY, MM, DD] = date.split('-'),
-          [hh, mm] = heure.split(/:/);
-        return `${DD}/${MM} ${hh}:${mm}`;
-      },
-      filtres_appliques = [addTag(`${FR(debut)}&nbsp;&rarr;&nbsp;${FR(fin)}`)],
-      filtres_elt = document.getElementById('filtres_appliques'),
-      nb_vls = document.getElementById('X-vls-dispos'),
-      vls = [...document.getElementsByClassName('vehicule-card--result')],
-      no_result = document.getElementById('no-result');
-    console.log({ data, debut, fin });
-
-    filtres_elt.innerText = '';
-    no_result.classList.add('hidden');
-
-    let count_vls = vls.length;
-
-    const fields = {
-      nbplaces: 'Nb places: ',
-      categorie: '',
-      serigraphie: 'Sérigraphie: ',
-      transmission: ''
-    };
-
-    for (let field in data) {
-      if (data[field] !== '*') {
-        filtres_appliques.push(addTag(`${fields[field]}${data[field]}`, field));
-      }
-    }
-
-    vls.forEach(vl => {
-      const vl_idx = vl.dataset.index;
-      vl.classList.remove('hidden');
-      for (let field in data) {
-        if (data[field] !== '*') {
-          if (field === 'nbplaces') {
-            if (+data[field] > +vl.dataset[field]) {
-              console.log(data[field], vl.dataset[field]);
-              vl.classList.add('hidden');
-              if (!mem.includes(vl_idx)) {
-                count_vls--;
-                mem.push(vl_idx);
-              }
-            }
-          } else if (vl.dataset[field] !== data[field]) {
-            vl.classList.add('hidden');
-            if (!mem.includes(vl_idx)) {
-              count_vls--;
-              mem.push(vl_idx);
-            }
-          }
-        }
-      }
-      nb_vls.innerText = `${count_vls} vehicule${pluralize(count_vls)} disponible${pluralize(count_vls)}`;
-      //if (!count_vls) {
-      no_result.classList.remove('hidden');
-      filtres_appliques.forEach(tag => filtres_elt.appendChild(tag));
-      //}
-    });
-
-  });
+  updater.addEventListener('update', filter);
 
   [
     document.getElementById('to-step-2-btn'), // bouton "Début" dans les filtres
