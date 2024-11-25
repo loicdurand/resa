@@ -111,8 +111,8 @@ onReady('#select-from-date').then(() => {
           }
         }
         nb_vls.innerText = `${count_vls} vehicule${pluralize(count_vls)} disponible${pluralize(count_vls)}`;
-        //if (!count_vls) {
-        no_result.classList.remove('hidden');
+        if (!count_vls)
+          no_result.classList.remove('hidden');
         filtres_appliques.forEach(tag => filtres_elt.appendChild(tag));
         //}
       });
