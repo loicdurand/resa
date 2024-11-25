@@ -66,9 +66,9 @@ class AccueilController extends AbstractController
         $timezone = new \DateTimeZone('America/Guadeloupe');
         $now = new \DateTime('now', $timezone);
         $max = new \DateTime('now', $timezone);
-        $max->modify('+ 3 months');
+        $max->modify($this->app_const['APP_LIMIT_RESA']);
         $max_date = $max->format("Y-m-d");
-        $max->modify('+ 3 weeks');
+        $max->modify($this->app_const['APP_MAX_RESA_DURATION']);
         $max->modify('- 1 days');
         $ok = false;
         for ($i = 0; $now->format("Y-m-d") !== $max->format("Y-m-d"); $i++) {
@@ -97,7 +97,7 @@ class AccueilController extends AbstractController
         }
 
         $last_date = [];
-        for ($i = count($dates_fin) - 1; $i > 0; $i--) {
+        for ($i = count($dates) - 1; $i > 0; $i--) {
             if (count($dates_fin[$i]['horaires']) > 0) {
                 $last_date = $dates_fin[$i];
                 $i = 0;
@@ -114,6 +114,25 @@ class AccueilController extends AbstractController
         ]));
     }
 
+    #[Route(path: '/reserver/{vl_id}')]
+    #[Route(path: '/reserver/{vl_id}/{from}/{to}')]
+    public function reserver(string $vl_id, string $from = '', string $to = ''): Response
+    {
+        $this->setAppConst();
+
+        if ($from === '') {
+            $timezone = new \DateTimeZone('America/Guadeloupe');
+            $now = new \DateTime('now', $timezone);
+            $tmp = new \DateTime('now', $timezone);
+            $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
+            $max->modify($this->app_const['APP_LIMIT_RESA']);
+            $from =  $now->format('Y-m-d H:i:s');
+            $to = $max->format('Y-m-d H:i:s');
+        }
+        dd([$vl_id, $from, $to]);
+        return $this->render('accueil/reserver.html.twig', array_merge($this->getAppConst(), []));
+    }
+
     /**
      * Utils
      */
@@ -126,7 +145,8 @@ class AccueilController extends AbstractController
     private function setAppConst()
     {
         $this->app_const = [];
-        foreach (['app.name', 'app.tagline', 'app.slug', 'app.max_nb_mois_reservation'] as $param) {
+        //dd($this->getParameter('app.max_resa_duration'));
+        foreach (['app.name', 'app.tagline', 'app.slug', 'app.limit_resa', 'app.max_resa_duration'] as $param) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
