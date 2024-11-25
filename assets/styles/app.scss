@@ -256,6 +256,13 @@
 
     & .fr-tag {
         background: var(--grey-4);
+        &.clickable{
+            cursor: pointer;
+        }
+
+        &:before {
+            width: .8rem;
+        }
     }
 
 }

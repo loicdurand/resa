@@ -47,9 +47,52 @@ onReady('#select-from-date').then(() => {
   const // 
     /* passage de l'étape 1 à 2 */
     step1 = document.getElementById('step-1'),
-    step2 = document.getElementById('step-2');
+    step2 = document.getElementById('step-2'),
+    addTag = (msg = '', field = '') => {
+      const  // 
+        li = document.createElement('li'),
+        p = document.createElement('p'),
+        classes = ['fr-tag', 'fr-tag--icon-right'];
 
-  const updater = new TimeUpdate();
+      if (field)
+        ['fr-fi-close-line', 'clickable'].forEach(cls => classes.push(cls));
+
+      classes.forEach(cls => p.classList.add(cls));
+      p.innerHTML = msg;
+      li.appendChild(p);
+
+      if (!field)
+        return li;
+
+      li.dataset.field = field;
+      li.addEventListener('click', (e) => {
+        const // 
+          target = e.currentTarget,
+          field = target.dataset.field;
+        let form_elt;
+        switch (field) {
+          case 'categorie':
+            form_elt = document.querySelector('[data-categorie="*"]');
+            form_elt.click();
+            break;
+          case 'serigraphie':
+          case 'transmission':
+            form_elt = document.querySelector(`input[name=radio--${field}][value="*"]`);
+            form_elt.checked = true;
+            break;
+          case 'nbplaces':
+            form_elt = document.getElementById('input--nb-places');
+            form_elt.value = 'Indifférent';
+          default:
+            break;
+        }
+        if (target.parentNode !== null)
+          target.outerHTML = '';
+      });
+      return li;
+    },
+    updater = new TimeUpdate();
+
   updater.addEventListener('update', ({ target: { dataset } }) => {
     const //
       mem = [],
@@ -61,7 +104,7 @@ onReady('#select-from-date').then(() => {
           [hh, mm] = heure.split(/:/);
         return `${DD}/${MM} ${hh}:${mm}`;
       },
-      filtres_appliques = [`<li><p class="fr-tag fr-tag--sm">${FR(debut)}&nbsp;&rarr;&nbsp;${FR(fin)}</p></li>`],
+      filtres_appliques = [addTag(`${FR(debut)}&nbsp;&rarr;&nbsp;${FR(fin)}`)],
       filtres_elt = document.getElementById('filtres_appliques'),
       nb_vls = document.getElementById('X-vls-dispos'),
       vls = [...document.getElementsByClassName('vehicule-card--result')],
@@ -82,7 +125,7 @@ onReady('#select-from-date').then(() => {
 
     for (let field in data) {
       if (data[field] !== '*') {
-        filtres_appliques.push(`<li><p class="fr-tag fr-tag--sm">${fields[field]}${data[field]}</p></li>`);
+        filtres_appliques.push(addTag(`${fields[field]}${data[field]}`, field));
       }
     }
 
@@ -111,8 +154,8 @@ onReady('#select-from-date').then(() => {
       }
       nb_vls.innerText = `${count_vls} vehicule${pluralize(count_vls)} disponible${pluralize(count_vls)}`;
       //if (!count_vls) {
-        no_result.classList.remove('hidden');
-        filtres_elt.innerHTML = filtres_appliques.join('');
+      no_result.classList.remove('hidden');
+      filtres_appliques.forEach(tag => filtres_elt.appendChild(tag));
       //}
     });
 
