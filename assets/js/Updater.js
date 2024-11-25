@@ -7,9 +7,6 @@ export default class Updater extends Emitter {
 
   heures_ouverture = [];
 
-  ref_debut = `${Y}-${M}-${D} ${H}:00:00`;
-  ref_fin = `${Y}-${M}-${D} ${addZeros(+H + 1, 2)}:00:00`;
-
   filtres = {
     debut: {
       date: document.getElementById('select-from-date--target'),
@@ -32,11 +29,22 @@ export default class Updater extends Emitter {
     }
   };
 
+  ref_debut = `${Y}-${M}-${D} ${H}:00:00`;
+  ref_fin = '';
+
   update = new Event("update");
 
   constructor() {
 
     super();
+
+    const  // 
+      lastOption = this.modale.fin.date.options[this.modale.fin.date.selectedIndex],
+      last_date = lastOption.value,
+      last_periode = (lastOption.dataset.pm || lastOption.dataset.am),
+      [, last_heure] = last_periode.split(/-/);
+
+    this.ref_fin = `${last_date} ${last_heure}:00`;
 
     let //
       starts_auj = true,
@@ -64,17 +72,21 @@ export default class Updater extends Emitter {
 
     ['debut', 'fin'].forEach(creneau => {
       this.modale[creneau].heure.length = 0;
-      const heures = heures_ouverture[creneau];
+      const heures = creneau === 'debut' ? heures_ouverture.debut : this.get_heures_ouverture(lastOption).fin;
 
       for (let i = heures[0]; i <= heures[heures.length - 1] && i < 50; i++) {
         const opt = document.createElement('option');
         opt.value = i;
         opt.innerText = addZeros(i, 2);
-        CSAG_horaire_depasse = CSAG_ouvert_auj && i <= +H;
+        CSAG_horaire_depasse = creneau === 'debut' ? CSAG_ouvert_auj && i <= +H : false;
         if (!heures.includes(i) || CSAG_horaire_depasse) {
           opt.disabled = true;
           opt.title = "En dehors des horaires d'ouverture du CSAG";
         }
+
+        if (creneau === 'fin' && i === heures[heures.length - 1])
+          opt.selected = true;
+        
         this.modale[creneau].heure.appendChild(opt);
       }
 
@@ -90,6 +102,7 @@ export default class Updater extends Emitter {
     this.set_ref_fin();
 
     ['date', 'heure'].forEach(part => {
+
       this.modale.debut[part].addEventListener('change', e => {
         this.set_ref_debut();
         this.addDays(e);
@@ -97,9 +110,7 @@ export default class Updater extends Emitter {
         this.evtEmitter.dataset.debut = this.get_ref_debut();
         this.evtEmitter.dispatchEvent(this.update);
       });
-    });
 
-    ['date', 'heure'].forEach(part => {
       this.modale.fin[part].addEventListener('change', e => {
         this.removeErrorText();
         this.set_ref_fin('show_error');
@@ -107,6 +118,7 @@ export default class Updater extends Emitter {
         this.evtEmitter.dataset.fin = this.get_ref_fin();
         this.evtEmitter.dispatchEvent(this.update);
       });
+
     });
 
     [...document.querySelectorAll('#fr-modal--categorie [data-categorie]')].forEach((btn, i, btns) => {

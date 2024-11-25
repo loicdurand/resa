@@ -69,6 +69,7 @@ class AccueilController extends AbstractController
         $max->modify('+ 3 months');
         $max_date = $max->format("Y-m-d");
         $max->modify('+ 3 weeks');
+        $max->modify('- 1 days');
         $ok = false;
         for ($i = 0; $now->format("Y-m-d") !== $max->format("Y-m-d"); $i++) {
             $fr_date =  $this->FR($now->format('Y-m-d'));
@@ -95,12 +96,21 @@ class AccueilController extends AbstractController
             $now->modify('+ 1 days');
         }
 
+        $last_date = [];
+        for ($i = count($dates_fin) - 1; $i > 0; $i--) {
+            if (count($dates_fin[$i]['horaires']) > 0) {
+                $last_date = $dates_fin[$i];
+                $i = 0;
+            }
+        }
+
         return $this->render('accueil/accueil.html.twig', array_merge($this->getAppConst(), [
             'vehicules' => $vehicules,
             'categories' => $categories,
             'transmissions' => $transmissions,
             'dates' => $dates,
-            'dates_fin' => $dates_fin
+            'dates_fin' => $dates_fin,
+            'last_date' => $last_date
         ]));
     }
 

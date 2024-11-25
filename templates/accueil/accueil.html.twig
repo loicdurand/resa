@@ -394,7 +394,7 @@
 																		</label>
 																		<select	class="fr-select"	id="select-to-date"	name="select-to-date">
 																			{% for i, date in dates_fin %}
-																				<option	value="{{ date.en }}"	data-short="{{ date.short }}"	data-am="{{ date.horaires.AM is defined ? date.horaires.AM:'' }}"	data-pm="{{ date.horaires.PM is defined ? date.horaires.PM:'' }}"	class="center"	{{ date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':'' }}>
+																				<option	{{ date.en == last_date.en ?	"selected":"" }}	value="{{ date.en }}"	data-short="{{ date.short }}"	data-am="{{ date.horaires.AM is defined ? date.horaires.AM:'' }}"	data-pm="{{ date.horaires.PM is defined ? date.horaires.PM:'' }}"	class="center"	{{ date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':'' }}>
 																					{{ date.fr }}
 																				</option>
 																			{% endfor %}
