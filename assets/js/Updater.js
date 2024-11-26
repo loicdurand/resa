@@ -51,7 +51,9 @@ export default class Updater extends Emitter {
       CSAG_ouvert_auj = true,
       CSAG_horaire_depasse = false,
       option = this.modale.debut.date.querySelector('option');
+      console.log('là');
     while (option.disabled) {
+      console.log('ici');
       starts_auj = false;
       CSAG_ouvert_auj = false;
       option.removeAttribute('selected');
@@ -63,6 +65,8 @@ export default class Updater extends Emitter {
       min = Math.min(...heures_ouverture.debut, ...heures_ouverture.fin),
       max = Math.max(...heures_ouverture.debut, ...heures_ouverture.fin),
       now_hors_horaires_CSAG = (!starts_auj || +H < min) ? heures_ouverture[0] : +H > max;
+
+      console.log({now_hors_horaires_CSAG, H});
 
     // ex: je suis sur le site à 22H. Le CSAG était ouvert aujourd'hui, pourtant il est fermé
     if (now_hors_horaires_CSAG) {
@@ -79,7 +83,7 @@ export default class Updater extends Emitter {
         opt.value = i;
         opt.innerText = addZeros(i, 2);
         CSAG_horaire_depasse = creneau === 'debut' ? CSAG_ouvert_auj && i <= +H : false;
-        if (!heures.includes(i) || CSAG_horaire_depasse) {
+        if (!heures.includes(i) || CSAG_horaire_depasse || (!now_hors_horaires_CSAG && i < +H)) {
           opt.disabled = true;
           opt.title = "En dehors des horaires d'ouverture du CSAG";
         }
