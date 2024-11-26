@@ -1,0 +1,22 @@
+.cs-fiche-vehicule {
+  & .cs-gallerie-btn {
+    padding: 0;
+  }
+
+  & .cs-marque {
+    font-weight: 900;
+    font-size: 1.5rem;
+  }
+
+  & dl,
+  & dd {
+    padding-inline-start: 0;
+  }
+
+  .cs-informations {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+}

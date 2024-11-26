@@ -51,9 +51,8 @@ export default class Updater extends Emitter {
       CSAG_ouvert_auj = true,
       CSAG_horaire_depasse = false,
       option = this.modale.debut.date.querySelector('option');
-      console.log('là');
-    while (option.disabled) {
-      console.log('ici');
+
+      while (option.disabled) {
       starts_auj = false;
       CSAG_ouvert_auj = false;
       option.removeAttribute('selected');
@@ -65,8 +64,6 @@ export default class Updater extends Emitter {
       min = Math.min(...heures_ouverture.debut, ...heures_ouverture.fin),
       max = Math.max(...heures_ouverture.debut, ...heures_ouverture.fin),
       now_hors_horaires_CSAG = (!starts_auj || +H < min) ? heures_ouverture[0] : +H > max;
-
-      console.log({now_hors_horaires_CSAG, H});
 
     // ex: je suis sur le site à 22H. Le CSAG était ouvert aujourd'hui, pourtant il est fermé
     if (now_hors_horaires_CSAG) {
@@ -127,7 +124,6 @@ export default class Updater extends Emitter {
 
     [...document.querySelectorAll('#fr-modal--categorie [data-categorie]')].forEach((btn, i, btns) => {
       btn.addEventListener('click', ({ currentTarget: target }) => {
-        console.log('ici');
         btns.forEach(btn => btn.classList.remove('selected'));
         target.classList.add('selected');
         this.evtEmitter.dataset.categorie = target.dataset.categorie;

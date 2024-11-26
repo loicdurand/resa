@@ -1,4 +1,6 @@
 @use "./starter-complet";
+@use "./accueil";
+@use "./reserver";
 
 // @font-face {
 // 	font-family: "Raleway";
@@ -11,139 +13,13 @@
 //         Helvetica, Arial, Courier New, sans-serif;
 // }
 
-/* FILTRES DE RECHERCHE */
-
-.cs-filtres-container {
-    top: 0;
-    left: 0;
-    height: 10rem;
-    width: 100%;
-    border-bottom: 1px solid var(--grey-4);
-    position: fixed;
-    background: transparent;
-    padding: 8px;
-    z-index: 1;
-    transition: all 350ms cubic-bezier(.70, 0, .34, 1);
-
-    &.hiddenOnScroll {
-        top: -10rem;
-    }
-
-    & .cs-btn-ctnr {
-        position: relative;
-
-        &.cs-date-ctnr {
-            height: 5rem;
-        }
-
-        &.cs-tags-ctnr {
-            height: 3rem;
-            margin-top: 1rem;
-        }
-
-        & .cs-btn {
-            float: left;
-            border: 1px solid var(--grey-5);
-            height: 100%;
-            background-color: var(--grey-0);
-            font-size: 1rem;
-            text-align: center;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-            outline: none;
-            position: relative;
-
-            &.cs-btn-from-to {
-                line-height: 4.5rem;
-                width: 50%;
-
-            }
-
-            &.cs-btn-tag {
-                width: 45%;
-                margin-left: 2.5%;
-                border-radius: 6px;
-
-                &.cs-btn-tag--right {
-                    margin-left: 5%;
-                }
-            }
-
-            &:after {
-                position: absolute;
-                content: "";
-                width: 0;
-                height: 100%;
-                top: 0;
-                left: 0;
-                direction: rtl;
-                z-index: -1;
-                box-shadow:
-                    -7px -7px 20px 0px #fff9,
-                    -4px -4px 5px 0px #fff9,
-                    7px 7px 20px 0px #0002,
-                    4px 4px 5px 0px #0001;
-                transition: all 0.3s ease;
-            }
-
-            &:hover {
-                color: var(--grey-10);
-            }
-
-            &:hover:after {
-                left: auto;
-                right: 0;
-                width: 100%;
-            }
-
-            &:active {
-                top: 2px;
-            }
-
-            &.cs-btn--left {
-                border-right: none;
-                border-radius: 6px 0 0 6px;
-            }
-
-            &.cs-btn--right {
-                border-left: none;
-                border-radius: 0px 6px 6px 0px;
-            }
-
-            & .cs-from-to {
-                height: 100%;
-                float: left;
-                width: 30%;
-                margin-left: -6px;
-                font-size: .8rem;
-                font-style: italic;
-            }
-
-            & .cs-from-to-value {
-                font-size: 1.2rem;
-                font-weight: 900;
-            }
-        }
-
-        & .separator {
-            content: "";
-            width: 2px;
-            height: 60%;
-            display: block;
-            background: var(--grey-5);
-            position: absolute;
-            left: 50%;
-            top: 20%;
-            z-index: 1;
-        }
-
-    }
-}
-
 .cs-main {
     margin-top: 10.5rem !important;
+}
+
+body.container .fr-tags-group .fr-tag {
+    background: var(--indigo-6);
+    color: var(--grey-0);
 }
 
 /* FOOTER */
@@ -188,115 +64,6 @@
 }
 
 /* FOOTER */
-
-/* AFFICHAGE DES VÉHICULES */
-
-.cs-nb-vehicules {
-    font-weight: 400 !important;
-    text-transform: uppercase;
-    margin-inline-start: -8px;
-}
-
-// CARD
-
-.cs-card {
-    border: 1px solid var(--grey-4);
-    border-radius: 6px;
-    padding: 0 !important;
-    max-height: 140px;
-    width: 100%;
-    background-image: none;
-    cursor: pointer;
-
-    & .cs-img-container {
-        width: 35%;
-        max-width: 126px;
-        height: 100%;
-        position: relative;
-        z-index: -1;
-
-        & .cs-img {
-            width: 150%;
-            height: auto;
-            border-radius: 6px 0 0 6px;
-            max-height: 140px;
-        }
-    }
-
-    & .cs-descr-container {
-        background-color: var(--grey-0);
-        height: 100%;
-        padding: .5rem;
-        width: 65%;
-        max-width: 65%;
-        border-radius: 0 6px 6px 0;
-
-        & .cs-marque {
-            padding-left: 16px;
-            margin-bottom: 0;
-            font-weight: 700 !important;
-            font-size: 1rem !important;
-            line-height: 1rem !important;
-        }
-
-        & .cs-tags {
-            margin-bottom: -8px;
-        }
-
-        & .cs-user-icon {
-            width: 12px;
-            padding: 0px;
-            margin: -12px -2px;
-            background-color: transparent;
-            color: var(--text-default-grey);
-        }
-    }
-}
-
-.cs-filtres-appliques {
-
-    & .fr-tag {
-        background: var(--grey-4);
-        &.clickable{
-            cursor: pointer;
-        }
-
-        &:before {
-            width: .8rem;
-        }
-    }
-
-}
-
-// Bouton nombre de places
-.cs-nb-places--container {
-    position: relative;
-
-    & .cs-nb-places--button,
-    & .cs-nb-places--input {
-        float: left;
-    }
-
-    & .cs-nb-places--button {
-        width: 20%;
-
-        &.cs-nb-places--button-subtract {
-            border-radius: 6px 0 0 6px;
-        }
-
-        &.cs-nb-places--button-add {
-            border-radius: 0 6px 6px 0;
-        }
-    }
-
-    & .cs-nb-places--input {
-        width: 60%;
-        text-align: center;
-        border: 1px solid;
-        border-radius: 0;
-        color: inherit;
-    }
-}
 
 // MODALES 
 

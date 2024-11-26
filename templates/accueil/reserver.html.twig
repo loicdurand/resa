@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+  {# Fil d'Arianne #}
+  <nav role="navigation" class="hide-s hide-m fr-breadcrumb" aria-label="vous êtes ici :">
+    <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+      Voir le fil d’Ariane
+    </button>
+    <div class="fr-collapse" id="breadcrumb-1">
+      <ol class="fr-breadcrumb__list">
+        <li>
+          <a href="/" class="fr-breadcrumb__link">
+            Accueil
+          </a>
+        </li>
+        <li>
+          <a class="fr-breadcrumb__link" aria-current="page">
+            Réserver un véhicule
+          </a>
+        </li>
+      </ol>
+    </div>
+  </nav>
+
+  {# fiche véhicule #}
+  <div id="fiche-vehicule" class="cs-fiche-vehicule fr-grid-row fr-grid-row--gutters">
+
+    {# GALLERIE #}
+    {# vue principale #}
+      <figure class="fr-col-9"> <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue principale du véhicule">
+        <figcaption class="hidden">
+          Vue principale du véhicule
+        </figcaption>
+      </figure>
+
+      {# vue de profil #}
+      <div class="fr-col-3 fr-mt-1w">
+        <figure>
+          <button class="fr-btn cs-gallerie-btn">
+            <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de profil du véhicule"></button>
+            <figcaption class="hidden">
+              Vue de profil du véhicule
+            </figcaption>
+          </figure>
+
+          {# vue de l'avant #}
+          <figure>
+            <button class="fr-btn cs-gallerie-btn">
+              <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de l'avant du véhicule"></button>
+              <figcaption class="hidden">
+                Vue de l'avant du véhicule
+              </figcaption>
+            </figure>
+
+            {# vue de l'arrière #}
+            <figure>
+              <button class="fr-btn cs-gallerie-btn">
+                <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de l'arrière du véhicule"></button>
+                <figcaption class="hidden">
+                  Vue de l'arrière du véhicule
+                </figcaption>
+              </figure>
+            </div>
+            {# FIN GALERIE #}
+
+            {# DESCRIPTION VL #}
+            <dl class="fr-col-12">
+              <dt class="cs-marque">
+                {{ vehicule.marque }}
+                <span class="cs-modele">
+                  {{ vehicule.modele }}
+                </span>
+              </dt>
+              {% if (vehicule.motorisation ~ vehicule.finition) is empty %}
+                <br/>
+              {% else %}
+                <dd>
+                  {{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
+                </dd>
+              {% endif %}
+              <dd>
+                <ul class="fr-tags-group cs-tags">
+                  <li>
+                    <p class="fr-tag fr-tag--sm">
+                      {{ vehicule.transmission.code }}
+                    </p>
+                  </li>
+                  <li>
+                    <p class="fr-tag fr-tag--sm">
+                      {{ vehicule.carburant.libelle }}
+                    </p>
+                  </li>
+                  <li>
+                    <p class="fr-tag fr-tag--sm">
+                      {{ vehicule.NbPlaces }}
+                      {{ vehicule.NbPlaces > 1 ? 'places' : 'place' }}
+                    </p>
+                  </li>
+                </ul>
+              </dd>
+            </dl>
+            {# FIN DESCRIPTION VL #}
+
+            {# INFORMATIONS #}
+            <div class="fr-col-12">
+              <p class="cs-informations">
+                Informations
+              </p>
+              <ul>
+                <li>
+                  Néant
+                </li>
+              </ul>
+            </div>
+            {# FIN INFORMATIONS #}
+
+            {# JE RÉSERVE #}
+            <div class="fr-col-12">
+              <p class="cs-informations">
+                Disponibilités
+              </p>
+            </div>
+          {# FIN JE RÉSERVE #}
+
+          </div>
+        {# fin fiche véhicule #}
+
+        {% endblock %}
+        

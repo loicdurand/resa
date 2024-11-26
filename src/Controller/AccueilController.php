@@ -23,14 +23,19 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class AccueilController extends AbstractController
 {
     private $app_const;
+    private $em;
+
+    public function __construct(ManagerRegistry $doctrine)
+    {
+        $this->em = $em = $doctrine->getManager();
+    }
 
     #[Route('/')]
-    public function accueil(ManagerRegistry $doctrine): Response
+    public function accueil(): Response
     {
         $this->setAppConst();
 
-        $em = $doctrine->getManager();
-        $vehicules = $em
+        $vehicules = $this->em
             ->getRepository(Vehicule::class)
             ->findAll();
 
@@ -57,7 +62,7 @@ class AccueilController extends AbstractController
             }
         }
 
-        $horaires = $em
+        $horaires = $this->em
             ->getRepository(HoraireOuverture::class)
             ->findAll();
 
@@ -129,8 +134,14 @@ class AccueilController extends AbstractController
             $from =  $now->format('Y-m-d H:i:s');
             $to = $max->format('Y-m-d H:i:s');
         }
-        dd([$vl_id, $from, $to]);
-        return $this->render('accueil/reserver.html.twig', array_merge($this->getAppConst(), []));
+
+        $vehicule = $this->em
+            ->getRepository(Vehicule::class)
+            ->findOneBy(['id' => $vl_id]);
+
+        return $this->render('accueil/reserver.html.twig', array_merge($this->getAppConst(), [
+            'vehicule' => $vehicule
+        ]));
     }
 
     /**
