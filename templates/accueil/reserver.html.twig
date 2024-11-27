@@ -136,7 +136,7 @@
                       <div class="cs-from-to-value--date">
                         {{ from.date }}
                       </div>
-                      <div id="select-from-heure--target"  class="cs-from-to-value--heure">
+                      <div id="select-from-heure--target" class="cs-from-to-value--heure">
                         {{ from.heure }}
                       </div>
                     </span>
@@ -150,7 +150,7 @@
                       <div class="cs-from-to-value--date">
                         {{ to.date }}
                       </div>
-                      <div id="select-to-heure--target"  class="cs-from-to-value--heure">
+                      <div id="select-to-heure--target" class="cs-from-to-value--heure">
                         {{ to.heure }}
                       </div>
                     </span>
@@ -158,10 +158,94 @@
                 </div>
               </div>
             </div>
-          {# FIN JE RÉSERVE #}
+            {# FIN JE RÉSERVE #}
 
-          </div>
-        {# fin fiche véhicule #}
+            {# CALENDRIERS #}
+            {# source: https://gist.github.com/aknosis/3932192 #}
+            {% set time = "now"|date("U") %}
+            <table>
+              <thead>
+                <tr class="cs-row-days">
+                  <th width="15%">
+                    Lundi
+                  </th>
+                  <th width="15%">
+                    Mardi
+                  </th>
+                  <th width="16%">
+                    Mercredi
+                  </th>
+                  <th width="15%">
+                    Jeudi
+                  </th>
+                  <th width="15%">
+                    Vendredi
+                  </th>
+                  <th width="12%">
+                    Samedi
+                  </th>
+                  <th width="12%">
+                    Dimanche
+                  </th>
+                </tr>
+                <tr>
+                  {% set trans_day_hash = { 
+                      "January": "Janvier", 
+                      "February": "Mardi", 
+                      "March": "Mercredi", 
+                      "April": "Jeudi", 
+                      "May": "Vendredi", 
+                      "June": "Samedi", 
+                      "July": "Dimanche" ,
+                      "August":"Août",
+                      "September":"Septembre",
+                      "October":"Octobre",
+                      "November":"Novembre",
+                      "December":"Décembre"
+                  } %}
+                  <th colspan="7">
+                    {{ trans_day_hash[time|date('F')] }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {% set daysInMonth = time|date('t') %}
+                  {% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
+                  {% set dow = startDow %}
+                  {% for day in range(1,daysInMonth) %}
+                    {% if loop.first and startDow != 0 %}
+                      <td colspan="{{ startDow }}"></td>
+                    {% endif %}
+                    <td>
+                      <div>
+                        <div class="cs-td-daynum">
+                          {{ day }}
+                        </div>
+                        <div>{# day content here #}
+                        </div>
+                      </div>
+                    </td>
+                    {% if loop.last and dow != 6 %}
+                      <td colspan="{{ 6 - dow }}">
+                        &nbsp;
+                      </td>
+                    {% endif %}
+                    {% if dow == 6 %}
+                      {% set dow = 0 %}
+                    </tr>
+                    <tr>
+                    {% else %}
+                      {% set dow = dow + 1 %}
+                  {% endif %}
+                {% endfor %}
+              </tr>
+            </tbody>
+          </table>
+        {# FIN CALENDRIERS #}
 
-        {% endblock %}
-        
+        </div>
+      {# fin fiche véhicule #}
+
+      {% endblock %}
+      

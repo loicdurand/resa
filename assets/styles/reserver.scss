@@ -60,4 +60,21 @@
     }
   }
 
+  & table {
+    & thead tr {
+      &.cs-row-days th {
+        padding: 1rem;
+        font-size: .8rem;
+      }
+
+      & th {
+        text-align: center;
+
+      }
+    }
+    & tbody tr td .cs-td-daynum{
+      font-style: italic;
+    }
+  }
+
 }
