@@ -128,11 +128,16 @@ class AccueilController extends AbstractController
         if ($from === '') {
             $timezone = new \DateTimeZone('America/Guadeloupe');
             $now = new \DateTime('now', $timezone);
+            $now->modify('+ 1 days');
+            $now->modify('+ 1 hours');
             $tmp = new \DateTime('now', $timezone);
             $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
             $max->modify($this->app_const['APP_LIMIT_RESA']);
-            $from =  $now->format('Y-m-d H:i:s');
-            $to = $max->format('Y-m-d H:i:s');
+            $from =  $now;
+            $to = $max;
+        } else {
+            $from = new \DateTime($from);
+            $to = new \DateTime($to);
         }
 
         $vehicule = $this->em
@@ -140,7 +145,15 @@ class AccueilController extends AbstractController
             ->findOneBy(['id' => $vl_id]);
 
         return $this->render('accueil/reserver.html.twig', array_merge($this->getAppConst(), [
-            'vehicule' => $vehicule
+            'vehicule' => $vehicule,
+            'from' => [
+                'date' => $this->FR($from->format('Y-m-d'), 'short'),
+                'heure' => $from->format('H:00')
+            ],
+            'to' => [
+                'date' => $this->FR($to->format('Y-m-d'), 'short'),
+                'heure' => $to->format('H:00')
+            ]
         ]));
     }
 
@@ -163,7 +176,7 @@ class AccueilController extends AbstractController
         }
     }
 
-    private function FR(String $date)
+    private function FR(String $date, $short = false)
     {
         $days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
         $months = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
@@ -172,7 +185,9 @@ class AccueilController extends AbstractController
         $d  = $dt->format('d');
         $m = intval($dt->format('m'));
         $Y = $dt->format('Y');
-        return $days[$dow] . ' ' . $d . ' ' . $months[$m] . ' ' . $Y;
+        if ($short !== false)
+            return $days[$dow] . ' ' . $d . ' ' . mb_substr( $months[$m], 0, 3) . ' ' . $Y;
+        return $days[$dow] . ' ' . $d . ' ' . $months[$m] . ' ' .  $Y;
     }
 
     private function getHorairesByDay(String $day, array $horaires)

@@ -13,10 +13,51 @@
     padding-inline-start: 0;
   }
 
+  .cs-gallerie {
+    border: 1px solid var(--grey-6);
+    margin-bottom: 2rem;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, .05);
+
+    & .cs-figure {
+      border: 1px solid var(--grey-2);
+      border-radius: 3px;
+    }
+  }
+
   .cs-informations {
     font-weight: 700;
     font-size: 1.25rem;
     margin: 0;
+  }
+
+  // Surcharge du filtre Début -> Fin
+  & .cs-filtres-container {
+    position: relative;
+    padding: 8px 0;
+    height: auto;
+
+    & .cs-date-ctnr {
+      height: 3rem;
+
+      & .cs-btn-from-to {
+        line-height: 2.5rem;
+
+        & .cs-from-to-value {
+          font-size: .8rem;
+
+          & .cs-from-to-value--date {
+            text-transform: lowercase;
+          }
+
+          & .cs-from-to-value--heure {
+            margin-top: -1.5rem;
+            font-size: .7rem;
+            font-weight: 500;
+          }
+        }
+      }
+    }
   }
 
 }

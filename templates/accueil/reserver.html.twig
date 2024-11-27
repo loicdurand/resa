@@ -24,43 +24,46 @@
   </nav>
 
   {# fiche véhicule #}
-  <div id="fiche-vehicule" class="cs-fiche-vehicule fr-grid-row fr-grid-row--gutters">
+  <div id="fiche-vehicule" class="cs-fiche-vehicule">
 
     {# GALLERIE #}
-    {# vue principale #}
-      <figure class="fr-col-9"> <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue principale du véhicule">
-        <figcaption class="hidden">
-          Vue principale du véhicule
-        </figcaption>
-      </figure>
+    <div class="cs-gallerie fr-grid-row fr-grid-row--gutters">
+      {# vue principale #}
+      <figure class="fr-col-9">
+        <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img cs-figure cs-figure--main" alt="Vue principale du véhicule">
+          <figcaption class="hidden">
+            Vue principale du véhicule
+          </figcaption>
+        </figure>
 
-      {# vue de profil #}
-      <div class="fr-col-3 fr-mt-1w">
-        <figure>
-          <button class="fr-btn cs-gallerie-btn">
-            <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de profil du véhicule"></button>
-            <figcaption class="hidden">
-              Vue de profil du véhicule
-            </figcaption>
-          </figure>
-
-          {# vue de l'avant #}
-          <figure>
+        {# vue de profil #}
+        <div class="fr-col-3 fr-mt-1w">
+          <figure class="cs-figure">
             <button class="fr-btn cs-gallerie-btn">
               <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de l'avant du véhicule"></button>
               <figcaption class="hidden">
-                Vue de l'avant du véhicule
+                Vue de profil du véhicule
               </figcaption>
             </figure>
 
-            {# vue de l'arrière #}
-            <figure>
+            {# vue de l'avant #}
+            <figure class="cs-figure">
               <button class="fr-btn cs-gallerie-btn">
-                <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de l'arrière du véhicule"></button>
+                <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de l'avant du véhicule"></button>
                 <figcaption class="hidden">
-                  Vue de l'arrière du véhicule
+                  Vue de l'avant du véhicule
                 </figcaption>
               </figure>
+
+              {# vue de l'arrière #}
+              <figure class="cs-figure">
+                <button class="fr-btn cs-gallerie-btn">
+                  <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de l'arrière du véhicule"></button>
+                  <figcaption class="hidden">
+                    Vue de l'arrière du véhicule
+                  </figcaption>
+                </figure>
+              </div>
             </div>
             {# FIN GALERIE #}
 
@@ -120,6 +123,40 @@
               <p class="cs-informations">
                 Disponibilités
               </p>
+
+              <div class="cs-filtres-container">
+
+                {# DE ... -> À ... #}
+                <div class="cs-btn-ctnr cs-date-ctnr">
+                  <button class="cs-btn cs-btn-from-to cs-btn--left">
+                    <span class="cs-from-to">
+                      Début
+                    </span>
+                    <span id="select-from-date--target" class="cs-from-to-value">
+                      <div class="cs-from-to-value--date">
+                        {{ from.date }}
+                      </div>
+                      <div id="select-from-heure--target"  class="cs-from-to-value--heure">
+                        {{ from.heure }}
+                      </div>
+                    </span>
+                  </button>
+                  <div class="separator"></div>
+                  <button class="cs-btn cs-btn-from-to cs-btn--right">
+                    <span class=" cs-from-to">
+                      Fin
+                    </span>
+                    <span id="select-to-date--target" class="cs-from-to-value">
+                      <div class="cs-from-to-value--date">
+                        {{ to.date }}
+                      </div>
+                      <div id="select-to-heure--target"  class="cs-from-to-value--heure">
+                        {{ to.heure }}
+                      </div>
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
           {# FIN JE RÉSERVE #}
 
