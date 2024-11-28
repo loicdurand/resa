@@ -72,8 +72,22 @@
 
       }
     }
-    & tbody tr td .cs-td-daynum.striked{
-      text-decoration-line: line-through;
+
+    & tbody tr td .cs-td-daynum {
+      font-weight: 900;
+      cursor: pointer;
+
+      &.striked{
+        text-decoration-line: line-through;
+      }
+
+      &.striked,
+      &.before_now,
+      &.after_limit {
+        cursor: initial;
+        font-weight: initial;
+        opacity: .5;
+      }
     }
   }
 

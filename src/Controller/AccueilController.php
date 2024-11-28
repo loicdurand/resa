@@ -68,13 +68,13 @@ class AccueilController extends AbstractController
 
         $dates = [];
         $dates_fin = [];
-        $timezone = new \DateTimeZone('America/Guadeloupe');
-        $now = new \DateTime('now', $timezone);
-        $max = new \DateTime('now', $timezone);
+        // $timezone = new \DateTimeZone('America/Guadeloupe');
+        $now = new \DateTime('now');
+        $max = new \DateTime('now');
         $max->modify($this->app_const['APP_LIMIT_RESA']);
         $max_date = $max->format("Y-m-d");
-        $max->modify($this->app_const['APP_MAX_RESA_DURATION']);
-        $max->modify('- 1 days');
+        //$max->modify($this->app_const['APP_MAX_RESA_DURATION']);
+        //$max->modify('- 1 days');
         $ok = false;
         for ($i = 0; $now->format("Y-m-d") !== $max->format("Y-m-d"); $i++) {
             $fr_date =  $this->FR($now->format('Y-m-d'));
@@ -126,11 +126,11 @@ class AccueilController extends AbstractController
         $this->setAppConst();
 
         if ($from === '') {
-            $timezone = new \DateTimeZone('America/Guadeloupe');
-            $now = new \DateTime('now', $timezone);
+            // $timezone = new \DateTimeZone('America/Guadeloupe');
+            $now = new \DateTime('now');
             $now->modify('+ 1 days');
             $now->modify('+ 1 hours');
-            $tmp = new \DateTime('now', $timezone);
+            $tmp = new \DateTime('now');
             $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
             $max->modify($this->app_const['APP_LIMIT_RESA']);
             $from =  $now;
@@ -144,6 +144,12 @@ class AccueilController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findOneBy(['id' => $vl_id]);
 
+        $limit_resa = $this->app_const['APP_LIMIT_RESA'];
+        $limit_resa = preg_replace("#\s?[+-]\s?#", '', $limit_resa);
+        $limit_resa = preg_replace("#days#", 'jours', $limit_resa);
+        $limit_resa = preg_replace("#months#", 'mois', $limit_resa);
+
+
         return $this->render('accueil/reserver.html.twig', array_merge($this->getAppConst(), [
             'vehicule' => $vehicule,
             'from' => [
@@ -153,7 +159,9 @@ class AccueilController extends AbstractController
             'to' => [
                 'date' => $this->FR($to->format('Y-m-d'), 'short'),
                 'heure' => $to->format('H:00')
-            ]
+            ],
+            'max' => $max,
+            'limit_resa' => $limit_resa
         ]));
     }
 
@@ -186,7 +194,7 @@ class AccueilController extends AbstractController
         $m = intval($dt->format('m'));
         $Y = $dt->format('Y');
         if ($short !== false)
-            return $days[$dow] . ' ' . $d . ' ' . mb_substr( $months[$m], 0, 3) . ' ' . $Y;
+            return $days[$dow] . ' ' . $d . ' ' . mb_substr($months[$m], 0, 3) . ' ' . $Y;
         return $days[$dow] . ' ' . $d . ' ' . $months[$m] . ' ' .  $Y;
     }
 

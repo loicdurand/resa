@@ -7,7 +7,7 @@
     <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
       Voir le fil d’Ariane
     </button>
-    <div class="fr-collapse" id="breadcrumb-1">
+    <div class="fr-collapse">
       <ol class="fr-breadcrumb__list">
         <li>
           <a href="/" class="fr-breadcrumb__link">
@@ -124,7 +124,7 @@
                 Disponibilités
               </p>
 
-              <div class="cs-filtres-container">
+              <div id="cs-filtres-container" class="cs-filtres-container hidden">
 
                 {# DE ... -> À ... #}
                 <div class="cs-btn-ctnr cs-date-ctnr">
@@ -163,8 +163,7 @@
             {# CALENDRIERS #}
             {# source: https://gist.github.com/aknosis/3932192 #}
             {% set time = "now"| date_modify('-1 months')| date("U") %}
-
-              {% for i in range(0,2) %}
+              {% for i in range(0,3) %}
               {% set time =  time | date_modify('+1 months') %}
                 <table>
                   <thead>
@@ -195,12 +194,12 @@
                   <tr>
                     {% set trans_day_hash = { 
                     "January": "Janvier", 
-                    "February": "Mardi", 
-                    "March": "Mercredi", 
-                    "April": "Jeudi", 
-                    "May": "Vendredi", 
-                    "June": "Samedi", 
-                    "July": "Dimanche" ,
+                    "February": "Février", 
+                    "March": "Mars", 
+                    "April": "Avril", 
+                    "May": "Mai", 
+                    "June": "Juin", 
+                    "July": "Juillet" ,
                     "August":"Août",
                     "September":"Septembre",
                     "October":"Octobre",
@@ -222,16 +221,18 @@
                       {% if loop.first and startDow != 0 %}
                         <td colspan="{{ startDow }}"></td>
                       {% endif %}
-                      {% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day))|date('U') %}
+                      {% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:59')|date('U') %}
+                      {% set before_now = curr_date <= ('now'|date('Y-m-d 00:00:00')|date('U') )? true: false %}
+                      {% set after_limit = curr_date > (max|date('Y-m-d 00:00:00')|date('U') )? true: false %}
                       <td>
                         <div>
-                          {% set striked = '' %}
+                          {% set striked = false %}
                           {% for reservation in vehicule.reservations %}
                             {% if curr_date >= date(reservation.dateDebut)|date('U') and curr_date <= date(reservation.dateFin)|date('U') %}
-                              {% set striked = ' striked' %}
+                              {% set striked = true %}
                             {% endif %}
                           {% endfor %}
-                          <div class="cs-td-daynum{{ striked }}" data-date="{{ Ymd }}">
+                          <div class="cs-td-daynum{{ striked ? ' striked': '' }}{{ before_now ? ' before_now' : '' }}{{ after_limit ? ' after_limit': '' }}" data-date="{{ Ymd }}" title="{{ striked ? "Le véhicule est déjà réservé à cette date" : before_now ? "Date passée": after_limit ? "Vous ne pouvez réserver au delà de " ~ limit_resa: '' }}">
                             {{ day }}
                           </div>
                           <div>{# day content here #}
