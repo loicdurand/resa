@@ -14,31 +14,25 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Vehicule $vehicule_id = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_debut = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(length: 5)]
+    private ?string $heure_debut = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_fin = null;
+
+    #[ORM\Column(length: 5)]
+    private ?string $heure_fin = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Vehicule $vehicule = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getVehiculeId(): ?Vehicule
-    {
-        return $this->vehicule_id;
-    }
-
-    public function setVehiculeId(?Vehicule $vehicule_id): static
-    {
-        $this->vehicule_id = $vehicule_id;
-
-        return $this;
     }
 
     public function getDateDebut(): ?\DateTimeInterface
@@ -49,6 +43,18 @@ class Reservation
     public function setDateDebut(\DateTimeInterface $date_debut): static
     {
         $this->date_debut = $date_debut;
+
+        return $this;
+    }
+
+    public function getHeureDebut(): ?string
+    {
+        return $this->heure_debut;
+    }
+
+    public function setHeureDebut(string $heure_debut): static
+    {
+        $this->heure_debut = $heure_debut;
 
         return $this;
     }
@@ -64,4 +70,29 @@ class Reservation
 
         return $this;
     }
+
+    public function getHeureFin(): ?string
+    {
+        return $this->heure_fin;
+    }
+
+    public function setHeureFin(string $heure_fin): static
+    {
+        $this->heure_fin = $heure_fin;
+
+        return $this;
+    }
+
+    public function getVehicule(): ?Vehicule
+    {
+        return $this->vehicule;
+    }
+
+    public function setVehicule(?Vehicule $vehicule): static
+    {
+        $this->vehicule = $vehicule;
+
+        return $this;
+    }
+
 }

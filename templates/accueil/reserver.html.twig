@@ -162,86 +162,99 @@
 
             {# CALENDRIERS #}
             {# source: https://gist.github.com/aknosis/3932192 #}
-            {% set time = "now"|date("U") %}
-            <table>
-              <thead>
-                <tr class="cs-row-days">
-                  <th width="15%">
-                    Lundi
-                  </th>
-                  <th width="15%">
-                    Mardi
-                  </th>
-                  <th width="16%">
-                    Mercredi
-                  </th>
-                  <th width="15%">
-                    Jeudi
-                  </th>
-                  <th width="15%">
-                    Vendredi
-                  </th>
-                  <th width="12%">
-                    Samedi
-                  </th>
-                  <th width="12%">
-                    Dimanche
-                  </th>
-                </tr>
-                <tr>
-                  {% set trans_day_hash = { 
-                      "January": "Janvier", 
-                      "February": "Mardi", 
-                      "March": "Mercredi", 
-                      "April": "Jeudi", 
-                      "May": "Vendredi", 
-                      "June": "Samedi", 
-                      "July": "Dimanche" ,
-                      "August":"Août",
-                      "September":"Septembre",
-                      "October":"Octobre",
-                      "November":"Novembre",
-                      "December":"Décembre"
-                  } %}
-                  <th colspan="7">
-                    {{ trans_day_hash[time|date('F')] }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {% set daysInMonth = time|date('t') %}
-                  {% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
-                  {% set dow = startDow %}
-                  {% for day in range(1,daysInMonth) %}
-                    {% if loop.first and startDow != 0 %}
-                      <td colspan="{{ startDow }}"></td>
-                    {% endif %}
-                    <td>
-                      <div>
-                        <div class="cs-td-daynum">
-                          {{ day }}
-                        </div>
-                        <div>{# day content here #}
-                        </div>
-                      </div>
-                    </td>
-                    {% if loop.last and dow != 6 %}
-                      <td colspan="{{ 6 - dow }}">
-                        &nbsp;
-                      </td>
-                    {% endif %}
-                    {% if dow == 6 %}
-                      {% set dow = 0 %}
+            {% set time = "now"| date_modify('-1 months')| date("U") %}
+
+              {% for i in range(0,2) %}
+              {% set time =  time | date_modify('+1 months') %}
+                <table>
+                  <thead>
+                    {% if loop.first %}
+                      <tr class="cs-row-days"> <th width="15%">
+                        Lundi
+                      </th>
+                      <th width="15%">
+                        Mardi
+                      </th>
+                      <th width="16%">
+                        Mercredi
+                      </th>
+                      <th width="15%">
+                        Jeudi
+                      </th>
+                      <th width="15%">
+                        Vendredi
+                      </th>
+                      <th width="12%">
+                        Samedi
+                      </th>
+                      <th width="12%">
+                        Dimanche
+                      </th>
                     </tr>
-                    <tr>
-                    {% else %}
-                      {% set dow = dow + 1 %}
                   {% endif %}
-                {% endfor %}
-              </tr>
-            </tbody>
-          </table>
+                  <tr>
+                    {% set trans_day_hash = { 
+                    "January": "Janvier", 
+                    "February": "Mardi", 
+                    "March": "Mercredi", 
+                    "April": "Jeudi", 
+                    "May": "Vendredi", 
+                    "June": "Samedi", 
+                    "July": "Dimanche" ,
+                    "August":"Août",
+                    "September":"Septembre",
+                    "October":"Octobre",
+                    "November":"Novembre",
+                    "December":"Décembre"
+                } %}
+                    <th colspan="7">
+                      {{ trans_day_hash[time|date('F')] }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    {% set daysInMonth = time|date('t') %}
+                    {% set Ymd = time|date('Y-m-d') %}
+                    {% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
+                    {% set dow = startDow %}
+                    {% for day in range(1,daysInMonth) %}
+                      {% if loop.first and startDow != 0 %}
+                        <td colspan="{{ startDow }}"></td>
+                      {% endif %}
+                      {% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day))|date('U') %}
+                      <td>
+                        <div>
+                          {% set striked = '' %}
+                          {% for reservation in vehicule.reservations %}
+                            {% if curr_date >= date(reservation.dateDebut)|date('U') and curr_date <= date(reservation.dateFin)|date('U') %}
+                              {% set striked = ' striked' %}
+                            {% endif %}
+                          {% endfor %}
+                          <div class="cs-td-daynum{{ striked }}" data-date="{{ Ymd }}">
+                            {{ day }}
+                          </div>
+                          <div>{# day content here #}
+                          </div>
+                        </div>
+                      </td>
+                      {% if loop.last and dow != 6 %}
+                        <td colspan="{{ 6 - dow }}">
+                          &nbsp;
+                        </td>
+                      {% endif %}
+                      {% if dow == 6 %}
+                        {% set dow = 0 %}
+                      </tr>
+                      <tr>
+                      {% else %}
+                        {% set dow = dow + 1 %}
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+              </tbody>
+            </table>
+          {% endfor %}
         {# FIN CALENDRIERS #}
 
         </div>

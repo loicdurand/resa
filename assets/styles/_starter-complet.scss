@@ -440,7 +440,6 @@ table td {
 	padding: 5px 5px 5px 8px;
 	background: white;
 	border-spacing: 10px;
-	border: 1px dotted var(--grey-5);
 	text-align: center;
 }
 
@@ -456,11 +455,6 @@ th {
 	line-height: 1.71428571;
 	text-align: left;
 	vertical-align: top;
-}
-
-td,
-tr td {
-	border-top: 1px solid var(--grey-5);
 }
 
 /* Centered */

@@ -44,12 +44,6 @@ class Vehicule
     #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'vehicule_id', orphanRemoval: true)]
     private Collection $photos;
 
-    /**
-     * @var Collection<int, Reservation>
-     */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'vehicule_id', orphanRemoval: true)]
-    private Collection $reservations;
-
     #[ORM\Column]
     private ?bool $serigraphie = null;
 
@@ -65,6 +59,12 @@ class Vehicule
 
     #[ORM\ManyToOne]
     private ?TransmissionVehicule $transmission = null;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'vehicule', orphanRemoval: true)]
+    private Collection $reservations;
 
     public function __construct()
     {
@@ -191,36 +191,6 @@ class Vehicule
         return $this;
     }
 
-    /**
-     * @return Collection<int, Reservation>
-     */
-    public function getReservations(): Collection
-    {
-        return $this->reservations;
-    }
-
-    public function addReservation(Reservation $reservation): static
-    {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations->add($reservation);
-            $reservation->setVehiculeId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): static
-    {
-        if ($this->reservations->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
-            if ($reservation->getVehiculeId() === $this) {
-                $reservation->setVehiculeId(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function isSerigraphie(): ?bool
     {
         return $this->serigraphie;
@@ -281,5 +251,34 @@ class Vehicule
         return $this;
     }
 
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setVehicule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getVehicule() === $this) {
+                $reservation->setVehicule(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

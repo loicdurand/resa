@@ -72,8 +72,8 @@
 
       }
     }
-    & tbody tr td .cs-td-daynum{
-      font-style: italic;
+    & tbody tr td .cs-td-daynum.striked{
+      text-decoration-line: line-through;
     }
   }
 
