@@ -4,7 +4,7 @@ import "/node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module";
 
 import './styles/app.scss';
 
-import { pluralize, addZeros } from './js/utils';
+import { pluralize, addZeros, add1Day, time } from './js/utils';
 import * as refs from './js/refs';
 import TimeUpdate from './js/Updater';
 
@@ -230,7 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
           [...document.querySelectorAll(`div[aria-controls="fr-modal--${_periode === 'from' ? 'to' : 'from'}"]`)].forEach(elt => {
             elt.setAttribute('aria-controls', `fr-modal--${_periode}`);
           });
-
         });
       });
 
@@ -245,13 +244,18 @@ document.addEventListener('DOMContentLoaded', () => {
           elt.classList.remove(`selected-${_periode}`);
           target.setAttribute('data-fr-opened', 'false');
         });
-        [...document.getElementsByClassName('bordered')].forEach(btn => btn.classList.remove('bordered'));
-        target.classList.add(`selected-${_periode}`)
+
+        target.classList.add(`selected-${_periode}`);
+
+        setBetweenClass();
+
         target.setAttribute('data-fr-opened', 'true');
+        [...document.getElementsByClassName('bordered')].forEach(btn => btn.classList.remove('bordered'));
+
+        document.getElementById(`cs-btn--${_periode == 'to' ? 'left' : 'right'}`).classList.add('bordered');
         const // 
           label = document.getElementById(`${_periode}-date-lib`),
           affichage = document.querySelector(`#select-${_periode}-date--target .cs-from-to-value--date`),
-          btn = document.getElementById(`cs-btn--${_periode == 'from' ? 'left' : 'right'}`),
           option_prec = select.heure[_periode].options[select.heure[_periode].selectedIndex]?.value,
           { dataset: { ref, date } } = target,
           th = document.getElementById(`th-${ref}`),
@@ -262,7 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         label.innerHTML = date_en_toutes_lettres;
         affichage.innerHTML = date_en_toutes_lettres;
-        btn.classList.add('bordered');
         select.heure[_periode].innerText = '';
         heures.forEach((h, idx) => {
           const option = document.createElement('option');
@@ -282,10 +285,6 @@ document.addEventListener('DOMContentLoaded', () => {
       ['heure', 'minute'].forEach(field => {
         ['from', 'to'].forEach(periode => {
           select[field][periode].addEventListener('change', () => {
-
-            // [...document.getElementsByClassName('bordered')].forEach(btn => btn.classList.remove('bordered'));
-            // const btn = document.getElementById(`cs-btn--${periode == 'to' ? 'left' : 'right'}`);
-            // btn.classList.add('bordered')
 
             console.log(select[field][periode]);
             const // 
@@ -311,6 +310,60 @@ document.addEventListener('DOMContentLoaded', () => {
           ctnr.classList.remove('fix');
         }
       });
+
+      function setBetweenClass() {
+
+        [...document.getElementsByClassName('between')].forEach(elt => elt.classList.remove('between'));
+
+        const // 
+          from = document.querySelector('.selected-from'),
+          to = document.querySelector('.selected-to');
+        if (from === null || to === null)
+          return false;
+
+        const // 
+          { dataset: { date: date_debut } } = from,
+          { dataset: { date: date_fin } } = to,
+          time_debut = ts(`${date_debut} 08:00:00`),
+          time_fin = ts(`${date_fin} 08:00:00`);
+
+        if (time_debut > time_fin)
+          return false;
+
+        let // 
+          i = 0,
+          curr = time_debut,
+          prev_target = from;
+        while (curr < subDay(time_fin)) {
+          curr = addDay(curr);
+          const target = document.querySelector(`.cs-td-daynum[data-date="${val(curr)}"]`);
+          if (target.classList.contains('striked')) {
+            document.querySelector('.selected-to').classList.remove('selected-to');
+            prev_target.classList.add('selected-to');
+            break;
+          }
+          prev_target = target;
+          target.classList.add('between');
+          i++;
+        }
+      };
+
+      function ts(datetime) {
+        return +new Date(Date.parse(datetime));
+      }
+
+      function val(ts) {
+        const { Y, M, D } = time(ts);
+        return `${Y}-${M}-${D}`;
+      }
+
+      function addDay(ts) {
+        return ts + (3600 * 1000 * 24);
+      }
+
+      function subDay(ts) {
+        return ts - (3600 * 1000 * 24);
+      }
 
     })
     .catch(e => void (0));

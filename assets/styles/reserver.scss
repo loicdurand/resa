@@ -40,6 +40,17 @@
     &.fix {
       position: fixed;
       top: 0;
+      padding: 8px 8px;
+      background: var(--grey-0);
+
+      &:before {
+        content: "Votre réservation:";
+        line-height: 2.5rem;
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin-bottom: .5rem;
+        display: block;
+      }
     }
 
     & .cs-date-ctnr {
@@ -106,17 +117,48 @@
       }
 
       &.selected-from,
-      &.selected-to {
+      &.selected-to,
+      &.between {
         border: 1px solid var(--grey-5);
         border-radius: 6px;
         transition: all 0.3s ease;
         box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
       }
 
+      &.selected-from {
+        background-color: var(--blue-4);
+        color: var(--grey-0);
+      }
+
+      &.between {
+        background-color: var(--blue-3);
+        color: var(--grey-0);
+      }
+
       &.selected-to {
         background-color: var(--blue-5);
         color: var(--grey-0);
       }
+
+      // &.between,
+      // &.selected-to {
+
+      //   &:before {
+      //     content: "→";
+      //     position: absolute;
+      //     font-size: 0.75rem;
+      //     line-height: 2;
+      //     color: var(--blue-5);
+      //     opacity: 1;
+      //     font-weight: 900;
+      //     left: 0;
+      //   }
+
+      //   &.selected-to:before {
+      //     left: -1rem;
+      //   }
+
+      // }
     }
   }
 
@@ -124,4 +166,8 @@
 
 .fr-modal .cs-date-lib {
   text-transform: lowercase;
+}
+
+.fr-modal--opened~.cs-fiche-vehicule .cs-filtres-container .bordered {
+  border: 1px solid var(--grey-5) !important;
 }
