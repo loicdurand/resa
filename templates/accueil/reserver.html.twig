@@ -171,25 +171,25 @@
                     {% if loop.first %}
                       <tr class="cs-row-days">
                         <th width="15%" id="th-LU" data-horaires="{{ horaires.LU }}">
-                          Lundi
+                  Lu<span class="hide-s">ndi</span>
                         </th>
                         <th width="15%" id="th-MA" data-horaires="{{ horaires.MA }}">
-                          Mardi
+                          Ma<span class="hide-s">rdi</span>
                         </th>
                         <th width="16%" id="th-ME" data-horaires="{{ horaires.ME }}">
-                          Mercredi
+                          Me<span class="hide-s">rcredi</span>
                         </th>
                         <th width="15%" id="th-JE" data-horaires="{{ horaires.JE }}">
-                          Jeudi
+                          Je<span class="hide-s">udi</span>
                         </th>
                         <th width="15%" id="th-VE" data-horaires="{{ horaires.VE }}">
-                          Vendredi
+                          Ve<span class="hide-s">vendredi</span>
                         </th>
                         <th width="12%" id="th-SA" data-horaires="{{ horaires.SA }}">
-                          Samedi
+                          Sa<span class="hide-s">samedi</span>
                         </th>
                         <th width="12%" id="th-DI" data-horaires="{{ horaires.DI }}">
-                          Dimanche
+                          Di<span class="hide-s">manche</span>
                         </th>
                       </tr>
                     {% endif %}
@@ -237,7 +237,7 @@
                                 {% set striked = true %}
                               {% endif %}
                             {% endfor %}
-                            <div data-ref="{{ days_list[dow] }}" {{ striked or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked': '' }}{{ before_now ? ' before_now' : '' }}{{ after_limit ? ' after_limit': '' }}{{ csag_ferme ? ' csag_ferme' : '' }}" data-date="{{ time|date('Y-m-' ~ day) }}" title="{{ striked ? " Le véhicule est déjà réservé à cette date" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
+                            <div data-ref="{{ days_list[dow] }}" {{ striked or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}" data-date="{{ time|date('Y-m-' ~ day) }}" title="{{ striked ? " Le véhicule est déjà réservé à cette date" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
                               {{ day }}
                             </div>
                             <div>{# day content here #}
@@ -289,19 +289,19 @@
                     <h3 class="fr-col-12 cs-date-lib" id="from-date-lib"></h3>
 
                     <div class="fr-grid-row fr-mb-2w">
-                      <div class=" fr-select-group fr-col fr-col-sm-6 fr-pl-1w">
+                      <div class=" fr-select-group fr-col fr-col-6 fr-pl-1w">
                         <label class="fr-label" for="select-from-heure">
                           Heure
                         </label>
                         <select class="fr-select" id="select-from-heure" name="select-from-heure"></select>
                       </div>
-                      <div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-6 fr-pl-1w cs-select-minutes">
+                      <div class="fr-select-group fr-select-group--disabled fr-col fr-col-6 fr-pl-1w cs-select-minutes">
                         <label class="fr-label" for="select-from-minute">
                           &nbsp;
                         </label>
                         <select class="fr-select" id="select-from-minute" name="select-from-minute">
                           {% for i in range(0, 60, APP_MINUTES_SELECT_INTERVAL) %}
-                            <option value="{{ i | length > 1 ? i : '0' ~ i }}" {{ i == 0 ? 'selected':'' }}>
+                            <option value="{{ i | length > 1 ? i : '0' ~ i }}" {{ i == 0 ? 'selected' }}>
                               {{ i | length > 1 ? i : '0' ~ i }}
                             </option>
                           {% endfor %}
@@ -347,7 +347,7 @@
                     <h3 class="fr-col-12 cs-date-lib" id="to-date-lib"></h3>
 
                     <div class="fr-grid-row fr-mb-2w">
-                      <div class=" fr-select-group fr-col fr-col-sm-6 fr-pl-1w">
+                      <div class=" fr-select-group fr-col fr-col-6 fr-pl-1w">
                         <label class="fr-label" for="select-to-heure">
                           Heure
                         </label>
@@ -357,7 +357,7 @@
                           </option>
                         </select>
                       </div>
-                      <div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-6 fr-pl-1w cs-select-minutes">
+                      <div class="fr-select-group fr-select-group--disabled fr-col fr-col-6 fr-pl-1w cs-select-minutes">
                         <label class="fr-label" for="select-to-minute">
                           &nbsp;
                         </label>

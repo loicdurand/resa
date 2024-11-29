@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls));
         if (!selectable)
           return false;
-        console.log(['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls)));
+
         [...document.getElementsByClassName('selected')].forEach(elt => {
           elt.classList.remove('selected');
           target.setAttribute('data-fr-opened', 'false');
@@ -237,11 +237,10 @@ document.addEventListener('DOMContentLoaded', () => {
           { dataset: { horaires } } = th,
           heures = horaires.split(','),
           [Y, m, d] = date.split('-'),
-          date_en_toutes_lettres = `${refs.jours[ref]} ${d} ${(refs.mois[+m]).slice(0, 3)} ${Y}`;
+          date_en_toutes_lettres = `${refs.jours[ref]} ${d}<span class="hide-s">&nbsp;${(refs.mois[+m]).slice(0, 3)} ${Y}</span>`;
 
         label.innerHTML = date_en_toutes_lettres;
         affichage.innerHTML = date_en_toutes_lettres;
-        console.log(option_prec);
         select.heure.from.innerText = '';
         heures.forEach((h, idx) => {
           const option = document.createElement('option');
@@ -256,7 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       ['heure', 'minute'].forEach(field => {
         ['from', 'to'].forEach(periode => {
-          console.log(select[field][periode]);
           select[field][periode].addEventListener('change', () => {
             const // 
               affichage = document.querySelector('#select-from-date--target .cs-from-to-value--heure'),
