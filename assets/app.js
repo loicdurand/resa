@@ -218,16 +218,30 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         };
 
+      ['left', 'right'].forEach(position => {
+        const btn = document.querySelector(`.cs-btn-from-to.cs-btn--${position}`);
+        btn.addEventListener('click', ({ currentTarget }) => {
+          if (currentTarget.classList.contains('cs-btn--left'))
+            _periode = 'from';
+          else
+            _periode = 'to';
+          [...document.querySelectorAll(`div[aria-controls="fr-modal--${_periode === 'from' ? 'to' : 'from'}"]`)].forEach(elt => {
+            elt.setAttribute('aria-controls', `fr-modal--${_periode}`);
+          });
+
+        });
+      });
+
       ctnr.addEventListener('click', ({ target }) => {
         const selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls));
         if (!selectable)
           return false;
 
-        [...document.getElementsByClassName('selected')].forEach(elt => {
-          elt.classList.remove('selected');
+        [...document.getElementsByClassName(`selected-${_periode}`)].forEach(elt => {
+          elt.classList.remove(`selected-${_periode}`);
           target.setAttribute('data-fr-opened', 'false');
         });
-        target.classList.add('selected');
+        target.classList.add(`selected-${_periode}`)
         target.setAttribute('data-fr-opened', 'true');
         const // 
           label = document.getElementById(`${_periode}-date-lib`),
@@ -255,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
         _periode = _periode === 'from' ? 'to' : 'from';
         [...document.querySelectorAll(`div[aria-controls="fr-modal--${_periode === 'from' ? 'to' : 'from'}"]`)].forEach(elt => {
           elt.setAttribute('aria-controls', `fr-modal--${_periode}`);
-        })
+        });
       });
 
       ['heure', 'minute'].forEach(field => {
@@ -267,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
               { value: heure_debut } = select.heure[periode].options[select.heure[periode].selectedIndex],
               { value: minute_debut } = select.minute[periode].options[select.minute[periode].selectedIndex],
               heure_en_toutes_lettres = `${heure_debut}:${minute_debut}`;
-              console.log(heure_en_toutes_lettres);
+            console.log(heure_en_toutes_lettres);
 
             affichage.innerText = heure_en_toutes_lettres;
           });

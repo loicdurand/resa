@@ -165,6 +165,7 @@ class AccueilController extends AbstractController
                 'date' => $this->FR($to->format('Y-m-d'), 'short'),
                 'heure' => $to->format('H:00')
             ],
+            'year' => $from->format('Y'),
             'max' => $max,
             'limit_resa' => $limit_resa,
             'filtered' => $filtered,
@@ -223,7 +224,7 @@ class AccueilController extends AbstractController
         $m = intval($dt->format('m'));
         $Y = $dt->format('Y');
         if ($short !== false)
-            return $days[$dow] . ' ' . $d . ' ' . mb_substr($months[$m], 0, 3) . ' ' . $Y;
+            return $days[$dow] . ' ' . $d . ' ' . mb_substr($months[$m], 0, 3);
         return $days[$dow] . ' ' . $d . ' ' . $months[$m] . ' ' .  $Y;
     }
 

@@ -134,10 +134,11 @@
                     </span>
                     <span id="select-from-date--target" class="cs-from-to-value">
                       <div class="cs-from-to-value--date">
-                        __
+                        {{ from.date }}&nbsp;<span class="hide-s">{{year}}</span>
                       </div>
                       <div id="select-from-heure--target" class="cs-from-to-value--heure">
-                      </div>
+                        {{ from.heure }}
+                    </div>
                     </span>
                   </button>
                   <div class="separator"></div>
@@ -147,10 +148,11 @@
                     </span>
                     <span id="select-to-date--target" class="cs-from-to-value">
                       <div class="cs-from-to-value--date">
-                        __
+                        {{ to.date }}&nbsp;<span class="hide-s">{{year}}</span>
                       </div>
                       <div id="select-to-heure--target" class="cs-from-to-value--heure">
-                      </div>
+                        {{ to.heure }}
+                    </div>
                     </span>
                   </button>
                 </div>
