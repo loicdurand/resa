@@ -11,7 +11,7 @@
       <ol class="fr-breadcrumb__list">
         <li>
           <a href="/" class="fr-breadcrumb__link">
-            Accueil 
+            Accueil
           </a>
         </li>
         <li>
@@ -124,7 +124,7 @@
                 Disponibilités
               </p>
 
-              <div id="cs-filtres-container" class="cs-filtres-container hidden">
+              <div id="cs-filtres-container" class="cs-filtres-container{{ filtered ? '' : ' hidden' }}">
 
                 {# DE ... -> À ... #}
                 <div class="cs-btn-ctnr cs-date-ctnr">
@@ -161,38 +161,40 @@
             {# FIN JE RÉSERVE #}
 
             {# CALENDRIERS #}
-            {# source: https://gist.github.com/aknosis/3932192 #}
-            {% set time = "now"| date_modify('-1 months')| date("U") %}
+            <div id="calendars-container">
+              {# source: https://gist.github.com/aknosis/3932192 #}
+              {% set time = "now"| date_modify('-1 months')| date("U") %}
               {% for i in range(0,3) %}
-              {% set time =  time | date_modify('+1 months') %}
+                {% set time =  time | date_modify('+1 months') %}
                 <table>
                   <thead>
                     {% if loop.first %}
-                      <tr class="cs-row-days"> <th width="15%">
-                        Lundi
-                      </th>
-                      <th width="15%">
-                        Mardi
-                      </th>
-                      <th width="16%">
-                        Mercredi
-                      </th>
-                      <th width="15%">
-                        Jeudi
-                      </th>
-                      <th width="15%">
-                        Vendredi
-                      </th>
-                      <th width="12%">
-                        Samedi
-                      </th>
-                      <th width="12%">
-                        Dimanche
-                      </th>
-                    </tr>
-                  {% endif %}
-                  <tr>
-                    {% set trans_day_hash = { 
+                      <tr class="cs-row-days">
+                        <th width="15%" id="th-LU" data-horaires="{{ horaires.LU }}">
+                          Lundi
+                        </th>
+                        <th width="15%" id="th-MA" data-horaires="{{ horaires.MA }}">
+                          Mardi
+                        </th>
+                        <th width="16%" id="th-ME" data-horaires="{{ horaires.ME }}">
+                          Mercredi
+                        </th>
+                        <th width="15%" id="th-JE" data-horaires="{{ horaires.JE }}">
+                          Jeudi
+                        </th>
+                        <th width="15%" id="th-VE" data-horaires="{{ horaires.VE }}">
+                          Vendredi
+                        </th>
+                        <th width="12%" id="th-SA" data-horaires="{{ horaires.SA }}">
+                          Samedi
+                        </th>
+                        <th width="12%" id="th-DI" data-horaires="{{ horaires.DI }}">
+                          Dimanche
+                        </th>
+                      </tr>
+                    {% endif %}
+                    <tr>
+                      {% set trans_day_hash = { 
                     "January": "Janvier", 
                     "February": "Février", 
                     "March": "Mars", 
@@ -206,60 +208,181 @@
                     "November":"Novembre",
                     "December":"Décembre"
                 } %}
-                    <th colspan="7">
-                      {{ trans_day_hash[time|date('F')] }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    {% set daysInMonth = time|date('t') %}
-                    {% set Ymd = time|date('Y-m-d') %}
-                    {% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
-                    {% set dow = startDow %}
-                    {% for day in range(1,daysInMonth) %}
-                      {% if loop.first and startDow != 0 %}
-                        <td colspan="{{ startDow }}"></td>
-                      {% endif %}
-                      {% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:59')|date('U') %}
-                      {% set before_now = curr_date <= ('now'|date('Y-m-d 00:00:00')|date('U') )? true: false %}
-                      {% set after_limit = curr_date > (max|date('Y-m-d 00:00:00')|date('U') )? true: false %}
-                      <td>
-                        <div>
-                          {% set striked = false %}
-                          {% for reservation in vehicule.reservations %}
-                            {% if curr_date >= date(reservation.dateDebut)|date('U') and curr_date <= date(reservation.dateFin)|date('U') %}
-                              {% set striked = true %}
-                            {% endif %}
-                          {% endfor %}
-                          <div class="cs-td-daynum{{ striked ? ' striked': '' }}{{ before_now ? ' before_now' : '' }}{{ after_limit ? ' after_limit': '' }}" data-date="{{ Ymd }}" title="{{ striked ? "Le véhicule est déjà réservé à cette date" : before_now ? "Date passée": after_limit ? "Vous ne pouvez réserver au delà de " ~ limit_resa: '' }}">
-                            {{ day }}
+                      {% set days_list = [
+                  'LU','MA','ME','JE','VE','SA','DI'
+                ] %}
+                      <th colspan="7">
+                        {{ trans_day_hash[time|date('F')] }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      {% set daysInMonth = time|date('t') %}
+                      {% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
+                      {% set dow = startDow %}
+                      {% for day in range(1,daysInMonth) %}
+                        {% if loop.first and startDow != 0 %}
+                          <td colspan="{{ startDow }}"></td>
+                        {% endif %}
+                        {% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:59')|date('U') %}
+                        {% set before_now = curr_date <= ('now'|date('Y-m-d 00:00:00')|date('U') )? true : false %}
+                        {% set after_limit = curr_date > (max|date('Y-m-d 00:00:00')|date('U') )? true : false %}
+                        {% set csag_ferme =  horaires[days_list[dow]] == '' %}
+                        <td class="target">
+                          <div>
+                            {% set striked = false %}
+                            {% for reservation in vehicule.reservations %}
+                              {% if curr_date >= date(reservation.dateDebut)|date('U') and curr_date <= date(reservation.dateFin)|date('U') %}
+                                {% set striked = true %}
+                              {% endif %}
+                            {% endfor %}
+                            <div data-ref="{{ days_list[dow] }}" {{ striked or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked': '' }}{{ before_now ? ' before_now' : '' }}{{ after_limit ? ' after_limit': '' }}{{ csag_ferme ? ' csag_ferme' : '' }}" data-date="{{ time|date('Y-m-' ~ day) }}" title="{{ striked ? " Le véhicule est déjà réservé à cette date" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
+                              {{ day }}
+                            </div>
+                            <div>{# day content here #}
+                            </div>
                           </div>
-                          <div>{# day content here #}
-                          </div>
-                        </div>
-                      </td>
-                      {% if loop.last and dow != 6 %}
-                        <td colspan="{{ 6 - dow }}">
-                          &nbsp;
                         </td>
+                        {% if loop.last and dow != 6 %}
+                          <td colspan="{{ 6 - dow }}">
+                            &nbsp;
+                          </td>
+                        {% endif %}
+                        {% if dow == 6 %}
+                          {% set dow = 0 %}
+                        </tr>
+                        <tr>
+                        {% else %}
+                          {% set dow = dow + 1 %}
                       {% endif %}
-                      {% if dow == 6 %}
-                        {% set dow = 0 %}
-                      </tr>
-                      <tr>
-                      {% else %}
-                        {% set dow = dow + 1 %}
-                    {% endif %}
-                  {% endfor %}
-                </tr>
-              </tbody>
-            </table>
-          {% endfor %}
+                    {% endfor %}
+                  </tr>
+                </tbody>
+              </table>
+            {% endfor %}
+          </div>
         {# FIN CALENDRIERS #}
 
         </div>
-      {# fin fiche véhicule #}
+        {# fin fiche véhicule #}
+
+        {# MODALE Début #}
+        <dialog aria-labelledby="fr-modal--from-title" id="fr-modal--from" class="fr-modal" role="dialog">
+          <div class="fr-container fr-container--fluid fr-container-md">
+            <div class="fr-grid-row fr-grid-row--center">
+              <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+
+                <div class="fr-modal__body">
+                  <div id="step-1" class="fr-mt-1w fr-modal__content fr-grid-row">
+                    {# stepper #}
+                    <div id="fr-modal--from-title" class="fr-stepper fr-col-12">
+                      <h2 class="fr-stepper__title">
+                        Début de la réservation
+                        <span class="fr-stepper__state">
+                          Étape 1 sur 2
+                        </span>
+                      </h2>
+                      <div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="2"></div>
+                    </div>
+
+                    <h3 class="fr-col-12 cs-date-lib" id="from-date-lib"></h3>
+
+                    <div class="fr-grid-row fr-mb-2w">
+                      <div class=" fr-select-group fr-col fr-col-sm-6 fr-pl-1w">
+                        <label class="fr-label" for="select-from-heure">
+                          Heure
+                        </label>
+                        <select class="fr-select" id="select-from-heure" name="select-from-heure"></select>
+                      </div>
+                      <div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-6 fr-pl-1w cs-select-minutes">
+                        <label class="fr-label" for="select-from-minute">
+                          &nbsp;
+                        </label>
+                        <select class="fr-select" id="select-from-minute" name="select-from-minute">
+                          {% for i in range(0, 60, APP_MINUTES_SELECT_INTERVAL) %}
+                            <option value="{{ i | length > 1 ? i : '0' ~ i }}" {{ i == 0 ? 'selected':'' }}>
+                              {{ i | length > 1 ? i : '0' ~ i }}
+                            </option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="cs-btns-group fr-btns-group">
+                      <button type="button" aria-controls="fr-modal--from" class="fr-btn fr-btn--tertiary-no-outline">
+                        Date de fin &#8594;
+                      </button>
+                    </div>
+
+                  </div>
+                {# fin étape DÉBUT #}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </dialog>
+        {# FIN MODALE Début #}
+
+        {# MODALE Fin #}
+        <dialog aria-labelledby="fr-modal--to-title" id="fr-modal--to" class="fr-modal" role="dialog">
+          <div class="fr-container fr-container--fluid fr-container-md">
+            <div class="fr-grid-row fr-grid-row--center">
+              <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+
+                <div class="fr-modal__body">
+                  <div id="step-1" class="fr-mt-1w fr-modal__content fr-grid-row">
+                    {# stepper #}
+                    <div id="fr-modal--to-title" class="fr-stepper fr-col-12">
+                      <h2 class="fr-stepper__title">
+                        Fin de la réservation
+                        <span class="fr-stepper__state">
+                          Étape 2 sur 2
+                        </span>
+                      </h2>
+                      <div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="2"></div>
+                    </div>
+
+                    <h3 class="fr-col-12 cs-date-lib" id="to-date-lib"></h3>
+
+                    <div class="fr-grid-row fr-mb-2w">
+                      <div class=" fr-select-group fr-col fr-col-sm-6 fr-pl-1w">
+                        <label class="fr-label" for="select-to-heure">
+                          Heure
+                        </label>
+                        <select class="fr-select" id="select-to-heure" name="select-to-heure">
+                          <option value="8" selected>
+                            08
+                          </option>
+                        </select>
+                      </div>
+                      <div class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-6 fr-pl-1w cs-select-minutes">
+                        <label class="fr-label" for="select-to-minute">
+                          &nbsp;
+                        </label>
+                        <select disabled class="fr-select" id="select-to-minute" name="select-to-minute">
+                          <option value="00" selected disabled hidden>
+                            00
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="cs-btns-group fr-btns-group">
+                      <button type="button" id="btn-go-step2" class="fr-btn fr-btn--tertiary-no-outline">
+                        Date de fin &#8594;
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </dialog>
+      {# FIN MODALE Fin #}
 
       {% endblock %}
       

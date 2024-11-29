@@ -77,18 +77,35 @@
       font-weight: 900;
       cursor: pointer;
 
-      &.striked{
+      &.striked {
         text-decoration-line: line-through;
+      }
+
+      &.csag_ferme[data-date][data-ref] {
+        opacity: 1;
       }
 
       &.striked,
       &.before_now,
-      &.after_limit {
+      &.after_limit,
+      &.csag_ferme {
         cursor: initial;
         font-weight: initial;
         opacity: .5;
       }
+
+      &.selected {
+        border: 1px solid var(--grey-5);
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+
+      }
     }
   }
 
+}
+
+.fr-modal .cs-date-lib {
+  text-transform: lowercase;
 }

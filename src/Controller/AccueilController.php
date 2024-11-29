@@ -16,6 +16,8 @@ use App\Entity\Permission;
 use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
 use App\Form\VehiculeType;
+use Doctrine\Common\Collections\Collection;
+use PhpParser\Node\Expr\Cast\Array_;
 use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -124,15 +126,17 @@ class AccueilController extends AbstractController
     public function reserver(string $vl_id, string $from = '', string $to = ''): Response
     {
         $this->setAppConst();
+        $filtered = true;
+        $tmp = new \DateTime('now');
+        $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
+        $max->modify($this->app_const['APP_LIMIT_RESA']);
 
         if ($from === '') {
+            $filtered = false;
             // $timezone = new \DateTimeZone('America/Guadeloupe');
             $now = new \DateTime('now');
             $now->modify('+ 1 days');
             $now->modify('+ 1 hours');
-            $tmp = new \DateTime('now');
-            $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
-            $max->modify($this->app_const['APP_LIMIT_RESA']);
             $from =  $now;
             $to = $max;
         } else {
@@ -149,6 +153,9 @@ class AccueilController extends AbstractController
         $limit_resa = preg_replace("#days#", 'jours', $limit_resa);
         $limit_resa = preg_replace("#months#", 'mois', $limit_resa);
 
+        $horaires = $this->em
+            ->getRepository(HoraireOuverture::class)
+            ->findAll();
 
         return $this->render('accueil/reserver.html.twig', array_merge($this->getAppConst(), [
             'vehicule' => $vehicule,
@@ -161,7 +168,9 @@ class AccueilController extends AbstractController
                 'heure' => $to->format('H:00')
             ],
             'max' => $max,
-            'limit_resa' => $limit_resa
+            'limit_resa' => $limit_resa,
+            'filtered' => $filtered,
+            'horaires' => $this->horaires_to_arr($horaires)
         ]));
     }
 
@@ -178,10 +187,32 @@ class AccueilController extends AbstractController
     {
         $this->app_const = [];
         //dd($this->getParameter('app.max_resa_duration'));
-        foreach (['app.name', 'app.tagline', 'app.slug', 'app.limit_resa', 'app.max_resa_duration'] as $param) {
+        foreach (['app.name', 'app.tagline', 'app.slug', 'app.limit_resa', 'app.max_resa_duration','app.minutes_select_interval'] as $param) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
+    }
+
+    private function horaires_to_arr(array $horaires)
+    {
+        $out = [
+            'LU'=>'',
+            'MA'=>'',
+            'ME'=>'',
+            'JE'=>'',
+            'VE'=>'',
+            'SA'=>'',
+            'DI'=>''
+        ];
+        foreach ($horaires as $horaire) {
+            $day = $horaire->getJour();
+            [$Hd] = explode(':', $horaire->getDebut());
+            $hd = intval($Hd);
+            [$Hf] = explode(':', $horaire->getFin());
+            $hf = intval($Hf);
+            $out[$day] =  $out[$day] . ($out[$day] === '' ? '' : ',') . implode(',', range($hd, $hf - 1));
+        }
+        return $out;
     }
 
     private function FR(String $date, $short = false)

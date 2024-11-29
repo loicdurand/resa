@@ -4,7 +4,8 @@ import "/node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module";
 
 import './styles/app.scss';
 
-import { pluralize } from './js/utils';
+import { pluralize, addZeros } from './js/utils';
+import * as refs from './js/refs';
 import TimeUpdate from './js/Updater';
 
 console.clear();
@@ -203,7 +204,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
   onReady('#fiche-vehicule')
     .then(elt => {
-      console.log({ elt });
+      const // 
+        ctnr = document.getElementById('calendars-container'),
+        select = {
+          heure: {
+            from: document.getElementById('select-from-heure'),
+            to: document.getElementById('select-to-heure')
+          },
+          minute: {
+            from: document.getElementById('select-from-minute'),
+            to: document.getElementById('select-to-minute')
+          }
+        };
+
+      ctnr.addEventListener('click', ({ target }) => {
+        const selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls));
+        if (!selectable)
+          return false;
+        console.log(['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls)));
+        [...document.getElementsByClassName('selected')].forEach(elt => {
+          elt.classList.remove('selected');
+          target.setAttribute('data-fr-opened', 'false');
+        });
+        target.classList.add('selected');
+        target.setAttribute('data-fr-opened', 'true');
+        const // 
+          label = document.getElementById('from-date-lib'),
+          affichage = document.querySelector('#select-from-date--target .cs-from-to-value--date'),
+          option_prec = select.heure.from.options[select.heure.from.selectedIndex]?.value,
+          { dataset: { ref, date } } = target,
+          th = document.getElementById(`th-${ref}`),
+          { dataset: { horaires } } = th,
+          heures = horaires.split(','),
+          [Y, m, d] = date.split('-'),
+          date_en_toutes_lettres = `${refs.jours[ref]} ${d} ${(refs.mois[+m]).slice(0, 3)} ${Y}`;
+
+        label.innerHTML = date_en_toutes_lettres;
+        affichage.innerHTML = date_en_toutes_lettres;
+        console.log(option_prec);
+        select.heure.from.innerText = '';
+        heures.forEach((h, idx) => {
+          const option = document.createElement('option');
+          option.value = addZeros(h, 2);
+          option.innerText = addZeros(h, 2);
+          if ((!option_prec && !idx) || option_prec == addZeros(h, 2))
+            option.selected = true;
+          select.heure.from.appendChild(option);
+        });
+        select.heure.from.dispatchEvent(new Event('change'));
+      });
+
+      ['heure', 'minute'].forEach(field => {
+        ['from', 'to'].forEach(periode => {
+          console.log(select[field][periode]);
+          select[field][periode].addEventListener('change', () => {
+            const // 
+              affichage = document.querySelector('#select-from-date--target .cs-from-to-value--heure'),
+              { value: heure_debut } = select.heure[periode].options[select.heure[periode].selectedIndex],
+              { value: minute_debut } = select.minute[periode].options[select.minute[periode].selectedIndex],
+              heure_en_toutes_lettres = `${heure_debut}:${minute_debut}`;
+
+            affichage.innerText = heure_en_toutes_lettres;
+          });
+        })
+      });
     })
     .catch(e => void (0));
 

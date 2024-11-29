@@ -10,6 +10,7 @@ parameters:
     app.slug: '%env(APP_SLUG)%'
     app.limit_resa: '+ 3 months'
     app.max_resa_duration: '+ 3 weeks'
+    app.minutes_select_interval: 15
 
 services:
     # default configuration for services in *this* file
