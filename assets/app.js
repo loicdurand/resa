@@ -206,6 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(elt => {
       let _periode = 'from';
       const // 
+        filtres_ctnr = document.getElementById('cs-filtres-container'),
+        ctnr_offset = filtres_ctnr.offsetTop,
         ctnr = document.getElementById('calendars-container'),
         select = {
           heure: {
@@ -237,15 +239,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!selectable)
           return false;
 
+        console.log({ _periode });
+
         [...document.getElementsByClassName(`selected-${_periode}`)].forEach(elt => {
           elt.classList.remove(`selected-${_periode}`);
           target.setAttribute('data-fr-opened', 'false');
         });
+        [...document.getElementsByClassName('bordered')].forEach(btn => btn.classList.remove('bordered'));
         target.classList.add(`selected-${_periode}`)
         target.setAttribute('data-fr-opened', 'true');
         const // 
           label = document.getElementById(`${_periode}-date-lib`),
           affichage = document.querySelector(`#select-${_periode}-date--target .cs-from-to-value--date`),
+          btn = document.getElementById(`cs-btn--${_periode == 'from' ? 'left' : 'right'}`),
           option_prec = select.heure[_periode].options[select.heure[_periode].selectedIndex]?.value,
           { dataset: { ref, date } } = target,
           th = document.getElementById(`th-${ref}`),
@@ -256,6 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         label.innerHTML = date_en_toutes_lettres;
         affichage.innerHTML = date_en_toutes_lettres;
+        btn.classList.add('bordered');
         select.heure[_periode].innerText = '';
         heures.forEach((h, idx) => {
           const option = document.createElement('option');
@@ -275,6 +282,11 @@ document.addEventListener('DOMContentLoaded', () => {
       ['heure', 'minute'].forEach(field => {
         ['from', 'to'].forEach(periode => {
           select[field][periode].addEventListener('change', () => {
+
+            // [...document.getElementsByClassName('bordered')].forEach(btn => btn.classList.remove('bordered'));
+            // const btn = document.getElementById(`cs-btn--${periode == 'to' ? 'left' : 'right'}`);
+            // btn.classList.add('bordered')
+
             console.log(select[field][periode]);
             const // 
               affichage = document.querySelector(`#select-${periode}-date--target .cs-from-to-value--heure`),
@@ -287,6 +299,19 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         })
       });
+
+      window.addEventListener('scroll', () => {
+        const // 
+          ctnr = document.getElementById('cs-filtres-container'),
+          scrollTop = document.body.scrollTop || document.documentElement.scrollTop,
+          filtres_pos = ctnr_offset - scrollTop;
+        if (filtres_pos < 0) {
+          ctnr.classList.add('fix');
+        } else {
+          ctnr.classList.remove('fix');
+        }
+      });
+
     })
     .catch(e => void (0));
 

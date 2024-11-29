@@ -37,11 +37,20 @@
     padding: 8px 0;
     height: auto;
 
+    &.fix {
+      position: fixed;
+      top: 0;
+    }
+
     & .cs-date-ctnr {
       height: 3rem;
 
       & .cs-btn-from-to {
         line-height: 2.5rem;
+
+        &.bordered {
+          border: 2px solid var(--blue-5);
+        }
 
         & .cs-from-to-value {
           font-size: .8rem;
@@ -103,8 +112,8 @@
         transition: all 0.3s ease;
         box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
       }
-      
-      &.selected-to{
+
+      &.selected-to {
         background-color: var(--blue-5);
         color: var(--grey-0);
       }
