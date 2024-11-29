@@ -124,7 +124,7 @@
                 Disponibilités
               </p>
 
-              <div id="cs-filtres-container" class="cs-filtres-container{{ filtered ? '' : ' hidden' }}">
+              <div id="cs-filtres-container" class="cs-filtres-container{{ filtered ? '' : ' hijdden' }}">
 
                 {# DE ... -> À ... #}
                 <div class="cs-btn-ctnr cs-date-ctnr">
@@ -134,10 +134,9 @@
                     </span>
                     <span id="select-from-date--target" class="cs-from-to-value">
                       <div class="cs-from-to-value--date">
-                        {{ from.date }}
+                        __
                       </div>
                       <div id="select-from-heure--target" class="cs-from-to-value--heure">
-                        {{ from.heure }}
                       </div>
                     </span>
                   </button>
@@ -148,10 +147,9 @@
                     </span>
                     <span id="select-to-date--target" class="cs-from-to-value">
                       <div class="cs-from-to-value--date">
-                        {{ to.date }}
+                        __
                       </div>
                       <div id="select-to-heure--target" class="cs-from-to-value--heure">
-                        {{ to.heure }}
                       </div>
                     </span>
                   </button>
@@ -163,8 +161,8 @@
             {# CALENDRIERS #}
             <div id="calendars-container">
               {# source: https://gist.github.com/aknosis/3932192 #}
-              {% set time = "now"| date_modify('-1 months')| date("U") %}
-              {% for i in range(0,3) %}
+              {% set time = "now"| date('Y-m-15') | date_modify('-1 months')| date("U") %}
+              {% for i in range(0,APP_LIMIT_RESA_MONTHS) %}
                 {% set time =  time | date_modify('+1 months') %}
                 <table>
                   <thead>
@@ -361,17 +359,19 @@
                         <label class="fr-label" for="select-to-minute">
                           &nbsp;
                         </label>
-                        <select disabled class="fr-select" id="select-to-minute" name="select-to-minute">
-                          <option value="00" selected disabled hidden>
-                            00
-                          </option>
+                        <select class="fr-select" id="select-to-minute" name="select-to-minute">
+                        {% for i in range(0, 60, APP_MINUTES_SELECT_INTERVAL) %}
+                        <option value="{{ i | length > 1 ? i : '0' ~ i }}" {{ i == 0 ? 'selected' }}>
+                          {{ i | length > 1 ? i : '0' ~ i }}
+                        </option>
+                      {% endfor %}
                         </select>
                       </div>
                     </div>
 
                     <div class="cs-btns-group fr-btns-group">
-                      <button type="button" id="btn-go-step2" class="fr-btn fr-btn--tertiary-no-outline">
-                        Date de fin &#8594;
+                      <button type="button" aria-controls="fr-modal--to" id="btn-go-step2" class="fr-btn fr-btn--tertiary-no-outline">
+                        Fermer
                       </button>
                     </div>
 

@@ -204,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   onReady('#fiche-vehicule')
     .then(elt => {
+      let _periode = 'from';
       const // 
         ctnr = document.getElementById('calendars-container'),
         select = {
@@ -229,38 +230,44 @@ document.addEventListener('DOMContentLoaded', () => {
         target.classList.add('selected');
         target.setAttribute('data-fr-opened', 'true');
         const // 
-          label = document.getElementById('from-date-lib'),
-          affichage = document.querySelector('#select-from-date--target .cs-from-to-value--date'),
-          option_prec = select.heure.from.options[select.heure.from.selectedIndex]?.value,
+          label = document.getElementById(`${_periode}-date-lib`),
+          affichage = document.querySelector(`#select-${_periode}-date--target .cs-from-to-value--date`),
+          option_prec = select.heure[_periode].options[select.heure[_periode].selectedIndex]?.value,
           { dataset: { ref, date } } = target,
           th = document.getElementById(`th-${ref}`),
           { dataset: { horaires } } = th,
           heures = horaires.split(','),
           [Y, m, d] = date.split('-'),
-          date_en_toutes_lettres = `${refs.jours[ref]} ${d}<span class="hide-s">&nbsp;${(refs.mois[+m]).slice(0, 3)} ${Y}</span>`;
+          date_en_toutes_lettres = `${refs.jours[ref]} ${d} ${(refs.mois[+m]).slice(0, 3)}<span class="hide-s">&nbsp;${Y}</span>`;
 
         label.innerHTML = date_en_toutes_lettres;
         affichage.innerHTML = date_en_toutes_lettres;
-        select.heure.from.innerText = '';
+        select.heure[_periode].innerText = '';
         heures.forEach((h, idx) => {
           const option = document.createElement('option');
           option.value = addZeros(h, 2);
           option.innerText = addZeros(h, 2);
           if ((!option_prec && !idx) || option_prec == addZeros(h, 2))
             option.selected = true;
-          select.heure.from.appendChild(option);
+          select.heure[_periode].appendChild(option);
         });
-        select.heure.from.dispatchEvent(new Event('change'));
+        select.heure[_periode].dispatchEvent(new Event('change'));
+        _periode = _periode === 'from' ? 'to' : 'from';
+        [...document.querySelectorAll(`div[aria-controls="fr-modal--${_periode === 'from' ? 'to' : 'from'}"]`)].forEach(elt => {
+          elt.setAttribute('aria-controls', `fr-modal--${_periode}`);
+        })
       });
 
       ['heure', 'minute'].forEach(field => {
         ['from', 'to'].forEach(periode => {
           select[field][periode].addEventListener('change', () => {
+            console.log(select[field][periode]);
             const // 
-              affichage = document.querySelector('#select-from-date--target .cs-from-to-value--heure'),
+              affichage = document.querySelector(`#select-${periode}-date--target .cs-from-to-value--heure`),
               { value: heure_debut } = select.heure[periode].options[select.heure[periode].selectedIndex],
               { value: minute_debut } = select.minute[periode].options[select.minute[periode].selectedIndex],
               heure_en_toutes_lettres = `${heure_debut}:${minute_debut}`;
+              console.log(heure_en_toutes_lettres);
 
             affichage.innerText = heure_en_toutes_lettres;
           });

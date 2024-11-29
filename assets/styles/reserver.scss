@@ -88,7 +88,8 @@
       &.striked,
       &.before_now,
       &.after_limit,
-      &.csag_ferme {
+      &.csag_ferme,
+      &.after_limit.csag_ferme[data-date][data-ref] {
         cursor: initial;
         font-weight: initial;
         opacity: .5;

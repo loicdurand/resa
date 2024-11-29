@@ -73,7 +73,7 @@ class AccueilController extends AbstractController
         // $timezone = new \DateTimeZone('America/Guadeloupe');
         $now = new \DateTime('now');
         $max = new \DateTime('now');
-        $max->modify($this->app_const['APP_LIMIT_RESA']);
+        $max->modify('+' . $this->app_const['APP_LIMIT_RESA_MONTHS'] . ' months');
         $max_date = $max->format("Y-m-d");
         //$max->modify($this->app_const['APP_MAX_RESA_DURATION']);
         //$max->modify('- 1 days');
@@ -129,7 +129,7 @@ class AccueilController extends AbstractController
         $filtered = true;
         $tmp = new \DateTime('now');
         $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
-        $max->modify($this->app_const['APP_LIMIT_RESA']);
+        $max->modify('+' . $this->app_const['APP_LIMIT_RESA_MONTHS'] . ' months');
 
         if ($from === '') {
             $filtered = false;
@@ -148,10 +148,8 @@ class AccueilController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findOneBy(['id' => $vl_id]);
 
-        $limit_resa = $this->app_const['APP_LIMIT_RESA'];
-        $limit_resa = preg_replace("#\s?[+-]\s?#", '', $limit_resa);
-        $limit_resa = preg_replace("#days#", 'jours', $limit_resa);
-        $limit_resa = preg_replace("#months#", 'mois', $limit_resa);
+        $limit_resa = $this->app_const['APP_LIMIT_RESA_MONTHS'];
+        $limit_resa = $limit_resa . ' mois';
 
         $horaires = $this->em
             ->getRepository(HoraireOuverture::class)
@@ -187,7 +185,7 @@ class AccueilController extends AbstractController
     {
         $this->app_const = [];
         //dd($this->getParameter('app.max_resa_duration'));
-        foreach (['app.name', 'app.tagline', 'app.slug', 'app.limit_resa', 'app.max_resa_duration','app.minutes_select_interval'] as $param) {
+        foreach (['app.name', 'app.tagline', 'app.slug', 'app.limit_resa_months', 'app.max_resa_duration', 'app.minutes_select_interval'] as $param) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
@@ -196,13 +194,13 @@ class AccueilController extends AbstractController
     private function horaires_to_arr(array $horaires)
     {
         $out = [
-            'LU'=>'',
-            'MA'=>'',
-            'ME'=>'',
-            'JE'=>'',
-            'VE'=>'',
-            'SA'=>'',
-            'DI'=>''
+            'LU' => '',
+            'MA' => '',
+            'ME' => '',
+            'JE' => '',
+            'VE' => '',
+            'SA' => '',
+            'DI' => ''
         ];
         foreach ($horaires as $horaire) {
             $day = $horaire->getJour();
