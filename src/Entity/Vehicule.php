@@ -63,7 +63,7 @@ class Vehicule
     /**
      * @var Collection<int, Reservation>
      */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'vehicule', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'vehicule', orphanRemoval: true, cascade: ["persist"])]
     private Collection $reservations;
 
     public function __construct()
@@ -280,5 +280,4 @@ class Vehicule
 
         return $this;
     }
-
 }

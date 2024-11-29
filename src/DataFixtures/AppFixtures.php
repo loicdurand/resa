@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\CategorieVehicule;
+use App\Entity\Reservation;
 use App\Entity\Role;
 use App\Entity\Action;
 use App\Entity\GenreVehicule;
@@ -254,7 +255,15 @@ class AppFixtures extends Fixture
             [$genrs[0], $cats[2], $carbs[1], $transms[1], 'RENAULT', 'Master', null, null, '2025-03-06', 3, 'AB-123-CH', 0]
         ];
 
+        $from = new \DateTime('now');
+        $from->modify('+ 1 days');
+        $tmp = new \DateTime('now');
+        $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
+        $max->modify('+4 months');
+        $to = $max;
+
         foreach ($vls as $vl) {
+
             [$gre, $cat, $carb, $tr, $marque, $modele, $mot, $finit, $ct, $pl, $immat, $serig] = $vl;
             $VL = new Vehicule();
             $VL->setGenre($gre);
@@ -269,8 +278,37 @@ class AppFixtures extends Fixture
             $VL->setNbPlaces($pl);
             $VL->setImmatriculation($immat);
             $VL->setSerigraphie($serig);
+
+            $from = new \DateTime('now');
+            $from->modify('+ 1 days');
+            $from->modify('+ 1 hours');
+            $tmp = new \DateTime('now');
+            $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
+            $max->modify('+3 months');
+            $randomDateDebut = $this->randomDate($from, $max);
+            $randomDateFin = $this->randomDate($randomDateDebut, $max);
+            while ($randomDateFin->format('U') < $max->format('U')) {
+                $resa = new Reservation();
+                $resa->setDateDebut($randomDateDebut);
+                $resa->setHeureDebut('08:00');
+                $resa->setDateFin($randomDateFin);
+                $resa->setHeureFin('17:00');
+
+                $randomDateDebut = $this->randomDate($randomDateFin, $max);
+                $randomDateFin = $this->randomDate($randomDateDebut, $max);
+
+                $VL->addReservation($resa);
+            }
             $manager->persist($VL);
             $manager->flush();
         }
+    }
+
+    private function randomDate(\DateTime $start, \DateTime $end)
+    {
+        $randomTimestamp = mt_rand($start->getTimestamp(), $end->getTimestamp());
+        $randomDate = new \DateTime();
+        $randomDate->setTimestamp($randomTimestamp);
+        return $randomDate;
     }
 }
