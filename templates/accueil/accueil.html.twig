@@ -115,13 +115,12 @@
 
 			{# Affichage des véhicules #}
 			{% for n, vehicule in vehicules %}
-
-			{% set resas = '' %}
-			{% for reservation in vehicule.reservations %}
+				{% set resas = '' %}
+				{% for reservation in vehicule.reservations %}
 					{% set resas = resas ~ (reservation.dateDebut|date('Y-m-d h:i:00')) ~ '_' ~ (reservation.dateFin|date('Y-m-d h:i:00')) ~ (loop.last ? '' :'|') %}
-			{% endfor %}
+				{% endfor %}
 
-				<a data-reservations="{{resas}}" href="/reserver/{{vehicule.id}}/"	class="vehicule-card vehicule-card--result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow"	data-index="{{ n }}"	data-categorie="{{ vehicule.categorie.libelle }}"	data-serigraphie="{{ vehicule.serigraphie ? 'Oui' : 'Non' }}"	data-transmission="{{ vehicule.transmission.code }}"	data-nbplaces="{{ vehicule.NbPlaces }}">
+				<a	data-reservations="{{ resas }}"	href="/reserver/{{ vehicule.id }}/"	class="vehicule-card vehicule-card--result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow"	data-index="{{ n }}"	data-categorie="{{ vehicule.categorie.libelle }}"	data-serigraphie="{{ vehicule.serigraphie ? 'Oui' : 'Non' }}"	data-transmission="{{ vehicule.transmission.code }}"	data-nbplaces="{{ vehicule.NbPlaces }}">
 					<figure	class="cs-img-container left">
 						<img	class="cs-img"	src="{{ asset('images/4L.jpg') }}"	alt="Renault 4l sérigraphiée">
 							<figcaption	class="hidden">
@@ -392,6 +391,8 @@
 																	</h2>
 																	<div	class="fr-stepper__steps"	data-fr-current-step="2"	data-fr-steps="2"></div>
 																</div>
+
+															<div class="divider" style="height:0;"></div>
 
 																<div	id="step-2-form-content"	class="fr-grid-row fr-mb-2w">
 																	<div	class="fr-select-group fr-col-6 fr-col-sm-6">
