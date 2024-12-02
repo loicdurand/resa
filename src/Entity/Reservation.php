@@ -30,6 +30,9 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private ?Vehicule $vehicule = null;
 
+    #[ORM\Column(length: 8)]
+    private ?string $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +94,18 @@ class Reservation
     public function setVehicule(?Vehicule $vehicule): static
     {
         $this->vehicule = $vehicule;
+
+        return $this;
+    }
+
+    public function getUser(): ?string
+    {
+        return $this->user;
+    }
+
+    public function setUser(string $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

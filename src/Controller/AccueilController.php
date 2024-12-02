@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Reservation;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,7 @@ use App\Entity\HoraireOuverture;
 use App\Entity\Permission;
 use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
+use App\Form\ReservationType;
 use App\Form\VehiculeType;
 use Doctrine\Common\Collections\Collection;
 use PhpParser\Node\Expr\Cast\Array_;
@@ -26,10 +28,20 @@ class AccueilController extends AbstractController
 {
     private $app_const;
     private $em;
+    private $request;
+    private $requestStack;
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine)
     {
         $this->em = $em = $doctrine->getManager();
+
+        $this->request = Request::createFromGlobals();
+        $this->requestStack = $requestStack;
+        // $this->session = $this->requestStack->getSession();
+        // /* paramètres session */
+        // $this->nigend = $this->session->get('HTTP_NIGEND');
+        // $this->unite =  $this->addZeros($this->session->get('HTTP_UNITE'), 8);
+        // $this->profil = $this->session->get('HTTP_PROFIL');
     }
 
     #[Route('/')]
@@ -155,6 +167,21 @@ class AccueilController extends AbstractController
             ->getRepository(HoraireOuverture::class)
             ->findAll();
 
+        $resa = new Reservation();
+        $resa->setUser('00249205');
+        $resa->setVehicule($vehicule);
+        $form = $this->createForm(ReservationType::class, $resa);
+
+        $form->handleRequest($this->request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $reservation = $form->getData();
+            if (!$reservation->getId()) {
+                $this->em->persist($reservation);
+            }
+            $this->em->flush();
+            return $this->redirectToRoute('parc');
+        }
+
         return $this->render('accueil/reserver.html.twig', array_merge($this->getAppConst(), [
             'vehicule' => $vehicule,
             'from' => [
@@ -169,7 +196,8 @@ class AccueilController extends AbstractController
             'max' => $max,
             'limit_resa' => $limit_resa,
             'filtered' => $filtered,
-            'horaires' => $this->horaires_to_arr($horaires)
+            'horaires' => $this->horaires_to_arr($horaires),
+            'form' => $form
         ]));
     }
 

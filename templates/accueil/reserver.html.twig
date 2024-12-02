@@ -245,6 +245,58 @@
 
               <div id="cs-filtres-container" class="cs-filtres-container">
 
+              {{ form_start(form) }}
+
+              <input
+                  id="form-field--date_debut"
+                  type="text"
+                  name="{{ field_name(form.date_debut) }}"
+                  value="{{ field_value(form.date_debut) }}"
+                  class="form-control"
+              >
+
+              <input
+                  id="form-field--heure_debut"
+                  type="text"
+                  name="{{ field_name(form.heure_debut) }}"
+                  value="{{ field_value(form.heure_debut) }}"
+                  class="form-control"
+              >                
+              
+              <input
+                  id="form-field--date_fin"
+                  type="text"
+                  name="{{ field_name(form.date_fin) }}"
+                  value="{{ field_value(form.date_fin) }}"
+                  class="form-control"
+              >
+
+              <input
+                  id="form-field--heure_fin"
+                  type="text"
+                  name="{{ field_name(form.heure_fin) }}"
+                  value="{{ field_value(form.heure_fin) }}"
+                  class="form-control"
+              >  
+              
+              <input
+                  id="form-field--user"
+                  type="text"
+                  name="{{ field_name(form.user) }}"
+                  value="{{ field_value(form.user) }}"
+                  class="form-control"
+              >
+
+              <input
+                  id="form-field--vehicule"
+                  type="text"
+                  name="{{ field_name(form.vehicule) }}"
+                  value="{{ field_value(form.vehicule) }}"
+                  class="form-control"
+              >  
+                
+              {{ form_end(form) }}
+
                 {# DE ... -> À ... #}
                 <div class="cs-btn-ctnr cs-date-ctnr">
                   <button id="cs-btn--left" class="cs-btn cs-btn-from-to cs-btn--left">

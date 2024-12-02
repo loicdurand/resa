@@ -289,6 +289,7 @@ class AppFixtures extends Fixture
             $randomDateFin = $this->randomDate($randomDateDebut, $max);
             while ($randomDateFin->format('U') < $max->format('U')) {
                 $resa = new Reservation();
+                $resa->setUser('00249205');
                 $resa->setDateDebut($randomDateDebut);
                 $resa->setHeureDebut('08:00');
                 $resa->setDateFin($randomDateFin);
