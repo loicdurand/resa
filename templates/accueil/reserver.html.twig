@@ -275,6 +275,19 @@
                     </span>
                   </button>
                 </div>
+
+                {# Bandeau d'information #}
+                <div id="bandeau-info" class="fr-notice fr-notice--warning hidden">
+    <div class="fr-container">
+        <div class="fr-notice__body">
+            <p>
+                <span class="fr-notice__title">Conflit</span>
+                <span class="fr-notice__desc">Il y a déjà une réservation dans la période que vous venez de sélectionner.</span>
+            </p>
+            <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1305" class="fr-btn--close fr-btn">Masquer le message</button>
+        </div>
+    </div>
+</div>
               </div>
             </div>
             {# FIN JE RÉSERVE #}

@@ -234,11 +234,14 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       ctnr.addEventListener('click', ({ target }) => {
+
+        let max_date_fin = false;
         const selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls));
+
         if (!selectable)
           return false;
 
-        console.log({ _periode });
+        console.log({ target });
 
         [...document.getElementsByClassName(`selected-${_periode}`)].forEach(elt => {
           elt.classList.remove(`selected-${_periode}`);
@@ -247,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         target.classList.add(`selected-${_periode}`);
 
-        setBetweenClass();
+        max_date_fin = setBetweenClass();
 
         target.setAttribute('data-fr-opened', 'true');
         [...document.getElementsByClassName('bordered')].forEach(btn => btn.classList.remove('bordered'));
@@ -257,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
           label = document.getElementById(`${_periode}-date-lib`),
           affichage = document.querySelector(`#select-${_periode}-date--target .cs-from-to-value--date`),
           option_prec = select.heure[_periode].options[select.heure[_periode].selectedIndex]?.value,
-          { dataset: { ref, date } } = target,
+          { dataset: { ref, date } } = max_date_fin || target,
           th = document.getElementById(`th-${ref}`),
           { dataset: { horaires } } = th,
           heures = horaires.split(','),
@@ -313,6 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       function setBetweenClass() {
 
+        const bandeau = document.getElementById('bandeau-info');
+        bandeau.classList.add('hidden');
         [...document.getElementsByClassName('between')].forEach(elt => elt.classList.remove('between'));
 
         const // 
@@ -340,12 +345,15 @@ document.addEventListener('DOMContentLoaded', () => {
           if (target.classList.contains('striked')) {
             document.querySelector('.selected-to').classList.remove('selected-to');
             prev_target.classList.add('selected-to');
+            bandeau.classList.remove('hidden');
             break;
           }
           prev_target = target;
           target.classList.add('between');
           i++;
         }
+
+        return prev_target;
       };
 
       function ts(datetime) {
