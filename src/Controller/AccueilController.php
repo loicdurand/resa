@@ -32,20 +32,26 @@ class AccueilController extends AbstractController
     private $request;
     private $requestStack;
 
+    private $session;
+    private $nigend;
+    private $unite;
+    private $profil;
+
     public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine)
     {
         $this->em = $em = $doctrine->getManager();
 
         $this->request = Request::createFromGlobals();
         $this->requestStack = $requestStack;
-        // $this->session = $this->requestStack->getSession();
+        $this->session = $this->requestStack->getSession();
         // /* paramètres session */
-        // $this->nigend = $this->session->get('HTTP_NIGEND');
-        // $this->unite =  $this->addZeros($this->session->get('HTTP_UNITE'), 8);
-        // $this->profil = $this->session->get('HTTP_PROFIL');
+        $this->nigend = $this->session->get('HTTP_NIGEND');
+        $this->unite =  $this->session->get('HTTP_UNITE');
+        $this->profil = $this->session->get('HTTP_PROFIL');
+
     }
 
-    #[Route('/', name:'accueil')]
+    #[Route('/', name: 'accueil')]
     public function accueil(): Response
     {
         $this->setAppConst();
@@ -134,8 +140,8 @@ class AccueilController extends AbstractController
         ]));
     }
 
-    #[Route(path: '/reserver/{vl_id}', name:'reserver')]
-    #[Route(path: '/reserver/{vl_id}/{from}/{to}', name:'reserver')]
+    #[Route(path: '/reserver/{vl_id}', name: 'reserver')]
+    #[Route(path: '/reserver/{vl_id}/{from}/{to}', name: 'reserver')]
     public function reserver(string $vl_id, string $from = '', string $to = ''): Response
     {
         $this->setAppConst();
@@ -172,7 +178,7 @@ class AccueilController extends AbstractController
         $resa = new Reservation();
         $resa->setUser('00249205');
         $resa->setVehicule($vehicule);
-        if($filtered){
+        if ($filtered) {
             $resa->setDateDebut($from);
             $resa->setHeureDebut($from->format('h:i'));
             $resa->setDateFin($to);
@@ -214,9 +220,7 @@ class AccueilController extends AbstractController
     {
         $this->setAppConst();
 
-        return $this->render('accueil/historique.html.twig', array_merge($this->getAppConst(), [
-
-        ]));
+        return $this->render('accueil/historique.html.twig', array_merge($this->getAppConst(), []));
     }
 
     /**
@@ -232,7 +236,17 @@ class AccueilController extends AbstractController
     {
         $this->app_const = [];
         //dd($this->getParameter('app.max_resa_duration'));
-        foreach (['app.name', 'app.tagline', 'app.slug', 'app.limit_resa_months', 'app.max_resa_duration', 'app.minutes_select_interval'] as $param) {
+        foreach (
+            [
+                'app.name',
+                'app.tagline',
+                'app.slug',
+                'app.limit_resa_months',
+                'app.max_resa_duration',
+                'app.minutes_select_interval',
+                'app.dev_nigend_default'
+            ] as $param
+        ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }

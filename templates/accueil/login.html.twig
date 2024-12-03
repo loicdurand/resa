@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+  <div class="fr-grid-row">
+
+    {{ form_start(form) }}
+
+    <div class="fr-mt-12w fr-col-8 fr-col-offset-2">
+
+      <label class="fr-label" for="nigend">
+        Chargement d'un nigend dans la base pour test :
+      </label>
+      {{ form_widget(form.nigend) }}
+
+      <br/>
+
+      <input type="submit" class="fr-btn fr-btn--primary" value="Charger le profil" />
+
+    </div>
+
+    {{ form_end(form) }}
+
+  </div>
+
+{% endblock %}

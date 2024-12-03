@@ -13,6 +13,7 @@ use App\Entity\TransmissionVehicule;
 use App\Entity\Atelier;
 use App\Entity\HoraireOuverture;
 
+use App\Entity\User;
 use App\Entity\Vehicule;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -23,6 +24,13 @@ class AppFixtures extends Fixture
     {
 
         // GESTION DES ROLES
+
+        $user = new User();
+        $user->setNigend('249205');
+        $user->setUnite('12238');
+        $user->setProfil('SOLC');
+        $manager->persist($user);
+        $manager->flush();
 
         $roles = [
             'SOLC' => [
