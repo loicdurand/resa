@@ -1,9 +1,25 @@
-import { addZeros, time, Emitter } from './utils';
+import { addZeros, time } from './utils';
 
 const { Y, M, D, H, m, s } = time()
 
+class Emitter {
+
+  evtEmitter = document.createElement('div');
+
+  constructor() {
+    return this;
+  }
+
+  addEventListener(listenerName, cb) {
+    this.evtEmitter.addEventListener(listenerName, cb);
+  }
+};
+
 
 export default class Updater extends Emitter {
+
+  is_init = false;
+  is_date_filtered = false;
 
   heures_ouverture = [];
 
@@ -37,6 +53,80 @@ export default class Updater extends Emitter {
   constructor() {
 
     super();
+    this.evtEmitter.dataset.debut = "*";
+    this.evtEmitter.dataset.fin = "*";
+
+    let // 
+      base = 5,
+      tmp_value = 4;
+    ['subtract', 'add'].forEach(field => {
+      const // 
+        input = document.getElementById('input--nb-places'),
+        btn = document.getElementById(`cs-nb-places--button-${field}`),
+        min = 2,
+        max = 9;
+      btn.addEventListener('click', e => {
+
+        if (!this.is_init)
+          this.is_init = this.init();
+
+        if (input.value !== 'Indifférent') {
+          if (field === 'add') {
+            tmp_value = tmp_value + 1;
+            if (tmp_value <= max) {
+              input.value = tmp_value;
+            } else {
+              input.value = 'Indifférent';
+            }
+          } else {
+            tmp_value = tmp_value - 1;
+            if (tmp_value >= min) {
+              input.value = tmp_value;
+            } else {
+              input.value = 'Indifférent';
+            }
+          }
+        } else {
+          input.value = base;
+          tmp_value = base;
+        }
+        this.evtEmitter.dataset.nbplaces = input.value === 'Indifférent' ? '*' : input.value;
+        this.evtEmitter.dispatchEvent(this.update);
+      });
+    });
+
+    [...document.querySelectorAll('#fr-modal--categorie [data-categorie]')].forEach((btn, i, btns) => {
+      btn.addEventListener('click', ({ currentTarget: target }) => {
+
+        if (!this.is_init)
+          this.is_init = this.init();
+
+        btns.forEach(btn => btn.classList.remove('selected'));
+        target.classList.add('selected');
+        this.evtEmitter.dataset.categorie = target.dataset.categorie;
+        this.evtEmitter.dispatchEvent(this.update);
+      })
+    });
+
+    ['serigraphie', 'transmission'].forEach(field => {
+      [...document.getElementsByName(`radio--${field}`)].forEach(radio => {
+        radio.addEventListener('change', ({ target: { value } }) => {
+
+          if (!this.is_init)
+            this.is_init = this.init();
+
+          this.evtEmitter.dataset[field] = value;
+          this.evtEmitter.dispatchEvent(this.update);
+        });
+      });
+    });
+
+
+    return this;
+
+  }
+
+  init() {
 
     const  // 
       lastOption = this.modale.fin.date.options[this.modale.fin.date.selectedIndex],
@@ -52,7 +142,7 @@ export default class Updater extends Emitter {
       CSAG_horaire_depasse = false,
       option = this.modale.debut.date.querySelector('option');
 
-      while (option.disabled) {
+    while (option.disabled) {
       starts_auj = false;
       CSAG_ouvert_auj = false;
       option.removeAttribute('selected');
@@ -87,7 +177,7 @@ export default class Updater extends Emitter {
 
         if (creneau === 'fin' && i === heures[heures.length - 1])
           opt.selected = true;
-        
+
         this.modale[creneau].heure.appendChild(opt);
       }
 
@@ -105,6 +195,7 @@ export default class Updater extends Emitter {
     ['date', 'heure'].forEach(part => {
 
       this.modale.debut[part].addEventListener('change', e => {
+        this.is_date_filtered = true;
         this.set_ref_debut();
         this.addDays(e);
         this.removeErrorText();
@@ -113,6 +204,7 @@ export default class Updater extends Emitter {
       });
 
       this.modale.fin[part].addEventListener('change', e => {
+        this.is_date_filtered = true;
         this.removeErrorText();
         this.set_ref_fin('show_error');
         this.addDays(e);
@@ -122,61 +214,8 @@ export default class Updater extends Emitter {
 
     });
 
-    [...document.querySelectorAll('#fr-modal--categorie [data-categorie]')].forEach((btn, i, btns) => {
-      btn.addEventListener('click', ({ currentTarget: target }) => {
-        btns.forEach(btn => btn.classList.remove('selected'));
-        target.classList.add('selected');
-        this.evtEmitter.dataset.categorie = target.dataset.categorie;
-        this.evtEmitter.dispatchEvent(this.update);
-      })
-    });
+    return 'done';
 
-    let // 
-      base = 5,
-      tmp_value = 4;
-    ['subtract', 'add'].forEach(field => {
-      const // 
-        input = document.getElementById('input--nb-places'),
-        btn = document.getElementById(`cs-nb-places--button-${field}`),
-        min = 2,
-        max = 9;
-      btn.addEventListener('click', e => {
-        if (input.value !== 'Indifférent') {
-          if (field === 'add') {
-            tmp_value = tmp_value + 1;
-            if (tmp_value <= max) {
-              input.value = tmp_value;
-            } else {
-              input.value = 'Indifférent';
-            }
-          } else {
-            tmp_value = tmp_value - 1;
-            if (tmp_value >= min) {
-              input.value = tmp_value;
-            } else {
-              input.value = 'Indifférent';
-            }
-          }
-        } else {
-          input.value = base;
-          tmp_value = base;
-        }
-        this.evtEmitter.dataset.nbplaces = input.value === 'Indifférent' ? '*' : input.value;
-        this.evtEmitter.dispatchEvent(this.update);
-      });
-    });
-
-    ['serigraphie', 'transmission'].forEach(field => {
-      [...document.getElementsByName(`radio--${field}`)].forEach(radio => {
-        radio.addEventListener('change', ({ target: { value } }) => {
-          this.evtEmitter.dataset[field] = value;
-          this.evtEmitter.dispatchEvent(this.update);
-        });
-      });
-    });
-
-
-    return this;
   }
 
   get_ref_debut() {
@@ -273,11 +312,13 @@ export default class Updater extends Emitter {
   }
 
   update_filtres(DEBUT_OU_FIN, text, short, heure) {
-    this.filtres[DEBUT_OU_FIN].date.children[0].innerText = text;
-    this.filtres[DEBUT_OU_FIN].date.children[1].innerText = short;
-    this.filtres[DEBUT_OU_FIN].heure.innerText = heure;
-    this.evtEmitter.dataset.debut = this.get_ref_debut();
-    this.evtEmitter.dataset.fin = this.get_ref_fin();
+    if (this.is_date_filtered) {
+      this.filtres[DEBUT_OU_FIN].date.children[0].innerText = text;
+      this.filtres[DEBUT_OU_FIN].date.children[1].innerText = short;
+      this.filtres[DEBUT_OU_FIN].heure.innerText = heure;
+      this.evtEmitter.dataset.debut = this.get_ref_debut();
+      this.evtEmitter.dataset.fin = this.get_ref_fin();
+    }
     ['categorie', 'serigraphie', 'nbplaces', 'transmission'].forEach(field => {
       this.evtEmitter.dataset[field] = '*';
     });

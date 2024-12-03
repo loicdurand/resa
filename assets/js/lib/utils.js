@@ -31,16 +31,3 @@ export const //
     subMinutes = (date, n) => time(+new Date(Date.parse(date) - (60 * 1000 * n))),
 
     addMinutes = (date, n) => time(+new Date(Date.parse(date) + (60 * 1000 * n)));
-
-export class Emitter {
-
-    evtEmitter = document.createElement('div');
-
-    constructor() {
-        return this;
-    }
-
-    addEventListener(listenerName, cb) {
-        this.evtEmitter.addEventListener(listenerName, cb);
-    }
-}
