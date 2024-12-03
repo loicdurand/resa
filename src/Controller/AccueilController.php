@@ -131,7 +131,6 @@ class AccueilController extends AbstractController
             'dates' => $dates,
             'dates_fin' => $dates_fin,
             'last_date' => $last_date,
-            'script' => 'accueil'
         ]));
     }
 
@@ -173,6 +172,12 @@ class AccueilController extends AbstractController
         $resa = new Reservation();
         $resa->setUser('00249205');
         $resa->setVehicule($vehicule);
+        if($filtered){
+            $resa->setDateDebut($from);
+            $resa->setHeureDebut($from->format('h:i'));
+            $resa->setDateFin($to);
+            $resa->setHeureFin($to->format('h:i'));
+        }
         $form = $this->createForm(ReservationType::class, $resa);
 
         $form->handleRequest($this->request);
@@ -200,8 +205,7 @@ class AccueilController extends AbstractController
             'limit_resa' => $limit_resa,
             'filtered' => $filtered,
             'horaires' => $this->horaires_to_arr($horaires),
-            'form' => $form,
-            'script' => 'reserver'
+            'form' => $form
         ]));
     }
 
