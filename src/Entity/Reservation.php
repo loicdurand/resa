@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReservationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Timezone;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -32,6 +33,13 @@ class Reservation
 
     #[ORM\Column(length: 8)]
     private ?string $user = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    public function __construct(){
+        $this->createdAt = new \DateTime('now', new \DateTimeZone('America/Guadeloupe'));
+    }
 
     public function getId(): ?int
     {
@@ -106,6 +114,18 @@ class Reservation
     public function setUser(string $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(): static
+    {
+        $this->createdAt = new \DateTime('now');
 
         return $this;
     }

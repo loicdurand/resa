@@ -261,6 +261,17 @@ document.addEventListener('DOMContentLoaded', () => {
             from: document.getElementById('select-from-minute'),
             to: document.getElementById('select-to-minute')
           }
+        },
+        form = {
+          date: {
+            from: document.getElementById('form-field--date_debut'),
+            to: document.getElementById('form-field--date_fin')
+          },
+          heure: {
+            from: document.getElementById('form-field--heure_debut'),
+            to: document.getElementById('form-field--heure_fin')
+          },
+          submit: document.getElementById('form-submit-ctnr')
         };
 
       ['left', 'right'].forEach(position => {
@@ -288,10 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!selectable)
           return false;
 
-        console.log({
-          target
-        });
-
         [...document.getElementsByClassName(`selected-${_periode}`)].forEach(elt => {
           elt.classList.remove(`selected-${_periode}`);
           target.setAttribute('data-fr-opened', 'false');
@@ -301,12 +308,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         max_date_fin = setBetweenClass();
 
+        if(!max_date_fin)
+          form.submit.classList.add('hidden');
+
         target.setAttribute('data-fr-opened', 'true');
         [...document.getElementsByClassName('bordered')].forEach(btn => btn.classList.remove('bordered'));
 
         document.getElementById(`cs-btn--${_periode == 'to' ? 'left' : 'right'}`).classList.add('bordered');
         const // 
           label = document.getElementById(`${_periode}-date-lib`),
+          form_elt = form.date[_periode],
           affichage = document.querySelector(`#select-${_periode}-date--target .cs-from-to-value--date`),
           option_prec = select.heure[_periode].options[select.heure[_periode].selectedIndex]?.value,
           {
@@ -327,6 +338,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         label.innerHTML = date_en_toutes_lettres;
         affichage.innerHTML = date_en_toutes_lettres;
+        form_elt.value = date;
+
         select.heure[_periode].innerText = '';
         heures.forEach((h, idx) => {
           const option = document.createElement('option');
@@ -360,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(heure_en_toutes_lettres);
 
             affichage.innerText = heure_en_toutes_lettres;
+            form.heure[periode].value = heure_en_toutes_lettres;
           });
         })
       });
@@ -404,6 +418,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (time_debut > time_fin)
           return false;
 
+        form.submit.classList.remove('hidden');
+
         let // 
           i = 0,
           curr = time_debut,
@@ -415,12 +431,16 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.selected-to').classList.remove('selected-to');
             prev_target.classList.add('selected-to');
             bandeau.classList.remove('hidden');
+            form.submit.classList.add('hidden');
             break;
           }
           prev_target = target;
           target.classList.add('between');
           i++;
         }
+
+        // if(bandeau.classList.contains('hidden'))
+          form.submit.classList.remove('hidden');
 
         return prev_target;
       };

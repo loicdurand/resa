@@ -19,6 +19,7 @@ use App\Entity\Vehicule;
 use App\Form\ReservationType;
 use App\Form\VehiculeType;
 use Doctrine\Common\Collections\Collection;
+use phpDocumentor\Reflection\Types\Boolean;
 use PhpParser\Node\Expr\Cast\Array_;
 use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\HttpFoundation\Request;
@@ -138,6 +139,7 @@ class AccueilController extends AbstractController
     public function reserver(string $vl_id, string $from = '', string $to = ''): Response
     {
         $this->setAppConst();
+
         $filtered = true;
         $tmp = new \DateTime('now');
         $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
@@ -179,7 +181,7 @@ class AccueilController extends AbstractController
                 $this->em->persist($reservation);
             }
             $this->em->flush();
-            return $this->redirectToRoute('parc');
+            return $this->redirectToRoute('historique');
         }
 
         return $this->render('accueil/reserver.html.twig', array_merge($this->getAppConst(), [
@@ -198,6 +200,16 @@ class AccueilController extends AbstractController
             'filtered' => $filtered,
             'horaires' => $this->horaires_to_arr($horaires),
             'form' => $form
+        ]));
+    }
+
+    #[Route(path: '/historique', name: 'historique')]
+    public function historique(?string $success = 'false'): Response
+    {
+        $this->setAppConst();
+
+        return $this->render('accueil/historique.html.twig', array_merge($this->getAppConst(), [
+
         ]));
     }
 

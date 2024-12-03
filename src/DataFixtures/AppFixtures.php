@@ -287,7 +287,9 @@ class AppFixtures extends Fixture
             $max->modify('+3 months');
             $randomDateDebut = $this->randomDate($from, $max);
             $randomDateFin = $this->randomDate($randomDateDebut, $max);
-            while ($randomDateFin->format('U') < $max->format('U')) {
+            $i = 0;
+            while ($randomDateFin->format('U') < $max->format('U') && $randomDateDebut->format('Y-m-d') !== $randomDateFin->format('Y-m-d')) {
+
                 $resa = new Reservation();
                 $resa->setUser('00249205');
                 $resa->setDateDebut($randomDateDebut);
@@ -299,6 +301,7 @@ class AppFixtures extends Fixture
                 $randomDateFin = $this->randomDate($randomDateDebut, $max);
 
                 $VL->addReservation($resa);
+                $i++;
             }
             $manager->persist($VL);
             $manager->flush();

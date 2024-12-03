@@ -238,6 +238,9 @@
             {# FIN INFORMATIONS #}
 
             {# JE RÉSERVE #}
+            
+            {{ form_start(form) }}
+
             <div class="fr-col-12">
               <p class="cs-informations">
                 Disponibilités
@@ -245,11 +248,9 @@
 
               <div id="cs-filtres-container" class="cs-filtres-container">
 
-              {{ form_start(form) }}
-
               <input
                   id="form-field--date_debut"
-                  type="text"
+                  type="hidden"
                   name="{{ field_name(form.date_debut) }}"
                   value="{{ field_value(form.date_debut) }}"
                   class="form-control"
@@ -257,7 +258,7 @@
 
               <input
                   id="form-field--heure_debut"
-                  type="text"
+                  type="hidden"
                   name="{{ field_name(form.heure_debut) }}"
                   value="{{ field_value(form.heure_debut) }}"
                   class="form-control"
@@ -265,7 +266,7 @@
               
               <input
                   id="form-field--date_fin"
-                  type="text"
+                  type="hidden"
                   name="{{ field_name(form.date_fin) }}"
                   value="{{ field_value(form.date_fin) }}"
                   class="form-control"
@@ -273,7 +274,7 @@
 
               <input
                   id="form-field--heure_fin"
-                  type="text"
+                  type="hidden"
                   name="{{ field_name(form.heure_fin) }}"
                   value="{{ field_value(form.heure_fin) }}"
                   class="form-control"
@@ -281,7 +282,7 @@
               
               <input
                   id="form-field--user"
-                  type="text"
+                  type="hidden"
                   name="{{ field_name(form.user) }}"
                   value="{{ field_value(form.user) }}"
                   class="form-control"
@@ -289,14 +290,12 @@
 
               <input
                   id="form-field--vehicule"
-                  type="text"
+                  type="hidden"
                   name="{{ field_name(form.vehicule) }}"
                   value="{{ field_value(form.vehicule) }}"
                   class="form-control"
               >  
                 
-              {{ form_end(form) }}
-
                 {# DE ... -> À ... #}
                 <div class="cs-btn-ctnr cs-date-ctnr">
                   <button id="cs-btn--left" class="cs-btn cs-btn-from-to cs-btn--left">
@@ -330,18 +329,33 @@
 
                 {# Bandeau d'information #}
                 <div id="bandeau-info" class="fr-notice fr-notice--warning hidden">
-    <div class="fr-container">
-        <div class="fr-notice__body">
-            <p>
-                <span class="fr-notice__title">Conflit</span>
-                <span class="fr-notice__desc">Il y a déjà une réservation dans la période que vous venez de sélectionner.</span>
-            </p>
-            <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1305" class="fr-btn--close fr-btn">Masquer le message</button>
-        </div>
-    </div>
-</div>
+                    <div class="fr-container">
+                        <div class="fr-notice__body">
+                            <p>
+                                <span class="fr-notice__title">Conflit</span>
+                                <p class="fr-notice__desc">
+                              Il y a déjà une réservation dans la période que vous venez de sélectionner.
+                              <br>La date de fin a été modifiée.
+                              </p>
+                            </p>
+                            <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1305" class="fr-btn--close fr-btn">Masquer le message</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="form-submit-ctnr" class="hidden fr-btns-group--right fr-mt-2w fr-mr-1w">
+                  <span>
+                    <button type="submit" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-right">
+                    Je réserve
+                  </button>
+                  </span>
+              </div>
+
               </div>
             </div>
+
+            {{ form_end(form) }}
+
             {# FIN JE RÉSERVE #}
 
             {# CALENDRIERS #}
