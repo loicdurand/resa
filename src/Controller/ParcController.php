@@ -23,18 +23,24 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ParcController extends AbstractController
 {
     private $app_const;
-    private $request;
-    private $requestStack;
+    private $requestStack, $session;
+    public $params, $request;
 
     public function __construct(RequestStack $requestStack)
     {
+        $this->setAppConst();
+
         $this->request = Request::createFromGlobals();
         $this->requestStack = $requestStack;
-        // $this->session = $this->requestStack->getSession();
-        // /* paramètres session */
-        // $this->nigend = $this->session->get('HTTP_NIGEND');
-        // $this->unite =  $this->addZeros($this->session->get('HTTP_UNITE'), 8);
-        // $this->profil = $this->session->get('HTTP_PROFIL');
+        $this->session = $this->requestStack->getSession();
+
+        $this->session = $this->requestStack->getSession();
+
+        $this->params = [
+            'nigend' => $this->session->get('HTTP_NIGEND'),
+            'unite' => $this->session->get('HTTP_UNITE'),
+            'profil' => $this->session->get('HTTP_PROFIL')
+        ];
     }
 
 
@@ -50,9 +56,13 @@ class ParcController extends AbstractController
 
         //dd($vehicules);
 
-        return $this->render('parc/afficher.html.twig', array_merge($this->getAppConst(), [
-            'vehicules' => $vehicules,
-        ]));
+        return $this->render('parc/afficher.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'vehicules' => $vehicules,
+            ]
+        ));
     }
 
     #[Route('/parc/ajouter')]
@@ -99,9 +109,13 @@ class ParcController extends AbstractController
             return $this->redirectToRoute('parc');
         }
 
-        return $this->render('parc/ajouter.html.twig', array_merge($this->getAppConst(), [
-            'form' => $form
-        ]));
+        return $this->render('parc/ajouter.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'form' => $form
+            ]
+        ));
     }
 
     /**
@@ -116,7 +130,18 @@ class ParcController extends AbstractController
     private function setAppConst()
     {
         $this->app_const = [];
-        foreach (['app.name', 'app.tagline', 'app.slug'] as $param) {
+        foreach (
+            [
+                'app.env',
+                'app.name',
+                'app.tagline',
+                'app.slug',
+                'app.limit_resa_months',
+                'app.max_resa_duration',
+                'app.minutes_select_interval',
+                'app.dev_nigend_default'
+            ] as $param
+        ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }

@@ -24,13 +24,20 @@ class AppFixtures extends Fixture
     {
 
         // GESTION DES ROLES
-
-        $user = new User();
-        $user->setNigend('249205');
-        $user->setUnite('12238');
-        $user->setProfil('SOLC');
-        $manager->persist($user);
-        $manager->flush();
+        $users = [
+            ['249205', '86977', 'SOLC'],
+            ['170044', '56751', 'CSAG'],
+            ['167194', '6768', 'CDT']
+        ];
+        
+        foreach ($users as [$nigend, $code_unite, $profil]) {
+            $user = new User();
+            $user->setNigend($nigend);
+            $user->setUnite($code_unite);
+            $user->setProfil($profil);
+            $manager->persist($user);
+            $manager->flush();
+        }
 
         $roles = [
             'SOLC' => [

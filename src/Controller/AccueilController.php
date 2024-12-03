@@ -29,26 +29,22 @@ class AccueilController extends AbstractController
 {
     private $app_const;
     private $em;
-    private $request;
-    private $requestStack;
-
-    private $session;
-    private $nigend;
-    private $unite;
-    private $profil;
+    private $requestStack, $session;
+    public $request, $params;
 
     public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine)
     {
-        $this->em = $em = $doctrine->getManager();
+        $this->em = $doctrine->getManager();
 
         $this->request = Request::createFromGlobals();
         $this->requestStack = $requestStack;
         $this->session = $this->requestStack->getSession();
         // /* paramètres session */
-        $this->nigend = $this->session->get('HTTP_NIGEND');
-        $this->unite =  $this->session->get('HTTP_UNITE');
-        $this->profil = $this->session->get('HTTP_PROFIL');
-
+        $this->params = [
+            'nigend' => $this->session->get('HTTP_NIGEND'),
+            'unite' => $this->session->get('HTTP_UNITE'),
+            'profil' => $this->session->get('HTTP_PROFIL')
+        ];
     }
 
     #[Route('/', name: 'accueil')]
@@ -130,14 +126,18 @@ class AccueilController extends AbstractController
             }
         }
 
-        return $this->render('accueil/accueil.html.twig', array_merge($this->getAppConst(), [
-            'vehicules' => $vehicules,
-            'categories' => $categories,
-            'transmissions' => $transmissions,
-            'dates' => $dates,
-            'dates_fin' => $dates_fin,
-            'last_date' => $last_date,
-        ]));
+        return $this->render('accueil/accueil.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'vehicules' => $vehicules,
+                'categories' => $categories,
+                'transmissions' => $transmissions,
+                'dates' => $dates,
+                'dates_fin' => $dates_fin,
+                'last_date' => $last_date,
+            ]
+        ));
     }
 
     #[Route(path: '/reserver/{vl_id}', name: 'reserver')]
@@ -196,23 +196,27 @@ class AccueilController extends AbstractController
             return $this->redirectToRoute('historique');
         }
 
-        return $this->render('accueil/reserver.html.twig', array_merge($this->getAppConst(), [
-            'vehicule' => $vehicule,
-            'from' => [
-                'date' => $this->FR($from->format('Y-m-d'), 'short'),
-                'heure' => $from->format('H:00')
-            ],
-            'to' => [
-                'date' => $this->FR($to->format('Y-m-d'), 'short'),
-                'heure' => $to->format('H:00')
-            ],
-            'year' => $from->format('Y'),
-            'max' => $max,
-            'limit_resa' => $limit_resa,
-            'filtered' => $filtered,
-            'horaires' => $this->horaires_to_arr($horaires),
-            'form' => $form
-        ]));
+        return $this->render('accueil/reserver.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'vehicule' => $vehicule,
+                'from' => [
+                    'date' => $this->FR($from->format('Y-m-d'), 'short'),
+                    'heure' => $from->format('H:00')
+                ],
+                'to' => [
+                    'date' => $this->FR($to->format('Y-m-d'), 'short'),
+                    'heure' => $to->format('H:00')
+                ],
+                'year' => $from->format('Y'),
+                'max' => $max,
+                'limit_resa' => $limit_resa,
+                'filtered' => $filtered,
+                'horaires' => $this->horaires_to_arr($horaires),
+                'form' => $form
+            ]
+        ));
     }
 
     #[Route(path: '/historique', name: 'historique')]
@@ -220,7 +224,10 @@ class AccueilController extends AbstractController
     {
         $this->setAppConst();
 
-        return $this->render('accueil/historique.html.twig', array_merge($this->getAppConst(), []));
+        return $this->render('accueil/historique.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params[]
+        ));
     }
 
     /**
@@ -238,6 +245,7 @@ class AccueilController extends AbstractController
         //dd($this->getParameter('app.max_resa_duration'));
         foreach (
             [
+                'app.env',
                 'app.name',
                 'app.tagline',
                 'app.slug',

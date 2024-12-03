@@ -8,10 +8,21 @@
 
     <div class="fr-mt-12w fr-col-8 fr-col-offset-2">
 
-      <label class="fr-label" for="nigend">
-        Chargement d'un nigend dans la base pour test :
-      </label>
-      {{ form_widget(form.nigend) }}
+      <div class="fr-input-group{{ result == false ? ' fr-input-group--error' : '' }}">
+
+        <label class="fr-label" for="nigend">
+          Chargement d'un nigend dans la base pour test :
+        </label>
+
+        {{ form_widget(form.nigend) }}
+
+        {% if result == false %}
+          <p id="text-input-error-desc-error" class="fr-error-text">
+            Le nigend n'est pas connu de la base.
+          </p>
+        {% endif %}
+
+      </div>
 
       <br/>
 

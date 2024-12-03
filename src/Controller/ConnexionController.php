@@ -30,7 +30,7 @@ class ConnexionController extends AbstractController
     $this->session = $this->requestStack->getSession();
   }
 
-  #[Route('/deconnexion', name: 'logout')]
+  #[Route('/logout', name: 'logout')]
   public function logout()
   {
     $this->session->clear();
@@ -38,7 +38,7 @@ class ConnexionController extends AbstractController
   }
 
   #[Route('/connexion', name: 'login')]
-  public function login(EntityManagerInterface $entityManager, AuthenticationUtils $authenticationUtils)
+  public function login(EntityManagerInterface $entityManager)
   {
     $this->setAppConst();
 
@@ -49,17 +49,24 @@ class ConnexionController extends AbstractController
     }
 
     $usr = new User();
-    $usr->setNigend($this->app_const['APP_DEV_NIGEND_DEFAULT']);
 
-    $form = $this->createForm(UserType::class, $usr);
+    $form = $this->createForm(UserType::class);
 
     $form->handleRequest($this->request);
+
     if ($form->isSubmitted() && $form->isValid()) {
-      
+
       $data = $form->getData();
       $user = $entityManager
         ->getRepository(User::class)
         ->findOneBy(['nigend' => $data->getNigend()]);
+
+      if (is_null($user)) {
+        return $this->render('accueil/login.html.twig', array_merge($this->getAppConst(), [
+          'form' => $form,
+          'result' => false
+        ]));
+      }
 
       $entityManager->flush();
       $nigend = $user->getNigend();
@@ -74,9 +81,13 @@ class ConnexionController extends AbstractController
       return $this->redirectToRoute('accueil');
     }
 
-    return $this->render('accueil/login.html.twig', array_merge($this->getAppConst(), [
-      'form' => $form
-    ]));
+    return $this->render('accueil/login.html.twig', array_merge(
+      $this->getAppConst(),
+      [
+        'form' => $form,
+        'result' => 'none'
+      ]
+    ));
   }
 
   private function addZeros($str, $maxlen = 2)
@@ -98,6 +109,7 @@ class ConnexionController extends AbstractController
     //dd($this->getParameter('app.max_resa_duration'));
     foreach (
       [
+        'app.env',
         'app.name',
         'app.tagline',
         'app.slug',

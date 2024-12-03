@@ -13,6 +13,37 @@
 //         Helvetica, Arial, Courier New, sans-serif;
 // }
 
+body.container .debug {
+    z-index: 2;
+    position: fixed;
+    bottom: 6px;
+    right: 6px;
+    border: 1px solid var(--grey-5);
+    background: rgba(255, 255, 255, .8);
+    border-radius: 3px;
+    font-size: 0.6rem;
+    line-height: 1;
+    margin: 3px;
+    padding: 0 3px;
+
+    & p {
+        margin-bottom: 0;
+        font-size: .8rem;
+    }
+
+    & dl {
+        padding-inline-start: 0;
+
+        & dd {
+            font-weight: 900;
+        }
+    }
+
+    & dt dd {
+        display: inline;
+    }
+}
+
 .cs-main {
     margin-top: 10.5rem !important;
 }
