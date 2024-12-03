@@ -286,6 +286,8 @@ document.addEventListener('DOMContentLoaded', () => {
           [...document.querySelectorAll(`div[aria-controls="fr-modal--${_periode === 'from' ? 'to' : 'from'}"]`)].forEach(elt => {
             elt.setAttribute('aria-controls', `fr-modal--${_periode}`);
           });
+          [...document.getElementsByClassName('bordered')].forEach(btn => btn.classList.remove('bordered'));
+          currentTarget.classList.add('bordered');
         });
       });
 
@@ -308,14 +310,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         max_date_fin = setBetweenClass();
 
-        if(!max_date_fin)
+        if (!max_date_fin)
           form.submit.classList.add('hidden');
 
         target.setAttribute('data-fr-opened', 'true');
         [...document.getElementsByClassName('bordered')].forEach(btn => btn.classList.remove('bordered'));
 
-        document.getElementById(`cs-btn--${_periode == 'to' ? 'left' : 'right'}`).classList.add('bordered');
         const // 
+          cs_btn = document.getElementById(`cs-btn--${_periode == 'to' ? 'left' : 'right'}`),
           label = document.getElementById(`${_periode}-date-lib`),
           form_elt = form.date[_periode],
           affichage = document.querySelector(`#select-${_periode}-date--target .cs-from-to-value--date`),
@@ -325,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
               ref,
               date
             }
-          } = max_date_fin || target,
+          } = _periode == 'from' ? target : (max_date_fin || target),
           th = document.getElementById(`th-${ref}`),
           {
             dataset: {
@@ -336,9 +338,16 @@ document.addEventListener('DOMContentLoaded', () => {
           [Y, m, d] = date.split('-'),
           date_en_toutes_lettres = `${refs.jours[ref]} ${d} ${(refs.mois[+m]).slice(0, 3)}<span class="hide-s">&nbsp;${Y}</span>`;
 
+        cs_btn.classList.add('bordered');
         label.innerHTML = date_en_toutes_lettres;
         affichage.innerHTML = date_en_toutes_lettres;
         form_elt.value = date;
+
+        console.log({ max_date_fin, res: max_date_fin === false });
+        if (max_date_fin === false)
+          cs_btn.classList.add('red');
+        else
+          cs_btn.classList.remove('red');
 
         select.heure[_periode].innerText = '';
         heures.forEach((h, idx) => {
@@ -400,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
           from = document.querySelector('.selected-from'),
           to = document.querySelector('.selected-to');
         if (from === null || to === null)
-          return false;
+          return undefined;
 
         const // 
           {
@@ -415,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
           time_debut = ts(`${date_debut} 08:00:00`),
           time_fin = ts(`${date_fin} 08:00:00`);
 
-        if (time_debut > time_fin)
+        if (time_debut >= time_fin)
           return false;
 
         form.submit.classList.remove('hidden');
@@ -440,9 +449,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // if(bandeau.classList.contains('hidden'))
-          form.submit.classList.remove('hidden');
+        form.submit.classList.remove('hidden');
 
-        return prev_target;
+        return document.querySelector('.selected-to');
       };
 
       function ts(datetime) {

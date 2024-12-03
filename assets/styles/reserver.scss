@@ -61,6 +61,9 @@
 
         &.bordered {
           border: 2px solid var(--blue-5);
+          &.red{
+            border-color: var(--red-5);
+          }
         }
 
         & .cs-from-to-value {
