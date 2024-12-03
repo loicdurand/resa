@@ -30,6 +30,7 @@
         "ngrok": "ngrok http http://resa:80"
     },
     "dependencies": {
+        "@bleckert/router": "^0.2.0",
         "@gouvfr/dsfr": "^1.12.1"
     }
 }

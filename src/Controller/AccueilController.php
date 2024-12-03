@@ -45,7 +45,7 @@ class AccueilController extends AbstractController
         // $this->profil = $this->session->get('HTTP_PROFIL');
     }
 
-    #[Route('/')]
+    #[Route('/', name:'accueil')]
     public function accueil(): Response
     {
         $this->setAppConst();
@@ -130,12 +130,13 @@ class AccueilController extends AbstractController
             'transmissions' => $transmissions,
             'dates' => $dates,
             'dates_fin' => $dates_fin,
-            'last_date' => $last_date
+            'last_date' => $last_date,
+            'script' => 'accueil'
         ]));
     }
 
-    #[Route(path: '/reserver/{vl_id}')]
-    #[Route(path: '/reserver/{vl_id}/{from}/{to}')]
+    #[Route(path: '/reserver/{vl_id}', name:'reserver')]
+    #[Route(path: '/reserver/{vl_id}/{from}/{to}', name:'reserver')]
     public function reserver(string $vl_id, string $from = '', string $to = ''): Response
     {
         $this->setAppConst();
@@ -199,7 +200,8 @@ class AccueilController extends AbstractController
             'limit_resa' => $limit_resa,
             'filtered' => $filtered,
             'horaires' => $this->horaires_to_arr($horaires),
-            'form' => $form
+            'form' => $form,
+            'script' => 'reserver'
         ]));
     }
 
