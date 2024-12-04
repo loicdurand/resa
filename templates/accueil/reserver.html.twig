@@ -423,19 +423,32 @@
                         {% if loop.first and startDow != 0 %}
                           <td colspan="{{ startDow }}"></td>
                         {% endif %}
-                        {% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:59')|date('U') %}
+                        {% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:00')|date('U') %}
                         {% set before_now = curr_date <= ('now'|date('Y-m-d 00:00:00')|date('U') )? true : false %}
                         {% set after_limit = curr_date > (max|date('Y-m-d 00:00:00')|date('U') )? true : false %}
                         {% set csag_ferme =  horaires[days_list[dow]] == '' %}
                         <td class="target">
                           <div class="relative">
+
                             {% set striked = false %}
+                            {% set striked_debut = false %}
+                            {% set striked_fin = false %}
+
                             {% for reservation in vehicule.reservations %}
-                              {% if curr_date >= date(reservation.dateDebut)|date('U') and curr_date <= date(reservation.dateFin)|date('U') %}
-                                {% set striked = true %}
+                              {% if 
+                              curr_date|date('Y-m-d')|date('U') >= date(reservation.dateDebut)|date('Y-m-d')|date('U') 
+                                and 
+                              curr_date|date('Y-m-d')|date('U') <= date(reservation.dateFin)|date('Y-m-d')|date('U') 
+                              %}
+                                
+                              {% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) %}
+                              {% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) %}
+                              {% set striked = striked_debut or striked_fin ? false : true %}
+
                               {% endif %}
                             {% endfor %}
-                            <div data-ref="{{ days_list[dow] }}" {{ striked or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" title="{{ striked ? " Le véhicule est déjà réservé à cette date" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
+
+                            <div data-ref="{{ days_list[dow] }}" {{ striked or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" title="{{ striked ? " Le véhicule est réservé toute la journée" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
                               {{ day }}
                             </div>
                             <div>{# day content here #}

@@ -61,7 +61,8 @@
 
         &.bordered {
           border: 2px solid var(--blue-5);
-          &.red{
+
+          &.red {
             border-color: var(--red-5);
           }
         }
@@ -100,16 +101,30 @@
     & tbody tr td .cs-td-daynum {
       font-weight: 900;
       cursor: pointer;
+      & + div{
+        width: 6px;
+        height: 6px;
+        border-radius: 6px;
+        margin: 0 auto;
+      }
 
-      &.striked {
-        text-decoration-line: line-through;
+      // &.striked,
+      // &.striked_debut,
+      // &.striked_fin {
+      //   text-decoration-line: line-through;
+      // }
+
+      &.striked+div,
+      &.striked_debut+div,
+      &.striked_fin+div {
+        background: var(--red-5);
       }
 
       &.csag_ferme[data-date][data-ref] {
         opacity: 1;
       }
 
-      &.striked,
+      // &.striked,
       &.before_now,
       &.after_limit,
       &.csag_ferme,

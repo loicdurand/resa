@@ -203,6 +203,8 @@ class AccueilController extends AbstractController
             return $this->redirectToRoute('historique');
         }
 
+        // dd($vehicule->getReservations()[1]->getDateFin());
+
         return $this->render('accueil/reserver.html.twig', array_merge(
             $this->getAppConst(),
             $this->params,
