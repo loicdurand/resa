@@ -23,12 +23,25 @@
 
                     <h3 class="fr-col-12 cs-date-lib" id="from-date-lib"></h3>
 
+                    <div id="notice-resa-debut" class="hidden fr-notice fr-notice--info">
+                      <div class="fr-container">
+                          <div class="fr-notice__body">
+                              <p>
+                                  <span class="fr-notice__title">Information:</span>
+                                  <span class="fr-notice__desc">Le véhicule&nbsp;<span id="text-resa-debut"></span>
+                              </p>
+                              <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
+                          </div>
+                      </div>
+                  </div>
+
                     <div class="fr-grid-row fr-mb-2w">
                       <div class=" fr-select-group fr-col fr-col-6 fr-pl-1w">
                         <label class="fr-label" for="select-from-heure">
                           Heure
                         </label>
                         <select class="fr-select" id="select-from-heure" name="select-from-heure"></select>
+                        
                       </div>
                       <div class="fr-select-group fr-select-group--disabled fr-col fr-col-6 fr-pl-1w cs-select-minutes">
                         <label class="fr-label" for="select-from-minute">
@@ -82,6 +95,18 @@
                     </div>
 
                     <h3 class="fr-col-12 cs-date-lib" id="to-date-lib"></h3>
+
+                    <div id="notice-resa-fin" class="hidden fr-notice fr-notice--info">
+                      <div class="fr-container">
+                          <div class="fr-notice__body">
+                              <p>
+                                  <span class="fr-notice__title">Information:</span>
+                                  <span class="fr-notice__desc">Le véhicule&nbsp;<span id="text-resa-fin"></span>
+                              </p>
+                              <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
+                          </div>
+                      </div>
+                  </div>
 
                     <div class="fr-grid-row fr-mb-2w">
                       <div class=" fr-select-group fr-col fr-col-6 fr-pl-1w">

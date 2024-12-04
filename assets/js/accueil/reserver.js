@@ -60,7 +60,9 @@ ctnr.addEventListener('click', ({
 }) => {
 
   let max_date_fin = false;
-  const // 
+  const //
+    notice = document.getElementById(`notice-resa-${_periode == 'from' ? 'debut' : 'fin'}`),
+    text = document.getElementById(`text-resa-${_periode == 'from' ? 'debut' : 'fin'}`),
     selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls)),
     { dataset: {
       heure_debut,
@@ -70,8 +72,20 @@ ctnr.addEventListener('click', ({
   _heure_debut = heure_debut;
   _heure_fin = heure_fin;
 
+  notice.classList.add('hidden');
+
   if (!selectable)
     return false;
+
+  if (heure_debut || heure_fin) {
+    notice.classList.remove('hidden');
+    if (heure_debut && heure_fin)
+      text.innerText = `est réservé de ${heure_debut} à ${heure_fin}`;
+    else if (heure_debut)
+      text.innerText = `est réservé à partir de ${heure_debut}`;
+    else
+      text.innerText = `n'est disponible qu'à partir de ${heure_fin}`
+  }
 
   [...document.getElementsByClassName(`selected-${_periode}`)].forEach(elt => {
     elt.classList.remove(`selected-${_periode}`);
@@ -236,8 +250,6 @@ function setBetweenClass() {
 };
 
 function is_disabled(h, m = '00', start = '24:00', end = '00:00') {
-
-  console.log({ h, m, start, end });
 
   const //
     int = heure => +heure.replace(/[^\d]/g, ''),
