@@ -108,11 +108,9 @@
         margin: 0 auto;
       }
 
-      // &.striked,
-      // &.striked_debut,
-      // &.striked_fin {
-      //   text-decoration-line: line-through;
-      // }
+      &.striked {
+        text-decoration-line: line-through;
+      }
 
       &.striked+div,
       &.striked_debut+div,

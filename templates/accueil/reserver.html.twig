@@ -441,14 +441,14 @@
                               curr_date|date('Y-m-d')|date('U') <= date(reservation.dateFin)|date('Y-m-d')|date('U') 
                               %}
                                 
-                              {% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) %}
-                              {% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) %}
+                              {% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) ? reservation.heureDebut : false %}
+                              {% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) ? reservation.heureFin : false %}
                               {% set striked = striked_debut or striked_fin ? false : true %}
 
                               {% endif %}
                             {% endfor %}
 
-                            <div data-ref="{{ days_list[dow] }}" {{ striked or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" title="{{ striked ? " Le véhicule est réservé toute la journée" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
+                            <div {{striked_debut ? 'data-heure_debut=' ~ striked_debut }} {{striked_fin ? 'data-heure_fin=' ~ striked_fin }}  data-ref="{{ days_list[dow] }}" {{ striked or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" title="{{ striked ? "Le véhicule est réservé toute la journée" : striked_debut or striked_fin ? "Le véhicule est réservé une partie de la journée" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
                               {{ day }}
                             </div>
                             <div>{# day content here #}

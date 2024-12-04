@@ -55,7 +55,9 @@ ctnr.addEventListener('click', ({
 }) => {
 
   let max_date_fin = false;
-  const selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls));
+  const // 
+    selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls)),
+    partially_selectable = !!['striked_debut', 'striked_fin'].find(cls => target.classList.contains(cls));
 
   if (!selectable)
     return false;
@@ -66,6 +68,8 @@ ctnr.addEventListener('click', ({
   });
 
   target.classList.add(`selected-${_periode}`);
+
+  console.log({ partially_selectable, _periode });
 
   max_date_fin = setBetweenClass();
 
@@ -102,7 +106,6 @@ ctnr.addEventListener('click', ({
   affichage.innerHTML = date_en_toutes_lettres;
   form_elt.value = date;
 
-  console.log({ max_date_fin, res: max_date_fin === false });
   if (max_date_fin === false)
     cs_btn.classList.add('red');
   else
@@ -195,7 +198,7 @@ function setBetweenClass() {
   while (curr < subDay(time_fin)) {
     curr = addDay(curr);
     const target = document.querySelector(`.cs-td-daynum[data-date="${val(curr)}"]`);
-    if (target.classList.contains('striked')) {
+    if (['striked', 'striked_debut', 'striked_fin'].find(cls => target.classList.contains(cls))) {
       document.querySelector('.selected-to').classList.remove('selected-to');
       prev_target.classList.add('selected-to');
       bandeau.classList.remove('hidden');
