@@ -1,12 +1,17 @@
 import {
   addZeros,
-  time
+  time,
+  onReady
 } from '../lib/utils';
 import * as refs from '../lib/refs';
 
 console.log('=== reserver ===');
 
-let _periode = 'from';
+let // 
+  _periode = 'from',
+  _heure_debut = '24:00',
+  _heure_fin = '00:00';
+
 const // 
   filtres_ctnr = document.getElementById('cs-filtres-container'),
   ctnr_offset = filtres_ctnr.offsetTop,
@@ -57,7 +62,13 @@ ctnr.addEventListener('click', ({
   let max_date_fin = false;
   const // 
     selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls)),
-    partially_selectable = !!['striked_debut', 'striked_fin'].find(cls => target.classList.contains(cls));
+    { dataset: {
+      heure_debut,
+      heure_fin
+    } } = target;
+
+  _heure_debut = heure_debut;
+  _heure_fin = heure_fin;
 
   if (!selectable)
     return false;
@@ -68,8 +79,6 @@ ctnr.addEventListener('click', ({
   });
 
   target.classList.add(`selected-${_periode}`);
-
-  console.log({ partially_selectable, _periode });
 
   max_date_fin = setBetweenClass();
 
@@ -106,20 +115,23 @@ ctnr.addEventListener('click', ({
   affichage.innerHTML = date_en_toutes_lettres;
   form_elt.value = date;
 
-  if (max_date_fin === false)
+  if (max_date_fin === false) {
     cs_btn.classList.add('red');
-  else
+  } else {
     cs_btn.classList.remove('red');
+  }
 
   select.heure[_periode].innerText = '';
   heures.forEach((h, idx) => {
     const option = document.createElement('option');
     option.value = addZeros(h, 2);
+    option.disabled = is_disabled(h, '00', heure_debut, heure_fin);
     option.innerText = addZeros(h, 2);
     if ((!option_prec && !idx) || option_prec == addZeros(h, 2))
-      option.selected = true;
+      option.selected = !option.disabled && true;
     select.heure[_periode].appendChild(option);
   });
+
   select.heure[_periode].dispatchEvent(new Event('change'));
   _periode = _periode === 'from' ? 'to' : 'from';
   [...document.querySelectorAll(`div[aria-controls="fr-modal--${_periode === 'from' ? 'to' : 'from'}"]`)].forEach(elt => {
@@ -129,7 +141,7 @@ ctnr.addEventListener('click', ({
 
 ['heure', 'minute'].forEach(field => {
   ['from', 'to'].forEach(periode => {
-    select[field][periode].addEventListener('change', () => {
+    select[field][periode].addEventListener('change', ({ target: { value } }) => {
 
       console.log(select[field][periode]);
       const // 
@@ -141,10 +153,17 @@ ctnr.addEventListener('click', ({
           value: minute_debut
         } = select.minute[periode].options[select.minute[periode].selectedIndex],
         heure_en_toutes_lettres = `${heure_debut}:${minute_debut}`;
-      console.log(heure_en_toutes_lettres);
 
       affichage.innerText = heure_en_toutes_lettres;
       form.heure[periode].value = heure_en_toutes_lettres;
+
+      if (field === 'heure') {
+        onReady(`#select-${periode}-minute option`).then(() => {
+          [...document.querySelectorAll(`#select-${periode}-minute option`)].forEach(option => {
+            option.disabled = is_disabled(value, option.value, _heure_debut, _heure_fin);
+          });
+        });
+      }
     });
   })
 });
@@ -215,6 +234,25 @@ function setBetweenClass() {
 
   return document.querySelector('.selected-to');
 };
+
+function is_disabled(h, m = '00', start = '24:00', end = '00:00') {
+
+  console.log({ h, m, start, end });
+
+  const //
+    int = heure => +heure.replace(/[^\d]/g, ''),
+    curr = +('' + h + m),
+    heure_debut = int(start),
+    heure_fin = int(end);
+  // - je peux choisir une heure AVANT heure_debut, ou APRÈS heure fin de réservation en cours
+  if (curr < heure_debut)
+    return false;
+  if (curr >= heure_fin) {
+    return false;
+  }
+
+  return true;
+}
 
 function ts(datetime) {
   return +new Date(Date.parse(datetime));

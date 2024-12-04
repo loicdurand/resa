@@ -30,4 +30,10 @@ export const //
 
     subMinutes = (date, n) => time(+new Date(Date.parse(date) - (60 * 1000 * n))),
 
-    addMinutes = (date, n) => time(+new Date(Date.parse(date) + (60 * 1000 * n)));
+    addMinutes = (date, n) => time(+new Date(Date.parse(date) + (60 * 1000 * n))),
+
+    onReady = async (selector) => {
+        while (document.querySelector(selector) === null)
+            await new Promise(resolve => requestAnimationFrame(resolve));
+        return document.querySelector(selector);
+    }
