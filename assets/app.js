@@ -8,6 +8,9 @@ import "/node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module";
 import Router from '@bleckert/router';
 
 new Router('/', {
+  '/connexion':()=>{
+    import('./js/accueil/login')
+  },
   '/reserver/*': () => {
     import('./js/accueil/reserver');
   },

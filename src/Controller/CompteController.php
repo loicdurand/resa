@@ -21,9 +21,25 @@ class CompteController extends AbstractController
     private $requestStack, $session;
     public $params, $request;
 
+    public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine)
+    {
+        $this->request = Request::createFromGlobals();
+        $this->requestStack = $requestStack;
+        $this->session = $this->requestStack->getSession();
+        // /* paramètres session */
+        $this->params = [
+            'nigend' => $this->session->get('HTTP_NIGEND'),
+            'unite' => $this->session->get('HTTP_UNITE'),
+            'profil' => $this->session->get('HTTP_PROFIL')
+        ];
+    }
+
     #[Route('/compte')]
     public function compte(ManagerRegistry $doctrine, RequestStack $requestStack): Response
     {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
         $this->setAppConst();
 
         $this->request = Request::createFromGlobals();

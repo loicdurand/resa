@@ -47,9 +47,13 @@
 						Utilisateur:
 					</dt>
 					<dd>
-						<a	href="/logout">
+						<a	href="/logout" aria-describedby="tooltip-logout"	title="déconnexion">
 							{{ nigend is defined? nigend }}
 						</a>
+						<span	class="fr-tooltip fr-placement"	id="tooltip-logout"	role="tooltip"	aria-hidden="true">
+							Se déconnecter
+						</span>
+
 					</dd>
 
 					<dt>

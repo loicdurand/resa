@@ -50,6 +50,10 @@ class AccueilController extends AbstractController
     #[Route('/', name: 'accueil')]
     public function accueil(): Response
     {
+
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
         $this->setAppConst();
 
         $vehicules = $this->em
@@ -144,6 +148,9 @@ class AccueilController extends AbstractController
     #[Route(path: '/reserver/{vl_id}/{from}/{to}', name: 'reserver')]
     public function reserver(string $vl_id, string $from = '', string $to = ''): Response
     {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
         $this->setAppConst();
 
         $filtered = true;
@@ -222,6 +229,9 @@ class AccueilController extends AbstractController
     #[Route(path: '/historique', name: 'historique')]
     public function historique(?string $success = 'false'): Response
     {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+        
         $this->setAppConst();
 
         return $this->render('accueil/historique.html.twig', array_merge(

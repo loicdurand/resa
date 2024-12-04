@@ -47,6 +47,9 @@ class ParcController extends AbstractController
     #[Route('/parc/', name: 'parc')]
     public function afficher(ManagerRegistry $doctrine): Response
     {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
         $this->setAppConst();
 
         $em = $doctrine->getManager();
@@ -68,6 +71,9 @@ class ParcController extends AbstractController
     #[Route('/parc/ajouter')]
     public function ajouter(?Vehicule $vehicule, Request $request, ManagerRegistry $doctrine): Response
     {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+        
         $this->setAppConst();
 
         $em = $doctrine->getManager();

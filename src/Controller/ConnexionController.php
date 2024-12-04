@@ -48,7 +48,9 @@ class ConnexionController extends AbstractController
       return $this->redirectToRoute('index');
     }
 
-    $usr = new User();
+    $users = $entityManager
+      ->getRepository(User::class)
+      ->findAll();
 
     $form = $this->createForm(UserType::class);
 
@@ -64,6 +66,7 @@ class ConnexionController extends AbstractController
       if (is_null($user)) {
         return $this->render('accueil/login.html.twig', array_merge($this->getAppConst(), [
           'form' => $form,
+          'users' => $users,
           'result' => false
         ]));
       }
@@ -85,6 +88,7 @@ class ConnexionController extends AbstractController
       $this->getAppConst(),
       [
         'form' => $form,
+        'users' => $users,
         'result' => 'none'
       ]
     ));

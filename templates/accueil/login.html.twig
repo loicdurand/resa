@@ -8,19 +8,28 @@
 
     <div class="fr-mt-12w fr-col-8 fr-col-offset-2">
 
-      <div class="fr-input-group{{ result == false ? ' fr-input-group--error' : '' }}">
+      <div class="fr-select-group{{ result == false ? ' fr-select-group--error' : '' }}">
 
-        <label class="fr-label" for="nigend">
+        <label class="fr-label" for="select-nigend">
           Chargement d'un nigend dans la base pour test :
         </label>
 
-        {{ form_widget(form.nigend) }}
+        <select class="fr-select" name="select-nigend" {{ result == false ?  'aria-describedby="select-error-desc-error"' : '' }}>
+          <option value="" selected disabled hidden>
+            Sélectionner un utilisateur
+          </option>
+          {% for user in users %}
+            <option value="{{ user.nigend }}">
+              {{ user.nigend ~ ' (' ~ user.profil ~ ')' }}
+            </option>
+          {% endfor %}
+        </select>
 
-        {% if result == false %}
-          <p id="text-input-error-desc-error" class="fr-error-text">
-            Le nigend n'est pas connu de la base.
-          </p>
-        {% endif %}
+        <p id="select-error-desc-error" class="fr-error-text{{ result == false ? '' : ' hidden'}}">
+          Aucun nigend sélectionné.
+        </p>
+
+        {{ form_widget(form.nigend) }}
 
       </div>
 
