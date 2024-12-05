@@ -335,10 +335,10 @@
                     </span>
                     <span id="select-from-date--target" class="cs-from-to-value">
                       <div class="cs-from-to-value--date">
-                        {{ from.date }}&nbsp;<span class="hide-s">{{year}}</span>
+                        {{ filtered ? from.date : '__' }}&nbsp;<span class="hide-s">{{ filtered ? year}}</span>
                       </div>
                       <div id="select-from-heure--target" class="cs-from-to-value--heure">
-                        {{ from.heure }}
+                        {{ filtered ? from.heure }}
                     </div>
                     </span>
                   </button>
@@ -349,10 +349,10 @@
                     </span>
                     <span id="select-to-date--target" class="cs-from-to-value">
                       <div class="cs-from-to-value--date">
-                        {{ to.date }}&nbsp;<span class="hide-s">{{year}}</span>
+                        {{ filtered ? to.date : '__' }}&nbsp;<span class="hide-s">{{ filtered ? year}}</span>
                       </div>
                       <div id="select-to-heure--target" class="cs-from-to-value--heure">
-                        {{ to.heure }}
+                        {{ filtered ? to.heure }}
                     </div>
                     </span>
                   </button>
@@ -369,7 +369,7 @@
                               <br>La date de fin a été modifiée.
                               </p>
                             </p>
-                            <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1305" class="fr-btn--close fr-btn">Masquer le message</button>
+                            {# <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1305" class="fr-btn--close fr-btn">Masquer le message</button> #}
                         </div>
                     </div>
                 </div>
