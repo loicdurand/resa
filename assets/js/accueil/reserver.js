@@ -58,11 +58,15 @@ ctnr.addEventListener('click', ({
   target
 }) => {
 
-  let max_date_fin = false;
+  let // 
+    has_error = false,
+    selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls));
+
+  selectable = selectable || target.classList.contains('striked_debut') || target.classList.contains('striked_fin');
+
   const //
     notice = document.getElementById(`notice-resa-${_periode == 'from' ? 'debut' : 'fin'}`),
     list = document.getElementById(`text-resa-${_periode == 'from' ? 'debut' : 'fin'}`),
-    selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls)),
     { dataset } = target;
 
   _heures = [];
@@ -76,6 +80,7 @@ ctnr.addEventListener('click', ({
   notice.classList.add('hidden');
   list.innerHTML = '';
 
+  console.log({_heures});
   if (!selectable)
     return false;
 
@@ -101,16 +106,14 @@ ctnr.addEventListener('click', ({
 
   target.classList.add(`selected-${_periode}`);
 
-  max_date_fin = setBetweenClass();
-
-  if (!max_date_fin)
-    form.submit.classList.add('hidden');
+  has_error = setBetweenClass();
 
   target.setAttribute('data-fr-opened', 'true');
   [...document.getElementsByClassName('bordered')].forEach(btn => btn.classList.remove('bordered'));
 
   const // 
     cs_btn = document.getElementById(`cs-btn--${_periode == 'to' ? 'left' : 'right'}`),
+    other_btn = document.getElementById(`cs-btn--${_periode == 'to' ? 'right' : 'left'}`),
     label = document.getElementById(`${_periode}-date-lib`),
     form_elt = form.date[_periode],
     affichage = document.querySelector(`#select-${_periode}-date--target .cs-from-to-value--date`),
@@ -120,7 +123,7 @@ ctnr.addEventListener('click', ({
         ref,
         date
       }
-    } = _periode == 'from' ? target : (max_date_fin || target),
+    } = target,
     th = document.getElementById(`th-${ref}`),
     {
       dataset: {
@@ -136,11 +139,10 @@ ctnr.addEventListener('click', ({
   affichage.innerHTML = date_en_toutes_lettres;
   form_elt.value = date;
 
-  const hide_msg_err = max_date_fin ? max_date_fin.dataset.date : max_date_fin;
-  if (hide_msg_err === false) {
-    cs_btn.classList.add('red');
+  if (has_error === false) {
+    [cs_btn, other_btn].forEach(elt => elt.classList.remove('red'));
   } else {
-    cs_btn.classList.remove('red');
+    cs_btn.classList.add('red');
   }
 
   select.heure[_periode].innerText = '';
@@ -163,6 +165,7 @@ ctnr.addEventListener('click', ({
 
   select.heure[_periode].dispatchEvent(new Event('change'));
   _periode = _periode === 'from' ? 'to' : 'from';
+  //const is_striked = target.classList.contains('striked_debut') || target.classList.contains('striked_fin');
   [...document.querySelectorAll(`div[aria-controls="fr-modal--${_periode === 'from' ? 'to' : 'from'}"]`)].forEach(elt => {
     elt.setAttribute('aria-controls', `fr-modal--${_periode}`);
   });
@@ -222,6 +225,7 @@ function setBetweenClass() {
   const bandeau = document.getElementById('bandeau-info');
   bandeau.classList.add('hidden');
   [...document.getElementsByClassName('between')].forEach(elt => elt.classList.remove('between'));
+  [...document.getElementsByClassName('aie')].forEach(elt => elt.classList.remove('aie'));
 
   const // 
     from = document.querySelector('.selected-from'),
@@ -248,28 +252,25 @@ function setBetweenClass() {
   form.submit.classList.remove('hidden');
 
   let // 
-    i = 0,
     curr = time_debut,
-    prev_target = from;
-  while (curr < subDay(time_fin)) {
+    has_error = false;
+  while (curr < time_fin) {
     curr = addDay(curr);
     const target = document.querySelector(`.cs-td-daynum[data-date="${val(curr)}"]`);
-    if (['striked', 'striked_debut', 'striked_fin'].find(cls => target.classList.contains(cls))) {
-      document.querySelector('.selected-to').classList.remove('selected-to');
-      prev_target.classList.add('selected-to');
+    if (target.classList.contains('striked')) {
+      target.classList.add('aie');
       bandeau.classList.remove('hidden');
       form.submit.classList.add('hidden');
-      break;
+      has_error = true;
+    } else {
+      target.classList.add('between');
     }
-    prev_target = target;
-    target.classList.add('between');
-    i++;
   }
 
-  // if(bandeau.classList.contains('hidden'))
-  form.submit.classList.remove('hidden');
+  if (document.getElementsByClassName('aie').length === 0)
+    form.submit.classList.remove('hidden');
 
-  return document.querySelector('.selected-to');
+  return has_error;
 };
 
 function is_disabled(h, m = '00', start = '24:00', end = '00:00') {

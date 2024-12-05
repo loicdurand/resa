@@ -101,7 +101,8 @@
     & tbody tr td .cs-td-daynum {
       font-weight: 900;
       cursor: pointer;
-      & + div{
+
+      &+div {
         width: 6px;
         height: 6px;
         border-radius: 6px;
@@ -110,6 +111,11 @@
 
       &.striked {
         text-decoration-line: line-through;
+
+        &.striked_debut,
+        &.striked_fin {
+          text-decoration-line: none;
+        }
       }
 
       &.striked+div,
@@ -134,11 +140,18 @@
 
       &.selected-from,
       &.selected-to,
-      &.between {
+      &.between,
+      &.aie {
         border: 1px solid var(--grey-5);
         border-radius: 6px;
         transition: all 0.3s ease;
         box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+      }
+
+      &.aie {
+        background-color: var(--red-4);
+        color: var(--grey-5);
+        font-weight: 100;
       }
 
       &.selected-from {
