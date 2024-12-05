@@ -179,15 +179,17 @@ ctnr.addEventListener('click', ({
             return is_disabled(h, minute, min_heure, '23:59') ? '' + h + ':' + minute : false;
           }).filter(Boolean).length
         }).find(length => length === minutes.length) ? true : false;
-        const bandeau = document.getElementById('bandeau-info');
-
-        bandeau.classList.add('hidden');
-        [cs_btn, other_btn].forEach(elt => elt.classList.remove('red'));
-        form.submit.classList.remove('hidden');
 
       } else {
-
+        // @Todo fix
+        console.log('@TODO');
       }
+
+      const bandeau = document.getElementById('bandeau-info');
+      bandeau.classList.add('hidden');
+      [cs_btn, other_btn].forEach(elt => elt.classList.remove('red'));
+      form.submit.classList.remove('hidden');
+
     }
     //*** */
 
