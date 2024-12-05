@@ -80,7 +80,6 @@ ctnr.addEventListener('click', ({
   notice.classList.add('hidden');
   list.innerHTML = '';
 
-  console.log({_heures});
   if (!selectable)
     return false;
 
@@ -151,11 +150,46 @@ ctnr.addEventListener('click', ({
     const option = document.createElement('option');
     option.value = addZeros(h, 2);
 
-    option.disabled = _heures.map(({ debut: heure_debut, fin: heure_fin }) => {
-      return minutes.map(({ value: minute }) => {
-        return is_disabled(h, minute, heure_debut, heure_fin) ? '' + h + ':' + minute : false;
-      }).filter(Boolean).length
-    }).find(length => length === minutes.length) ? true : false;
+    // ***
+    let // 
+      min_heure = '';
+
+    if (_periode === 'from') {
+      option.disabled = _heures.map(({ debut: heure_debut, fin: heure_fin }) => {
+        return minutes.map(({ value: minute }) => {
+          return is_disabled(h, minute, heure_debut, heure_fin) ? '' + h + ':' + minute : false;
+        }).filter(Boolean).length
+      }).find(length => length === minutes.length) ? true : false;
+    } else {
+      const // 
+        to_date = document.querySelector('.selected-to').dataset.date,
+        from_date = document.querySelector('.selected-from').dataset.date,
+
+        from_h = select.heure.from.options[select.heure.from.selectedIndex].value,
+        from_mn = select.minute.from.options[select.minute.from.selectedIndex].value,
+        from_heure = `${from_h}:${from_mn}`;
+
+      // si date_debut < date_fin, alors heure_max = debut première résa
+      if (ts(from_date) < ts(to_date)) {
+        min_heure = _heures.sort(({ debut: a }, { debut: b }) => {
+          return int(a) < int(b);
+        })[0].debut;
+        option.disabled = _heures.map(({ debut: heure_debut, fin: heure_fin }) => {
+          return minutes.map(({ value: minute }) => {
+            return is_disabled(h, minute, min_heure, '23:59') ? '' + h + ':' + minute : false;
+          }).filter(Boolean).length
+        }).find(length => length === minutes.length) ? true : false;
+        const bandeau = document.getElementById('bandeau-info');
+
+        bandeau.classList.add('hidden');
+        [cs_btn, other_btn].forEach(elt => elt.classList.remove('red'));
+        form.submit.classList.remove('hidden');
+
+      } else {
+
+      }
+    }
+    //*** */
 
     option.innerText = addZeros(h, 2);
     if ((!option_prec && !idx) || option_prec == addZeros(h, 2))
@@ -179,7 +213,7 @@ ctnr.addEventListener('click', ({
         affichage = document.querySelector(`#select-${periode}-date--target .cs-from-to-value--heure`),
         {
           value: heure_debut
-        } = select.heure[periode].options[select.heure[periode].selectedIndex],
+        } = select.heure[periode].options[select.heure[periode].selectedIndex] || { value: '08' },
         {
           value: minute_debut
         } = select.minute[periode].options[select.minute[periode].selectedIndex],
@@ -190,14 +224,48 @@ ctnr.addEventListener('click', ({
 
       if (field === 'heure') {
         onReady(`#select-${periode}-minute option`).then(() => {
-          const //
+
+          let open_hours = [];
+          const // 
             minutes_options = [...document.querySelectorAll(`#select-${periode}-minute option`)],
+            { dataset: { date: from_date } } = document.querySelector('.selected-from') || { dataset: { date: false } };
+          if (periode === 'from') {
             open_hours = minutes_options.map(({ value: minute }) => {
               return _heures.find(({ debut: heure_debut, fin: heure_fin }) => {
+                if (!heure_fin)
+                  heure_fin = '23:59';
+                //@Todo: fix si début 1er jourd e résa
+                console.log({ from_date, value, minute, dis: is_disabled(value, minute, heure_debut, heure_fin) });
+
                 return is_disabled(value, minute, heure_debut, heure_fin);
               }) ? false : minute;
 
             }).filter(Boolean);
+          } else {
+            const // 
+              to_date = document.querySelector('.selected-to').dataset.date,
+
+              from_h = select.heure.from.options[select.heure.from.selectedIndex].value,
+              from_mn = select.minute.from.options[select.minute.from.selectedIndex].value,
+              from_heure = `${from_h}:${from_mn}`;
+            console.log({ from_date, from_heure, to_date });
+            console.log(_heures);
+
+            // si date_debut < date_fin, alors heure_max = debut première résa
+            if (ts(from_date) < ts(to_date)) {
+              const min_heure = _heures.sort(({ debut: a }, { debut: b }) => {
+                return int(a) < int(b);
+              })[0].debut;
+              open_hours = minutes_options.map(({ value: minute }) => {
+                return [{ debut: min_heure, fin: '23:59' }].find(({ debut: heure_debut, fin: heure_fin }) => {
+                  return is_disabled(value, minute, heure_debut, heure_fin);
+                }) ? false : minute;
+
+              }).filter(Boolean);
+              console.log({ open_hours });
+            }
+
+          }
           minutes_options.forEach(opt => {
             opt.disabled = !open_hours.includes(opt.value);
           });
@@ -276,7 +344,6 @@ function setBetweenClass() {
 function is_disabled(h, m = '00', start = '24:00', end = '00:00') {
 
   const //
-    int = heure => +heure.replace(/[^\d]/g, ''),
     curr = +('' + h + m),
     heure_debut = int(start),
     heure_fin = int(end);
@@ -293,6 +360,11 @@ function is_disabled(h, m = '00', start = '24:00', end = '00:00') {
 function ts(datetime) {
   return +new Date(Date.parse(datetime));
 }
+
+function int(heure) {
+  return +heure.replace(/[^\d]/g, '');
+}
+
 
 function val(ts) {
   const {
