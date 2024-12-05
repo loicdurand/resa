@@ -9,8 +9,7 @@ console.log('=== reserver ===');
 
 let // 
   _periode = 'from',
-  _heure_debut = '24:00',
-  _heure_fin = '00:00';
+  _heures = [];
 
 const // 
   filtres_ctnr = document.getElementById('cs-filtres-container'),
@@ -62,29 +61,37 @@ ctnr.addEventListener('click', ({
   let max_date_fin = false;
   const //
     notice = document.getElementById(`notice-resa-${_periode == 'from' ? 'debut' : 'fin'}`),
-    text = document.getElementById(`text-resa-${_periode == 'from' ? 'debut' : 'fin'}`),
+    list = document.getElementById(`text-resa-${_periode == 'from' ? 'debut' : 'fin'}`),
     selectable = !['striked', 'before_now', 'after_limit', 'csag_ferme'].find(cls => target.classList.contains(cls)),
-    { dataset: {
-      heure_debut,
-      heure_fin
-    } } = target;
+    { dataset } = target;
 
-  _heure_debut = heure_debut;
-  _heure_fin = heure_fin;
+  _heures = [];
+  for (let prop in dataset) {
+    if (/resa_[\d+]_debut/.test(prop)) {
+      const [, index, period] = prop.split('_');
+      _heures.push({ debut: dataset[prop], fin: dataset[`resa_${index}_fin`] });
+    }
+  }
 
   notice.classList.add('hidden');
+  list.innerHTML = '';
 
   if (!selectable)
     return false;
 
-  if (heure_debut || heure_fin) {
+  if (_heures.length) {
     notice.classList.remove('hidden');
-    if (heure_debut && heure_fin)
-      text.innerText = `est réservé de ${heure_debut} à ${heure_fin}`;
-    else if (heure_debut)
-      text.innerText = `est réservé à partir de ${heure_debut}`;
-    else
-      text.innerText = `n'est disponible qu'à partir de ${heure_fin}`
+    _heures.forEach(({ debut: heure_debut, fin: heure_fin }) => {
+      const li = document.createElement('li');
+      if (heure_debut && heure_fin)
+        li.innerText = `de ${heure_debut} à ${heure_fin}`;
+      else if (heure_debut)
+        li.innerText = `à partir de ${heure_debut}`;
+      else
+        li.innerText = `à partir de ${heure_fin}`;
+      list.appendChild(li);
+    });
+
   }
 
   [...document.getElementsByClassName(`selected-${_periode}`)].forEach(elt => {
@@ -129,7 +136,8 @@ ctnr.addEventListener('click', ({
   affichage.innerHTML = date_en_toutes_lettres;
   form_elt.value = date;
 
-  if (max_date_fin === false) {
+  const hide_msg_err = max_date_fin ? max_date_fin.dataset.date : max_date_fin;
+  if (hide_msg_err === false) {
     cs_btn.classList.add('red');
   } else {
     cs_btn.classList.remove('red');
@@ -137,9 +145,16 @@ ctnr.addEventListener('click', ({
 
   select.heure[_periode].innerText = '';
   heures.forEach((h, idx) => {
+    const minutes = [...document.querySelectorAll(`#select-${_periode}-minute option`)];
     const option = document.createElement('option');
     option.value = addZeros(h, 2);
-    option.disabled = is_disabled(h, '00', heure_debut, heure_fin);
+
+    option.disabled = _heures.map(({ debut: heure_debut, fin: heure_fin }) => {
+      return minutes.map(({ value: minute }) => {
+        return is_disabled(h, minute, heure_debut, heure_fin) ? '' + h + ':' + minute : false;
+      }).filter(Boolean).length
+    }).find(length => length === minutes.length) ? true : false;
+
     option.innerText = addZeros(h, 2);
     if ((!option_prec && !idx) || option_prec == addZeros(h, 2))
       option.selected = !option.disabled && true;
@@ -157,7 +172,6 @@ ctnr.addEventListener('click', ({
   ['from', 'to'].forEach(periode => {
     select[field][periode].addEventListener('change', ({ target: { value } }) => {
 
-      console.log(select[field][periode]);
       const // 
         affichage = document.querySelector(`#select-${periode}-date--target .cs-from-to-value--heure`),
         {
@@ -173,9 +187,18 @@ ctnr.addEventListener('click', ({
 
       if (field === 'heure') {
         onReady(`#select-${periode}-minute option`).then(() => {
-          [...document.querySelectorAll(`#select-${periode}-minute option`)].forEach(option => {
-            option.disabled = is_disabled(value, option.value, _heure_debut, _heure_fin);
+          const //
+            minutes_options = [...document.querySelectorAll(`#select-${periode}-minute option`)],
+            open_hours = minutes_options.map(({ value: minute }) => {
+              return _heures.find(({ debut: heure_debut, fin: heure_fin }) => {
+                return is_disabled(value, minute, heure_debut, heure_fin);
+              }) ? false : minute;
+
+            }).filter(Boolean);
+          minutes_options.forEach(opt => {
+            opt.disabled = !open_hours.includes(opt.value);
           });
+
         });
       }
     });

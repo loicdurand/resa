@@ -23,12 +23,14 @@
 
                     <h3 class="fr-col-12 cs-date-lib" id="from-date-lib"></h3>
 
-                    <div id="notice-resa-debut" class="hidden fr-notice fr-notice--info">
+                    <div id="notice-resa-debut" class="hidden fr-col-12 fr-notice fr-notice--info">
                       <div class="fr-container">
                           <div class="fr-notice__body">
                               <p>
                                   <span class="fr-notice__title">Information:</span>
-                                  <span class="fr-notice__desc">Le véhicule&nbsp;<span id="text-resa-debut"></span>
+                                  <div class="fr-notice__desc">
+                                    Le véhicule est déjà réservé:&nbsp;<ul id="text-resa-debut"></ul>
+                                  </div>
                               </p>
                               <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
                           </div>
@@ -96,17 +98,19 @@
 
                     <h3 class="fr-col-12 cs-date-lib" id="to-date-lib"></h3>
 
-                    <div id="notice-resa-fin" class="hidden fr-notice fr-notice--info">
-                      <div class="fr-container">
-                          <div class="fr-notice__body">
-                              <p>
-                                  <span class="fr-notice__title">Information:</span>
-                                  <span class="fr-notice__desc">Le véhicule&nbsp;<span id="text-resa-fin"></span>
-                              </p>
-                              <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
-                          </div>
-                      </div>
-                  </div>
+                    <div id="notice-resa-fin" class="hidden fr-col-12 fr-notice fr-notice--info">
+                    <div class="fr-container">
+                        <div class="fr-notice__body">
+                            <p>
+                                <span class="fr-notice__title">Information:</span>
+                                <div class="fr-notice__desc">
+                                  Le véhicule est déjà réservé:&nbsp;<ul id="text-resa-fin"></ul>
+                                </div>
+                            </p>
+                            <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
+                        </div>
+                    </div>
+                </div>
 
                     <div class="fr-grid-row fr-mb-2w">
                       <div class=" fr-select-group fr-col fr-col-6 fr-pl-1w">
@@ -460,8 +464,9 @@
                             {% set striked = false %}
                             {% set striked_debut = false %}
                             {% set striked_fin = false %}
+                            {% set mems = [] %}
 
-                            {% for reservation in vehicule.reservations %}
+                            {% for i, reservation in vehicule.reservations %}
                               {% if 
                               curr_date|date('Y-m-d')|date('U') >= date(reservation.dateDebut)|date('Y-m-d')|date('U') 
                                 and 
@@ -471,11 +476,14 @@
                               {% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) ? reservation.heureDebut : false %}
                               {% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) ? reservation.heureFin : false %}
                               {% set striked = striked_debut or striked_fin ? false : true %}
+                              {% set mem = [] %}
+                              {% set mem = mem|merge([{'debut': striked_debut, 'fin': striked_fin}]) %}
+                              {% set mems = mems|merge(mem) %}
 
                               {% endif %}
                             {% endfor %}
 
-                            <div {{striked_debut ? 'data-heure_debut=' ~ striked_debut }} {{striked_fin ? 'data-heure_fin=' ~ striked_fin }}  data-ref="{{ days_list[dow] }}" {{ striked or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" title="{{ striked ? "Le véhicule est réservé toute la journée" : striked_debut or striked_fin ? "Le véhicule est réservé une partie de la journée" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
+                          <div {% for i, mem in mems %}  data-resa_{{i}}_debut="{{ mem.debut }}" data-resa_{{i}}_fin="{{ mem.fin }}" {% endfor %} {{striked_debut ? 'data-heure_debut=' ~ striked_debut }} {{striked_fin ? 'data-heure_fin=' ~ striked_fin }}  data-ref="{{ days_list[dow] }}" {{ striked or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" title="{{ striked ? "Le véhicule est réservé toute la journée" : striked_debut or striked_fin ? "Le véhicule est réservé une partie de la journée" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
                               {{ day }}
                             </div>
                             <div>{# day content here #}
