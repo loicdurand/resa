@@ -125,7 +125,6 @@ export default class ModalManager {
       nbs = minutes
         .map(m => {
           const iHeure = h * 100 + +m // ex: 8 -> 845, 10 -> 1045;
-          console.log({ h: iHeure, debut_resa: iDebut });
           if (iHeure > iDebut && iHeure < iFin)
             disabledNbs.push(m);
         });
