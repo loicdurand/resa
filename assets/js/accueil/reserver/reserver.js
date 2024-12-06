@@ -26,6 +26,27 @@ window.addEventListener('scroll', () => {
 
 const // 
   calendriers = document.getElementById('calendars-container'),
+  select = {
+    heure: {
+      from: document.getElementById('select-from-heure'),
+      to: document.getElementById('select-to-heure')
+    },
+    minute: {
+      from: document.getElementById('select-from-minute'),
+      to: document.getElementById('select-to-minute')
+    }
+  },
+  form = {
+    date: {
+      from: document.getElementById('form-field--date_debut'),
+      to: document.getElementById('form-field--date_fin')
+    },
+    heure: {
+      from: document.getElementById('form-field--heure_debut'),
+      to: document.getElementById('form-field--heure_fin')
+    },
+    submit: document.getElementById('form-submit-ctnr')
+  },
   modal = new ModalManager(),
   periode = new Periode()
     .setListeners([
@@ -64,7 +85,6 @@ const //
       }
     ])
     .onchange(that => {
-      console.log({ periode: that.periode, other: that.other });
 
       // bordure bleue au dessus des boutons Début: __ -> Fin: __
       document.getElementById(`cs-btn--${that.periode}`).classList.add('bordered');
@@ -77,6 +97,28 @@ const //
       modal.setPeriode(that.periode);
 
     });
+
+['heure', 'minute'].forEach(field => {
+  ['from', 'to'].forEach(periode => {
+    select[field][periode].addEventListener('change', ({ target: { value } }) => {
+
+      const { value: heure_debut } = select.heure[periode].options[select.heure[periode].selectedIndex] || { value: '08' };
+
+      if (field === 'heure')
+        modal.manage_minutes(heure_debut, select.minute[periode]);
+
+      const // 
+        affichage = document.querySelector(`#select-${periode}-date--target .cs-from-to-value--heure`),
+        { value: minute_debut } = select.minute[periode].options[select.minute[periode].selectedIndex],
+        heure_en_toutes_lettres = `${heure_debut}:${minute_debut}`;
+
+      affichage.innerText = heure_en_toutes_lettres;
+      form.heure[periode].value = heure_en_toutes_lettres;
+
+    });
+
+  });
+});
 
 /**
  * 
@@ -142,6 +184,8 @@ function click_on_date(periode, { target: tgt }) {
   modal.open(target);
 
   modal.manage_select(target);
+
+  select.heure[periode.get()].dispatchEvent(new Event('change'));
 
   /**
    * Quand tout est fini, on peut switcher de période (ex: début -> fin)
@@ -259,9 +303,7 @@ function setBetweenDates(debut, fin) {
 /*
  * FONCTIONS UTILES POUR LES DATES
  */
-function int(heure) {
-  return +heure.replace(/[^\d]/g, '');
-}
+
 function ts(datetime) {
   return +new Date(Date.parse(datetime));
 }

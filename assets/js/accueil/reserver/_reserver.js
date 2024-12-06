@@ -152,7 +152,7 @@ ctnr.addEventListener('click', ({
 
     // ***
     let // 
-      min_heure = '';
+      min_heure = ''; 
 
     if (_periode === 'from') {
       option.disabled = _heures.map(({ debut: heure_debut, fin: heure_fin }) => {

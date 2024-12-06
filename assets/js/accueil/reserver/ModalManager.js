@@ -55,35 +55,77 @@ export default class ModalManager {
   manage_select(target) {
     const // 
       { dataset } = target,
-      {
-        ref,
-        date
-      } = dataset,
+      { ref } = dataset,
       th = document.getElementById(`th-${ref}`),
-      {
-        dataset: {
-          horaires
-        }
-      } = th,
+      { dataset: { horaires } } = th,
       heures = horaires.split(','),
       select_heures = document.getElementById(`select-${this.periode}-heure`),
-      select_minutes = document.getElementById(`select-${this.periode}-minute`),
       is_striked = target.classList.contains('striked');
-    console.log(heures);
 
     // CAS FACILE: pas de réservation
     if (!is_striked) {
       this.addOptions(select_heures, heures);
     } else {
+      let nbs = []; // les heures affichées dans le <select/>
       const //
+        disabledNbs = [], // les heures "disabled"
         reservations = this.getResas(dataset);
-      console.log({ reservations });
+      reservations.forEach(({ debut: heure_debut, fin: heure_fin }) => {
+        let // 
+          iDebut = ModalManager.int(heure_debut),  // ex: 08:00 -> 800
+          iFin = ModalManager.int(heure_fin);      // ex: 17:30 -> 1730
+        // si période == début, on peut réserver au moins 15mn avant une réservation
+        if (this.periode === 'from')
+          iDebut -= iDebut % 100 ? (40 + 15) : 15; // ex: 800 -> 745, 730 -> 715
+
+        nbs = heures
+          .map(h => {
+            const iHeure = +h * 100 + 45 // ex: 8 -> 845, 10 -> 1045;
+            if (iHeure >= iDebut && iHeure < iFin)
+              disabledNbs.push(h);
+          });
+
+      });
+
+      this.addOptions(select_heures, heures, disabledNbs);
+
       this.affiche_infos_resas(reservations);
+
     }
 
   }
 
-  addOptions(select, nbs) {
+  manage_minutes(heure_choisie, select_minute) {
+    let nbs = []; // les minutes affichées dans le <select/>
+    const //
+      minutes = [...select_minute.options].map(opt => opt.value),
+      disabledNbs = [], // les minutes "disabled"
+      clicked_date = document.querySelector(`.selected-${this.periode}`),
+      { dataset } = clicked_date,
+      h = +heure_choisie,
+      reservations = this.getResas(dataset);
+    reservations.forEach(({ debut: heure_debut, fin: heure_fin }) => {
+      let // 
+        iDebut = ModalManager.int(heure_debut),  // ex: 08:00 -> 800
+        iFin = ModalManager.int(heure_fin);      // ex: 17:30 -> 1730
+      // si période == début, on peut réserver au moins 15mn avant une réservation
+      if (this.periode === 'from')
+        iDebut -= iDebut % 100 ? (40 + 15) : 15; // ex: 800 -> 745, 730 -> 715
+
+      nbs = minutes
+        .map(m => {
+          const iHeure = h * 100 + +m // ex: 8 -> 845, 10 -> 1045;
+          if (iHeure >= iDebut && iHeure < iFin)
+            disabledNbs.push(m);
+        });
+
+    });
+
+    this.addOptions(select_minute, minutes, disabledNbs);
+
+  }
+
+  addOptions(select, nbs, disabledNbs = []) {
     select.options.length = 0;
     nbs.forEach(nb => {
       const // 
@@ -91,8 +133,9 @@ export default class ModalManager {
         option = document.createElement('option');
       option.value = n;
       option.innerText = n;
+      option.disabled = disabledNbs.includes(nb)
       select.appendChild(option);
-    })
+    });
   }
 
   getResas(dataset) {
@@ -130,6 +173,15 @@ export default class ModalManager {
       list.appendChild(li);
     });
 
+  }
+
+  static int(heure) {
+    return +heure.replace(/[^\d]/g, '');
+  }
+
+  static str(heure) {
+    const s = addZeros(heure, 4);
+    return `${s.substring(0, 2)}:${s.substring(2, 4)}`;
   }
 
 }
