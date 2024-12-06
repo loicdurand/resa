@@ -12,9 +12,9 @@ new Router('/', {
     import('./js/accueil/login')
   },
   '/reserver/*': () => {
-    import('./js/accueil/reserver');
+    import('./js/accueil/reserver/reserver');
   },
   '^$': () => {
-    import('./js/accueil/index');
+    import('./js/accueil/index/index');
   }
 });

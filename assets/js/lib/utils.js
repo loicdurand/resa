@@ -36,4 +36,13 @@ export const //
         while (document.querySelector(selector) === null)
             await new Promise(resolve => requestAnimationFrame(resolve));
         return document.querySelector(selector);
+    },
+
+    getParent = (elt, match) => {
+        while (!elt.matches(match) && elt.parentElement !== null ) {
+            elt = elt.parentElement;
+        }
+        if (elt.nodeName == 'BODY')
+            return false;
+        return elt;
     }

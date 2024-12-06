@@ -23,13 +23,13 @@
 
                     <h3 class="fr-col-12 cs-date-lib" id="from-date-lib"></h3>
 
-                    <div id="notice-resa-debut" class="hidden fr-col-12 fr-notice fr-notice--info">
+                    <div id="notice-resa-from" class="hidden fr-col-12 fr-notice fr-notice--info">
                       <div class="fr-container">
                           <div class="fr-notice__body">
                               <p>
                                   <span class="fr-notice__title">Information:</span>
                                   <div class="fr-notice__desc">
-                                    Le véhicule est déjà réservé:&nbsp;<ul id="text-resa-debut"></ul>
+                                    Le véhicule est déjà réservé:&nbsp;<ul id="text-resa-from"></ul>
                                   </div>
                               </p>
                               <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
@@ -62,7 +62,7 @@
                     </div>
 
                     <div class="cs-btns-group fr-btns-group">
-                      <button type="button" aria-controls="fr-modal--from" class="fr-btn fr-btn--tertiary-no-outline">
+                      <button id="modal-suivant" type="button" aria-controls="fr-modal--from" class="fr-btn fr-btn--tertiary-no-outline">
                         Date de fin &#8594;
                       </button>
                     </div>
@@ -98,13 +98,13 @@
 
                     <h3 class="fr-col-12 cs-date-lib" id="to-date-lib"></h3>
 
-                    <div id="notice-resa-fin" class="hidden fr-col-12 fr-notice fr-notice--info">
+                    <div id="notice-resa-to" class="hidden fr-col-12 fr-notice fr-notice--info">
                     <div class="fr-container">
                         <div class="fr-notice__body">
                             <p>
                                 <span class="fr-notice__title">Information:</span>
                                 <div class="fr-notice__desc">
-                                  Le véhicule est déjà réservé:&nbsp;<ul id="text-resa-fin"></ul>
+                                  Le véhicule est déjà réservé:&nbsp;<ul id="text-resa-to"></ul>
                                 </div>
                             </p>
                             <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
@@ -138,7 +138,7 @@
                     </div>
 
                     <div class="cs-btns-group fr-btns-group">
-                      <button type="button" aria-controls="fr-modal--to" id="btn-go-step2" class="fr-btn fr-btn--tertiary-no-outline">
+                      <button id="modal-fermer" type="button" aria-controls="fr-modal--to" id="btn-go-step2" class="fr-btn fr-btn--tertiary-no-outline">
                         Fermer
                       </button>
                     </div>
@@ -329,29 +329,29 @@
                 
                 {# DE ... -> À ... #}
                 <div class="cs-btn-ctnr cs-date-ctnr">
-                  <button type="button" id="cs-btn--left" class="cs-btn cs-btn-from-to cs-btn--left">
+                  <button type="button" id="cs-btn--from" class="bordered cs-btn cs-btn-from-to cs-btn--left">
                     <span class="cs-from-to">
                       Début
                     </span>
                     <span id="select-from-date--target" class="cs-from-to-value">
-                      <div class="cs-from-to-value--date">
+                      <div id="from-value--date" class="cs-from-to-value--date">
                         {{ filtered ? from.date : '__' }}&nbsp;<span class="hide-s">{{ filtered ? year}}</span>
                       </div>
-                      <div id="select-from-heure--target" class="cs-from-to-value--heure">
+                      <div id="from-value--heure" class="cs-from-to-value--heure">
                         {{ filtered ? from.heure }}
                     </div>
                     </span>
                   </button>
                   <div class="separator"></div>
-                  <button type="button" id="cs-btn--right" class="cs-btn cs-btn-from-to cs-btn--right">
+                  <button type="button" id="cs-btn--to" class="cs-btn cs-btn-from-to cs-btn--right">
                     <span class=" cs-from-to">
                       Fin
                     </span>
                     <span id="select-to-date--target" class="cs-from-to-value">
-                      <div class="cs-from-to-value--date">
+                      <div id="to-value--date" class="cs-from-to-value--date">
                         {{ filtered ? to.date : '__' }}&nbsp;<span class="hide-s">{{ filtered ? year}}</span>
                       </div>
-                      <div id="select-to-heure--target" class="cs-from-to-value--heure">
+                      <div  id="to-value--heure" class="cs-from-to-value--heure">
                         {{ filtered ? to.heure }}
                     </div>
                     </span>

@@ -1,4 +1,4 @@
-import { addZeros, time } from './utils';
+import { addZeros, time } from '../../lib/utils';
 
 const { Y, M, D, H, m, s } = time()
 

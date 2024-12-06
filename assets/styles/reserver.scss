@@ -124,7 +124,7 @@
         background: var(--red-5);
       }
 
-      &.csag_ferme[data-date][data-ref] {
+      &.csag_ferme[data-date][data-ref]:not(.desactivee-from, .desactivee-to) {
         opacity: 1;
       }
 
@@ -132,7 +132,9 @@
       &.before_now,
       &.after_limit,
       &.csag_ferme,
-      &.after_limit.csag_ferme[data-date][data-ref] {
+      &.after_limit.csag_ferme[data-date][data-ref],
+      &.desactivee-from,
+      &.desactivee-to {
         cursor: initial;
         font-weight: initial;
         opacity: .5;

@@ -1,7 +1,7 @@
 import {
   pluralize,
-} from '../lib/utils';
-import TimeUpdate from '../lib/Updater';
+} from '../../lib/utils';
+import TimeUpdate from './Updater';
 
 console.log('=== accueil ===');
 
