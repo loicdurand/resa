@@ -1,10 +1,4 @@
-import {
-  addZeros,
-  time,
-  onReady,
-  getParent
-} from '../../lib/utils';
-import * as refs from '../../lib/refs';
+import { time } from '../../lib/utils';
 
 import Periode from './Periode';
 import ModalManager from './ModalManager';
@@ -204,7 +198,7 @@ function click_on_date(periode, { target: tgt }) {
 
   modal.open(target);
 
-  modal.manage_select(target);
+  modal.manage_heures(target);
 
   select.heure[periode.get()].dispatchEvent(new Event('change'));
 
@@ -252,8 +246,15 @@ function masque_apres_resa(target) {
       curr_target.classList.add('desactivee-from');
       curr_target.removeAttribute('aria-controls');
     }
-    if (curr_target.classList.contains('striked'))
+    if (curr_target.classList.contains('striked')) {
+      /**
+       * on ajoute une résa particulière, de manière à empêcher les chevauchements
+       * ex: si VL déjà réservé de 8H à 9H, et de 12H à 14H,
+       * l'utilisateur ne peut rien choisir après 8H
+       */
+      !trouve && modal.createPseudoResaApres(curr_target);
       trouve = true;
+    }
   }
 }
 
@@ -294,8 +295,15 @@ function masque_avant_resa(target) {
       curr_target.classList.add('desactivee-from');
       curr_target.removeAttribute('aria-controls');
     }
-    if (curr_target.classList.contains('striked'))
+    if (curr_target.classList.contains('striked')) {
+      /**
+       * on ajoute une résa particulière, de manière à empêcher les chevauchements
+       * ex: si VL déjà réservé de 8H à 9H, et de 12H à 14H,
+       * l'utilisateur ne peut rien choisir après avant 14H
+       */
+      !trouve && modal.createPseudoResaAvant(curr_target);
       trouve = true;
+    }
   }
 }
 

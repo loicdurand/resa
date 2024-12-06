@@ -52,7 +52,7 @@ export default class ModalManager {
 
   }
 
-  manage_select(target) {
+  manage_heures(target) {
     const // 
       { dataset } = target,
       { ref } = dataset,
@@ -75,12 +75,17 @@ export default class ModalManager {
           iDebut = ModalManager.int(heure_debut),  // ex: 08:00 -> 800
           iFin = ModalManager.int(heure_fin);      // ex: 17:30 -> 1730
         // si période == début, on peut réserver au moins 15mn avant une réservation
+        console.log({ iDebut });
         if (this.periode === 'from')
           iDebut -= iDebut % 100 ? (40 + 15) : 15; // ex: 800 -> 745, 730 -> 715
+        else
+          iDebut += ('' + iDebut).endsWith('45') ? (40 + 15) : 15; // ex: 845 -> 900, 730 -> 745
+        console.log({ iDebut });
+
 
         nbs = heures
           .map(h => {
-            const iHeure = +h * 100 + 45 // ex: 8 -> 845, 10 -> 1045;
+            const iHeure = this.periode === 'from' ? +h * 100 + 45 : +h * 100 // ex: 8 -> 845, 10 -> 1045;
             if (iHeure >= iDebut && iHeure < iFin)
               disabledNbs.push(h);
           });
@@ -109,13 +114,14 @@ export default class ModalManager {
         iDebut = ModalManager.int(heure_debut),  // ex: 08:00 -> 800
         iFin = ModalManager.int(heure_fin);      // ex: 17:30 -> 1730
       // si période == début, on peut réserver au moins 15mn avant une réservation
-      if (this.periode === 'from')
-        iDebut -= iDebut % 100 ? (40 + 15) : 15; // ex: 800 -> 745, 730 -> 715
+      if (this.periode === 'from' && iDebut != 0)
+        iDebut -= iDebut % 100 == 0 ? (40 + 15) : 15; // ex: 800 -> 745, 730 -> 715
 
       nbs = minutes
         .map(m => {
           const iHeure = h * 100 + +m // ex: 8 -> 845, 10 -> 1045;
-          if (iHeure >= iDebut && iHeure < iFin)
+          console.log({ h: iHeure, debut_resa: iDebut });
+          if (iHeure > iDebut && iHeure < iFin)
             disabledNbs.push(m);
         });
 
@@ -140,6 +146,13 @@ export default class ModalManager {
 
   getResas(dataset) {
     const heures = [];
+
+    console.log(this.periode);
+    if (dataset.resa_999_debut)
+      return this.periode === 'to' ?
+        [{ debut: dataset.resa_999_debut, fin: '23:59' }] :
+        [{ debut: '00:00', fin: dataset.resa_999_fin }];
+
     for (let prop in dataset) {
       if (/resa_[\d+]_debut/.test(prop)) {
         const [, index, period] = prop.split('_');
@@ -147,6 +160,30 @@ export default class ModalManager {
       }
     }
     return heures;
+  }
+
+  createPseudoResaAvant(target) {
+    const { dataset } = target;
+    let max_heure = '00:00';
+    for (let prop in dataset) {
+      if (/resa_[\d+]_fin/.test(prop)) {
+        max_heure = ModalManager.int(dataset[prop]) > ModalManager.int(max_heure) ? dataset[prop] : max_heure;
+      }
+    }
+    target.dataset.resa_999_debut = '00:00';
+    target.dataset.resa_999_fin = max_heure;
+  }
+
+  createPseudoResaApres(target) {
+    const { dataset } = target;
+    let min_heure = '23:59';
+    for (let prop in dataset) {
+      if (/resa_[\d+]_debut/.test(prop)) {
+        min_heure = ModalManager.int(dataset[prop]) < ModalManager.int(min_heure) ? dataset[prop] : min_heure;
+      }
+    }
+    target.dataset.resa_999_debut = min_heure;
+    target.dataset.resa_999_fin = '23:59';
   }
 
   affiche_infos_resas(heures) {
