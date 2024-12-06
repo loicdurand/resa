@@ -90,6 +90,8 @@ const //
     ])
     .onchange(that => {
 
+      console.log(`Période courante: ${that.periode}`);
+
       // bordure bleue au dessus des boutons Début: __ -> Fin: __
       document.getElementById(`cs-btn--${that.periode}`).classList.add('bordered');
       document.getElementById(`cs-btn--${that.other}`).classList.remove('bordered');
