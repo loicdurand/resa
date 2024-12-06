@@ -94,7 +94,8 @@ const //
         elt.setAttribute('aria-controls', `fr-modal--${that.periode}`);
       });
 
-      modal.setPeriode(that.periode);
+      modal
+        .setPeriode(that.periode);
 
     });
 
@@ -113,12 +114,32 @@ const //
         heure_en_toutes_lettres = `${heure_debut}:${minute_debut}`;
 
       affichage.innerText = heure_en_toutes_lettres;
-      form.heure[periode].value = heure_en_toutes_lettres;
+
+      updateForm(periode, heure_en_toutes_lettres);
 
     });
 
   });
 });
+
+function updateForm(periode, heure) {
+  const // 
+    clicked_date = document.querySelector(`.selected-${periode}`),
+    { dataset: { date } } = clicked_date;
+
+  form.date[periode].value = date;
+  form.heure[periode].value = heure;
+
+  const //
+    other = periode === 'from' ? 'to' : 'from',
+    is_valid_form = !!(form.date[other].value && form.heure[other].value);
+
+  if (is_valid_form)
+    form.submit.classList.remove('hidden');
+  else
+    form.submit.classList.add('hidden');
+
+}
 
 /**
  * 
