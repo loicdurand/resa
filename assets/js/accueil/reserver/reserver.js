@@ -76,6 +76,16 @@ const //
         elt: calendriers,
         evt: 'click',
         cb: click_on_date
+      },
+      {
+        elt: document.getElementById('fr-modal--from'),
+        evt: 'click',
+        cb: (periode, { target }) => target.matches('#fr-modal--from') && periode.set('to')
+      },
+      {
+        elt: document.getElementById('fr-modal--to'),
+        evt: 'click',
+        cb: (periode, { target }) => target.matches('#fr-modal--to') && periode.set('from')
       }
     ])
     .onchange(that => {

@@ -15,6 +15,7 @@ export default class ModalManager {
   }
 
   is_clickable(target) {
+
     const classes_non_cliquables = [
       'desactivee-from',
       'desactivee-to',
@@ -23,6 +24,10 @@ export default class ModalManager {
       'after_limit',
       'csag_ferme'
     ];
+
+    if (target === null || !target.classList.contains('cs-td-daynum'))
+      return false;
+
     let class_bloquante = !classes_non_cliquables.find(cls => target.classList.contains(cls));
     return class_bloquante || target.classList.contains('striked_debut') || target.classList.contains('striked_fin');
   }
@@ -32,7 +37,7 @@ export default class ModalManager {
   }
 
   close(trigger) {
-    trigger.setAttribute('data-fr-opened', 'false');
+    trigger?.setAttribute('data-fr-opened', 'false');
   }
 
   affiche_date_dans_titre(target) {
@@ -147,7 +152,6 @@ export default class ModalManager {
   getResas(dataset) {
     const heures = [];
 
-    console.log(this.periode);
     if (dataset.resa_999_debut)
       return this.periode === 'to' ?
         [{ debut: dataset.resa_999_debut, fin: '23:59' }] :
@@ -162,7 +166,18 @@ export default class ModalManager {
     return heures;
   }
 
+  deletePseudoResas() {
+    const elt = this.periode === 'from' ?
+      document.querySelector('[data-resa_999_fin="23:59"]') :
+      document.querySelector('[data-resa_999_debut="00:00"]');
+    if (elt === null)
+      return false;
+    elt.removeAttribute('dataset.resa_999_debut');
+    elt.removeAttribute('dataset.resa_999_fin');
+  }
+
   createPseudoResaAvant(target) {
+    this.deletePseudoResas();
     const { dataset } = target;
     let max_heure = '00:00';
     for (let prop in dataset) {
@@ -175,6 +190,7 @@ export default class ModalManager {
   }
 
   createPseudoResaApres(target) {
+    this.deletePseudoResas();
     const { dataset } = target;
     let min_heure = '23:59';
     for (let prop in dataset) {
