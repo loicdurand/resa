@@ -48,7 +48,7 @@ class HistoriqueController extends AbstractController
         ];
     }
 
-    #[Route(path: '/historique', name: 'success')]
+    #[Route(path: '/historique/success', name: 'success')]
     public function historique(): Response
     {
         if (is_null($this->params['nigend']))
