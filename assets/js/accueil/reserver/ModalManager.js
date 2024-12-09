@@ -1,5 +1,5 @@
 import * as refs from '../../lib/refs';
-import { addZeros } from '../../lib/utils';
+import { addZeros, getParent } from '../../lib/utils';
 
 export default class ModalManager {
 
@@ -105,9 +105,12 @@ export default class ModalManager {
   manage_minutes(heure_choisie, select_minute) {
     let nbs = []; // les minutes affichées dans le <select/>
     const //
+      modal_ouverte = getParent(select_minute, '.fr-modal'),
+      modal_id = modal_ouverte.id,
+      [, periode] = modal_id.split('--'),
       minutes = [...select_minute.options].map(opt => opt.value),
       disabledNbs = [], // les minutes "disabled"
-      clicked_date = document.querySelector(`.selected-${this.periode}`),
+      clicked_date = document.querySelector(`.selected-${periode}`),
       { dataset } = clicked_date,
       h = +heure_choisie,
       reservations = this.getResas(dataset);
@@ -116,7 +119,7 @@ export default class ModalManager {
         iDebut = ModalManager.int(heure_debut),  // ex: 08:00 -> 800
         iFin = ModalManager.int(heure_fin);      // ex: 17:30 -> 1730
       // si période == début, on peut réserver au moins 15mn avant une réservation
-      if (this.periode === 'from' && iDebut != 0)
+      if (periode === 'from' && iDebut != 0)
         iDebut -= iDebut % 100 == 0 ? (40 + 15) : 15; // ex: 800 -> 745, 730 -> 715
 
       nbs = minutes
