@@ -42,16 +42,20 @@ export default class Periode {
   }
 
   setListeners(listeners) {
-    listeners.forEach(({ elt, evt, cb }) => {
+    listeners.forEach(({ elt, evt = 'click', cb }) => {
       elt.addEventListener(evt, (e) => {
-        this.#onchange(this, e);
         cb(this, e);
+        this.#onchange(this, e);
       });
     });
     return this;
   }
 
-  onchange(fn) {
+  onClickEvents(listeners) {
+    return this.setListeners(listeners);
+  }
+
+  then(fn) {
     this.#onchange = () => fn(this);
     return this;
   }

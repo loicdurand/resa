@@ -3,7 +3,7 @@ import { addZeros } from '../../lib/utils';
 
 export default class ModalManager {
 
-  periode;
+  periode = 'from';
 
   constructor() {
     return this;
@@ -80,13 +80,10 @@ export default class ModalManager {
           iDebut = ModalManager.int(heure_debut),  // ex: 08:00 -> 800
           iFin = ModalManager.int(heure_fin);      // ex: 17:30 -> 1730
         // si période == début, on peut réserver au moins 15mn avant une réservation
-        console.log({ iDebut });
         if (this.periode === 'from')
           iDebut -= iDebut % 100 ? (40 + 15) : 15; // ex: 800 -> 745, 730 -> 715
         else
           iDebut += ('' + iDebut).endsWith('45') ? (40 + 15) : 15; // ex: 845 -> 900, 730 -> 745
-        console.log({ iDebut });
-
 
         nbs = heures
           .map(h => {

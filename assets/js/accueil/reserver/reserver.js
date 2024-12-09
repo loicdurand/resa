@@ -5,6 +5,7 @@ import ModalManager from './ModalManager';
 
 console.log('=== reserver ===');
 
+// Effet au scroll permettant de fixer les champs "Début: __ -> Fin: __" sur le heut de l'écran
 window.addEventListener('scroll', () => {
   const // 
     ctnr = document.getElementById('cs-filtres-container'),
@@ -43,65 +44,60 @@ const //
   },
   modal = new ModalManager(),
   periode = new Periode()
-    .setListeners([
+
+    // mise en place de tous les évènements "onclick" modifiant la période actuelle (début -> fin)
+    .onClickEvents([
       {
         elt: document.getElementById('cs-btn--from'),
-        evt: 'click',
         cb: (periode, { target }) => {
+          periode.set('from');
           if (!target.classList.contains('bordered'))
             [...document.getElementsByClassName('desactivee-from')].forEach(elt => elt.classList.remove('desactivee-from'))
-          periode.set('from');
         }
       },
       {
         elt: document.getElementById('cs-btn--to'),
-        evt: 'click',
         cb: (periode, { target }) => {
-          if (!target.classList.contains('bordered'))
-            [...document.getElementsByClassName('desactivee-to')].forEach(elt => elt.classList.remove('desactivee-to'))
           periode.set('to');
+          if (!target.classList.contains('bordered'))
+            [...document.getElementsByClassName('desactivee-to')].forEach(elt => elt.classList.remove('desactivee-to'));
+
         }
       },
       {
         elt: document.getElementById('modal-suivant'),
-        evt: 'click',
         cb: periode => periode.set('to')
       },
       {
         elt: document.getElementById('modal-fermer'),
-        evt: 'click',
         cb: periode => periode.set('from')
       },
       {
         elt: calendriers,
-        evt: 'click',
         cb: click_on_date
       },
       {
         elt: document.getElementById('fr-modal--from'),
-        evt: 'click',
         cb: (periode, { target }) => target.matches('#fr-modal--from') && periode.set('to')
       },
       {
         elt: document.getElementById('fr-modal--to'),
-        evt: 'click',
         cb: (periode, { target }) => target.matches('#fr-modal--to') && periode.set('from')
       }
     ])
-    .onchange(that => {
 
-      console.log(`Période courante: ${that.periode}`);
+    // fonction appelée à chaque fois que la période (debut -> fin) change
+    .then(periode => {
+
+      modal.setPeriode(periode.get());
 
       // bordure bleue au dessus des boutons Début: __ -> Fin: __
-      document.getElementById(`cs-btn--${that.periode}`).classList.add('bordered');
-      document.getElementById(`cs-btn--${that.other}`).classList.remove('bordered');
+      document.getElementById(`cs-btn--${periode.get()}`).classList.add('bordered');
+      document.getElementById(`cs-btn--${periode.other}`).classList.remove('bordered');
 
-      [...document.querySelectorAll(`div[aria-controls="fr-modal--${that.other}"]`)].forEach(elt => {
-        elt.setAttribute('aria-controls', `fr-modal--${that.periode}`);
+      [...document.querySelectorAll(`div[aria-controls="fr-modal--${periode.other}"]`)].forEach(elt => {
+        elt.setAttribute('aria-controls', `fr-modal--${periode.get()}`);
       });
-
-      modal
-        .setPeriode(that.periode);
 
     });
 
@@ -217,7 +213,7 @@ function click_on_date(periode, { target: tgt }) {
   /**
    * Quand tout est fini, on peut switcher de période (ex: début -> fin)
    */
-  periode.toggle();
+  periode.set(periode.other);
 
 }
 
