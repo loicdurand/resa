@@ -14,6 +14,7 @@ use App\Entity\CategorieVehicule;
 use App\Entity\GenreVehicule;
 use App\Entity\HoraireOuverture;
 use App\Entity\Permission;
+use App\Entity\StatutReservation;
 use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
 use App\Form\ReservationType;
@@ -175,6 +176,10 @@ class AccueilController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findOneBy(['id' => $vl_id]);
 
+        $statut_resa_en_attente = $this->em
+            ->getRepository(StatutReservation::class)
+            ->findOneBy(['code' => 'En attente']);
+
         $limit_resa = $this->app_const['APP_LIMIT_RESA_MONTHS'];
         $limit_resa = $limit_resa . ' mois';
 
@@ -185,12 +190,15 @@ class AccueilController extends AbstractController
         $resa = new Reservation();
         $resa->setUser('00249205');
         $resa->setVehicule($vehicule);
+        $resa->setStatut($statut_resa_en_attente);
+
         if ($filtered) {
             $resa->setDateDebut($from);
             $resa->setHeureDebut($from->format('h:i'));
             $resa->setDateFin($to);
             $resa->setHeureFin($to->format('h:i'));
         }
+
         $form = $this->createForm(ReservationType::class, $resa);
 
         $form->handleRequest($this->request);
@@ -233,12 +241,12 @@ class AccueilController extends AbstractController
     {
         if (is_null($this->params['nigend']))
             return $this->redirectToRoute('login');
-        
+
         $this->setAppConst();
 
         return $this->render('accueil/historique.html.twig', array_merge(
             $this->getAppConst(),
-            $this->params[]
+            $this->params
         ));
     }
 

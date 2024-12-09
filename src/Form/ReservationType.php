@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Reservation;
+use App\Entity\StatutReservation;
 use App\Entity\Vehicule;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -25,6 +26,10 @@ class ReservationType extends AbstractType
             ->add('user')
             ->add('vehicule', EntityType::class, [
                 'class' => Vehicule::class,
+                'choice_label' => 'id',
+            ])
+            ->add('statut', EntityType::class, [
+                'class' => StatutReservation::class,
                 'choice_label' => 'id',
             ])
         ;

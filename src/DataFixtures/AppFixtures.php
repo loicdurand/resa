@@ -12,7 +12,7 @@ use App\Entity\CarburantVehicule;
 use App\Entity\TransmissionVehicule;
 use App\Entity\Atelier;
 use App\Entity\HoraireOuverture;
-
+use App\Entity\StatutReservation;
 use App\Entity\User;
 use App\Entity\Vehicule;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -29,7 +29,7 @@ class AppFixtures extends Fixture
             ['170044', '56751', 'CSAG'],
             ['167194', '6768', 'CDT']
         ];
-        
+
         foreach ($users as [$nigend, $code_unite, $profil]) {
             $user = new User();
             $user->setNigend($nigend);
@@ -261,6 +261,23 @@ class AppFixtures extends Fixture
             }
         };
 
+        // TYPES DE RÉSERVATIONS
+
+        $types_resas = [
+            ['En attente', 'En attente de validation hiérachique'],
+            ['Confirmée', 'Confirmée']
+        ];
+
+        foreach ($types_resas as $index => [$code, $libelle]) {
+            $entity = new StatutReservation();
+            $entity->setCode($code);
+            $entity->setLibelle($libelle);
+            $manager->persist($entity);
+            $manager->flush();
+            if ($index == 0) {
+                $resa_en_attente = $entity;
+            }
+        };
 
         $vls = [
             [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'AB-123-CD', 0],
@@ -311,6 +328,7 @@ class AppFixtures extends Fixture
                 $resa->setHeureDebut('08:00');
                 $resa->setDateFin($randomDateFin);
                 $resa->setHeureFin('17:00');
+                $resa->setStatut($resa_en_attente);
 
                 $randomDateDebut = $this->randomDate($randomDateFin, $max);
                 $randomDateFin = $this->randomDate($randomDateDebut, $max);

@@ -37,6 +37,10 @@ class Reservation
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?StatutReservation $statut = null;
+
     public function __construct(){
         $this->createdAt = new \DateTime('now', new \DateTimeZone('America/Guadeloupe'));
     }
@@ -126,6 +130,18 @@ class Reservation
     public function setCreatedAt(): static
     {
         $this->createdAt = new \DateTime('now');
+
+        return $this;
+    }
+
+    public function getStatut(): ?StatutReservation
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?StatutReservation $statut): static
+    {
+        $this->statut = $statut;
 
         return $this;
     }
