@@ -7,22 +7,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\Role;
-use App\Entity\Action;
-use App\Entity\CarburantVehicule;
-use App\Entity\CategorieVehicule;
-use App\Entity\GenreVehicule;
 use App\Entity\HoraireOuverture;
-use App\Entity\Permission;
 use App\Entity\StatutReservation;
-use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
 use App\Form\ReservationType;
-use App\Form\VehiculeType;
-use Doctrine\Common\Collections\Collection;
-use phpDocumentor\Reflection\Types\Boolean;
-use PhpParser\Node\Expr\Cast\Array_;
-use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -208,7 +196,7 @@ class AccueilController extends AbstractController
                 $this->em->persist($reservation);
             }
             $this->em->flush();
-            return $this->redirectToRoute('historique');
+            return $this->redirectToRoute('success');
         }
 
         // dd($vehicule->getReservations()[1]->getDateFin());
@@ -233,20 +221,6 @@ class AccueilController extends AbstractController
                 'horaires' => $this->horaires_to_arr($horaires),
                 'form' => $form
             ]
-        ));
-    }
-
-    #[Route(path: '/historique', name: 'historique')]
-    public function historique(?string $success = 'false'): Response
-    {
-        if (is_null($this->params['nigend']))
-            return $this->redirectToRoute('login');
-
-        $this->setAppConst();
-
-        return $this->render('accueil/historique.html.twig', array_merge(
-            $this->getAppConst(),
-            $this->params
         ));
     }
 
