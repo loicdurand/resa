@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\CategorieVehicule;
+use App\Entity\Reservation;
 use App\Entity\Role;
 use App\Entity\Action;
 use App\Entity\GenreVehicule;
@@ -11,7 +12,8 @@ use App\Entity\CarburantVehicule;
 use App\Entity\TransmissionVehicule;
 use App\Entity\Atelier;
 use App\Entity\HoraireOuverture;
-
+use App\Entity\StatutReservation;
+use App\Entity\User;
 use App\Entity\Vehicule;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -22,6 +24,20 @@ class AppFixtures extends Fixture
     {
 
         // GESTION DES ROLES
+        $users = [
+            ['249205', '86977', 'SOLC'],
+            ['170044', '56751', 'CSAG'],
+            ['167194', '6768', 'CDT']
+        ];
+
+        foreach ($users as [$nigend, $code_unite, $profil]) {
+            $user = new User();
+            $user->setNigend($nigend);
+            $user->setUnite($code_unite);
+            $user->setProfil($profil);
+            $manager->persist($user);
+            $manager->flush();
+        }
 
         $roles = [
             'SOLC' => [
@@ -245,6 +261,23 @@ class AppFixtures extends Fixture
             }
         };
 
+        // TYPES DE RÉSERVATIONS
+
+        $types_resas = [
+            ['En attente', 'En attente de validation hiérachique'],
+            ['Confirmée', 'Confirmée']
+        ];
+
+        foreach ($types_resas as $index => [$code, $libelle]) {
+            $entity = new StatutReservation();
+            $entity->setCode($code);
+            $entity->setLibelle($libelle);
+            $manager->persist($entity);
+            $manager->flush();
+            if ($index == 0) {
+                $resa_en_attente = $entity;
+            }
+        };
 
         $vls = [
             [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'AB-123-CD', 0],
@@ -254,7 +287,15 @@ class AppFixtures extends Fixture
             [$genrs[0], $cats[2], $carbs[1], $transms[1], 'RENAULT', 'Master', null, null, '2025-03-06', 3, 'AB-123-CH', 0]
         ];
 
+        $from = new \DateTime('now');
+        $from->modify('+ 1 days');
+        $tmp = new \DateTime('now');
+        $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
+        $max->modify('+4 months');
+        $to = $max;
+
         foreach ($vls as $vl) {
+
             [$gre, $cat, $carb, $tr, $marque, $modele, $mot, $finit, $ct, $pl, $immat, $serig] = $vl;
             $VL = new Vehicule();
             $VL->setGenre($gre);
@@ -269,8 +310,42 @@ class AppFixtures extends Fixture
             $VL->setNbPlaces($pl);
             $VL->setImmatriculation($immat);
             $VL->setSerigraphie($serig);
+
+            $from = new \DateTime('now');
+            $from->modify('+ 1 days');
+            $from->modify('+ 1 hours');
+            $tmp = new \DateTime('now');
+            $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
+            $max->modify('+3 months');
+            $randomDateDebut = $this->randomDate($from, $max);
+            $randomDateFin = $this->randomDate($randomDateDebut, $max);
+            $i = 0;
+            while ($randomDateFin->format('U') < $max->format('U') && $randomDateDebut->format('Y-m-d') !== $randomDateFin->format('Y-m-d')) {
+
+                $resa = new Reservation();
+                $resa->setUser('00249205');
+                $resa->setDateDebut($randomDateDebut);
+                $resa->setHeureDebut('08:00');
+                $resa->setDateFin($randomDateFin);
+                $resa->setHeureFin('17:00');
+                $resa->setStatut($resa_en_attente);
+
+                $randomDateDebut = $this->randomDate($randomDateFin, $max);
+                $randomDateFin = $this->randomDate($randomDateDebut, $max);
+
+                $VL->addReservation($resa);
+                $i++;
+            }
             $manager->persist($VL);
             $manager->flush();
         }
+    }
+
+    private function randomDate(\DateTime $start, \DateTime $end)
+    {
+        $randomTimestamp = mt_rand($start->getTimestamp(), $end->getTimestamp());
+        $randomDate = new \DateTime();
+        $randomDate->setTimestamp($randomTimestamp);
+        return $randomDate;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Reservation;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,9 +14,14 @@ use App\Entity\CategorieVehicule;
 use App\Entity\GenreVehicule;
 use App\Entity\HoraireOuverture;
 use App\Entity\Permission;
+use App\Entity\StatutReservation;
 use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
+use App\Form\ReservationType;
 use App\Form\VehiculeType;
+use Doctrine\Common\Collections\Collection;
+use phpDocumentor\Reflection\Types\Boolean;
+use PhpParser\Node\Expr\Cast\Array_;
 use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -23,14 +29,35 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class AccueilController extends AbstractController
 {
     private $app_const;
+    private $em;
+    private $requestStack, $session;
+    public $request, $params;
 
-    #[Route('/')]
-    public function accueil(ManagerRegistry $doctrine): Response
+    public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine)
     {
+        $this->em = $doctrine->getManager();
+
+        $this->request = Request::createFromGlobals();
+        $this->requestStack = $requestStack;
+        $this->session = $this->requestStack->getSession();
+        // /* paramètres session */
+        $this->params = [
+            'nigend' => $this->session->get('HTTP_NIGEND'),
+            'unite' => $this->session->get('HTTP_UNITE'),
+            'profil' => $this->session->get('HTTP_PROFIL')
+        ];
+    }
+
+    #[Route('/', name: 'accueil')]
+    public function accueil(): Response
+    {
+
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
         $this->setAppConst();
 
-        $em = $doctrine->getManager();
-        $vehicules = $em
+        $vehicules = $this->em
             ->getRepository(Vehicule::class)
             ->findAll();
 
@@ -57,19 +84,19 @@ class AccueilController extends AbstractController
             }
         }
 
-        $horaires = $em
+        $horaires = $this->em
             ->getRepository(HoraireOuverture::class)
             ->findAll();
 
         $dates = [];
         $dates_fin = [];
-        $timezone = new \DateTimeZone('America/Guadeloupe');
-        $now = new \DateTime('now', $timezone);
-        $max = new \DateTime('now', $timezone);
-        $max->modify('+ 3 months');
+        // $timezone = new \DateTimeZone('America/Guadeloupe');
+        $now = new \DateTime('now');
+        $max = new \DateTime('now');
+        $max->modify('+' . $this->app_const['APP_LIMIT_RESA_MONTHS'] . ' months');
         $max_date = $max->format("Y-m-d");
-        $max->modify('+ 3 weeks');
-        $max->modify('- 1 days');
+        //$max->modify($this->app_const['APP_MAX_RESA_DURATION']);
+        //$max->modify('- 1 days');
         $ok = false;
         for ($i = 0; $now->format("Y-m-d") !== $max->format("Y-m-d"); $i++) {
             $fr_date =  $this->FR($now->format('Y-m-d'));
@@ -97,21 +124,130 @@ class AccueilController extends AbstractController
         }
 
         $last_date = [];
-        for ($i = count($dates_fin) - 1; $i > 0; $i--) {
+        for ($i = count($dates) - 1; $i > 0; $i--) {
             if (count($dates_fin[$i]['horaires']) > 0) {
                 $last_date = $dates_fin[$i];
                 $i = 0;
             }
         }
 
-        return $this->render('accueil/accueil.html.twig', array_merge($this->getAppConst(), [
-            'vehicules' => $vehicules,
-            'categories' => $categories,
-            'transmissions' => $transmissions,
-            'dates' => $dates,
-            'dates_fin' => $dates_fin,
-            'last_date' => $last_date
-        ]));
+        return $this->render('accueil/accueil.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'vehicules' => $vehicules,
+                'categories' => $categories,
+                'transmissions' => $transmissions,
+                'dates' => $dates,
+                'dates_fin' => $dates_fin,
+                'last_date' => $last_date,
+            ]
+        ));
+    }
+
+    #[Route(path: '/reserver/{vl_id}', name: 'reserver')]
+    #[Route(path: '/reserver/{vl_id}/{from}/{to}', name: 'reserver')]
+    public function reserver(string $vl_id, string $from = '', string $to = ''): Response
+    {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
+        $this->setAppConst();
+
+        $filtered = true;
+        $tmp = new \DateTime('now');
+        $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
+        $max->modify('+' . $this->app_const['APP_LIMIT_RESA_MONTHS'] . ' months');
+
+        if ($from === '') {
+            $filtered = false;
+            // $timezone = new \DateTimeZone('America/Guadeloupe');
+            $now = new \DateTime('now');
+            $now->modify('+ 1 days');
+            $now->modify('+ 1 hours');
+            $from =  $now;
+            $to = $max;
+        } else {
+            $from = new \DateTime($from);
+            $to = new \DateTime($to);
+        }
+
+        $vehicule = $this->em
+            ->getRepository(Vehicule::class)
+            ->findOneBy(['id' => $vl_id]);
+
+        $statut_resa_en_attente = $this->em
+            ->getRepository(StatutReservation::class)
+            ->findOneBy(['code' => 'En attente']);
+
+        $limit_resa = $this->app_const['APP_LIMIT_RESA_MONTHS'];
+        $limit_resa = $limit_resa . ' mois';
+
+        $horaires = $this->em
+            ->getRepository(HoraireOuverture::class)
+            ->findAll();
+
+        $resa = new Reservation();
+        $resa->setUser('00249205');
+        $resa->setVehicule($vehicule);
+        $resa->setStatut($statut_resa_en_attente);
+
+        if ($filtered) {
+            $resa->setDateDebut($from);
+            $resa->setHeureDebut($from->format('h:i'));
+            $resa->setDateFin($to);
+            $resa->setHeureFin($to->format('h:i'));
+        }
+
+        $form = $this->createForm(ReservationType::class, $resa);
+
+        $form->handleRequest($this->request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $reservation = $form->getData();
+            if (!$reservation->getId()) {
+                $this->em->persist($reservation);
+            }
+            $this->em->flush();
+            return $this->redirectToRoute('historique');
+        }
+
+        // dd($vehicule->getReservations()[1]->getDateFin());
+
+        return $this->render('accueil/reserver.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'vehicule' => $vehicule,
+                'from' => [
+                    'date' => $this->FR($from->format('Y-m-d'), 'short'),
+                    'heure' => $from->format('H:00')
+                ],
+                'to' => [
+                    'date' => $this->FR($to->format('Y-m-d'), 'short'),
+                    'heure' => $to->format('H:00')
+                ],
+                'year' => $from->format('Y'),
+                'max' => $max,
+                'limit_resa' => $limit_resa,
+                'filtered' => $filtered,
+                'horaires' => $this->horaires_to_arr($horaires),
+                'form' => $form
+            ]
+        ));
+    }
+
+    #[Route(path: '/historique', name: 'historique')]
+    public function historique(?string $success = 'false'): Response
+    {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
+        $this->setAppConst();
+
+        return $this->render('accueil/historique.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params
+        ));
     }
 
     /**
@@ -126,13 +262,47 @@ class AccueilController extends AbstractController
     private function setAppConst()
     {
         $this->app_const = [];
-        foreach (['app.name', 'app.tagline', 'app.slug', 'app.max_nb_mois_reservation'] as $param) {
+        //dd($this->getParameter('app.max_resa_duration'));
+        foreach (
+            [
+                'app.env',
+                'app.name',
+                'app.tagline',
+                'app.slug',
+                'app.limit_resa_months',
+                'app.max_resa_duration',
+                'app.minutes_select_interval',
+                'app.dev_nigend_default'
+            ] as $param
+        ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
     }
 
-    private function FR(String $date)
+    private function horaires_to_arr(array $horaires)
+    {
+        $out = [
+            'LU' => '',
+            'MA' => '',
+            'ME' => '',
+            'JE' => '',
+            'VE' => '',
+            'SA' => '',
+            'DI' => ''
+        ];
+        foreach ($horaires as $horaire) {
+            $day = $horaire->getJour();
+            [$Hd] = explode(':', $horaire->getDebut());
+            $hd = intval($Hd);
+            [$Hf] = explode(':', $horaire->getFin());
+            $hf = intval($Hf);
+            $out[$day] =  $out[$day] . ($out[$day] === '' ? '' : ',') . implode(',', range($hd, $hf - 1));
+        }
+        return $out;
+    }
+
+    private function FR(String $date, $short = false)
     {
         $days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
         $months = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
@@ -141,7 +311,9 @@ class AccueilController extends AbstractController
         $d  = $dt->format('d');
         $m = intval($dt->format('m'));
         $Y = $dt->format('Y');
-        return $days[$dow] . ' ' . $d . ' ' . $months[$m] . ' ' . $Y;
+        if ($short !== false)
+            return $days[$dow] . ' ' . $d . ' ' . mb_substr($months[$m], 0, 3);
+        return $days[$dow] . ' ' . $d . ' ' . $months[$m] . ' ' .  $Y;
     }
 
     private function getHorairesByDay(String $day, array $horaires)

@@ -19,7 +19,7 @@
 	</nav>
 
 	{# Filtres de recherche #}
-	<div	id="hideOnScroll"	class="cs-filtres-container">
+	<div	id="hideOnScroll"	class="cs-filtres-container cs-recherche">
 
 		{# DE ... -> À ... #}
 		<div	class="cs-btn-ctnr cs-date-ctnr">
@@ -29,10 +29,10 @@
 				</span>
 				<span	id="select-from-date--target"	class="cs-from-to-value">
 					<span	class="hide-s hide-m">
-						Aujourd'hui
+						__ {# Aujourd'hui #}
 					</span>
 					<span	class="hide-l hide-xl">
-						Aujourd'hui
+						__ {# Aujourd'hui #}
 					</span>
 					<span	id="select-from-heure--target"></span>
 				</span>
@@ -44,10 +44,10 @@
 				</span>
 				<span	id="select-to-date--target"	class="cs-from-to-value">
 					<span	class="hide-s hide-m">
-						Demain
+						__ {# Demain #}
 					</span>
 					<span	class="hide-l hide-xl">
-						Demain
+						__ {# Demain #}
 					</span>
 					<span	id="select-to-heure--target"></span>
 				</span>
@@ -115,7 +115,12 @@
 
 			{# Affichage des véhicules #}
 			{% for n, vehicule in vehicules %}
-				<div	class="vehicule-card vehicule-card--result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow"	data-index="{{ n }}"	data-categorie="{{ vehicule.categorie.libelle }}"	data-serigraphie="{{ vehicule.serigraphie ? 'Oui' : 'Non' }}"	data-transmission="{{ vehicule.transmission.code }}"	data-nbplaces="{{ vehicule.NbPlaces }}">
+				{% set resas = '' %}
+				{% for reservation in vehicule.reservations %}
+					{% set resas = resas ~ (reservation.dateDebut|date('Y-m-d h:i:00')) ~ '_' ~ (reservation.dateFin|date('Y-m-d h:i:00')) ~ (loop.last ? '' :'|') %}
+				{% endfor %}
+
+				<a	data-reservations="{{ resas }}"	href="/reserver/{{ vehicule.id }}/"	class="vehicule-card vehicule-card--result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow"	data-index="{{ n }}"	data-categorie="{{ vehicule.categorie.libelle }}"	data-serigraphie="{{ vehicule.serigraphie ? 'Oui' : 'Non' }}"	data-transmission="{{ vehicule.transmission.code }}"	data-nbplaces="{{ vehicule.NbPlaces }}">
 					<figure	class="cs-img-container left">
 						<img	class="cs-img"	src="{{ asset('images/4L.jpg') }}"	alt="Renault 4l sérigraphiée">
 							<figcaption	class="hidden">
@@ -160,7 +165,7 @@
 								</dd>
 							</dl>
 						</div>
-					</div>
+					</a>
 				{% endfor %}
 
 			</div>
@@ -330,6 +335,8 @@
 																	<div	class="fr-stepper__steps"	data-fr-current-step="1"	data-fr-steps="2"></div>
 																</div>
 
+															<div class="divider fr-mt-0w"></div>
+
 																<div	class="fr-grid-row fr-mb-2w">
 																	<div	class="fr-select-group fr-col-6 fr-col-sm-6">
 																		<label	class="fr-label"	for="select-from-date">
@@ -387,6 +394,8 @@
 																	<div	class="fr-stepper__steps"	data-fr-current-step="2"	data-fr-steps="2"></div>
 																</div>
 
+															<div class="divider fr-mt-0w"></div>
+
 																<div	id="step-2-form-content"	class="fr-grid-row fr-mb-2w">
 																	<div	class="fr-select-group fr-col-6 fr-col-sm-6">
 																		<label	class="fr-label"	for="select-to-date">
@@ -439,5 +448,6 @@
 												</div>
 											</div>
 										</dialog>
+										
 									{% endblock %}
 									

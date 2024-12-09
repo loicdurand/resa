@@ -30,17 +30,19 @@ export const //
 
     subMinutes = (date, n) => time(+new Date(Date.parse(date) - (60 * 1000 * n))),
 
-    addMinutes = (date, n) => time(+new Date(Date.parse(date) + (60 * 1000 * n)));
+    addMinutes = (date, n) => time(+new Date(Date.parse(date) + (60 * 1000 * n))),
 
-export class Emitter {
+    onReady = async (selector) => {
+        while (document.querySelector(selector) === null)
+            await new Promise(resolve => requestAnimationFrame(resolve));
+        return document.querySelector(selector);
+    },
 
-    evtEmitter = document.createElement('div');
-
-    constructor() {
-        return this;
+    getParent = (elt, match) => {
+        while (!elt.matches(match) && elt.parentElement !== null ) {
+            elt = elt.parentElement;
+        }
+        if (elt.nodeName == 'BODY')
+            return false;
+        return elt;
     }
-
-    addEventListener(listenerName, cb) {
-        this.evtEmitter.addEventListener(listenerName, cb);
-    }
-}
