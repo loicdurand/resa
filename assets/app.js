@@ -8,11 +8,14 @@ import "/node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module";
 import Router from '@bleckert/router';
 
 new Router('/', {
-  '/connexion':()=>{
+  '/connexion': () => {
     import('./js/accueil/login')
   },
-  '/reserver/*': () => {
+  '/reserver': () => {
     import('./js/accueil/reserver/reserver');
+  },
+  '/historique': () => {
+    import('./js/historique/historique');
   },
   '^$': () => {
     import('./js/accueil/index/index');

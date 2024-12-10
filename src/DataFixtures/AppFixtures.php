@@ -265,7 +265,9 @@ class AppFixtures extends Fixture
 
         $types_resas = [
             ['En attente', 'En attente de validation hiérachique'],
-            ['Confirmée', 'Confirmée']
+            ['Confirmée', 'Réservation validée par la hiérarchie'],
+            ['En cours', 'La réservation a débuté'],
+            ['Terminée', 'Réservation terminée']
         ];
 
         foreach ($types_resas as $index => [$code, $libelle]) {
@@ -310,42 +312,9 @@ class AppFixtures extends Fixture
             $VL->setNbPlaces($pl);
             $VL->setImmatriculation($immat);
             $VL->setSerigraphie($serig);
-
-            $from = new \DateTime('now');
-            $from->modify('+ 1 days');
-            $from->modify('+ 1 hours');
-            $tmp = new \DateTime('now');
-            $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
-            $max->modify('+3 months');
-            $randomDateDebut = $this->randomDate($from, $max);
-            $randomDateFin = $this->randomDate($randomDateDebut, $max);
-            $i = 0;
-            while ($randomDateFin->format('U') < $max->format('U') && $randomDateDebut->format('Y-m-d') !== $randomDateFin->format('Y-m-d')) {
-
-                $resa = new Reservation();
-                $resa->setUser('00249205');
-                $resa->setDateDebut($randomDateDebut);
-                $resa->setHeureDebut('08:00');
-                $resa->setDateFin($randomDateFin);
-                $resa->setHeureFin('17:00');
-                $resa->setStatut($resa_en_attente);
-
-                $randomDateDebut = $this->randomDate($randomDateFin, $max);
-                $randomDateFin = $this->randomDate($randomDateDebut, $max);
-
-                $VL->addReservation($resa);
-                $i++;
-            }
             $manager->persist($VL);
             $manager->flush();
         }
     }
 
-    private function randomDate(\DateTime $start, \DateTime $end)
-    {
-        $randomTimestamp = mt_rand($start->getTimestamp(), $end->getTimestamp());
-        $randomDate = new \DateTime();
-        $randomDate->setTimestamp($randomTimestamp);
-        return $randomDate;
-    }
 }

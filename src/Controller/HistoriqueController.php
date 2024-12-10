@@ -48,8 +48,8 @@ class HistoriqueController extends AbstractController
         ];
     }
 
-    #[Route(path: '/historique/success', name: 'success')]
-    public function historique(): Response
+    #[Route(path: '/historique/confirmation', name: 'success')]
+    public function confirmation(): Response
     {
         if (is_null($this->params['nigend']))
             return $this->redirectToRoute('login');
@@ -61,14 +61,34 @@ class HistoriqueController extends AbstractController
             ->getRepository(Reservation::class)
             ->findLastByNigend($nigend);
 
-        dd($last_resa);
+        return $this->render('historique/confirmation.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'reservation' => $last_resa,
+                'vehicule' => $last_resa->getVehicule()
+            ]
+        ));
+    }
 
+    #[Route(path: '/historique', name: 'historique')]
+    public function historique(): Response
+    {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
+        $this->setAppConst();
+
+        $nigend = $this->params['nigend'];
+        $resas = $this->em
+            ->getRepository(Reservation::class)
+            ->findByNigend($nigend);
 
         return $this->render('historique/historique.html.twig', array_merge(
             $this->getAppConst(),
             $this->params,
             [
-                'reservation' => $last_resa
+                'reservations' => $resas,
             ]
         ));
     }
