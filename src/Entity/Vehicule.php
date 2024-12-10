@@ -38,12 +38,6 @@ class Vehicule
     #[ORM\Column(length: 9)]
     private ?string $immatriculation = null;
 
-    /**
-     * @var Collection<int, Photo>
-     */
-    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'vehicule_id', orphanRemoval: true)]
-    private Collection $photos;
-
     #[ORM\Column]
     private ?bool $serigraphie = null;
 
@@ -66,10 +60,16 @@ class Vehicule
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'vehicule', orphanRemoval: true, cascade: ["persist"])]
     private Collection $reservations;
 
+    /**
+     * @var Collection<int, Photo>
+     */
+    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'vehicule', orphanRemoval: true)]
+    private Collection $photos;
+
     public function __construct()
     {
-        $this->photos = new ArrayCollection();
         $this->reservations = new ArrayCollection();
+        $this->photos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -161,36 +161,6 @@ class Vehicule
         return $this;
     }
 
-    /**
-     * @return Collection<int, Photo>
-     */
-    public function getPhotos(): Collection
-    {
-        return $this->photos;
-    }
-
-    public function addPhoto(Photo $photo): static
-    {
-        if (!$this->photos->contains($photo)) {
-            $this->photos->add($photo);
-            $photo->setVehiculeId($this);
-        }
-
-        return $this;
-    }
-
-    public function removePhoto(Photo $photo): static
-    {
-        if ($this->photos->removeElement($photo)) {
-            // set the owning side to null (unless already changed)
-            if ($photo->getVehiculeId() === $this) {
-                $photo->setVehiculeId(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function isSerigraphie(): ?bool
     {
         return $this->serigraphie;
@@ -275,6 +245,36 @@ class Vehicule
             // set the owning side to null (unless already changed)
             if ($reservation->getVehicule() === $this) {
                 $reservation->setVehicule(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Photo>
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    public function addPhoto(Photo $photo): static
+    {
+        if (!$this->photos->contains($photo)) {
+            $this->photos->add($photo);
+            $photo->setVehicule($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhoto(Photo $photo): static
+    {
+        if ($this->photos->removeElement($photo)) {
+            // set the owning side to null (unless already changed)
+            if ($photo->getVehicule() === $this) {
+                $photo->setVehicule(null);
             }
         }
 

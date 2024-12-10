@@ -282,11 +282,13 @@ class AppFixtures extends Fixture
         };
 
         $vls = [
-            [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'AB-123-CD', 0],
-            [$genrs[1], $cats[0], $carbs[1], $transms[0], 'MERCEDES', 'GLA', '200 CDI', 'ELEGANCE', '2025-03-11', 5, 'AB-123-CE', 0],
-            [$genrs[1], $cats[0], $carbs[0], $transms[1], 'RENAULT', 'Clio', '1.0 SCe 60', null, '2024-12-11', 5, 'AB-123-CF', 1],
-            [$genrs[1], $cats[1], $carbs[1], $transms[0], 'BMW', 'X4', '30D', null, '2025-07-12', 4, 'AB-123-CG', 0],
-            [$genrs[0], $cats[2], $carbs[1], $transms[1], 'RENAULT', 'Master', null, null, '2025-03-06', 3, 'AB-123-CH', 0]
+            [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'GS-517-PF', 0],
+            [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 3, 'GY-057-GF', 0],
+            [$genrs[1], $cats[1], $carbs[1], $transms[0], 'BMW', 'X4', '30D', null, '2025-07-12', 4, 'GL-146-SZ', 0],
+            [$genrs[1], $cats[1], $carbs[1], $transms[0], 'HYUNDAI', 'Sante Fe', null, null, '2025-07-12', 7, 'WW-682-LV', 0],
+            [$genrs[1], $cats[0], $carbs[1], $transms[0], 'CITROËN', 'Berlingo', null, null, '2025-03-11', 5, 'CD-943-AR', 0],
+            [$genrs[1], $cats[0], $carbs[0], $transms[1], 'PEUGEOT', 'Partner', null, null, '2024-12-11', 2, 'AD-089-FR', 1],
+            [$genrs[0], $cats[2], $carbs[1], $transms[1], 'BMW', 'X1', null, null, '2025-03-06', 5, 'EA-125-NP', 0]
         ];
 
         $from = new \DateTime('now');
