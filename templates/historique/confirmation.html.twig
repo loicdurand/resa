@@ -29,7 +29,7 @@
   </nav>
 
   <h1>
-    Une dernière étape...
+    Attente de validation...
   </h1>
 
   <div class="fr-grid-row">
@@ -118,15 +118,29 @@
               {{ reservation.heureDebut }}
             </span>
             <br>
-            au
-            <span class="bold">
-              {{ reservation.dateFin | date('d/m/Y') }}
-              à
-              {{ reservation.heureFin }}
-            </span>
+              au
+              <span class="bold">
+                {{ reservation.dateFin | date('d/m/Y') }}
+                à
+                {{ reservation.heureFin }}
+              </span>
+            </p>
+          </div>
+        </a>
+        <div class="fr-mt-4w fr-grid-row">
+          <p class="fr-col-6">
+            <a href="/" class="cs-go cs-go-accueil fr-link fr-icon-arrow-left-line fr-link--icon-left" data-fr-js-link-actionee="true">
+              <span class="hide-s">Retour à la page d'a</span><span class="hide-m hide-l hide-xl">A</span>ccueil
+            </a>
+          </p>
+          <p class="fr-col-6">
+            <a href="/historique" class="cs-go cs-go-histo fr-link fr-icon-arrow-right-line fr-link--icon-right fr-mt-auto fr-mr-0" id="page-switcher__next--composants-et-modeles-composants-liste-deroulante" data-fr-js-link-actionee="true">
+              <span class="hide-s">Afficher mon&nbsp;h</span><span class="hide-m hide-l hide-xl">H</span>istorique
+            </a>
           </p>
         </div>
-      </a>
+      </div>
     </div>
-  </div>
-{% endblock %}
+
+  {% endblock %}
+  

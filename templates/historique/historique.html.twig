@@ -58,7 +58,7 @@
         {% for i, reservation in reservations %}
           {% if( reservation.dateFin | date('U')) >= ('now'|date('U')) %}
 
-            <div class="fr-grid-row cs-border fr-mb-1w" href="/historique">
+            <div class="fr-grid-row cs-border cursor-initial fr-mb-1w" href="/historique">
               <div class="fr-col-12">
                 <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
                   <figure class="cs-img-container left">
