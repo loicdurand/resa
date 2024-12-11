@@ -14,8 +14,8 @@ new Router('/', {
   '/reserver': () => {
     import('./js/accueil/reserver/reserver');
   },
-  '/historique': () => {
-    import('./js/historique/historique');
+  '/parc': () => {
+    import('./js/parc/parc');
   },
   '^$': () => {
     import('./js/accueil/index/index');
