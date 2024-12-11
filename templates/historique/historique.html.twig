@@ -174,7 +174,7 @@
             {% endfor %}
 
             {# PAS DE RÉSA À VENIR MAIS RÉSAS PASSÉES #}
-            {% if (passees | length) == (reservations | length) %}
+            {% if (passees | length) == (reservations | length) and (passees | length > 0) %}
               <div class="cs-noborder cursor-initial">
                 <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
 

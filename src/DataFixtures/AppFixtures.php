@@ -91,7 +91,7 @@ class AppFixtures extends Fixture
                 'nom' => 'VALIDER_RESAS',
                 'libelle' => 'Valider les réservations de véhicules',
                 'template' => null, //'validation_reservation',
-                'defaut' => ['CSAG', 'CDT']
+                'defaut' => ['CDT']
             ],
             [
                 'nom' => 'RESERVER_VL',

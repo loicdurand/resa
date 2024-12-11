@@ -26,7 +26,7 @@
 				</li>
 				<li>
 					<a	class="fr-breadcrumb__link"	aria-current="page">
-						Ajouter un véhicule
+					{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }} un véhicule
 					</a>
 				</li>
 			</ol>
