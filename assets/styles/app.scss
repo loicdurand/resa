@@ -62,6 +62,10 @@ body.container .fr-tags-group .fr-tag {
     color: var(--grey-0);
 }
 
+table th, table td{
+    text-align: center !important;
+}
+
 /* FOOTER */
 
 .cs-footer {

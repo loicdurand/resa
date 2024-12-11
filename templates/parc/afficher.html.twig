@@ -62,9 +62,6 @@
 									</span>
 								</th>
 								<th	scope="col">
-									Statut
-								</th>
-								<th	scope="col">
 									Immatriculation
 								</th>
 								<th	scope="col">
@@ -106,9 +103,6 @@
 											</div>
 										</th>
 										<td>
-											Disponible
-										</td>
-										<td>
 											{{ vl.immatriculation }}
 										</td>
 										<td>
@@ -123,7 +117,7 @@
 											</abbr>
 										</td>
 										<td>
-											{{ vl.controletechnique | date('d/m/Y') }}
+											{{ vl.controletechnique != '' ? vl.controletechnique | date('d/m/Y'): '--' }}
 										</td>
 										<td>
 											{{ vl.nbplaces }}
@@ -139,7 +133,7 @@
 								{% else %}
 
 									<tr	id="table-row-key-1"	data-row-key="1">
-										<td	colspan="10">
+										<td	colspan="9">
 											Il n'y a encore aucun véhicule dans votre parc.
 										</td>
 									</tr>
