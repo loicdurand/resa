@@ -41,7 +41,7 @@
         </button>
       </li>
       <li role="presentation">
-        <button id="tabpanel-passees" class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left" tabindex="-1" role="tab" aria-selected="false" aria-controls="tabpanel-passees-panel">
+        <button id="tabpanel-passees" {{ reservations | length == 0 ? 'disabled' }} class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left" tabindex="-1" role="tab" aria-selected="false" aria-controls="tabpanel-passees-panel">
           <span class="hide-s hide-m">
             Mes réservations&nbsp;
           </span>
@@ -137,18 +137,9 @@
               {% else %}
                 {% set passees = passees | merge([i]) %}
               {% endif %}
-            {% endfor %}
-          </div>
-        </div>
 
-        <div id="tabpanel-passees-panel" class="fr-tabs__panel" role="tabpanel" aria-labelledby="tabpanel-passees" tabindex="0">
-          <div class="fr-container">
-            {# RÉSERVATIONS PASSÉES #}
-            {% for i in passees %}
-
-              {% set reservation = reservations[i] %}
-
-              <div class="fr-grid-row cs-border fr-mb-1w" href="/historique">
+            {% else %}
+              <div class="fr-grid-row cs-border cursor-initial">
                 <div class="fr-col-12">
                   <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
                     <figure class="cs-img-container left">
@@ -160,74 +151,148 @@
 
                       <div class="left cs-descr-container">
 
-                        <p class="fr-tag cs-resa-statut {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
-                          {{ reservation.statut.code }}
-                        </p>
-
-                        {% set vehicule = reservation.vehicule %}
-
                         <dl>
                           <dt class="cs-marque">
-                            {{ vehicule.marque }}
-                            &nbsp;
-                            <span class="cs-modele">
-                              {{ vehicule.modele }}
-                            </span>
+                            Aucun résultat
                           </dt>
-                          {% if (vehicule.motorisation ~ vehicule.finition) is empty %}
-                            <br/>
-                          {% else %}
-                            <dd>
-                              {{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
-                            </dd>
-                          {% endif %}
                           <dd>
-                            <ul class="fr-tags-group cs-tags">
-                              <li>
-                                <p class="fr-tag fr-tag--sm">
-                                  {{ vehicule.transmission.code }}
-                                </p>
-                              </li>
-                              <li>
-                                <p class="fr-tag fr-tag--sm">
-                                  {{ vehicule.carburant.libelle }}
-                                </p>
-                              </li>
-                            </ul>
+                            <h3 class="fr-mb-0w">
+                              Vous n'avez pas encore effectué de réservation.
+                            </h3>
                           </dd>
-                          <dd title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
-                            {% for i in range(1, vehicule.NbPlaces) %}
-                              <i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
-                            {% endfor %}
+                          <dd>
+                            <a href="/" class="cs-go cs-go-histo fr-link fr-icon-arrow-right-line fr-link--icon-right" data-fr-js-link-actionee="true">
+                              Réserver un véhicule
+                            </a>
                           </dd>
                         </dl>
-
                       </div>
                     </div>
                   </div>
-                  <div class="cs-from-to fr-col-12 center {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
-                    <p>
-                      Du
-                      <span class="bold">
-                        {{ reservation.dateDebut | date('d/m/Y') }}
-                        à
-                        {{ reservation.heureDebut }}
-                      </span>
-                      <br>
-                        au
-                        <span class="bold">
-                          {{ reservation.dateFin | date('d/m/Y') }}
-                          à
-                          {{ reservation.heureFin }}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-
-                {% endfor %}
+                </div>
               </div>
+            {% endfor %}
+
+            {# PAS DE RÉSA À VENIR MAIS RÉSAS PASSÉES #}
+            {% if (passees | length) == (reservations | length) %}
+              <div class="cs-noborder cursor-initial">
+                <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
+
+                  <figure class="cs-img-container left">
+                    <img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée">
+                      <figcaption class="hidden">
+                        Renault 4l sérigraphiée
+                      </figcaption>
+                    </figure>
+
+                    <div class="left cs-descr-container">
+                      <dl>
+                        <dt class="cs-marque">
+                          Aucun résultat
+                        </dt>
+                        <dd>
+                          <h3>
+                            Vous n'avez pas de réservation à venir.
+                          </h3>
+                        </dd>
+                      </dl>
+                    </div>
+
+                  </div>
+                </div>
+              {% endif %}
+            {# FIN PAS DE RÉSA À VENIR MAIS RÉSAS PASSÉES #}
+
             </div>
           </div>
 
-        {% endblock %}
-        
+          <div id="tabpanel-passees-panel" class="fr-tabs__panel" role="tabpanel" aria-labelledby="tabpanel-passees" tabindex="0">
+            <div class="fr-container">
+              {# RÉSERVATIONS PASSÉES #}
+              {% for i in passees %}
+
+                {% set reservation = reservations[i] %}
+
+                <div class="fr-grid-row cs-border fr-mb-1w" href="/historique">
+                  <div class="fr-col-12">
+                    <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
+                      <figure class="cs-img-container left">
+                        <img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée">
+                          <figcaption class="hidden">
+                            Renault 4l sérigraphiée
+                          </figcaption>
+                        </figure>
+
+                        <div class="left cs-descr-container">
+
+                          <p class="fr-tag cs-resa-statut {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
+                            {{ reservation.statut.code }}
+                          </p>
+
+                          {% set vehicule = reservation.vehicule %}
+
+                          <dl>
+                            <dt class="cs-marque">
+                              {{ vehicule.marque }}
+                              &nbsp;
+                              <span class="cs-modele">
+                                {{ vehicule.modele }}
+                              </span>
+                            </dt>
+                            {% if (vehicule.motorisation ~ vehicule.finition) is empty %}
+                              <br/>
+                            {% else %}
+                              <dd>
+                                {{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
+                              </dd>
+                            {% endif %}
+                            <dd>
+                              <ul class="fr-tags-group cs-tags">
+                                <li>
+                                  <p class="fr-tag fr-tag--sm">
+                                    {{ vehicule.transmission.code }}
+                                  </p>
+                                </li>
+                                <li>
+                                  <p class="fr-tag fr-tag--sm">
+                                    {{ vehicule.carburant.libelle }}
+                                  </p>
+                                </li>
+                              </ul>
+                            </dd>
+                            <dd title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
+                              {% for i in range(1, vehicule.NbPlaces) %}
+                                <i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
+                              {% endfor %}
+                            </dd>
+                          </dl>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cs-from-to fr-col-12 center {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
+                      <p>
+                        Du
+                        <span class="bold">
+                          {{ reservation.dateDebut | date('d/m/Y') }}
+                          à
+                          {{ reservation.heureDebut }}
+                        </span>
+                        <br>
+                          au
+                          <span class="bold">
+                            {{ reservation.dateFin | date('d/m/Y') }}
+                            à
+                            {{ reservation.heureFin }}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+          {% endblock %}
+          

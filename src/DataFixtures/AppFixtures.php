@@ -96,7 +96,7 @@ class AppFixtures extends Fixture
             [
                 'nom' => 'RESERVER_VL',
                 'libelle' => 'Réserver un véhicule',
-                'template' => null, //'reservation_vehicule',
+                'template' => 'compte/reserver_vl.html.twig',
                 'defaut' => ['USR', 'CSAG', 'CDT', 'SOLC']
             ]
         ];

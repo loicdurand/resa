@@ -1,6 +1,10 @@
 .cs-border {
-
   border: 1px solid var(--grey-5);
+}
+
+.cs-border,
+.cs-noborder {
+
   border-radius: 3px;
   position: relative;
 
@@ -18,7 +22,7 @@
 
     & .cs-img-container .cs-img,
     & .cs-descr-container {
-      max-height: 130px;
+      max-height: 127px;
 
       & .cs-resa-statut {
         position: absolute;
@@ -79,6 +83,7 @@
   display: block;
   position: absolute;
   right: 16px;
+  bottom: 6px;
 }
 
 @media screen and (max-width:640px) {

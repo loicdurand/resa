@@ -115,7 +115,6 @@ class HistoriqueController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
-                'app.dev_nigend_default'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));

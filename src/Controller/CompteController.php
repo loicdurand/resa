@@ -21,7 +21,7 @@ class CompteController extends AbstractController
     private $requestStack, $session;
     public $params, $request;
 
-    public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine)
+    public function __construct(RequestStack $requestStack)
     {
         $this->request = Request::createFromGlobals();
         $this->requestStack = $requestStack;
@@ -51,7 +51,7 @@ class CompteController extends AbstractController
         $this->params = [
             'nigend' => $this->session->get('HTTP_NIGEND'),
             'unite' => $this->session->get('HTTP_UNITE'),
-            'profil' => $this->session->get('HTTP_PROFIL')
+            'profil' => $this->session->get('HTTP_PROFIL') 
         ];
 
         $em = $doctrine->getManager();
@@ -89,7 +89,6 @@ class CompteController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
-                'app.dev_nigend_default'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));

@@ -28,8 +28,6 @@ class ParcController extends AbstractController
 
     public function __construct(RequestStack $requestStack)
     {
-        $this->setAppConst();
-
         $this->request = Request::createFromGlobals();
         $this->requestStack = $requestStack;
         $this->session = $this->requestStack->getSession();
@@ -44,7 +42,7 @@ class ParcController extends AbstractController
     }
 
 
-    #[Route('/parc/', name: 'parc')]
+    #[Route('/parc', name: 'parc')]
     public function afficher(ManagerRegistry $doctrine): Response
     {
         if (is_null($this->params['nigend']))
@@ -145,7 +143,6 @@ class ParcController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
-                'app.dev_nigend_default'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
