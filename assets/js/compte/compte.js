@@ -13,7 +13,7 @@ const //
 ['debut', 'fin'].forEach(field => {
   inputs[field] = document.getElementById(`horaire_ouverture_${field}`);
   inputs[field].addEventListener('keyup', ({ target: { value } }) => {
-    if (/$\d\d:\d\d/.test(addZeros(value, 5)))
+    if (/^\d\d:\d\d$/.test(addZeros(value, 5)))
       submit.disabled = false;
     else
       submit.disabled = true;
