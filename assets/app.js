@@ -17,6 +17,9 @@ new Router('/', {
   '/parc': () => {
     import('./js/parc/parc');
   },
+  '/compte':()=>{
+    import('./js/compte/compte');
+  },
   '^$': () => {
     import('./js/accueil/index/index');
   }

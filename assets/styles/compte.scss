@@ -10,8 +10,14 @@
     opacity: 0;
   }
 
+  &:hover,
   &:hover:after {
     opacity: 1;
     color: var(--text-action-high-blue-france);
   }
+
+}
+
+form[name="horaire_ouverture"] input {
+  text-align: center;
 }

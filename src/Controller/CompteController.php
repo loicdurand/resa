@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 use App\Entity\Role;
 use App\Entity\Action;
+use App\Entity\Atelier;
 use App\Entity\HoraireOuverture;
 use App\Entity\Permission;
 
@@ -62,11 +63,14 @@ class CompteController extends AbstractController
             ->getRepository(Role::class)
             ->findAll();
 
-        $horaires = $em
-            ->getRepository(HoraireOuverture::class)
-            ->findAll();
+        $unite =  $em
+            ->getRepository(Atelier::class)
+            ->findOneBy(['code_unite' => $this->params['unite']]);
 
-        $form = $this->createForm(HoraireOuvertureType::class);
+        $horaires = $unite->getHorairesOuverture();
+        $horaire = new HoraireOuverture();
+        $horaire->setCodeUnite($unite);
+        $form = $this->createForm(HoraireOuvertureType::class, $horaire);
 
         //$form->handleRequest($this->request);
         // if ($form->isSubmitted() && $form->isValid()) {

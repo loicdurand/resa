@@ -14,13 +14,24 @@ class HoraireOuvertureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('jour')
-            ->add('creneau')
+            ->add('jour', null, [
+                'attr' => [
+                    'readonly' => true,
+                ]
+            ])
+            ->add('creneau', null, [
+                'attr' => [
+                    'readonly' => true,
+                ]
+            ])
             ->add('debut')
             ->add('fin')
             ->add('code_unite', EntityType::class, [
                 'class' => Atelier::class,
-                'choice_label' => 'id',
+                'choice_label' => 'code_unite',
+                'attr' => [
+                    'readonly' => true,
+                ]
             ])
         ;
     }
