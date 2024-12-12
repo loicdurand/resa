@@ -1,0 +1,76 @@
+<div	class="fr-summary"	role="navigation">
+	<p>
+		Définir les horaires de l'atelier a pour principal effet d'empêcher les utilisateurs de réserver un véhicule en dehors de ces horaires.
+	</p>
+
+	{# <ol>
+		{{ form_start(form) }}<li>{{ form_rest(form) }}</li>{{form_end(form)}}
+	</ol> #}
+	{% set days_code_list = ['LU','MA','ME','JE','VE','SA','DI'] %}
+	{% set days_list = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'] %}
+	{% set creneau = 'AM' %}
+
+	<div	class="fr-table">
+		<div	class="fr-table__wrapper">
+			<div	class="fr-table__container">
+				<div	class="fr-table__content">
+					<table class="cs-table-horaires">
+						<caption>
+							Gestion des horaires:
+						</caption>
+						<thead>
+							<tr>
+								<th></th>
+								<th	scope="col"	colspan="2">
+									MATIN
+								</th>
+								<th></th>
+								<th	scope="col"	colspan="2">
+									APRÈS-MIDI
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for i, day_code in days_code_list %}
+								<tr	id="table-no-scroll-row-key-1"	data-row-key="1">
+									<th	scope="row">
+										{{ days_list[i] }}
+									</th>
+									<td>
+
+										{% set horaire = horaires | find((h,_) => h.jour == day_code and h.creneau == 'AM') %}
+
+										<button	class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
+											{{ horaire.debut is defined ? horaire.debut : '__' }}
+										</button>
+									</td>
+									<td>
+										<button	class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
+											{{ horaire.fin is defined ? horaire.fin : '__' }}
+										</button>
+									</td>
+
+									{% set horaire = horaires | find((h,_) => h.jour == day_code and h.creneau == 'PM') %}
+
+									<td>
+										-
+									</td>
+									<td>
+										<button	class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
+											{{ horaire.debut is defined ? horaire.debut : '__' }}
+										</button>
+									</td>
+									<td>
+										<button	class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
+											{{ horaire.fin is defined ? horaire.fin : '__' }}
+										</button>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

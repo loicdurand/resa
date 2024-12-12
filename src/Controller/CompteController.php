@@ -12,7 +12,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 use App\Entity\Role;
 use App\Entity\Action;
+use App\Entity\HoraireOuverture;
 use App\Entity\Permission;
+
+use App\Form\HoraireOuvertureType;
 
 
 class CompteController extends AbstractController
@@ -51,7 +54,7 @@ class CompteController extends AbstractController
         $this->params = [
             'nigend' => $this->session->get('HTTP_NIGEND'),
             'unite' => $this->session->get('HTTP_UNITE'),
-            'profil' => $this->session->get('HTTP_PROFIL') 
+            'profil' => $this->session->get('HTTP_PROFIL')
         ];
 
         $em = $doctrine->getManager();
@@ -59,11 +62,28 @@ class CompteController extends AbstractController
             ->getRepository(Role::class)
             ->findAll();
 
+        $horaires = $em
+            ->getRepository(HoraireOuverture::class)
+            ->findAll();
+
+        $form = $this->createForm(HoraireOuvertureType::class);
+
+        //$form->handleRequest($this->request);
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $vehicule = $form->getData();
+        //     $em->persist($vehicule);
+        //     $em->flush();
+
+        //     return $this->redirectToRoute('parc');
+        // }
+
         return $this->render('compte/compte.html.twig', array_merge(
             $this->getAppConst(),
             $this->params,
             [
                 'roles' => $roles,
+                'form' => $form,
+                'horaires' => $horaires
             ]
         ));
     }

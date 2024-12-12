@@ -78,7 +78,7 @@ class AppFixtures extends Fixture
             [
                 'nom' => 'GERER_HORAIRES',
                 'libelle' => 'Gérer les horaires de l\'atelier',
-                'template' => null, //'horaires_atelier',
+                'template' => 'compte/gestion_horaires.html.twig', //'horaires_atelier',
                 'defaut' => ['CSAG']
             ],
             [

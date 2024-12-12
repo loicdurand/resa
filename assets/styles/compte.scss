@@ -1,0 +1,17 @@
+.fr-table .cs-table-horaires td .cs-btn--icon-on-hover {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  text-align: left;
+  vertical-align: middle;
+  color: var(--text-default-grey);
+
+  &:after {
+    opacity: 0;
+  }
+
+  &:hover:after {
+    opacity: 1;
+    color: var(--text-action-high-blue-france);
+  }
+}
