@@ -1,4 +1,5 @@
 import { addZeros } from '../lib/utils';
+import { jours } from '../lib/refs';
 
 console.log('=== compte ===');
 
@@ -7,6 +8,7 @@ const //
   [table] = document.getElementsByClassName('cs-table-horaires'),
   form = document.querySelector('form[name="horaire_ouverture"]'),
   submit = form.querySelector('[type="submit"]'),
+  modal_jour = document.getElementById('modal-jour'),
   inputs = {};
 
 ['code_unite', 'jour', 'creneau'].forEach(field => inputs[field] = document.getElementById(`form-field--${field}`));
@@ -18,7 +20,6 @@ const //
     else
       submit.disabled = true;
   });
-
 });
 
 table.addEventListener('click', ({ target }) => {
@@ -31,6 +32,8 @@ table.addEventListener('click', ({ target }) => {
     tr = target.parentElement.parentElement,
     btns = [...tr.querySelectorAll('button')],
     [debut_AM, fin_AM, debut_PM, fin_PM] = btns.map(btn => btn.innerText.trim());
+
+  modal_jour.innerHTML = `du ${jours[jour]} ${creneau === 'AM' ? 'matin' : 'après-midi'}`;
 
   inputs.jour.value = jour;
   inputs.creneau.value = creneau;

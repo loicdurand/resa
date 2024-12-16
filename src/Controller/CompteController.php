@@ -38,7 +38,7 @@ class CompteController extends AbstractController
         ];
     }
 
-    #[Route('/compte')]
+    #[Route('/compte', name: 'compte')]
     public function compte(ManagerRegistry $doctrine, RequestStack $requestStack): Response
     {
         if (is_null($this->params['nigend']))
@@ -72,14 +72,31 @@ class CompteController extends AbstractController
         $horaire->setCodeUnite($unite);
         $form = $this->createForm(HoraireOuvertureType::class, $horaire);
 
-        //$form->handleRequest($this->request);
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     $vehicule = $form->getData();
-        //     $em->persist($vehicule);
-        //     $em->flush();
+        $form->handleRequest($this->request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $exists = false;
+            foreach ($horaires as $h) {
+                if (
+                    $data->getCodeUnite() === $h->getCodeUnite() &&
+                    $data->getJour() === $h->getJour() &&
+                    $data->getCreneau() === $h->getCreneau()
+                ) {
+                    $exists = true;
+                    $h->setDebut($data->getDebut());
+                    $h->setFin($data->getFin());
+                    $em->persist($h);
+                    $em->flush();
+                }
+            }
 
-        //     return $this->redirectToRoute('parc');
-        // }
+            if (!$exists) {
+                $em->persist($data);
+                $em->flush();
+            }
+
+            return $this->redirectToRoute('compte');
+        }
 
         return $this->render('compte/compte.html.twig', array_merge(
             $this->getAppConst(),
