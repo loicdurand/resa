@@ -76,6 +76,7 @@ class CompteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $exists = false;
+
             foreach ($horaires as $h) {
                 if (
                     $data->getCodeUnite() === $h->getCodeUnite() &&
@@ -83,15 +84,22 @@ class CompteController extends AbstractController
                     $data->getCreneau() === $h->getCreneau()
                 ) {
                     $exists = true;
-                    $h->setDebut($data->getDebut());
-                    $h->setFin($data->getFin());
-                    $em->persist($h);
+                    if (is_null($data->getDebut())) {
+                        $em->remove($h);
+                    } else {
+                        $h->setDebut($data->getDebut());
+                        $h->setFin($data->getFin());
+                        $em->persist($h);
+                    }
                     $em->flush();
                 }
             }
 
             if (!$exists) {
-                $em->persist($data);
+                if (is_null($data->getDebut()))
+                    $em->remove($h);
+                else
+                    $em->persist($data);
                 $em->flush();
             }
 
