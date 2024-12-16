@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+  {# Fil d'Arianne #}
+  <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+    <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+      Voir le fil d’Ariane
+    </button>
+    <div class="fr-collapse" id="breadcrumb-1">
+      <ol class="fr-breadcrumb__list">
+        <li>
+          <a class="fr-breadcrumb__link" href="/">
+            Accueil
+          </a>
+        </li>
+        <li>
+          <a class="fr-breadcrumb__link" href="/compte">
+            Compte
+          </a>
+        </li>
+        <li>
+          <a class="fr-breadcrumb__link" aria-current="page">
+            Validation
+          </a>
+        </li>
+      </ol>
+    </div>
+  </nav>
+
+  <h1>
+    Valider les réservations
+  </h1>
+
+  <p class="cs-nb-vehicules fr-h6 fr-ml-1v">
+    {{ reservations | length }}
+    &nbsp;réservations à valider:
+  </p>
+
+  <p>
+    Cliquez sur les réservations affichées ci-dessous pour afficher les options disponibles.
+  </p>
+
+  {% for reservation in reservations %}
+    {% set vehicule = reservation.vehicule %}
+    <div class="fr-grid-row cs-border fr-mb-1w valid-resa relative">
+      <div class="fr-col-12">
+        <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
+          <figure class="cs-img-container left">
+            <img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée">
+              <figcaption class="hidden">
+                Renault 4l sérigraphiée
+              </figcaption>
+            </figure>
+
+            <div class="left cs-descr-container">
+
+              <p class="fr-tag cs-resa-statut {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}">
+                <span class="fr-text--xs">
+                  Réservé par&nbsp;
+                </span><!-- -->{{ reservation.user == nigend ? 'Vous' | upper : reservation.user | trim('0', 'left') }}
+              </p>
+
+              <dl>
+                <dt class="cs-marque">
+                  {{ vehicule.marque }}
+                  &nbsp;
+                  <span class="cs-modele">
+                    {{ vehicule.modele }}
+                  </span>
+                </dt>
+                {% if (vehicule.motorisation ~ vehicule.finition) is empty %}
+                  <br/>
+                {% else %}
+                  <dd>
+                    {{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
+                  </dd>
+                {% endif %}
+                <dd>
+                  <ul class="fr-tags-group cs-tags">
+                    <li>
+                      <p class="fr-tag fr-tag--sm">
+                        {{ vehicule.transmission.code }}
+                      </p>
+                    </li>
+                    <li>
+                      <p class="fr-tag fr-tag--sm">
+                        {{ vehicule.carburant.libelle }}
+                      </p>
+                    </li>
+                  </ul>
+                </dd>
+                <dd title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
+                  {% for i in range(1, vehicule.NbPlaces) %}
+                    <i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
+                  {% endfor %}
+                </dd>
+              </dl>
+
+            </div>
+          </div>
+        </div>
+        <div class="cs-from-to fr-col-12 center {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}">
+          <p>
+            Du
+            <span class="bold">
+              {{ reservation.dateDebut | date('d/m/Y') }}
+              à
+              {{ reservation.heureDebut }}
+            </span>
+            <br>
+              au
+              <span class="bold">
+                {{ reservation.dateFin | date('d/m/Y') }}
+                à
+                {{ reservation.heureFin }}
+              </span>
+            </p>
+          </div>
+
+          <div class="valid-resa--menu">
+            <div class="fr-grid-row">
+              <div class="fr-col-4 center">
+                <button class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-delete-line">
+                  Supprimer
+                </button>
+              </div>
+              <div class="fr-col-4 center">
+                <button class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-ball-pen-line">
+                  Modifier
+                </button>
+              </div>
+              <div class="fr-col-4 center">
+                <button class="fr-btn fr-btn--primary fr-btn--icon-left fr-icon-checkbox-circle-line">
+                  Valider
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+
+    {% endblock %}
+    

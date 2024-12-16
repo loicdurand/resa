@@ -59,13 +59,16 @@
 						<div	class="fr-collapse"	id="accordion-{{ role_key ~ perm_key }}">
 							<!-- données de test -->
 							{% if perm.action.template is null %}
+								
+							<div	class="fr-summary"	role="navigation">
 
-								<h4	class="fr-h4">
-									Pas encore de contenu
-								</h4>
-								<p	class="fr-mt-2w">
-									Cette page est en cours de conctruction. Nous vous invitons à revenir ultérieurement.
-								</p>
+									<h4	class="fr-h4">
+										Pas encore de contenu
+									</h4>
+									<p	class="fr-mt-2w">
+										Cette page est en cours de conctruction. Nous vous invitons à revenir ultérieurement.
+									</p>
+								</div>
 
 							{% else %}
 

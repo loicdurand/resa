@@ -27,7 +27,7 @@ class AppFixtures extends Fixture
         $users = [
             ['249205', '86977', 'SOLC'],
             ['170044', '56751', 'CSAG'],
-            ['167194', '6768', 'CDT']
+            ['167194', '6768', 'VDT']
         ];
 
         foreach ($users as [$nigend, $code_unite, $profil]) {
@@ -50,13 +50,18 @@ class AppFixtures extends Fixture
                 'nom' => 'CSAG',
                 'libelle' => 'CSAG'
             ],
-            'CDT' => [
+            'VDT' => [
                 'ordre' => 300,
+                'nom' => 'VDT',
+                'libelle' => 'Validateur'
+            ],
+            'CDT' => [
+                'ordre' => 400,
                 'nom' => 'CDT',
                 'libelle' => 'Commandement'
             ],
             'USR' => [
-                'ordre' => 400,
+                'ordre' => 500,
                 'nom' => 'USR',
                 'libelle' => 'Utilisateur'
             ]
@@ -90,14 +95,14 @@ class AppFixtures extends Fixture
             [
                 'nom' => 'VALIDER_RESAS',
                 'libelle' => 'Valider les réservations de véhicules',
-                'template' => null, //'validation_reservation',
-                'defaut' => ['CDT']
+                'template' => 'compte/valider_resas.html.twig', //'validation_reservation',
+                'defaut' => ['VDT']
             ],
             [
                 'nom' => 'RESERVER_VL',
                 'libelle' => 'Réserver un véhicule',
                 'template' => 'compte/reserver_vl.html.twig',
-                'defaut' => ['USR', 'CSAG', 'CDT', 'SOLC']
+                'defaut' => ['USR', 'CSAG', 'VDT', 'SOLC']
             ]
         ];
 
@@ -318,5 +323,4 @@ class AppFixtures extends Fixture
             $manager->flush();
         }
     }
-
 }

@@ -176,7 +176,7 @@ class AccueilController extends AbstractController
             ->findAll();
 
         $resa = new Reservation();
-        $resa->setUser('00249205');
+        $resa->setUser($this->params['nigend']);
         $resa->setVehicule($vehicule);
         $resa->setStatut($statut_resa_en_attente);
 

@@ -1,0 +1,22 @@
+.valid-resa {
+  &:hover .valid-resa--menu {
+    display: block;
+    position: absolute;
+    background-color: rgba(255, 255, 255, .5);
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+
+    & .fr-btn {
+      margin-top: 5rem;
+
+      &.fr-btn--secondary {
+        background-color: #fff;
+      }
+    }
+  }
+
+  & .valid-resa--menu {
+    display: none;
+  }
+}
