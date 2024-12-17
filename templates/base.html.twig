@@ -5,7 +5,7 @@
 		<meta	name="viewport"	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<title>
 			{% block title %}
-				{{ APP_NAME }}
+					{{ APP_NAME | raw }}
 				-
 				{{ APP_TAGLINE }}
 			{% endblock %}
@@ -81,7 +81,7 @@
 						<div	class="fr-header__brand fr-enlarge-link">
 							<div	class="fr-header__brand-top">
 								<div	class="fr-header__logo">
-									<a	href="/"	title="Accueil - {{ APP_NAME }} {{ APP_TAGLINE }}">
+									<a	href="/"	title="Accueil - {{ APP_NAME | raw }} - {{ APP_TAGLINE }}">
 										<p	class="fr-logo">
 											Gendarmerie
 											<br/>
@@ -96,9 +96,9 @@
 								</div>
 							</div>
 							<div	class="fr-header__service">
-								<a	href="/"	title="Accueil - {{ APP_NAME }} - {{ APP_TAGLINE }}">
+								<a	href="/"	title="Accueil - {{ APP_NAME | raw }} - {{ APP_TAGLINE }}">
 									<p	class="fr-header__service-title">
-										{{ APP_NAME }}
+										{{ APP_NAME | raw }}
 										-
 										{{ APP_TAGLINE }}
 									</p>
