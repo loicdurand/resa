@@ -20,6 +20,9 @@ new Router('/', {
   '/compte':()=>{
     import('./js/compte/compte');
   },
+  '/validation':()=>{
+    import('./js/compte/validation');
+  },
   '^$': () => {
     import('./js/accueil/index/index');
   }

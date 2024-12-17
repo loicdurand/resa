@@ -20,3 +20,9 @@
     display: none;
   }
 }
+
+@media all and (max-width: 641px) {
+  .valid-resa:hover .valid-resa--menu .fr-btn {
+    margin-top: 0;
+  }
+}

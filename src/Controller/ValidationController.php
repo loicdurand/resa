@@ -69,6 +69,30 @@ class ValidationController extends AbstractController
         ));
     }
 
+    #[Route('/validation/valid', name: 'valid', methods: ['POST'])]
+    public function valid(ManagerRegistry $doctrine, RequestStack $requestStack)
+    {
+        $data = (array) json_decode($this->request->getContent());
+        $id = $data['id'];
+        $em = $doctrine->getManager();
+
+        $statut_valide = $em
+            ->getRepository(StatutReservation::class)
+            ->findOneBy(['code' => 'Confirmée']);
+
+        $reservation = $em->getRepository(Reservation::class)
+            ->findOneBy(['id' => $id]);
+
+        $reservation->setStatut($statut_valide);
+        $em->persist($reservation);
+        $em->flush();
+
+        return $this->json([
+            'id' => $reservation->getId(),
+            'statut' => $reservation->getStatut()->getCode()
+        ]);
+    }
+
     /**
      * Utils
      */
