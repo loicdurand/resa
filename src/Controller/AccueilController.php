@@ -47,7 +47,7 @@ class AccueilController extends AbstractController
 
         $vehicules = $this->em
             ->getRepository(Vehicule::class)
-            ->findAll();
+            ->findAll(); 
 
         $categories = [];
         $transmissions = [];

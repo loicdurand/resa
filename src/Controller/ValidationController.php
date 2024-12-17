@@ -76,6 +76,9 @@ class ValidationController extends AbstractController
         $id = $data['id'];
         $em = $doctrine->getManager();
 
+        if ($this->getParameter('app.env') == 'dev')
+            sleep(seconds: 1.5);
+
         $statut_valide = $em
             ->getRepository(StatutReservation::class)
             ->findOneBy(['code' => 'Confirmée']);
@@ -84,6 +87,33 @@ class ValidationController extends AbstractController
             ->findOneBy(['id' => $id]);
 
         $reservation->setStatut($statut_valide);
+        $em->persist($reservation);
+        $em->flush();
+
+        return $this->json([
+            'id' => $reservation->getId(),
+            'statut' => $reservation->getStatut()->getCode()
+        ]);
+    }
+
+    #[Route('/validation/suppr', name: 'suppr', methods: ['POST'])]
+    public function suppr(ManagerRegistry $doctrine, RequestStack $requestStack)
+    {
+        $data = (array) json_decode($this->request->getContent());
+        $id = $data['id'];
+        $em = $doctrine->getManager();
+
+        if ($this->getParameter('app.env') == 'dev')
+            sleep(seconds: 1.5);
+
+        $statut_annulee = $em
+            ->getRepository(StatutReservation::class)
+            ->findOneBy(['code' => 'Annulée']);
+
+        $reservation = $em->getRepository(Reservation::class)
+            ->findOneBy(['id' => $id]);
+
+        $reservation->setStatut($statut_annulee);
         $em->persist($reservation);
         $em->flush();
 

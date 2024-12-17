@@ -272,7 +272,8 @@ class AppFixtures extends Fixture
             ['En attente', 'En attente de validation hiérachique'],
             ['Confirmée', 'Réservation validée par la hiérarchie'],
             ['En cours', 'La réservation a débuté'],
-            ['Terminée', 'Réservation terminée']
+            ['Terminée', 'Réservation terminée'],
+            ['Annulée', 'Réservation annulée par la hiérachie']
         ];
 
         foreach ($types_resas as $index => [$code, $libelle]) {

@@ -226,6 +226,11 @@ class Vehicule
      */
     public function getReservations(): Collection
     {
+        foreach ($this->reservations as $resa) {
+            $statut = $resa->getStatut();
+            if ($statut->getCode() == 'Annulée')
+                $this->removeReservation($resa);
+        }
         return $this->reservations;
     }
 
