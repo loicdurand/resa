@@ -58,7 +58,7 @@ class ReservationRepository extends ServiceEntityRepository
         $now = new \DateTime('now');
         foreach ($resas as $resa) {
             $statut = $resa->getStatut()->getCode();
-            if ($statut === 'Terminée' || $statut === 'En cours')
+            if ($statut === 'Terminée')
                 continue;
 
             $date_debut = new \DateTime($resa->getDateDebut()->format('Y-m-d') . ' ' . $resa->getHeureDebut() . ':00');
@@ -68,9 +68,11 @@ class ReservationRepository extends ServiceEntityRepository
                 $em->persist($resa);
                 $em->flush();
             } else if ($date_debut->format('U') < $now->format('U') && $date_fin->format('U') > $now->format('U')) {
-                $resa->setStatut($statut_en_cours);
-                $em->persist($resa);
-                $em->flush();
+                if ($statut !== 'En attente') {
+                    $resa->setStatut($statut_en_cours);
+                    $em->persist($resa);
+                    $em->flush();
+                }
             }
         }
 
