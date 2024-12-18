@@ -50,6 +50,7 @@ class VehiculeRepository extends ServiceEntityRepository
                 v.id = r.vehicule_id
             JOIN transmission_vehicule t ON v.transmission_id = t.Id
             JOIN carburant_vehicule c ON v.carburant_id = c.id
+            JOIN statut_reservation s ON r.statut_id = s.id
             WHERE
                 v.id != $vl_id
             AND
@@ -57,9 +58,10 @@ class VehiculeRepository extends ServiceEntityRepository
             AND
                 v.serigraphie = $serigraphie
             AND
-                CONCAT(CONCAT(r.date_debut, ' '), r.heure_debut) NOT BETWEEN "$debut" AND "$fin"
+                "$debut" NOT BETWEEN CONCAT(CONCAT(r.date_debut, ' '), r.heure_debut) AND CONCAT(CONCAT(r.date_fin, ' '), r.heure_fin)
             AND
-                CONCAT(CONCAT(r.date_fin, ' '), r.heure_fin) NOT BETWEEN "$debut" AND "$fin";
+                "$fin" NOT BETWEEN CONCAT(CONCAT(r.date_debut, ' '), r.heure_debut) AND CONCAT(CONCAT(r.date_fin, ' '), r.heure_fin)
+            OR s.code = 'Annulée';
 SQL;
 
         $stmt = $this->conn->prepare($sql);
