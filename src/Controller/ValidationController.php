@@ -15,6 +15,7 @@ use App\Entity\Action;
 use App\Entity\Atelier;
 use App\Entity\HoraireOuverture;
 use App\Entity\Permission;
+use App\Entity\Vehicule;
 use App\Entity\Reservation;
 use App\Entity\StatutReservation;
 use App\Form\HoraireOuvertureType;
@@ -64,9 +65,28 @@ class ValidationController extends AbstractController
             $this->getAppConst(),
             $this->params,
             [
-                'reservations' => $resas_en_attente
+                'reservations' => $resas_en_attente,
             ]
         ));
+    }
+
+    #[Route('/validation/vehicules', name: 'vehicules', methods: ['POST'])]
+    public function vehicules(ManagerRegistry $doctrine, RequestStack $requestStack)
+    {
+        $data = (array) json_decode($this->request->getContent());
+        $id = $data['id'];
+        $em = $doctrine->getManager();
+
+        $vl_equiv = $em
+            ->getRepository(Vehicule::class)
+            ->getVehiculeEquiv($id);
+
+        if ($this->getParameter('app.env') == 'dev')
+            sleep(seconds: 1.5);
+
+        return $this->json([
+            'vl' => $vl_equiv
+        ]);
     }
 
     #[Route('/validation/valid', name: 'valid', methods: ['POST'])]
@@ -87,6 +107,40 @@ class ValidationController extends AbstractController
             ->findOneBy(['id' => $id]);
 
         $reservation->setStatut($statut_valide);
+        $em->persist($reservation);
+        $em->flush();
+
+        return $this->json([
+            'id' => $reservation->getId(),
+            'statut' => $reservation->getStatut()->getCode()
+        ]);
+    }
+
+    #[Route('/validation/modif', name: 'modif', methods: ['POST'])]
+    public function modif(ManagerRegistry $doctrine, RequestStack $requestStack)
+    {
+        $data = (array) json_decode($this->request->getContent());
+        $id = $data['id'];
+        $vehicule_id = $data['vl'];
+        $em = $doctrine->getManager();
+
+        if ($this->getParameter('app.env') == 'dev')
+            sleep(seconds: 1.5);
+
+        $statut_valide = $em
+            ->getRepository(StatutReservation::class)
+            ->findOneBy(['code' => 'Confirmée']);
+
+        $vl = $em
+            ->getRepository(Vehicule::class)
+            ->findOneBy(['id' => $vehicule_id]);
+
+        $reservation = $em->getRepository(Reservation::class)
+            ->findOneBy(['id' => $id]);
+
+        $reservation->setStatut($statut_valide);
+        $reservation->setVehicule($vl);
+
         $em->persist($reservation);
         $em->flush();
 

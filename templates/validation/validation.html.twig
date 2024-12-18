@@ -93,7 +93,7 @@
                 {% if (vehicule.motorisation ~ vehicule.finition) is empty %}
                   <br/>
                 {% else %}
-                  <dd>
+                  <dd class="motorisation">
                     {{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
                   </dd>
                 {% endif %}
@@ -111,7 +111,7 @@
                     </li>
                   </ul>
                 </dd>
-                <dd title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
+                <dd class="nb-places" title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
                   {% for i in range(1, vehicule.NbPlaces) %}
                     <i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
                   {% endfor %}
@@ -152,7 +152,7 @@
               </button>
             </li>
             <li class="center">
-              <button class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-ball-pen-line">
+              <button data-fr-opened="false" data-id="{{ reservation.id }}" aria-controls="fr-modal-modification" class="modif-resa fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-ball-pen-line">
                 Modifier
                 <span class="hide-m hide-l hide-xl">
                   .
@@ -160,7 +160,7 @@
               </button>
             </li>
             <li class="center">
-              <button data-id="{{ reservation.id }}" class="valid-resa fr-btn fr-btn--primary fr-btn--icon-left fr-icon-checkbox-circle-line">
+              <button data-fr-opened="false" data-id="{{ reservation.id }}" aria-controls="fr-modal-confirmation" class="valid-resa fr-btn fr-btn--primary fr-btn--icon-left fr-icon-checkbox-circle-line">
                 Valider
               </button>
             </li>
@@ -196,34 +196,30 @@
       </div>
     {% endfor %}
 
-    {# MODALE DE SUPPRESSION #}
-    <dialog aria-labelledby="fr-modal-suppression-title" id="fr-modal-suppression" class="fr-modal" role="dialog">
+    {# MODALE DE CONFIRMATION #}
+    <dialog aria-labelledby="fr-modal-confirmation-title" id="fr-modal-confirmation" class="fr-modal" role="dialog">
       <div class="fr-container fr-container--fluid fr-container-md">
         <div class="fr-grid-row fr-grid-row--center">
           <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
             <div class="fr-modal__body">
               <div class="fr-modal__header">
-                <button class="fr-btn--close fr-btn" aria-controls="fr-modal-suppression">
+                <button class="fr-btn--close fr-btn" aria-controls="fr-modal-confirmation">
                   Fermer
                 </button>
               </div>
               <div class="fr-modal__content">
-                <h1 id="fr-modal-suppression-title" class="fr-modal__title">
+                <h1 id="fr-modal-confirmation-title" class="fr-modal__title">
                   <span class="fr-icon-arrow-right-line fr-icon--lg"></span>
                   Confirmation
                 </h1>
                 <p>
-                  En cliquant sur le bouton ci-dessous, vous confirmez l'annulation
-                  <span class="underline"><!--
-                  -->définitive<!--
-                  --></span>
-                  de la réservation.
+                  En cliquant sur le bouton ci-dessous, vous validez la réservation de cette utilisateur.
                 </p>
               </div>
               <div class="fr-modal__footer">
                 <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-                  <button id="annul-resa--confirm" class="fr-btn fr-icon-delete-line fr-btn--icon-left fr-btn--secondary">
-                    Je confirme l'annulation de cette réservation
+                  <button id="valid-resa--confirm" class="fr-btn fr-icon-delete-line fr-btn--icon-left fr-btn--secondary">
+                    Je valide cette réservation
                   </button>
                 </div>
               </div>
@@ -232,7 +228,94 @@
         </div>
       </div>
     </dialog>
-  {# FIN MODALE DE SUPPRESSION #}
+    {# FIN MODALE DE CONFIRMATION #}
 
-  {% endblock %}
-  
+    {# MODALE DE MODIFICATION #}
+    <dialog aria-labelledby="fr-modal-modification-title" id="fr-modal-modification" class="fr-modal" role="dialog">
+      <div class="fr-container fr-container--fluid fr-container-md">
+        <div class="fr-grid-row fr-grid-row--center">
+          <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+            <div class="fr-modal__body">
+              <div class="fr-modal__header">
+                <button class="fr-btn--close fr-btn" aria-controls="fr-modal-modification">
+                  Fermer
+                </button>
+              </div>
+              <div class="fr-modal__content">
+                <h1 id="fr-modal-modification-title" class="fr-modal__title">
+                  <span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+                  Confirmation
+                </h1>
+                <p>
+                  Vous souhaitez modifier la réservation de cette utilisateur.
+                  <br>
+                    Sélectionnez un véhicule similaire à celui demandé par l'utilisateur,
+                    en tenant compte du nombre de places assises et éventuellement de la présence, ou non, d'une sérigraphié sur le véhicule.
+                  </p>
+
+                  <div class="fr-select-group fr-select-group">
+                    <label class="fr-label" for="vl-remplacement">
+                      Sélectionnez un véhicule de remplacement
+                    </label>
+                    <select class="fr-select" id="vl-remplacement" name="vl-remplacement">
+                      <option value="" selected>
+                        Recherche de véhicule de remplacement en cours...
+                      </option>
+                    </select>
+                  </div>
+
+                </div>
+                <div class="fr-modal__footer">
+                  <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+                    <button disabled id="modif-resa--confirm" class="fr-btn fr-icon-ball-pen-line fr-btn--icon-left fr-btn--secondary">
+                      Je confirme la modification
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </dialog>
+      {# FIN MODALE DE MODIFICATION #}
+
+      {# MODALE DE SUPPRESSION #}
+      <dialog aria-labelledby="fr-modal-suppression-title" id="fr-modal-suppression" class="fr-modal" role="dialog">
+        <div class="fr-container fr-container--fluid fr-container-md">
+          <div class="fr-grid-row fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+              <div class="fr-modal__body">
+                <div class="fr-modal__header">
+                  <button class="fr-btn--close fr-btn" aria-controls="fr-modal-suppression">
+                    Fermer
+                  </button>
+                </div>
+                <div class="fr-modal__content">
+                  <h1 id="fr-modal-suppression-title" class="fr-modal__title">
+                    <span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+                    Confirmation
+                  </h1>
+                  <p>
+                    En cliquant sur le bouton ci-dessous, vous confirmez l'annulation
+                    <span class="underline"><!--
+                    -->définitive<!--
+                    --></span>
+                    de la réservation.
+                  </p>
+                </div>
+                <div class="fr-modal__footer">
+                  <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+                    <button id="annul-resa--confirm" class="fr-btn fr-icon-delete-line fr-btn--icon-left fr-btn--secondary">
+                      Je confirme l'annulation de cette réservation
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </dialog>
+    {# FIN MODALE DE SUPPRESSION #}
+
+    {% endblock %}
+    
