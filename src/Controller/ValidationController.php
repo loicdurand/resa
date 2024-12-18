@@ -81,8 +81,8 @@ class ValidationController extends AbstractController
             ->getRepository(Vehicule::class)
             ->getVehiculeEquiv($id);
 
-        if ($this->getParameter('app.env') == 'dev')
-            sleep(seconds: 1.5);
+        // if ($this->getParameter('app.env') == 'dev')
+        //     sleep(seconds: 1.5);
 
         return $this->json([
             'vl' => $vl_equiv

@@ -29,7 +29,7 @@ class VehiculeRepository extends ServiceEntityRepository
             ->findOneBy(['id' => $reservation_id]);
 
         $vl = $resa->getVehicule();
-        $vl_id = $vl->getId();
+        $immat = $vl->getImmatriculation();
         $nb_places = $vl->getNbPlaces();
         $serigraphie = intval($vl->isSerigraphie());
         $debut = $resa->getDateDebut()->format('Y-m-d') . ' ' . $resa->getHeureDebut();
@@ -46,22 +46,30 @@ class VehiculeRepository extends ServiceEntityRepository
                 c.code as carburant
             FROM
                 vehicule v
-            JOIN reservation r ON
-                v.id = r.vehicule_id
+            LEFT JOIN reservation r ON v.id = r.vehicule_id
+            LEFT JOIN statut_reservation s ON r.statut_id = s.id
             JOIN transmission_vehicule t ON v.transmission_id = t.Id
             JOIN carburant_vehicule c ON v.carburant_id = c.id
-            JOIN statut_reservation s ON r.statut_id = s.id
-            WHERE
-                v.id != $vl_id
+            WHERE(
+                v.immatriculation != "$immat"
             AND
                 v.nb_places >= $nb_places
             AND
                 v.serigraphie = $serigraphie
-            AND
-                "$debut" NOT BETWEEN CONCAT(CONCAT(r.date_debut, ' '), r.heure_debut) AND CONCAT(CONCAT(r.date_fin, ' '), r.heure_fin)
-            AND
-                "$fin" NOT BETWEEN CONCAT(CONCAT(r.date_debut, ' '), r.heure_debut) AND CONCAT(CONCAT(r.date_fin, ' '), r.heure_fin)
-            OR s.code = 'Annulée';
+            )
+            AND (
+                (r.id IS NULL OR s.code = 'Annulée')
+                OR (
+                    (
+                        "$debut" NOT BETWEEN CONCAT(CONCAT(r.date_debut, ' '), r.heure_debut) AND CONCAT(CONCAT(r.date_fin, ' '), r.heure_fin)
+                    AND
+                        "$fin" NOT BETWEEN CONCAT(CONCAT(r.date_debut, ' '), r.heure_debut) AND CONCAT(CONCAT(r.date_fin, ' '), r.heure_fin)
+                    )
+                    OR s.code != 'Annulée'
+                )
+            )
+            GROUP BY v.id
+            ;
 SQL;
 
         $stmt = $this->conn->prepare($sql);
