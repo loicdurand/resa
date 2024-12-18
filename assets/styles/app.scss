@@ -2,6 +2,8 @@
 @use "./accueil";
 @use "./reserver";
 @use "./historique";
+@use "./compte";
+@use "./validation";
 
 // @font-face {
 // 	font-family: "Raleway";
@@ -15,7 +17,6 @@
 // }
 
 body.container .debug {
-    display: none;
     z-index: 2;
     position: fixed;
     bottom: 6px;
@@ -60,6 +61,10 @@ body.container .debug {
 body.container .fr-tags-group .fr-tag {
     background: var(--indigo-6);
     color: var(--grey-0);
+}
+
+table th, table td{
+    text-align: center !important;
 }
 
 /* FOOTER */

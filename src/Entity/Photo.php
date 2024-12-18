@@ -15,27 +15,42 @@ class Photo
 
     #[ORM\ManyToOne(inversedBy: 'photos')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Vehicule $vehicule_id = null;
+    private ?Vehicule $vehicule = null;
+
+    #[ORM\Column(length: 25)]
+    private ?string $path = null;
 
     #[ORM\Column(length: 25, nullable: true)]
     private ?string $position = null;
 
-    #[ORM\Column(length: 25)]
-    private ?string $nom = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $principale = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getVehiculeId(): ?Vehicule
+    public function getVehicule(): ?Vehicule
     {
-        return $this->vehicule_id;
+        return $this->vehicule;
     }
 
-    public function setVehiculeId(?Vehicule $vehicule_id): static
+    public function setVehicule(?Vehicule $vehicule): static
     {
-        $this->vehicule_id = $vehicule_id;
+        $this->vehicule = $vehicule;
+
+        return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setPath(string $path): static
+    {
+        $this->path = $path;
 
         return $this;
     }
@@ -52,14 +67,14 @@ class Photo
         return $this;
     }
 
-    public function getNom(): ?string
+    public function getPrincipale(): ?int
     {
-        return $this->nom;
+        return $this->principale;
     }
 
-    public function setNom(string $nom): static
+    public function setPrincipale(?int $principale): static
     {
-        $this->nom = $nom;
+        $this->principale = $principale;
 
         return $this;
     }

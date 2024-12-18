@@ -47,7 +47,7 @@ class AccueilController extends AbstractController
 
         $vehicules = $this->em
             ->getRepository(Vehicule::class)
-            ->findAll();
+            ->findAll(); 
 
         $categories = [];
         $transmissions = [];
@@ -176,7 +176,7 @@ class AccueilController extends AbstractController
             ->findAll();
 
         $resa = new Reservation();
-        $resa->setUser('00249205');
+        $resa->setUser($this->params['nigend']);
         $resa->setVehicule($vehicule);
         $resa->setStatut($statut_resa_en_attente);
 
@@ -246,7 +246,6 @@ class AccueilController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
-                'app.dev_nigend_default'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));

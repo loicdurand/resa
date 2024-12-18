@@ -12,7 +12,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 use App\Entity\Role;
 use App\Entity\Action;
+use App\Entity\Atelier;
+use App\Entity\HoraireOuverture;
 use App\Entity\Permission;
+
+use App\Form\HoraireOuvertureType;
 
 
 class CompteController extends AbstractController
@@ -21,7 +25,7 @@ class CompteController extends AbstractController
     private $requestStack, $session;
     public $params, $request;
 
-    public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine)
+    public function __construct(RequestStack $requestStack)
     {
         $this->request = Request::createFromGlobals();
         $this->requestStack = $requestStack;
@@ -34,7 +38,7 @@ class CompteController extends AbstractController
         ];
     }
 
-    #[Route('/compte')]
+    #[Route('/compte', name: 'compte')]
     public function compte(ManagerRegistry $doctrine, RequestStack $requestStack): Response
     {
         if (is_null($this->params['nigend']))
@@ -59,12 +63,76 @@ class CompteController extends AbstractController
             ->getRepository(Role::class)
             ->findAll();
 
+        $unite =  $em
+            ->getRepository(Atelier::class)
+            ->findOneBy(['code_unite' => $this->params['unite']]);
+
+        // GESTION DES HORAIRES - RÉSERVÉ AU CSAG
+        $role = $em
+            ->getRepository(Role::class)
+            ->findOneBy(['nom' => $this->params['profil']]);
+        $action = $em
+            ->getRepository(Action::class)
+            ->findOneBy(['nom' => 'GERER_HORAIRES']);
+        $permission = $em
+            ->getRepository(Permission::class)
+            ->findOneBy([
+                'role' => $role->getId(),
+                'action' => $action->getId()
+            ]);
+
+        $action_params = [
+            'roles' => $roles,
+        ];
+
+        if (!is_null($permission)) {
+            $horaires = $unite->getHorairesOuverture();
+            $horaire = new HoraireOuverture();
+            $horaire->setCodeUnite($unite);
+            $form = $this->createForm(HoraireOuvertureType::class, $horaire);
+
+            $form->handleRequest($this->request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $data = $form->getData();
+                $exists = false;
+
+                foreach ($horaires as $h) {
+                    if (
+                        $data->getCodeUnite() === $h->getCodeUnite() &&
+                        $data->getJour() === $h->getJour() &&
+                        $data->getCreneau() === $h->getCreneau()
+                    ) {
+                        $exists = true;
+                        if (is_null($data->getDebut())) {
+                            $em->remove($h);
+                        } else {
+                            $h->setDebut($data->getDebut());
+                            $h->setFin($data->getFin());
+                            $em->persist($h);
+                        }
+                        $em->flush();
+                    }
+                }
+
+                if (!$exists) {
+                    if (is_null($data->getDebut()))
+                        $em->remove($h);
+                    else
+                        $em->persist($data);
+                    $em->flush();
+                }
+
+                return $this->redirectToRoute('compte');
+            }
+
+            $action_params['form'] = $form;
+            $action_params['horaires'] = $horaires;
+        }
+
         return $this->render('compte/compte.html.twig', array_merge(
             $this->getAppConst(),
             $this->params,
-            [
-                'roles' => $roles,
-            ]
+            $action_params
         ));
     }
 
@@ -89,7 +157,6 @@ class CompteController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
-                'app.dev_nigend_default'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));

@@ -7,22 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\Role;
-use App\Entity\Action;
-use App\Entity\CarburantVehicule;
-use App\Entity\CategorieVehicule;
-use App\Entity\GenreVehicule;
-use App\Entity\HoraireOuverture;
-use App\Entity\Permission;
-use App\Entity\StatutReservation;
-use App\Entity\TransmissionVehicule;
-use App\Entity\Vehicule;
-use App\Form\ReservationType;
-use App\Form\VehiculeType;
-use Doctrine\Common\Collections\Collection;
-use phpDocumentor\Reflection\Types\Boolean;
-use PhpParser\Node\Expr\Cast\Array_;
-use PhpParser\Node\Expr\Cast\Object_;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -115,7 +100,6 @@ class HistoriqueController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
-                'app.dev_nigend_default'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));

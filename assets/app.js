@@ -14,8 +14,14 @@ new Router('/', {
   '/reserver': () => {
     import('./js/accueil/reserver/reserver');
   },
-  '/historique': () => {
-    import('./js/historique/historique');
+  '/parc': () => {
+    import('./js/parc/parc');
+  },
+  '/compte':()=>{
+    import('./js/compte/compte');
+  },
+  '/validation':()=>{
+    import('./js/compte/validation');
   },
   '^$': () => {
     import('./js/accueil/index/index');

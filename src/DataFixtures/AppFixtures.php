@@ -27,7 +27,7 @@ class AppFixtures extends Fixture
         $users = [
             ['249205', '86977', 'SOLC'],
             ['170044', '56751', 'CSAG'],
-            ['167194', '6768', 'CDT']
+            ['167194', '6768', 'VDT']
         ];
 
         foreach ($users as [$nigend, $code_unite, $profil]) {
@@ -50,13 +50,18 @@ class AppFixtures extends Fixture
                 'nom' => 'CSAG',
                 'libelle' => 'CSAG'
             ],
-            'CDT' => [
+            'VDT' => [
                 'ordre' => 300,
+                'nom' => 'VDT',
+                'libelle' => 'Validateur'
+            ],
+            'CDT' => [
+                'ordre' => 400,
                 'nom' => 'CDT',
                 'libelle' => 'Commandement'
             ],
             'USR' => [
-                'ordre' => 400,
+                'ordre' => 500,
                 'nom' => 'USR',
                 'libelle' => 'Utilisateur'
             ]
@@ -78,7 +83,7 @@ class AppFixtures extends Fixture
             [
                 'nom' => 'GERER_HORAIRES',
                 'libelle' => 'Gérer les horaires de l\'atelier',
-                'template' => null, //'horaires_atelier',
+                'template' => 'compte/gestion_horaires.html.twig', //'horaires_atelier',
                 'defaut' => ['CSAG']
             ],
             [
@@ -90,14 +95,14 @@ class AppFixtures extends Fixture
             [
                 'nom' => 'VALIDER_RESAS',
                 'libelle' => 'Valider les réservations de véhicules',
-                'template' => null, //'validation_reservation',
-                'defaut' => ['CSAG', 'CDT']
+                'template' => 'compte/valider_resas.html.twig', //'validation_reservation',
+                'defaut' => ['VDT']
             ],
             [
                 'nom' => 'RESERVER_VL',
                 'libelle' => 'Réserver un véhicule',
-                'template' => null, //'reservation_vehicule',
-                'defaut' => ['USR', 'CSAG', 'CDT', 'SOLC']
+                'template' => 'compte/reserver_vl.html.twig',
+                'defaut' => ['USR', 'CSAG', 'VDT', 'CDT', 'SOLC']
             ]
         ];
 
@@ -267,7 +272,8 @@ class AppFixtures extends Fixture
             ['En attente', 'En attente de validation hiérachique'],
             ['Confirmée', 'Réservation validée par la hiérarchie'],
             ['En cours', 'La réservation a débuté'],
-            ['Terminée', 'Réservation terminée']
+            ['Terminée', 'Réservation terminée'],
+            ['Annulée', 'Réservation annulée par la hiérachie']
         ];
 
         foreach ($types_resas as $index => [$code, $libelle]) {
@@ -282,11 +288,13 @@ class AppFixtures extends Fixture
         };
 
         $vls = [
-            [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'AB-123-CD', 0],
-            [$genrs[1], $cats[0], $carbs[1], $transms[0], 'MERCEDES', 'GLA', '200 CDI', 'ELEGANCE', '2025-03-11', 5, 'AB-123-CE', 0],
-            [$genrs[1], $cats[0], $carbs[0], $transms[1], 'RENAULT', 'Clio', '1.0 SCe 60', null, '2024-12-11', 5, 'AB-123-CF', 1],
-            [$genrs[1], $cats[1], $carbs[1], $transms[0], 'BMW', 'X4', '30D', null, '2025-07-12', 4, 'AB-123-CG', 0],
-            [$genrs[0], $cats[2], $carbs[1], $transms[1], 'RENAULT', 'Master', null, null, '2025-03-06', 3, 'AB-123-CH', 0]
+            [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'GS-517-PF', 0],
+            [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 3, 'GY-057-GF', 0],
+            [$genrs[1], $cats[1], $carbs[1], $transms[0], 'BMW', 'X4', '30D', null, '2025-07-12', 4, 'GL-146-SZ', 0],
+            [$genrs[1], $cats[1], $carbs[1], $transms[0], 'HYUNDAI', 'Sante Fe', null, null, '2025-07-12', 7, 'WW-682-LV', 0],
+            [$genrs[1], $cats[0], $carbs[1], $transms[0], 'CITROËN', 'Berlingo', null, null, '2025-03-11', 5, 'CD-943-AR', 0],
+            [$genrs[1], $cats[0], $carbs[0], $transms[1], 'PEUGEOT', 'Partner', null, null, '2024-12-11', 2, 'AD-089-FR', 1],
+            [$genrs[0], $cats[2], $carbs[1], $transms[1], 'BMW', 'X1', null, null, '2025-03-06', 5, 'EA-125-NP', 0]
         ];
 
         $from = new \DateTime('now');
@@ -316,5 +324,4 @@ class AppFixtures extends Fixture
             $manager->flush();
         }
     }
-
 }

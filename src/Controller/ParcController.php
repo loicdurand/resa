@@ -28,8 +28,6 @@ class ParcController extends AbstractController
 
     public function __construct(RequestStack $requestStack)
     {
-        $this->setAppConst();
-
         $this->request = Request::createFromGlobals();
         $this->requestStack = $requestStack;
         $this->session = $this->requestStack->getSession();
@@ -44,7 +42,7 @@ class ParcController extends AbstractController
     }
 
 
-    #[Route('/parc/', name: 'parc')]
+    #[Route('/parc', name: 'parc')]
     public function afficher(ManagerRegistry $doctrine): Response
     {
         if (is_null($this->params['nigend']))
@@ -69,11 +67,11 @@ class ParcController extends AbstractController
     }
 
     #[Route('/parc/ajouter')]
-    public function ajouter(?Vehicule $vehicule, Request $request, ManagerRegistry $doctrine): Response
+    public function ajouter(ManagerRegistry $doctrine): Response
     {
         if (is_null($this->params['nigend']))
             return $this->redirectToRoute('login');
-        
+
         $this->setAppConst();
 
         $em = $doctrine->getManager();
@@ -119,7 +117,78 @@ class ParcController extends AbstractController
             $this->getAppConst(),
             $this->params,
             [
-                'form' => $form
+                'form' => $form,
+                'action' => 'ajouter'
+            ]
+        ));
+    }
+
+    #[Route('/parc/modifier/{vehicule_id}')]
+    public function modifier(string $vehicule_id, ManagerRegistry $doctrine): Response
+    {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
+        $this->setAppConst();
+
+        $em = $doctrine->getManager();
+
+        $vl = $em
+            ->getRepository(Vehicule::class)
+            ->findOneBy(['id' => $vehicule_id]);
+
+        $form = $this->createForm(VehiculeType::class, $vl);
+
+        $form->handleRequest($this->request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $vehicule = $form->getData();
+            $em->persist($vehicule);
+            $em->flush();
+
+            return $this->redirectToRoute('parc');
+        }
+
+        return $this->render('parc/ajouter.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'form' => $form,
+                'action' => 'modifier'
+            ]
+        ));
+    }
+
+    #[Route('/parc/supprimer/{vehicule_id}')]
+    public function supprimer(string $vehicule_id, ManagerRegistry $doctrine): Response
+    {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
+        $this->setAppConst();
+
+        $em = $doctrine->getManager();
+
+        $vl = $em
+            ->getRepository(Vehicule::class)
+            ->findOneBy(['id' => $vehicule_id]);
+
+        $form = $this->createForm(VehiculeType::class, $vl, ['disabled' => true]);
+
+        $form->handleRequest($this->request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $vehicule = $form->getData();
+            $em->remove($vehicule);
+            $em->flush();
+
+            return $this->redirectToRoute('parc');
+        }
+
+        return $this->render('parc/ajouter.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'form' => $form,
+                'action' => 'supprimer'
             ]
         ));
     }
@@ -145,7 +214,6 @@ class ParcController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
-                'app.dev_nigend_default'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
