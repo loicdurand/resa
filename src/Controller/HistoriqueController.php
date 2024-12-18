@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -15,8 +14,10 @@ class HistoriqueController extends AbstractController
 {
     private $app_const;
     private $em;
-    private $requestStack, $session;
-    public $request, $params;
+    private $requestStack;
+    private $session;
+    public $request;
+    public $params;
 
     public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine)
     {
@@ -36,8 +37,9 @@ class HistoriqueController extends AbstractController
     #[Route(path: '/historique/confirmation', name: 'success')]
     public function confirmation(): Response
     {
-        if (is_null($this->params['nigend']))
+        if (is_null($this->params['nigend'])) {
             return $this->redirectToRoute('login');
+        }
 
         $this->setAppConst();
 
@@ -59,8 +61,9 @@ class HistoriqueController extends AbstractController
     #[Route(path: '/historique', name: 'historique')]
     public function historique(): Response
     {
-        if (is_null($this->params['nigend']))
+        if (is_null($this->params['nigend'])) {
             return $this->redirectToRoute('login');
+        }
 
         $this->setAppConst();
 

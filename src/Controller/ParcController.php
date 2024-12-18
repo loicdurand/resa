@@ -48,7 +48,7 @@ class ParcController extends AbstractController
         if (is_null($this->params['nigend']))
             return $this->redirectToRoute('login');
 
-        $this->setAppConst();
+        $this->setAppConst(); 
 
         $em = $doctrine->getManager();
         $vehicules = $em

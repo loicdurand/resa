@@ -164,8 +164,9 @@ class AppFixtures extends Fixture
             $entity->setOrdre($ordre);
             $manager->persist($entity);
             $manager->flush();
-            if ($code === 'CTTE' || $code === 'VP')
+            if ($code === 'CTTE' || $code === 'VP') {
                 $genrs[] = $entity;
+            }
         }
 
         $categories = [

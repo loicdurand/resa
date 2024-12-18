@@ -1,29 +1,29 @@
 <?php
+
 // src/Controller/LuckyController.php
+
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-
 use App\Entity\Role;
 use App\Entity\Action;
 use App\Entity\Atelier;
 use App\Entity\HoraireOuverture;
 use App\Entity\Permission;
-
 use App\Form\HoraireOuvertureType;
-
 
 class CompteController extends AbstractController
 {
     private $app_const;
-    private $requestStack, $session;
-    public $params, $request;
+    private $requestStack;
+    private $session;
+    public $params;
+    public $request;
 
     public function __construct(RequestStack $requestStack)
     {
@@ -41,8 +41,9 @@ class CompteController extends AbstractController
     #[Route('/compte', name: 'compte')]
     public function compte(ManagerRegistry $doctrine, RequestStack $requestStack): Response
     {
-        if (is_null($this->params['nigend']))
+        if (is_null($this->params['nigend'])) {
             return $this->redirectToRoute('login');
+        }
 
         $this->setAppConst();
 
@@ -115,10 +116,11 @@ class CompteController extends AbstractController
                 }
 
                 if (!$exists) {
-                    if (is_null($data->getDebut()))
+                    if (is_null($data->getDebut())) {
                         $em->remove($h);
-                    else
+                    } else {
                         $em->persist($data);
+                    }
                     $em->flush();
                 }
 

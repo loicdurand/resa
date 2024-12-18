@@ -26,7 +26,8 @@
 				</li>
 				<li>
 					<a	class="fr-breadcrumb__link"	aria-current="page">
-					{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }} un véhicule
+						{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }}
+						un véhicule
 					</a>
 				</li>
 			</ol>
@@ -83,67 +84,92 @@
 
 			{{ form_rest(form) }}
 
-			<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
-				{% if(action == 'ajouter') %}
+			<div	class="fr-grid-row fr-mt-2w">
+				<div	class="fr-col-6">
+					<div	class="fr-upload-group">
+						<label	class="fr-label"	for="file-upload">
+							Ajouter des images
+							<span	class="fr-hint-text">
+								Taille maximale : 10 Mo. Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles.
+							</span>
+						</label>
+						<input	class="fr-upload"	type="file"	id="file-upload"	multiple	name="file-upload"></div>
+					</div>
+					<div	class="fr-col-6">
+						<div	class="qr-ctnr">
+							<figure>
+								<img height="100"	src="{{ qr_code_url('http://192.168.1.75/parc/ajouter') }}" />
+								<figcaption>
+									Ajouter des images depuis mon Néo
+								</figcaption>
+							</figure>
+						</div>
+					</div>
+				</div>
+
+				<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
+					{% if(action == 'ajouter') %}
+						<li>
+							<!-- Bouton d'ouverture de la modale -->
+							<button	class="fr-btn fr-btn--secondary"	data-fr-opened="false"	aria-controls="fr-modal--reset-ajouter">
+								Réinitialiser le formulaire
+							</button>
+
+						</li>
+					{% endif %}
+
 					<li>
-						<!-- Bouton d'ouverture de la modale -->
-						<button	class="fr-btn fr-btn--secondary"	data-fr-opened="false"	aria-controls="fr-modal--reset-ajouter">
-							Réinitialiser le formulaire
+						<button	type="submit"	class="fr-btn">
+							{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }}
+							le véhicule
 						</button>
-
 					</li>
-				{% endif %}
 
-				<li>
-					<button	type="submit"	class="fr-btn">
-					{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }} le véhicule
-					</button>
-				</li>
+				</ul>
 
-			</ul>
+			</div>
 
 		</div>
 
-	</div>
+		{{ form_end(form) }}
 
-	{{ form_end(form) }}
-
-	{# MODALE DE CONFIRMATION DE RÉINITIALISATION DU FORMULAIRE #}
-	<dialog	aria-labelledby="fr-modal--reset-ajouter-title"	id="fr-modal--reset-ajouter"	class="fr-modal"	role="dialog">
-		<div	class="fr-container fr-container--fluid fr-container-md">
-			<div	class="fr-grid-row fr-grid-row--center">
-				<div	class="fr-col-12 fr-col-md-8 fr-col-lg-6">
-					<div	class="fr-modal__body">
-						<div	class="fr-modal__header">
-							<button	class="fr-btn--close fr-btn"	aria-controls="fr-modal--reset-ajouter">
-								Fermer
-							</button>
-						</div>
-						<div	class="fr-modal__content">
-							<h1	id="fr-modal--reset-ajouter-title"	class="fr-modal__title">
-								<span	class="fr-icon-arrow-right-line fr-icon--lg"></span>
-								Confirmer
-							</h1>
-							<p>
-								Vous allez réinitialiser le formulaire.
-								<br/>
-								Tous les champs remplis précédemment vont être effacés.
-								<br/>
-								Cliquez sur le bouton ci-dessous pour confirmer cette action.
-							</p>
-						</div>
-						<div	class="fr-modal__footer">
-							<div	class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-								<button	type="reset"	class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary"	aria-controls="fr-modal--reset-ajouter">
-									Réinitialiser le formulaire
+		{# MODALE DE CONFIRMATION DE RÉINITIALISATION DU FORMULAIRE #}
+		<dialog	aria-labelledby="fr-modal--reset-ajouter-title"	id="fr-modal--reset-ajouter"	class="fr-modal"	role="dialog">
+			<div	class="fr-container fr-container--fluid fr-container-md">
+				<div	class="fr-grid-row fr-grid-row--center">
+					<div	class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+						<div	class="fr-modal__body">
+							<div	class="fr-modal__header">
+								<button	class="fr-btn--close fr-btn"	aria-controls="fr-modal--reset-ajouter">
+									Fermer
 								</button>
+							</div>
+							<div	class="fr-modal__content">
+								<h1	id="fr-modal--reset-ajouter-title"	class="fr-modal__title">
+									<span	class="fr-icon-arrow-right-line fr-icon--lg"></span>
+									Confirmer
+								</h1>
+								<p>
+									Vous allez réinitialiser le formulaire.
+									<br/>
+									Tous les champs remplis précédemment vont être effacés.
+									<br/>
+									Cliquez sur le bouton ci-dessous pour confirmer cette action.
+								</p>
+							</div>
+							<div	class="fr-modal__footer">
+								<div	class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+									<button	type="reset"	class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary"	aria-controls="fr-modal--reset-ajouter">
+										Réinitialiser le formulaire
+									</button>
 
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</dialog>
+		</dialog>
 
-{% endblock %}
+	{% endblock %}
+	
