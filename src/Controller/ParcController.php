@@ -26,11 +26,19 @@ use App\Form\VehiculeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+use Imagine\Gd\Imagine;
+use Imagine\Image\Box;
+
 class ParcController extends AbstractController
 {
     private $app_const;
     private $requestStack, $session;
     public $params, $request;
+
+    private const MAX_WIDTH = 640;
+    private const MAX_HEIGHT = 480;
+
+    private $imagine;
 
     public function __construct(RequestStack $requestStack)
     {
@@ -45,6 +53,8 @@ class ParcController extends AbstractController
             'unite' => $this->session->get('HTTP_UNITE'),
             'profil' => $this->session->get('HTTP_PROFIL')
         ];
+
+        $this->imagine = new Imagine();
     }
 
 
@@ -136,8 +146,9 @@ class ParcController extends AbstractController
     public function upload(
         ManagerRegistry $doctrine,
         SluggerInterface $slugger,
-        #[Autowire('%kernel.project_dir%/public/uploads/photos')] string $photosDirectory
+        #[Autowire('%kernel.project_dir%/assets/images/uploads')] string $photosDirectory
     ): Response {
+
         $this->setAppConst();
 
         $vehicule_id = $this->request->get('vehicule');
@@ -158,11 +169,13 @@ class ParcController extends AbstractController
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 /** @var UploadedFile $photoFile */
-                $photos = $form->get('photo')->getData();
+
+                $photos = $form->get('photos')->getData();
 
                 foreach ($photos as $photoFile) {
 
                     if ($photoFile) {
+
                         $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
                         $safeFilename = substr($slugger->slug($originalFilename), 0, 20);
                         $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
@@ -171,9 +184,16 @@ class ParcController extends AbstractController
                         } catch (FileException $e) {
                         }
 
+                        // try {
+                        //     $this->resize($photosDirectory . '/' . $newFilename);
+                        // } catch (\Throwable $th) {
+                        //     //throw $th;
+                        // }
+
                         $photo = new Photo();
                         $photo->setVehicule($vehicule);
                         $photo->setPath($newFilename);
+
                         $em->persist($photo);
                         $em->flush();
                     }
@@ -226,7 +246,8 @@ class ParcController extends AbstractController
             $this->params,
             [
                 'form' => $form,
-                'action' => 'modifier'
+                'action' => 'modifier',
+                'vehicule_id' => $vehicule_id
             ]
         ));
     }
@@ -292,5 +313,21 @@ class ParcController extends AbstractController
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
+    }
+
+    private function resize(string $filename): void
+    {
+        list($iwidth, $iheight) = getimagesize($filename);
+        $ratio = $iwidth / $iheight;
+        $width = self::MAX_WIDTH;
+        $height = self::MAX_HEIGHT;
+        if ($width < $height) {
+            $width = $height * $ratio;
+        } else {
+            $width = $height / $ratio;
+        }
+
+        $photo = $this->imagine->open($filename);
+        $photo->resize(new Box($width, $height))->save($filename);
     }
 }

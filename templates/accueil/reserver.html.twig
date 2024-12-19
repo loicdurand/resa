@@ -179,45 +179,54 @@
   <div id="fiche-vehicule" class="cs-fiche-vehicule">
 
     {# GALLERIE #}
-    <div class="cs-gallerie fr-grid-row fr-grid-row--gutters">
-      {# vue principale #}
-      <figure class="fr-col-9">
-        <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img cs-figure cs-figure--main" alt="Vue principale du véhicule">
-          <figcaption class="hidden">
-            Vue principale du véhicule
-          </figcaption>
-        </figure>
+    {% set len = vehicule.photos|length %}
 
-        {# vue de profil #}
-        <div class="fr-col-3 fr-mt-1w">
-          <figure class="cs-figure">
-            <button class="fr-btn cs-gallerie-btn">
-              <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de l'avant du véhicule"></button>
-              <figcaption class="hidden">
-                Vue de profil du véhicule
-              </figcaption>
-            </figure>
+      <div	class="cs-gallerie fr-grid-row fr-grid-row--gutters">
+        {# vue principale #}
+        <figure	class="fr-col-{{ len <= 1 ? '12' : len == 2 ? '6' : '9' }}">
+          <img	src="{{ len > 0 ?  asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}"	class="fr-responsive-img cs-figure cs-figure--main"	alt="Vue principale du véhicule">
+            <figcaption	class="hidden">
+              Vue principale du véhicule
+            </figcaption>
+          </figure>
 
-            {# vue de l'avant #}
-            <figure class="cs-figure">
-              <button class="fr-btn cs-gallerie-btn">
-                <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de l'avant du véhicule"></button>
-                <figcaption class="hidden">
-                  Vue de l'avant du véhicule
-                </figcaption>
-              </figure>
-
-              {# vue de l'arrière #}
-              <figure class="cs-figure">
-                <button class="fr-btn cs-gallerie-btn">
-                  <img src="{{ asset('images/4L.jpg') }}" class="fr-responsive-img" alt="Vue de l'arrière du véhicule"></button>
-                  <figcaption class="hidden">
-                    Vue de l'arrière du véhicule
+          {# vue de profil #}
+          {% if(len > 1) %}
+            <div	class="fr-col-{{ len == 2 ? '6' : '3 fr-mt-1w' }}">
+              <figure	class="cs-figure">
+                <button	class="fr-btn cs-gallerie-btn">
+                  <img	src="{{ asset('images/uploads/' ~ vehicule.photos[1].path) }}"	class="fr-responsive-img"	alt="Vue de l'avant du véhicule"></button>
+                  <figcaption	class="hidden">
+                    Vue de profil du véhicule
                   </figcaption>
                 </figure>
+
+                {# vue de l'avant #}
+                {% if(len > 2) %}
+                  <figure	class="cs-figure">
+                    <button	class="fr-btn cs-gallerie-btn">
+                      <img	src="{{ asset('images/uploads/' ~ vehicule.photos[2].path) }}"	class="fr-responsive-img"	alt="Vue de l'avant du véhicule"></button>
+                      <figcaption	class="hidden">
+                        Vue de l'avant du véhicule
+                      </figcaption>
+                    </figure>
+                  {% endif %}
+
+                  {# vue de l'arrière #}
+                  {% if(len > 3) %}
+                    <figure	class="cs-figure">
+                      <button	class="fr-btn cs-gallerie-btn">
+                        <img	src="{{ asset('images/uploads/' ~ vehicule.photos[3].path) }}"	class="fr-responsive-img"	alt="Vue de l'arrière du véhicule"></button>
+                        <figcaption	class="hidden">
+                          Vue de l'arrière du véhicule
+                        </figcaption>
+                      </figure>
+                    {% endif %}
+                  </div>
+                {% endif %}
               </div>
-            </div>
-            {# FIN GALERIE #}
+
+              {# FIN GALERIE #}
 
             {# DESCRIPTION VL #}
             <dl class="fr-col-12">

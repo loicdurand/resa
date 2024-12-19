@@ -52,37 +52,43 @@
 	{% elseif (action=='modifier') %}
 		<p	class="fr-text--sm">
 			Le formulaire suivant permet de modifier les caractéristiques du véhicule sélectionné.
-		</p>
-	{% elseif (action=='supprimer') %}
-		<p	class="fr-text--sm">
-			Vous êtes sur le point de supprimer
-			<span	class="underline">
-				définitivement
-			</span>
-			le véhicule sélectionné.
-		</p>
-	{% endif %}
+			<br>
+				Cliquez sur ce lien pour
+				<a	class="fr-link bold" href="/parc/upload?vehicule={{ vehicule_id }}&action=modifier">
+				mettre à jour les photos
+				</a>
+				de ce véhicule.
+			</p>
+		{% elseif (action=='supprimer') %}
+			<p	class="fr-text--sm">
+				Vous êtes sur le point de supprimer
+				<span	class="underline">
+					définitivement
+				</span>
+				le véhicule sélectionné.
+			</p>
+		{% endif %}
 
-	{{ form_start(form) }}
+		{{ form_start(form) }}
 
-	<div	class="fr-container">
+		<div	class="fr-container">
 
-		<div	class="fr-mt-2w fr-grid-row fr-grid-row--gutters">
+			<div	class="fr-mt-2w fr-grid-row fr-grid-row--gutters">
 
-			<fieldset	class="fr-col-12 fr-col-sm-12 fr-fieldset"	id="checkboxes"	aria-labelledby="checkboxes-legend checkboxes-messages">
-				<legend	class="fr-fieldset__legend--regular fr-fieldset__legend"	id="checkboxes-legend">
-					Sérigraphie
-				</legend>
-				<div	class="fr-fieldset__element">
-					<div	class="fr-checkbox-group">
-						{{ form_widget(form.serigraphie) }}
-						{{ form_label(form.serigraphie) }}
-						<div	class="fr-messages-group"	id="checkboxes-1-messages"	aria-live="assertive"></div>
+				<fieldset	class="fr-col-12 fr-col-sm-12 fr-fieldset"	id="checkboxes"	aria-labelledby="checkboxes-legend checkboxes-messages">
+					<legend	class="fr-fieldset__legend--regular fr-fieldset__legend"	id="checkboxes-legend">
+						Sérigraphie
+					</legend>
+					<div	class="fr-fieldset__element">
+						<div	class="fr-checkbox-group">
+							{{ form_widget(form.serigraphie) }}
+							{{ form_label(form.serigraphie) }}
+							<div	class="fr-messages-group"	id="checkboxes-1-messages"	aria-live="assertive"></div>
+						</div>
 					</div>
-				</div>
-			</fieldset>
+				</fieldset>
 
-			{{ form_rest(form) }}
+				{{ form_rest(form) }}
 
 				<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
 					{% if(action == 'ajouter') %}
