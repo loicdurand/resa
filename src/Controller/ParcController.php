@@ -142,12 +142,14 @@ class ParcController extends AbstractController
 
         $vehicule_id = $this->request->get('vehicule');
         $action = $this->request->get('action');
+        $token = $this->request->get('token');
+
         $em = $doctrine->getManager();
         $vehicule = $em->getRepository(Vehicule::class)->findOneBy(['id' => $vehicule_id]);
 
         $random_hex = bin2hex(random_bytes(18));
-        $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/images-upload/';
-        $url = $baseurl . $random_hex;
+        $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/upload?vehicule=13&action=ajouter';
+        $url = $baseurl . '&token=' . $random_hex;
 
         $form = $this->createForm(PhotoType::class);
 
@@ -188,7 +190,8 @@ class ParcController extends AbstractController
                 'action' => $action,
                 'url' => $url,
                 'vehicule' => $vehicule,
-                'form' => $form
+                'form' => $form,
+                'token' => is_null($token) ? false : $token
             ]
         ));
     }
