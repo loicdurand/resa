@@ -84,29 +84,6 @@
 
 			{{ form_rest(form) }}
 
-			<div	class="fr-grid-row fr-mt-2w">
-				<div	class="fr-col-6">
-					<div	class="fr-upload-group">
-						<label	class="fr-label"	for="file-upload">
-							Ajouter des images
-							<span	class="fr-hint-text">
-								Taille maximale : 10 Mo. Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles.
-							</span>
-						</label>
-						<input	class="fr-upload"	type="file"	id="file-upload"	multiple	name="file-upload"></div>
-					</div>
-					<div	class="fr-col-6">
-						<div	class="qr-ctnr">
-							<figure>
-								<img height="100"	src="{{ qr_code_url('http://192.168.1.75/parc/ajouter') }}" />
-								<figcaption>
-									Ajouter des images depuis mon Néo
-								</figcaption>
-							</figure>
-						</div>
-					</div>
-				</div>
-
 				<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
 					{% if(action == 'ajouter') %}
 						<li>

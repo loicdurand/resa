@@ -21,3 +21,18 @@
 form[name="horaire_ouverture"] input {
   text-align: center;
 }
+
+.cs-qr-ctnr {
+  width: 100%;
+
+  & figure {
+    & img {
+      display: block;
+      margin: 0 auto;
+    }
+
+    & figcaption {
+      text-align: center;
+    }
+  }
+}

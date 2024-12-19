@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	{# Fil d'Arianne #}
+	<nav	role="navigation"	class="fr-breadcrumb"	aria-label="vous êtes ici :">
+		<button	class="fr-breadcrumb__button"	aria-expanded="false"	aria-controls="breadcrumb-1">
+			Voir le fil d’Ariane
+		</button>
+		<div	class="fr-collapse"	id="breadcrumb-1">
+			<ol	class="fr-breadcrumb__list">
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/">
+						Accueil
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/compte/">
+						Compte
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/parc/">
+						Parc
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/parc/">
+						{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }}
+						un véhicule
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	aria-current="page">
+						Ajouter des images
+					</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+
+	<h2	class="fr-mt-2w">
+		Ajouter des photographies
+	</h2>
+
+	<p	class="fr-text--sm">
+		Les photographies des véhicules rendent le site plus attrayant pour les utilisateurs, tout en les aider à se faire une idée du véhicule
+		qu'ils souhaitent réserver.
+	</p>
+
+	<p	class="bold">
+		Vous n'avez pas d'image du véhicule sur cet appareil?
+	</p>
+
+	<p>
+		Vous avez la possibilité de prendre le véhicule en photo
+		<span	class="bold">
+			à l'aide de votre téléphone Néogend
+		</span>
+		!
+		Flashez le QR-code ci-dessous, et vous serez redirigé sur cette page sans avoir à vous reconnecter.
+	</p>
+
+	<div	class="fr-container">
+
+		<div	class="fr-mt-2w fr-grid-row fr-grid-row--gutters">
+
+			{{ form_start(form) }}
+
+			<div	class="cs-qr-ctnr fr-grid-row fr-mt-2w">
+				<div	class="fr-col-8">
+					<div	class="fr-upload-group">
+						<label	class="fr-label"	for="file-upload">
+							Ajouter des images
+							<span	class="fr-hint-text">
+								Taille maximale : 10 Mo. Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles.
+							</span>
+						</label>
+						{{ form_widget(form.photo) }}
+					</div>
+					</div>
+					<div	class="fr-col-4">
+						<div	class="qr-ctnr">
+							<figure>
+								<img	height="100"	src="{{ qr_code_url(url) }}" />
+								<figcaption>
+									Ajouter des images depuis mon Néo
+								</figcaption>
+							</figure>
+						</div>
+					</div>
+				</div>
+
+				<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
+
+					<li>
+						<button	type="submit"	class="fr-btn">
+							Transmettre
+						</button>
+					</li>
+
+				</ul>
+
+				{{ form_end(form) }}
+
+			</div>
+
+		</div>
+
+	{% endblock %}
+	

@@ -5,6 +5,10 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Role;
@@ -15,6 +19,8 @@ use App\Entity\GenreVehicule;
 use App\Entity\Permission;
 use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
+use App\Entity\Photo;
+use App\Form\PhotoType;
 use App\Form\VehiculeType;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +54,7 @@ class ParcController extends AbstractController
         if (is_null($this->params['nigend']))
             return $this->redirectToRoute('login');
 
-        $this->setAppConst(); 
+        $this->setAppConst();
 
         $em = $doctrine->getManager();
         $vehicules = $em
@@ -110,7 +116,10 @@ class ParcController extends AbstractController
                 $em->persist($vehicule);
             }
             $em->flush();
-            return $this->redirectToRoute('parc');
+            return $this->redirectToRoute('upload', [
+                'vehicule' => $vehicule->getId(),
+                'action' => 'ajouter'
+            ]);
         }
 
         return $this->render('parc/ajouter.html.twig', array_merge(
@@ -118,7 +127,68 @@ class ParcController extends AbstractController
             $this->params,
             [
                 'form' => $form,
-                'action' => 'ajouter'
+                'action' => 'ajouter',
+            ]
+        ));
+    }
+
+    #[Route('/parc/upload', name: 'upload')]
+    public function upload(
+        ManagerRegistry $doctrine,
+        SluggerInterface $slugger,
+        #[Autowire('%kernel.project_dir%/public/uploads/photos')] string $photosDirectory
+    ): Response {
+        $this->setAppConst();
+
+        $vehicule_id = $this->request->get('vehicule');
+        $action = $this->request->get('action');
+        $em = $doctrine->getManager();
+        $vehicule = $em->getRepository(Vehicule::class)->findOneBy(['id' => $vehicule_id]);
+
+        $random_hex = bin2hex(random_bytes(18));
+        $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/images-upload/';
+        $url = $baseurl . $random_hex;
+
+        $form = $this->createForm(PhotoType::class);
+
+        $form->handleRequest($this->request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                /** @var UploadedFile $photoFile */
+                $photos = $form->get('photo')->getData();
+
+                foreach ($photos as $photoFile) {
+
+                    if ($photoFile) {
+                        $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                        $safeFilename = substr($slugger->slug($originalFilename), 0, 20);
+                        $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
+                        try {
+                            $photoFile->move($photosDirectory, $newFilename);
+                        } catch (FileException $e) {
+                        }
+
+                        $photo = new Photo();
+                        $photo->setVehicule($vehicule);
+                        $photo->setPath($newFilename);
+                        $em->persist($photo);
+                        $em->flush();
+                    }
+                }
+
+                return $this->redirectToRoute('parc');
+            }
+        }
+
+        return $this->render('parc/upload.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'action' => $action,
+                'url' => $url,
+                'vehicule' => $vehicule,
+                'form' => $form
             ]
         ));
     }

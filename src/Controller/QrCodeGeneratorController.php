@@ -12,7 +12,7 @@ class QrCodeGeneratorController extends AbstractController
     public function index(): Response
     {
         return $this->render('qr_code_generator/index.html.twig', [
-            'controller_name' => 'QrCodeGeneratorController',
+            'controller_name' => 'QrCodeGeneratorController'
         ]);
     }
 }
