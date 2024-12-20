@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Token;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\User;
 use App\Entity\Role;
 use App\Entity\Action;
 use App\Entity\CarburantVehicule;
@@ -26,19 +28,11 @@ use App\Form\VehiculeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-use Imagine\Gd\Imagine;
-use Imagine\Image\Box;
-
 class ParcController extends AbstractController
 {
     private $app_const;
     private $requestStack, $session;
     public $params, $request;
-
-    private const MAX_WIDTH = 640;
-    private const MAX_HEIGHT = 480;
-
-    private $imagine;
 
     public function __construct(RequestStack $requestStack)
     {
@@ -53,8 +47,6 @@ class ParcController extends AbstractController
             'unite' => $this->session->get('HTTP_UNITE'),
             'profil' => $this->session->get('HTTP_PROFIL')
         ];
-
-        $this->imagine = new Imagine();
     }
 
 
@@ -154,13 +146,40 @@ class ParcController extends AbstractController
         $vehicule_id = $this->request->get('vehicule');
         $action = $this->request->get('action');
         $token = $this->request->get('token');
-
         $em = $doctrine->getManager();
+
+        if (is_null($this->params['nigend']) && is_null($token)) {
+            return $this->redirectToRoute('login');
+        } else if (!is_null($token)) {
+            $tkn = $em->getRepository(Token::class)->findOneBy(['token' => $token]);
+            if (is_null($tkn))
+                return $this->redirectToRoute('login');
+            $user = $tkn->getUser();
+            $this->session->set('HTTP_NIGEND', $user->getNigend());
+            $this->session->set('HTTP_UNITE', $user->getUnite());
+            $this->session->set('HTTP_PROFIL', $user->getProfil());
+            $this->params = [
+                'nigend' => $this->session->get('HTTP_NIGEND'),
+                'unite' => $this->session->get('HTTP_UNITE'),
+                'profil' => $this->session->get('HTTP_PROFIL')
+            ];
+        }
+
+
         $vehicule = $em->getRepository(Vehicule::class)->findOneBy(['id' => $vehicule_id]);
 
         $random_hex = bin2hex(random_bytes(18));
-        $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/upload?vehicule=13&action=ajouter';
+        $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/upload?vehicule=' . $vehicule_id . '&action=ajouter';
         $url = $baseurl . '&token=' . $random_hex;
+
+        $tkn = $em->getRepository(Token::class)->findOneBy(['url' => $url]);
+        if (is_null($tkn)) {
+            $usr = $em->getRepository(User::class)->findOneBy(['nigend' => $this->params['nigend']]);
+            $tkn = new Token();
+            $tkn->setUser($usr);
+            $tkn->setToken($random_hex);
+            $tkn->setUrl($baseurl);
+        }
 
         $form = $this->createForm(PhotoType::class);
 
@@ -308,5 +327,4 @@ class ParcController extends AbstractController
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
     }
-
 }
