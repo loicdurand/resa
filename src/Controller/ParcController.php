@@ -184,12 +184,6 @@ class ParcController extends AbstractController
                         } catch (FileException $e) {
                         }
 
-                        // try {
-                        //     $this->resize($photosDirectory . '/' . $newFilename);
-                        // } catch (\Throwable $th) {
-                        //     //throw $th;
-                        // }
-
                         $photo = new Photo();
                         $photo->setVehicule($vehicule);
                         $photo->setPath($newFilename);
@@ -315,19 +309,4 @@ class ParcController extends AbstractController
         }
     }
 
-    private function resize(string $filename): void
-    {
-        list($iwidth, $iheight) = getimagesize($filename);
-        $ratio = $iwidth / $iheight;
-        $width = self::MAX_WIDTH;
-        $height = self::MAX_HEIGHT;
-        if ($width < $height) {
-            $width = $height * $ratio;
-        } else {
-            $width = $height / $ratio;
-        }
-
-        $photo = $this->imagine->open($filename);
-        $photo->resize(new Box($width, $height))->save($filename);
-    }
 }

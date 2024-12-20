@@ -58,7 +58,7 @@
       <div class="fr-col-12">
         <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
           <figure class="cs-img-container left">
-            <img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée">
+            <img class="cs-img" src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}" alt="Renault 4l sérigraphiée">
               <figcaption class="hidden">
                 Renault 4l sérigraphiée
               </figcaption>

@@ -69,7 +69,7 @@
 
 							{# vue de profil #}
 							{% if(len > 1) %}
-								<div	class="fr-col-{{ len == 2 ? '6' : '3' }} fr-mt-1w">
+								<div	class="fr-col-{{ len == 2 ? '6' : '3 fr-mt-1w' }}">
 									<figure	class="cs-figure">
 										<button	class="fr-btn cs-gallerie-btn">
 											<img	src="{{ asset('images/uploads/' ~ vehicule.photos[1].path) }}"	class="fr-responsive-img"	alt="Vue de l'avant du véhicule"></button>

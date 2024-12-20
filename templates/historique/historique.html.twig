@@ -57,14 +57,14 @@
         {# RÉSERVATIONS FUTURES #}
         {% for i, reservation in reservations %}
           {% if( reservation.dateFin | date('U')) >= ('now'|date('U')) %}
-
+            {% set vehicule = reservation.vehicule %}
             <div class="fr-grid-row cs-border cursor-initial fr-mb-1w" href="/historique">
               <div class="fr-col-12">
                 <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
                   <figure class="cs-img-container left">
-                    <img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée">
+                    <img class="cs-img" src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}" alt="{{ vehicule.marque ~ ' ' ~ vehicule.modele }}">
                       <figcaption class="hidden">
-                        Renault 4l sérigraphiée
+                        Image principale du véhicule
                       </figcaption>
                     </figure>
 
@@ -143,9 +143,9 @@
                 <div class="fr-col-12">
                   <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
                     <figure class="cs-img-container left">
-                      <img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée">
+                      <img class="cs-img" src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}" alt="{{ vehicule.marque ~ ' ' ~ vehicule.modele }}">
                         <figcaption class="hidden">
-                          Renault 4l sérigraphiée
+                          Image principale du véhicule
                         </figcaption>
                       </figure>
 
@@ -175,13 +175,14 @@
 
             {# PAS DE RÉSA À VENIR MAIS RÉSAS PASSÉES #}
             {% if (passees | length) == (reservations | length) and (passees | length > 0) %}
+              {% set vehicule = reservation.vehicule %}
               <div class="cs-noborder cursor-initial">
                 <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
 
                   <figure class="cs-img-container left">
-                    <img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée">
+                    <img class="cs-img" src="{{ asset('images/no_image.jpg') }}" alt="Aucune image d'illustration">
                       <figcaption class="hidden">
-                        Renault 4l sérigraphiée
+                        Aucune image d'illustration
                       </figcaption>
                     </figure>
 
@@ -212,14 +213,15 @@
               {% for i in passees %}
 
                 {% set reservation = reservations[i] %}
+                {% set vehicule = reservation.vehicule %}
 
                 <div class="fr-grid-row cs-border fr-mb-1w" href="/historique">
                   <div class="fr-col-12">
                     <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
                       <figure class="cs-img-container left">
-                        <img class="cs-img" src="{{ asset('images/4L.jpg') }}" alt="Renault 4l sérigraphiée">
+                        <img class="cs-img" src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}" alt="{{ vehicule.marque ~ ' ' ~ vehicule.modele }}">
                           <figcaption class="hidden">
-                            Renault 4l sérigraphiée
+                            Image principale du véhicule
                           </figcaption>
                         </figure>
 
