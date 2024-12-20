@@ -120,6 +120,7 @@ class ConnexionController extends AbstractController
         'app.limit_resa_months',
         'app.max_resa_duration',
         'app.minutes_select_interval',
+        'app.token_gives_full_access'
       ] as $param
     ) {
       $AppConstName = strToUpper(str_replace('.', '_', $param));

@@ -12,6 +12,7 @@ parameters:
     app.limit_resa_months: 3
     app.max_resa_duration: '+ 3 weeks'
     app.minutes_select_interval: 15
+    app.token_gives_full_access: true
 
 services:
     # default configuration for services in *this* file

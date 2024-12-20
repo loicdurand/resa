@@ -26,7 +26,8 @@
 				</li>
 				<li>
 					<a	class="fr-breadcrumb__link"	aria-current="page">
-					{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }} un véhicule
+						{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }}
+						un véhicule
 					</a>
 				</li>
 			</ol>
@@ -51,99 +52,107 @@
 	{% elseif (action=='modifier') %}
 		<p	class="fr-text--sm">
 			Le formulaire suivant permet de modifier les caractéristiques du véhicule sélectionné.
-		</p>
-	{% elseif (action=='supprimer') %}
-		<p	class="fr-text--sm">
-			Vous êtes sur le point de supprimer
-			<span	class="underline">
-				définitivement
-			</span>
-			le véhicule sélectionné.
-		</p>
-	{% endif %}
+			<br>
+				Cliquez sur ce lien pour
+				<a	class="fr-link bold" href="/parc/upload?vehicule={{ vehicule_id }}&action=modifier">
+				mettre à jour les photos
+				</a>
+				de ce véhicule.
+			</p>
+		{% elseif (action=='supprimer') %}
+			<p	class="fr-text--sm">
+				Vous êtes sur le point de supprimer
+				<span	class="underline">
+					définitivement
+				</span>
+				le véhicule sélectionné.
+			</p>
+		{% endif %}
 
-	{{ form_start(form) }}
+		{{ form_start(form) }}
 
-	<div	class="fr-container">
+		<div	class="fr-container">
 
-		<div	class="fr-mt-2w fr-grid-row fr-grid-row--gutters">
+			<div	class="fr-mt-2w fr-grid-row fr-grid-row--gutters">
 
-			<fieldset	class="fr-col-12 fr-col-sm-12 fr-fieldset"	id="checkboxes"	aria-labelledby="checkboxes-legend checkboxes-messages">
-				<legend	class="fr-fieldset__legend--regular fr-fieldset__legend"	id="checkboxes-legend">
-					Sérigraphie
-				</legend>
-				<div	class="fr-fieldset__element">
-					<div	class="fr-checkbox-group">
-						{{ form_widget(form.serigraphie) }}
-						{{ form_label(form.serigraphie) }}
-						<div	class="fr-messages-group"	id="checkboxes-1-messages"	aria-live="assertive"></div>
+				<fieldset	class="fr-col-12 fr-col-sm-12 fr-fieldset"	id="checkboxes"	aria-labelledby="checkboxes-legend checkboxes-messages">
+					<legend	class="fr-fieldset__legend--regular fr-fieldset__legend"	id="checkboxes-legend">
+						Sérigraphie
+					</legend>
+					<div	class="fr-fieldset__element">
+						<div	class="fr-checkbox-group">
+							{{ form_widget(form.serigraphie) }}
+							{{ form_label(form.serigraphie) }}
+							<div	class="fr-messages-group"	id="checkboxes-1-messages"	aria-live="assertive"></div>
+						</div>
 					</div>
-				</div>
-			</fieldset>
+				</fieldset>
 
-			{{ form_rest(form) }}
+				{{ form_rest(form) }}
 
-			<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
-				{% if(action == 'ajouter') %}
+				<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
+					{% if(action == 'ajouter') %}
+						<li>
+							<!-- Bouton d'ouverture de la modale -->
+							<button	class="fr-btn fr-btn--secondary"	data-fr-opened="false"	aria-controls="fr-modal--reset-ajouter">
+								Réinitialiser le formulaire
+							</button>
+
+						</li>
+					{% endif %}
+
 					<li>
-						<!-- Bouton d'ouverture de la modale -->
-						<button	class="fr-btn fr-btn--secondary"	data-fr-opened="false"	aria-controls="fr-modal--reset-ajouter">
-							Réinitialiser le formulaire
+						<button	type="submit"	class="fr-btn">
+							{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }}
+							le véhicule
 						</button>
-
 					</li>
-				{% endif %}
 
-				<li>
-					<button	type="submit"	class="fr-btn">
-					{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }} le véhicule
-					</button>
-				</li>
+				</ul>
 
-			</ul>
+			</div>
 
 		</div>
 
-	</div>
+		{{ form_end(form) }}
 
-	{{ form_end(form) }}
-
-	{# MODALE DE CONFIRMATION DE RÉINITIALISATION DU FORMULAIRE #}
-	<dialog	aria-labelledby="fr-modal--reset-ajouter-title"	id="fr-modal--reset-ajouter"	class="fr-modal"	role="dialog">
-		<div	class="fr-container fr-container--fluid fr-container-md">
-			<div	class="fr-grid-row fr-grid-row--center">
-				<div	class="fr-col-12 fr-col-md-8 fr-col-lg-6">
-					<div	class="fr-modal__body">
-						<div	class="fr-modal__header">
-							<button	class="fr-btn--close fr-btn"	aria-controls="fr-modal--reset-ajouter">
-								Fermer
-							</button>
-						</div>
-						<div	class="fr-modal__content">
-							<h1	id="fr-modal--reset-ajouter-title"	class="fr-modal__title">
-								<span	class="fr-icon-arrow-right-line fr-icon--lg"></span>
-								Confirmer
-							</h1>
-							<p>
-								Vous allez réinitialiser le formulaire.
-								<br/>
-								Tous les champs remplis précédemment vont être effacés.
-								<br/>
-								Cliquez sur le bouton ci-dessous pour confirmer cette action.
-							</p>
-						</div>
-						<div	class="fr-modal__footer">
-							<div	class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-								<button	type="reset"	class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary"	aria-controls="fr-modal--reset-ajouter">
-									Réinitialiser le formulaire
+		{# MODALE DE CONFIRMATION DE RÉINITIALISATION DU FORMULAIRE #}
+		<dialog	aria-labelledby="fr-modal--reset-ajouter-title"	id="fr-modal--reset-ajouter"	class="fr-modal"	role="dialog">
+			<div	class="fr-container fr-container--fluid fr-container-md">
+				<div	class="fr-grid-row fr-grid-row--center">
+					<div	class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+						<div	class="fr-modal__body">
+							<div	class="fr-modal__header">
+								<button	class="fr-btn--close fr-btn"	aria-controls="fr-modal--reset-ajouter">
+									Fermer
 								</button>
+							</div>
+							<div	class="fr-modal__content">
+								<h1	id="fr-modal--reset-ajouter-title"	class="fr-modal__title">
+									<span	class="fr-icon-arrow-right-line fr-icon--lg"></span>
+									Confirmer
+								</h1>
+								<p>
+									Vous allez réinitialiser le formulaire.
+									<br/>
+									Tous les champs remplis précédemment vont être effacés.
+									<br/>
+									Cliquez sur le bouton ci-dessous pour confirmer cette action.
+								</p>
+							</div>
+							<div	class="fr-modal__footer">
+								<div	class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+									<button	type="reset"	class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary"	aria-controls="fr-modal--reset-ajouter">
+										Réinitialiser le formulaire
+									</button>
 
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</dialog>
+		</dialog>
 
-{% endblock %}
+	{% endblock %}
+	

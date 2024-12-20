@@ -17,7 +17,7 @@ class Photo
     #[ORM\JoinColumn(nullable: false)]
     private ?Vehicule $vehicule = null;
 
-    #[ORM\Column(length: 25)]
+    #[ORM\Column(length: 50)]
     private ?string $path = null;
 
     #[ORM\Column(length: 25, nullable: true)]

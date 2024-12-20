@@ -2,11 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Token;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\User;
 use App\Entity\Role;
 use App\Entity\Action;
 use App\Entity\CarburantVehicule;
@@ -15,10 +21,14 @@ use App\Entity\GenreVehicule;
 use App\Entity\Permission;
 use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
+use App\Entity\Photo;
+use App\Form\PhotoType;
 use App\Form\VehiculeType;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+
+use App\Service\PhotoService;
 
 class ParcController extends AbstractController
 {
@@ -110,7 +120,10 @@ class ParcController extends AbstractController
                 $em->persist($vehicule);
             }
             $em->flush();
-            return $this->redirectToRoute('parc');
+            return $this->redirectToRoute('upload', [
+                'vehicule' => $vehicule->getId(),
+                'action' => 'ajouter'
+            ]);
         }
 
         return $this->render('parc/ajouter.html.twig', array_merge(
@@ -118,7 +131,114 @@ class ParcController extends AbstractController
             $this->params,
             [
                 'form' => $form,
-                'action' => 'ajouter'
+                'action' => 'ajouter',
+            ]
+        ));
+    }
+
+    #[Route('/parc/upload', name: 'upload')]
+    public function upload(
+        ManagerRegistry $doctrine,
+        SluggerInterface $slugger,
+        #[Autowire('%kernel.project_dir%/assets/images/uploads')] string $photosDirectory
+    ): Response {
+
+        $this->setAppConst();
+
+        $vehicule_id = $this->request->get('vehicule');
+        $action = $this->request->get('action');
+        $token = $this->request->get('token');
+        $em = $doctrine->getManager();
+
+        if (is_null($this->params['nigend']) && is_null($token)) {
+            return $this->redirectToRoute('login');
+        } else if (!is_null($token)) {
+            $tkn = $em->getRepository(Token::class)->findOneBy(['token' => $token]);
+            if (is_null($tkn))
+                return $this->redirectToRoute('login');
+            $user = $tkn->getUser();
+            if ($this->app_const['APP_TOKEN_GIVES_FULL_ACCESS'] === true) {
+                $this->session->set('HTTP_NIGEND', $user->getNigend());
+                $this->session->set('HTTP_UNITE', $user->getUnite());
+                $this->session->set('HTTP_PROFIL', $user->getProfil());
+            }
+            $this->params = [
+                'nigend' => $user->getNigend(),
+                'unite' => $user->getUnite(),
+                'profil' => $user->getProfil()
+            ];
+        }
+
+        $vehicule = $em->getRepository(Vehicule::class)->findOneBy(['id' => $vehicule_id]);
+
+        $random_hex = bin2hex(random_bytes(18));
+        $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/parc/upload?vehicule=' . $vehicule_id . '&action=ajouter';
+        $url = $baseurl . '&token=' . $random_hex;
+
+        $tkn = $em->getRepository(Token::class)->findOneBy(['url' => $baseurl]);
+        if (is_null($tkn)) {
+            $usr = $em->getRepository(User::class)->findOneBy(['nigend' => $this->params['nigend']]);
+            $tkn = new Token();
+            $tkn->setUser($usr);
+            $tkn->setToken($random_hex);
+            $tkn->setUrl($baseurl);
+            $em->persist($tkn);
+            $em->flush();
+        }
+
+        $form = $this->createForm(PhotoType::class);
+
+        $form->handleRequest($this->request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                /** @var UploadedFile $photoFile */
+
+                $photos = $form->get('photos')->getData();
+
+                foreach ($photos as $photoFile) {
+
+                    if ($photoFile) {
+
+                        $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                        $safeFilename = substr($slugger->slug($originalFilename), 0, 20);
+                        $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
+                        try {
+                            $photoFile->move($photosDirectory, $newFilename);
+                        } catch (FileException $e) {
+                        }
+                        try {
+                            $photoservice = new PhotoService();
+                            $src = $photosDirectory . '/' . $newFilename;
+                            $dest = $photosDirectory . '/mini/' . $newFilename;
+                            $photoservice->createThumbnail($src, $dest, 320, null);
+                        } catch (\Throwable $th) {
+                            throw $th;
+                        }
+
+
+                        $photo = new Photo();
+                        $photo->setVehicule($vehicule);
+                        $photo->setPath('mini/' . $newFilename);
+
+                        $em->persist($photo);
+                        $em->flush();
+                    }
+                }
+
+                return $this->redirectToRoute('parc');
+            }
+        }
+
+        return $this->render('parc/upload.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'action' => $action,
+                'url' => $url,
+                'vehicule' => $vehicule,
+                'form' => $form,
+                'token' => is_null($token) ? false : $token
             ]
         ));
     }
@@ -153,7 +273,8 @@ class ParcController extends AbstractController
             $this->params,
             [
                 'form' => $form,
-                'action' => 'modifier'
+                'action' => 'modifier',
+                'vehicule_id' => $vehicule_id
             ]
         ));
     }
@@ -193,10 +314,6 @@ class ParcController extends AbstractController
         ));
     }
 
-    /**
-     * Utils
-     */
-
     private function getAppConst()
     {
         return $this->app_const;
@@ -214,6 +331,7 @@ class ParcController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
+                'app.token_gives_full_access'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));

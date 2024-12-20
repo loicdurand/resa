@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -21,6 +23,17 @@ class User
 
     #[ORM\Column(length: 25, nullable: true)]
     private ?string $profil = null;
+
+    /**
+     * @var Collection<int, Token>
+     */
+    #[ORM\OneToMany(targetEntity: Token::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $tokens;
+
+    public function __construct()
+    {
+        $this->tokens = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,5 +82,35 @@ class User
         while (strlen($str) < $maxlen)
             $str = "0" . $str;
         return $str;
+    }
+
+    /**
+     * @return Collection<int, Token>
+     */
+    public function getTokens(): Collection
+    {
+        return $this->tokens;
+    }
+
+    public function addToken(Token $token): static
+    {
+        if (!$this->tokens->contains($token)) {
+            $this->tokens->add($token);
+            $token->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeToken(Token $token): static
+    {
+        if ($this->tokens->removeElement($token)) {
+            // set the owning side to null (unless already changed)
+            if ($token->getUser() === $this) {
+                $token->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

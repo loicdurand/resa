@@ -58,3 +58,6 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+eslint.config.mjs
+workspaceStorage/
