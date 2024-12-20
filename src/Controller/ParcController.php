@@ -155,16 +155,17 @@ class ParcController extends AbstractController
             if (is_null($tkn))
                 return $this->redirectToRoute('login');
             $user = $tkn->getUser();
-            $this->session->set('HTTP_NIGEND', $user->getNigend());
-            $this->session->set('HTTP_UNITE', $user->getUnite());
-            $this->session->set('HTTP_PROFIL', $user->getProfil());
+            if ($this->app_const['APP_TOKEN_GIVES_FULL_ACCESS'] === true) {
+                $this->session->set('HTTP_NIGEND', $user->getNigend());
+                $this->session->set('HTTP_UNITE', $user->getUnite());
+                $this->session->set('HTTP_PROFIL', $user->getProfil());
+            }
             $this->params = [
-                'nigend' => $this->session->get('HTTP_NIGEND'),
-                'unite' => $this->session->get('HTTP_UNITE'),
-                'profil' => $this->session->get('HTTP_PROFIL')
+                'nigend' => $user->getNigend(),
+                'unite' => $user->getUnite(),
+                'profil' => $user->getProfil()
             ];
         }
-
 
         $vehicule = $em->getRepository(Vehicule::class)->findOneBy(['id' => $vehicule_id]);
 
@@ -323,6 +324,7 @@ class ParcController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
+                'app.token_gives_full_access'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
