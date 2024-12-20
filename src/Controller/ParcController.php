@@ -169,7 +169,7 @@ class ParcController extends AbstractController
         $vehicule = $em->getRepository(Vehicule::class)->findOneBy(['id' => $vehicule_id]);
 
         $random_hex = bin2hex(random_bytes(18));
-        $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/upload?vehicule=' . $vehicule_id . '&action=ajouter';
+        $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/parc/upload?vehicule=' . $vehicule_id . '&action=ajouter';
         $url = $baseurl . '&token=' . $random_hex;
 
         $tkn = $em->getRepository(Token::class)->findOneBy(['url' => $url]);
@@ -179,6 +179,8 @@ class ParcController extends AbstractController
             $tkn->setUser($usr);
             $tkn->setToken($random_hex);
             $tkn->setUrl($baseurl);
+            $em->persist($tkn);
+            $em->flush();
         }
 
         $form = $this->createForm(PhotoType::class);
