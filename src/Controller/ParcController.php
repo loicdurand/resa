@@ -28,6 +28,8 @@ use App\Form\VehiculeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+use App\Service\PhotoService;
+
 class ParcController extends AbstractController
 {
     private $app_const;
@@ -205,10 +207,19 @@ class ParcController extends AbstractController
                             $photoFile->move($photosDirectory, $newFilename);
                         } catch (FileException $e) {
                         }
+                        try {
+                            $photoservice = new PhotoService();
+                            $src = $photosDirectory . '/' . $newFilename;
+                            $dest = $photosDirectory . '/mini/' . $newFilename;
+                            $photoservice->createThumbnail($src, $dest, 320, null);
+                        } catch (\Throwable $th) {
+                            throw $th;
+                        }
+
 
                         $photo = new Photo();
                         $photo->setVehicule($vehicule);
-                        $photo->setPath($newFilename);
+                        $photo->setPath('mini/' . $newFilename);
 
                         $em->persist($photo);
                         $em->flush();
@@ -302,10 +313,6 @@ class ParcController extends AbstractController
             ]
         ));
     }
-
-    /**
-     * Utils
-     */
 
     private function getAppConst()
     {

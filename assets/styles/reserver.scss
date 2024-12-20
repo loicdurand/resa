@@ -22,8 +22,24 @@
     & .cs-figure {
       border: 1px solid var(--grey-2);
       border-radius: 3px;
-      width: 100%;
-      object-fit: scale-down;
+      height: 425px;
+      object-fit: contain; //scale-down;
+    }
+
+    & .fr-col-3 .cs-figure {
+      height: auto;
+
+      & img {
+        height: 130px;
+      }
+    }
+
+    & .fr-col-6 .cs-figure {
+      width: auto;
+
+      & img {
+        height: 423px;
+      }
     }
   }
 

@@ -65,7 +65,6 @@ class VehiculeRepository extends ServiceEntityRepository
                     AND
                         "$fin" NOT BETWEEN CONCAT(CONCAT(r.date_debut, ' '), r.heure_debut) AND CONCAT(CONCAT(r.date_fin, ' '), r.heure_fin)
                     )
-                    OR s.code != 'Annulée'
                 )
             )
             GROUP BY v.id
