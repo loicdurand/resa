@@ -173,7 +173,7 @@ class ParcController extends AbstractController
         $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/parc/upload?vehicule=' . $vehicule_id . '&action=ajouter';
         $url = $baseurl . '&token=' . $random_hex;
 
-        $tkn = $em->getRepository(Token::class)->findOneBy(['url' => $url]);
+        $tkn = $em->getRepository(Token::class)->findOneBy(['url' => $baseurl]);
         if (is_null($tkn)) {
             $usr = $em->getRepository(User::class)->findOneBy(['nigend' => $this->params['nigend']]);
             $tkn = new Token();
