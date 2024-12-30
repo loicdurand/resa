@@ -20,10 +20,12 @@ use App\Entity\CategorieVehicule;
 use App\Entity\GenreVehicule;
 use App\Entity\Permission;
 use App\Entity\TransmissionVehicule;
+use App\Entity\Reservation;
 use App\Entity\Vehicule;
 use App\Entity\Photo;
 use App\Form\PhotoType;
 use App\Form\VehiculeType;
+use App\Entity\HoraireOuverture;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -314,6 +316,58 @@ class ParcController extends AbstractController
         ));
     }
 
+    #[Route('/parc/tdb/{debut}/{fin}')]
+    public function tdb(ManagerRegistry $doctrine, \DateTime $debut, \DateTime $fin): Response
+    {
+        $em = $doctrine->getManager();
+        $this->setAppConst();
+
+        $tmp = new \DateTime('now');
+        $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
+        $max->modify('+' . $this->app_const['APP_LIMIT_RESA_MONTHS'] . ' months');
+
+        $limit_resa = $this->app_const['APP_LIMIT_RESA_MONTHS'];
+        $limit_resa = $limit_resa . ' mois';
+
+        $horaires = $em
+            ->getRepository(HoraireOuverture::class)
+            ->findAll();
+
+        $reservations = $em->getRepository(Reservation::class)
+            ->findBetween($debut, $fin);
+
+        $vehicules = [];
+        $ids = [];
+
+        foreach ($reservations as $reservation) {
+            $vl = $reservation->getVehicule();
+            if (!in_array($vl->getId(), $ids)) {
+                $ids[] = $vl->getId();
+                $color = $this->rand_dark_color();
+                $vehicules[] = [
+                    'id' => $vl->getId(),
+                    'immatriculation' => $vl->getImmatriculation(),
+                    'marque' => $vl->getMarque(),
+                    'modele' => $vl->getModele(),
+                    'color' => $color
+                ];
+                $vl->color = $color;
+            }
+        }
+
+        return $this->render('parc/tdb.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'limit_resa' => $limit_resa,
+                'horaires' => $this->horaires_to_arr($horaires),
+                'max' => $max,
+                'vehicules' => $vehicules,
+                'reservations' => $reservations
+            ]
+        ));
+    }
+
     private function getAppConst()
     {
         return $this->app_const;
@@ -337,5 +391,63 @@ class ParcController extends AbstractController
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
+    }
+
+    private function rand_color()
+    {
+        return sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+    }
+
+    private function rand_dark_color()
+    {
+        $colour = $this->rand_color();
+        [$r, $g, $b] = $this->HTMLToRGB($colour);
+        if ($this->lightness($r, $g, $b) >= .5)
+            return $this->rand_dark_color();
+        else
+            return $colour;
+    }
+
+    private function lightness($R = 255, $G = 255, $B = 255)
+    {
+        return (max($R, $G, $B) + min($R, $G, $B)) / 510.0; // HSL algorithm
+    }
+
+    private function HTMLToRGB($htmlCode)
+    {
+        if ($htmlCode[0] == '#')
+            $htmlCode = substr($htmlCode, 1);
+
+        if (strlen($htmlCode) == 3) {
+            $htmlCode = $htmlCode[0] . $htmlCode[0] . $htmlCode[1] . $htmlCode[1] . $htmlCode[2] . $htmlCode[2];
+        }
+
+        $r = hexdec($htmlCode[0] . $htmlCode[1]);
+        $g = hexdec($htmlCode[2] . $htmlCode[3]);
+        $b = hexdec($htmlCode[4] . $htmlCode[5]);
+
+        return [$r, $g, $b];
+    }
+
+    private function horaires_to_arr(array $horaires)
+    {
+        $out = [
+            'LU' => '',
+            'MA' => '',
+            'ME' => '',
+            'JE' => '',
+            'VE' => '',
+            'SA' => '',
+            'DI' => ''
+        ];
+        foreach ($horaires as $horaire) {
+            $day = $horaire->getJour();
+            [$Hd] = explode(':', $horaire->getDebut());
+            $hd = intval($Hd);
+            [$Hf] = explode(':', $horaire->getFin());
+            $hf = intval($Hf);
+            $out[$day] =  $out[$day] . ($out[$day] === '' ? '' : ',') . implode(',', range($hd, $hf - 1));
+        }
+        return $out;
     }
 }

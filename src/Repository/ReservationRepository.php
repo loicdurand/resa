@@ -18,6 +18,20 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
+    public function findBetween(\DateTime $start, \DateTime $end): mixed
+    {
+        $debut = $start->format('Y-m-d');
+        $fin = $end->format('Y-m-d');
+        return  $this->createQueryBuilder('r')
+            ->andWhere('r.date_fin >= :debut')
+            ->andWhere('r.date_debut <= :fin')
+            ->setParameter('debut', value: $debut)
+            ->setParameter('fin', value: $fin)
+            ->orderBy('r.date_debut', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findLastByNigend($nigend)
     {
         $query = $this->createQueryBuilder('r')
