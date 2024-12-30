@@ -1,0 +1,32 @@
+{% set time = "now"| date('Y-m-d') %}
+{% set tomorrow = "now"| date_modify('+1 days')| date('Y-m-d') %}
+{% set next_sunday = "now"| date_modify('next sunday')| date('Y-m-d') %}
+{% set plus1month = "now"| date_modify('+1 months')| date('Y-m-d') %}
+{% set plus3months = "now"| date_modify('+3 months')| date('Y-m-d') %}
+<nav	class="fr-summary"	role="navigation"	aria-labelledby="fr-go_to_tdb-title">
+	<h2	class="fr-summary__title"	id="fr-go_to_tdb-title">
+		Afficher le tableau de bord des réservations:
+	</h2>
+	<ol>
+		<li>
+			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ time }}/{{ tomorrow }}">
+				tableau de bord journalier
+			</a>
+		</li>
+		<li>
+			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ time }}/{{ next_sunday }}">
+				tableau de bord hebdomadaire
+			</a>
+		</li>
+		<li>
+			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ time }}/{{ plus1month }}">
+				tableau de bord mensuel
+			</a>
+		</li>
+		<li>
+			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ time }}/{{ plus3months }}">
+				afficher tout
+			</a>
+		</li>
+	</ol>
+</nav>

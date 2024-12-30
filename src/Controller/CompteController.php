@@ -85,7 +85,8 @@ class CompteController extends AbstractController
             ]);
 
         $action_params = [
-            'roles' => $roles,
+            'open' => $open,
+            'roles' => $roles
         ];
 
         if (!is_null($permission)) {
@@ -133,7 +134,6 @@ class CompteController extends AbstractController
 
             $action_params['form'] = $form;
             $action_params['horaires'] = $horaires;
-            $action_params['open'] = $open;
         }
 
         return $this->render('compte/compte.html.twig', array_merge(
