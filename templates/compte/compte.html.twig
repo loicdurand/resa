@@ -52,15 +52,15 @@
 				{% for perm_key, perm in role.permissions %}
 					<section	class="fr-accordion">
 						<h3	class="fr-accordion__title">
-							<button	class="fr-accordion__btn"	aria-expanded="false"	aria-controls="accordion-{{ role_key ~ perm_key }}">
+							<button	class="fr-accordion__btn"	aria-expanded={{ open == perm.action.template ? "true": "false"}}	aria-controls="accordion-{{ role_key ~ perm_key }}">
 								{{ perm.action.libelle }}
 							</button>
 						</h3>
 						<div	class="fr-collapse"	id="accordion-{{ role_key ~ perm_key }}">
 							<!-- données de test -->
 							{% if perm.action.template is null %}
-								
-							<div	class="fr-summary"	role="navigation">
+
+								<div	class="fr-summary"	role="navigation">
 
 									<h4	class="fr-h4">
 										Pas encore de contenu
