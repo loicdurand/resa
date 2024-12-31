@@ -153,7 +153,7 @@
                                 
                               {% endif %} #}
                               {% for mem in ( mems ) %}
-                                <p style="background-color: {{mem.vl.color}};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}">
+                                <p style="background-color: {{mem.vl.couleurVignette}};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}">
                                   {% if mem.debut %} <span>&rarr;&nbsp;{{ mem.debut }}</span>{% endif %}
                                   {% if mem.fin %} <span>{{ mem.fin }}&nbsp;&larr;</span>{% endif %}
                                 </p>

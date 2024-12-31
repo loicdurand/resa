@@ -66,10 +66,14 @@ class Vehicule
     #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'vehicule', orphanRemoval: true)]
     private Collection $photos;
 
+    #[ORM\Column(length: 8, nullable: false)]
+    private ?string $couleur_vignette = null;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
         $this->photos = new ArrayCollection();
+        $this->couleur_vignette = $this->rand_dark_color();
     }
 
     public function getId(): ?int
@@ -284,5 +288,55 @@ class Vehicule
         }
 
         return $this;
+    }
+
+    public function getCouleurVignette(): ?string
+    {
+        return $this->couleur_vignette;
+    }
+
+    public function setCouleurVignette(?string $couleur_vignette): static
+    {
+        if (is_null($couleur_vignette) || $couleur_vignette == '')
+            $couleur_vignette = $this->rand_dark_color();
+        $this->couleur_vignette = $couleur_vignette;
+
+        return $this;
+    }
+
+    private function rand_color()
+    {
+        return sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+    }
+
+    private function rand_dark_color()
+    {
+        $colour = $this->rand_color();
+        [$r, $g, $b] = $this->HTMLToRGB($colour);
+        if ($this->lightness($r, $g, $b) >= .5)
+            return $this->rand_dark_color();
+        else
+            return $colour;
+    }
+
+    private function lightness($R = 255, $G = 255, $B = 255)
+    {
+        return (max($R, $G, $B) + min($R, $G, $B)) / 510.0; // HSL algorithm
+    }
+
+    private function HTMLToRGB($htmlCode)
+    {
+        if ($htmlCode[0] == '#')
+            $htmlCode = substr($htmlCode, 1);
+
+        if (strlen($htmlCode) == 3) {
+            $htmlCode = $htmlCode[0] . $htmlCode[0] . $htmlCode[1] . $htmlCode[1] . $htmlCode[2] . $htmlCode[2];
+        }
+
+        $r = hexdec($htmlCode[0] . $htmlCode[1]);
+        $g = hexdec($htmlCode[2] . $htmlCode[3]);
+        $b = hexdec($htmlCode[4] . $htmlCode[5]);
+
+        return [$r, $g, $b];
     }
 }

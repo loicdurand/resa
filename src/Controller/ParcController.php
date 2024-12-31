@@ -343,15 +343,13 @@ class ParcController extends AbstractController
             $vl = $reservation->getVehicule();
             if (!in_array($vl->getId(), $ids)) {
                 $ids[] = $vl->getId();
-                $color = $this->rand_dark_color();
                 $vehicules[] = [
                     'id' => $vl->getId(),
                     'immatriculation' => $vl->getImmatriculation(),
                     'marque' => $vl->getMarque(),
                     'modele' => $vl->getModele(),
-                    'color' => $color
+                    'color' => $vl->getCouleurVignette()
                 ];
-                $vl->color = $color;
             }
         }
 
@@ -391,42 +389,6 @@ class ParcController extends AbstractController
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
-    }
-
-    private function rand_color()
-    {
-        return sprintf('#%06X', mt_rand(0, 0xFFFFFF));
-    }
-
-    private function rand_dark_color()
-    {
-        $colour = $this->rand_color();
-        [$r, $g, $b] = $this->HTMLToRGB($colour);
-        if ($this->lightness($r, $g, $b) >= .5)
-            return $this->rand_dark_color();
-        else
-            return $colour;
-    }
-
-    private function lightness($R = 255, $G = 255, $B = 255)
-    {
-        return (max($R, $G, $B) + min($R, $G, $B)) / 510.0; // HSL algorithm
-    }
-
-    private function HTMLToRGB($htmlCode)
-    {
-        if ($htmlCode[0] == '#')
-            $htmlCode = substr($htmlCode, 1);
-
-        if (strlen($htmlCode) == 3) {
-            $htmlCode = $htmlCode[0] . $htmlCode[0] . $htmlCode[1] . $htmlCode[1] . $htmlCode[2] . $htmlCode[2];
-        }
-
-        $r = hexdec($htmlCode[0] . $htmlCode[1]);
-        $g = hexdec($htmlCode[2] . $htmlCode[3]);
-        $b = hexdec($htmlCode[4] . $htmlCode[5]);
-
-        return [$r, $g, $b];
     }
 
     private function horaires_to_arr(array $horaires)
