@@ -1,30 +1,57 @@
 // surcharge 'reserver.scss' pour ne pas "striker" les dates
-.cs-fiche-vehicule.cs-tdb table tbody tr td .cs-td-daynum.striked {
-  text-decoration: none;
+.cs-fiche-vehicule.cs-tdb table {
 
-  &+div {
-    background: transparent;
-    height: fit-content;
-    width: 100%;
-    text-align: center;
+  & td {
+    padding: 5px 0;
 
-    & p {
-      // min-width: 6px;
-      // min-height: 6px;
-      display: inline-block;
-      margin: auto;
-      color: #fff;
-      padding: 0 2px;
-      font-size: .6rem;
-      line-height: 1.5;
-      border-radius: 3px;
+    &:empty {
+      padding: 0;
+    }
+  }
 
-      & span {
-        line-break: auto;
-      }
+  & th,
+  & td {
+    min-width: calc(100% /7);
+  }
 
-      & span>span {
-        margin-left: 1rem;
+  & th.week-end,
+  & td.week-end {
+    font-weight: initial;
+    opacity: 0.5;
+  }
+
+  & tbody tr td .cs-td-daynum.striked {
+    text-decoration: none;
+
+    &+div {
+      background: transparent;
+      height: fit-content;
+      width: 100%;
+      text-align: center;
+
+      & p {
+        margin: 3px auto;
+        color: #fff;
+        padding: 0 2px;
+        font-size: 10px;
+        line-height: 1.5;
+        border-radius: 5px;
+        max-width: 50px;
+
+        &:empty {
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          margin: 0;
+        }
+
+        & span {
+          line-break: auto;
+        }
+
+        & span>span {
+          margin-left: 1rem;
+        }
       }
     }
   }

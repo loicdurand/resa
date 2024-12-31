@@ -64,7 +64,8 @@ body.container .fr-tags-group .fr-tag {
     color: var(--grey-0);
 }
 
-table th, table td{
+table th,
+table td {
     text-align: center !important;
 }
 
@@ -230,6 +231,15 @@ table th, table td{
             width: 45%;
         }
     }
+
+    .cs-fiche-vehicule.cs-tdb table tbody tr td .cs-td-daynum.striked+div p {
+        &:empty {
+            width: 10px;
+            height: 10px;
+            margin: 0px auto 5px auto;
+        }
+    }
+
 }
 
 /* FORMAT LAPTOP

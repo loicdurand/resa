@@ -359,6 +359,8 @@ class ParcController extends AbstractController
             [
                 'limit_resa' => $limit_resa,
                 'horaires' => $this->horaires_to_arr($horaires),
+                'debut' => $debut,
+                'fin' => $fin,
                 'max' => $max,
                 'vehicules' => $vehicules,
                 'reservations' => $reservations
