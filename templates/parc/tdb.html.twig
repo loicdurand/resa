@@ -60,6 +60,7 @@
     <div class="fr-grid-row">
 
       {% set time = "now"| date('Y-m-d') %}
+      {% set now = "now"| date('Y-m-d') %}
       {% set curr_day = time | date('d') %}
       {% set prev_monday = time| date_modify('previous monday')| date('Y-m-d') %}
       {% set next_sunday = time| date_modify('next sunday')| date('Y-m-d') %}
@@ -72,9 +73,9 @@
           Affichage
         </label>
         <select class="fr-select" id="select-type-affichage" name="select-type-affichage">
-          {# <option {{ affichage == 'j' ? 'selected' : '' }} value="/parc/tdb/{{ time }}/{{ time }}/j">
+          <option {{ affichage == 'j' ? 'selected' : '' }} value="/parc/tdb/{{ now }}/{{ now }}/j">
             1 jour
-          </option> #}
+          </option>
           <option {{ affichage == 'h' ? 'selected' : '' }} value="/parc/tdb/{{ prev_monday }}/{{ next_sunday }}/h">
             1 semaine
           </option>
@@ -89,6 +90,28 @@
     </div>
 
     {# CALENDRIERS #}
+
+    {% set trans_day_hash = { 
+      "January": "Janvier", 
+      "February": "Février", 
+      "March": "Mars", 
+      "April": "Avril", 
+      "May": "Mai", 
+      "June": "Juin", 
+      "July": "Juillet" ,
+      "August":"Août",
+      "September":"Septembre",
+      "October":"Octobre",
+      "November":"Novembre",
+      "December":"Décembre"
+  } %}
+    {% set days_list = [
+    'LU','MA','ME','JE','VE','SA','DI'
+  ] %}
+    {% set days_list_long = [
+    'Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'
+  ] %}
+
     <div id="calendars-container">
       {# source: https://gist.github.com/aknosis/3932192 #}
       {% set time = debut| date('Y-m-15') | date_modify('-1 months')| date("U") %}
@@ -98,119 +121,188 @@
       {% set diff = mois_fin - mois_debut %}
       {% set diff = diff > APP_LIMIT_RESA_MONTHS ? APP_LIMIT_RESA_MONTHS : diff %}
 
-      {% for i in range(0, diff) %}
-        {% set time =  time | date_modify('+1 months') %}
+      {# AFFICHAGE JOURNALIER #}
+      {% if affichage == 'j' %}
+
+        {% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
+        {% set curr_date = debut %}
+        {% set mems = [] %}
+        {% set dow = startDow %}
+        {% for i, reservation in reservations %}
+          {% if 
+            curr_date|date('Y-m-d')|date('U') >= date(reservation.dateDebut)|date('Y-m-d')|date('U') 
+              and 
+            curr_date|date('Y-m-d')|date('U') <= date(reservation.dateFin)|date('Y-m-d')|date('U') %}
+
+            {% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) ? reservation.heureDebut : false %}
+            {% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) ? reservation.heureFin : false %}
+            {# {% set striked = striked_debut or striked_fin ? false : true %} #}
+            {% set striked = true %}
+
+            {% set mem = [] %}
+            {% set mem = mem|merge([{
+              'sort': striked_debut ? striked_debut : striked_fin ? striked_fin : '00:00', 
+              'debut': striked_debut, 
+              'fin': striked_fin, 
+              'vl': reservation.vehicule,
+              'resa_from': reservation.dateDebut | date('d/m/Y \\à ') ~ reservation.heureDebut,
+              'resa_to': reservation.dateFin | date('d/m/Y \\à ') ~ reservation.heureFin,
+              'resa_par': reservation.user
+            }]) %}
+            {% set mems = mems|merge(mem) %}
+
+          {% endif %}
+        {% endfor %}
         <table>
           <thead>
-            {% if loop.first %}
-              <tr class="cs-row-days">
-                <th id="th-LU" data-horaires="{{ horaires.LU }}">
-                  Lu<!--
-                  --><span class="hide-s"><!--
-                  -->ndi
-                  </span>
-                </th>
-                <th id="th-MA" data-horaires="{{ horaires.MA }}">
-                  Ma<!--
-                  --><span class="hide-s"><!--
-                  -->rdi
-                  </span>
-                </th>
-                <th id="th-ME" data-horaires="{{ horaires.ME }}">
-                  Me<!--
-                  --><span class="hide-s"><!--
-                  -->rcredi
-                  </span>
-                </th>
-                <th id="th-JE" data-horaires="{{ horaires.JE }}">
-                  Je<!--
-                  --><span class="hide-s"><!--
-                  -->udi
-                  </span>
-                </th>
-                <th id="th-VE" data-horaires="{{ horaires.VE }}">
-                  Ve<!--
-                  --><span class="hide-s"><!--
-                  -->ndredi
-                  </span>
-                </th>
-                <th class="week-end" id="th-SA" data-horaires="{{ horaires.SA }}">
-                  Sa<!--
-                  --><span class="hide-s"><!--
-                  -->medi
-                  </span>
-                </th>
-                <th class="week-end" id="th-DI" data-horaires="{{ horaires.DI }}">
-                  Di<!--
-                  --><span class="hide-s"><!--
-                  -->manche
-                  </span>
-                </th>
-              </tr>
-            {% endif %}
             <tr>
-              {% set trans_day_hash = { 
-                    "January": "Janvier", 
-                    "February": "Février", 
-                    "March": "Mars", 
-                    "April": "Avril", 
-                    "May": "Mai", 
-                    "June": "Juin", 
-                    "July": "Juillet" ,
-                    "August":"Août",
-                    "September":"Septembre",
-                    "October":"Octobre",
-                    "November":"Novembre",
-                    "December":"Décembre"
-                } %}
-              {% set days_list = [
-                  'LU','MA','ME','JE','VE','SA','DI'
-                ] %}
-              <th colspan="7">
-                {{ trans_day_hash[time|date('F')] }}
+              <th colspan="3">
+                {{ days_list_long[dow] ~ debut|date(' d ') ~ trans_day_hash[debut|date('F')] ~ debut|date(' Y') }}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              {% set daysInMonth = time|date('t') %}
-              {% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
-              {% set dow = startDow %}
-              {% for day in range(1,daysInMonth) %}
-                {% if loop.first and startDow != 0 %}
-                  <td colspan="{{ startDow }}"></td>
-                {% endif %}
-                {% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:00')|date('U') %}
-                {% set before_now = curr_date <= ('now'|date('Y-m-d 00:00:00')|date('U') )? true : false %}
-                {% set before_debut = curr_date <= debut|date('Y-m-d 00:00:00')|date('U') %}
-                {% set after_fin = curr_date >= fin|date('Y-m-d 23:59:59')|date('U') %}
-                {% set after_limit = curr_date > (max|date('Y-m-d 00:00:00')|date('U') )? true : false %}
-                {% set csag_ferme =  horaires[days_list[dow]] == '' %}
+            {% for h in range(0, 23) %}
+              <tr>
+                <td rowspan="4">
+                  {{ h | length < 2 ? '0' ~ h : h }}
+                </td>
+                <td>
+                  00
+                </td>
+                <td>
+                  {{ (h | length < 2 ? '0' ~ h : h)~':00' }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  15
+                </td>
+                <td>
+                  {{ (h | length < 2 ? '0' ~ h : h)~':15' }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  30
+                </td>
+                <td>
+                  {{ (h | length < 2 ? '0' ~ h : h)~':30' }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  45
+                </td>
+                <td>
+                  {{ (h | length < 2 ? '0' ~ h : h)~':45' }}
+                </td>
+              </tr>
 
-                {% if before_debut or after_fin %}
-                  <td></td>
-                {% else %}
-                  <td class="target{{ dow >= 5 ? ' week-end':'' }}{{ curr_date == debut|date('Y-m-d 23:59:00')|date('U') ? ' bold' : '' }}">
-                    <div class="relative">
+            {% endfor %}
+          </tbody>
+        </table>
 
-                      {% set striked = false %}
-                      {% set striked_debut = false %}
-                      {% set striked_fin = false %}
-                      {% set mems = [] %}
+      {# FIN AFFICHAGE JOURNALIER #}
 
-                      {% for i, reservation in reservations %}
-                        {% if 
+        {# AUTRES AFFICHAGES (HEBDO, MENSUEL, TOUT) #}
+        {% else %}
+        {% for i in range(0, diff) %}
+          {% set time =  time | date_modify('+1 months') %}
+          <table>
+            <thead>
+              {% if loop.first %}
+                <tr class="cs-row-days">
+                  <th id="th-LU" data-horaires="{{ horaires.LU }}">
+                    Lu<!--
+                    --><span class="hide-s"><!--
+                    -->ndi
+                    </span>
+                  </th>
+                  <th id="th-MA" data-horaires="{{ horaires.MA }}">
+                    Ma<!--
+                    --><span class="hide-s"><!--
+                    -->rdi
+                    </span>
+                  </th>
+                  <th id="th-ME" data-horaires="{{ horaires.ME }}">
+                    Me<!--
+                    --><span class="hide-s"><!--
+                    -->rcredi
+                    </span>
+                  </th>
+                  <th id="th-JE" data-horaires="{{ horaires.JE }}">
+                    Je<!--
+                    --><span class="hide-s"><!--
+                    -->udi
+                    </span>
+                  </th>
+                  <th id="th-VE" data-horaires="{{ horaires.VE }}">
+                    Ve<!--
+                    --><span class="hide-s"><!--
+                    -->ndredi
+                    </span>
+                  </th>
+                  <th class="week-end" id="th-SA" data-horaires="{{ horaires.SA }}">
+                    Sa<!--
+                    --><span class="hide-s"><!--
+                    -->medi
+                    </span>
+                  </th>
+                  <th class="week-end" id="th-DI" data-horaires="{{ horaires.DI }}">
+                    Di<!--
+                    --><span class="hide-s"><!--
+                    -->manche
+                    </span>
+                  </th>
+                </tr>
+              {% endif %}
+              <tr>
+                <th colspan="7">
+                  {{ trans_day_hash[time|date('F')] }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {% set daysInMonth = time|date('t') %}
+                {% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
+                {% set dow = startDow %}
+                {% for day in range(1,daysInMonth) %}
+                  {% if loop.first and startDow != 0 %}
+                    <td colspan="{{ startDow }}"></td>
+                  {% endif %}
+                  {% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:00')|date('U') %}
+                  {% set before_now = curr_date <= ('now'|date('Y-m-d 00:00:00')|date('U') )? true : false %}
+                  {% set before_debut = curr_date <= debut|date('Y-m-d 00:00:00')|date('U') %}
+                  {% set after_fin = curr_date >= fin|date('Y-m-d 23:59:59')|date('U') %}
+                  {% set after_limit = curr_date > (max|date('Y-m-d 00:00:00')|date('U') )? true : false %}
+                  {% set csag_ferme =  horaires[days_list[dow]] == '' %}
+
+                  {% if before_debut or after_fin %}
+                    <td></td>
+                  {% else %}
+                    <td class="target{{ dow >= 5 ? ' week-end':'' }}{{ curr_date == debut|date('Y-m-d 23:59:00')|date('U') ? ' bold' : '' }}">
+                      <div class="relative">
+
+                        {% set striked = false %}
+                        {% set striked_debut = false %}
+                        {% set striked_fin = false %}
+                        {% set mems = [] %}
+
+                        {% for i, reservation in reservations %}
+                          {% if 
                               curr_date|date('Y-m-d')|date('U') >= date(reservation.dateDebut)|date('Y-m-d')|date('U') 
                                 and 
                               curr_date|date('Y-m-d')|date('U') <= date(reservation.dateFin)|date('Y-m-d')|date('U') %}
 
-                          {% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) ? reservation.heureDebut : false %}
-                          {% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) ? reservation.heureFin : false %}
-                          {# {% set striked = striked_debut or striked_fin ? false : true %} #}
-                          {% set striked = true %}
+                            {% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) ? reservation.heureDebut : false %}
+                            {% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) ? reservation.heureFin : false %}
+                            {# {% set striked = striked_debut or striked_fin ? false : true %} #}
+                            {% set striked = true %}
 
-                          {% set mem = [] %}
-                          {% set mem = mem|merge([{
+                            {% set mem = [] %}
+                            {% set mem = mem|merge([{
                                 'sort': striked_debut ? striked_debut : striked_fin ? striked_fin : '00:00', 
                                 'debut': striked_debut, 
                                 'fin': striked_fin, 
@@ -219,93 +311,94 @@
                                 'resa_to': reservation.dateFin | date('d/m/Y \\à ') ~ reservation.heureFin,
                                 'resa_par': reservation.user
                               }]) %}
-                          {% set mems = mems|merge(mem) %}
+                            {% set mems = mems|merge(mem) %}
 
-                        {% endif %}
-                      {% endfor %}
-
-                      <div {{ striked_fin ? 'data-heure_fin=' ~ striked_fin }} data-ref="{{ days_list[dow] }}" class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" {{ csag_ferme ? 'title="En dehors des horaires d\'ouverture du CSAG"' : '' }}>
-                        {{ day }}
-                      </div>
-                      <div>
-                        {# day content here #}
-                        {# {% if striked_debut %}
-                          
-                        {% endif %} #}
-                          {% for j, mem in ( mems|sort((a, b)=>a.sort <=> b.sort)) %}
-
-                            {% if (mem.debut or mem.fin) %}
-                              <p aria-describedby="tooltip-{{ day ~ i ~ j }}" style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"> {% if mem.debut %}
-                                <span>
-                                  &rarr;&nbsp;
-                                  {{ mem.debut }}
-                                </span>
-                              {% endif %}
-                              {% if mem.fin %}
-                                <span>
-                                  {{ mem.fin }}
-                                  &nbsp;&larr;
-                                </span>
-                              {% endif %}
-                            </p>
-                          {% else %}
-                            <p aria-describedby="tooltip-{{ day ~ i ~ j }}" style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"></p>
                           {% endif %}
-                          <div class="fr-tooltip fr-placement cs-tooltip" id="tooltip-{{ day ~ i ~ j }}" role="tooltip" aria-hidden="true" style="background-color: {{ mem.vl.couleurVignette }};">
-                            <h3>
-                              {{ mem.vl.marque ~ ' ' ~ mem.vl.modele }}
-                            </h3>
-                            <dl>
-                              <dt>
-                                Immatriculation:
-                              </dt>
-                              <dd>
-                                {{ mem.vl.immatriculation }}
-                              </dd>
-                              <dt>
-                                Réservé par:
-                              </dt>
-                              <dd>
-                                {{ mem.resa_par }}
-                              </dd>
-                              <dt>
-                                Perception:
-                              </dt>
-                              <dd>
-                                {{ mem.resa_from }}
-                              </dd>
-                              <dt>
-                                Restitution:
-                              </dt>
-                              <dd>
-                                {{ mem.resa_to }}
-                              </dd>
+                        {% endfor %}
 
-                            </div>
-                          {% endfor %}
+                        <div {{ striked_fin ? 'data-heure_fin=' ~ striked_fin }} data-ref="{{ days_list[dow] }}" class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" {{ csag_ferme ? 'title="En dehors des horaires d\'ouverture du CSAG"' : '' }}>
+                          {{ day }}
                         </div>
-                      </div>
-                    </td>
-                  {% endif %}
+                        <div>
+                          {# day content here #}
+                          {# {% if striked_debut %}
+                            
+                          {% endif %} #}
+                            {% for j, mem in ( mems|sort((a, b)=>a.sort <=> b.sort)) %}
 
-                  {% if loop.last and dow != 6 %}
-                    <td colspan="{{ 6 - dow }}">
-                      &nbsp;
-                    </td>
-                  {% endif %}
-                  {% if dow == 6 %}
-                    {% set dow = 0 %}
-                  </tr>
-                  <tr>
-                  {% else %}
-                    {% set dow = dow + 1 %}
-                {% endif %}
-              {% endfor %}
-            </tr>
-          </tbody>
-        </table>
+                              {% if (mem.debut or mem.fin) %}
+                                <p aria-describedby="tooltip-{{ day ~ i ~ j }}" style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"> {% if mem.debut %}
+                                  <span>
+                                    &rarr;&nbsp;
+                                    {{ mem.debut }}
+                                  </span>
+                                {% endif %}
+                                {% if mem.fin %}
+                                  <span>
+                                    {{ mem.fin }}
+                                    &nbsp;&larr;
+                                  </span>
+                                {% endif %}
+                              </p>
+                            {% else %}
+                              <p aria-describedby="tooltip-{{ day ~ i ~ j }}" style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"></p>
+                            {% endif %}
+                            <div class="fr-tooltip fr-placement cs-tooltip" id="tooltip-{{ day ~ i ~ j }}" role="tooltip" aria-hidden="true" style="background-color: {{ mem.vl.couleurVignette }};">
+                              <h3>
+                                {{ mem.vl.marque ~ ' ' ~ mem.vl.modele }}
+                              </h3>
+                              <dl>
+                                <dt>
+                                  Immatriculation:
+                                </dt>
+                                <dd>
+                                  {{ mem.vl.immatriculation }}
+                                </dd>
+                                <dt>
+                                  Réservé par:
+                                </dt>
+                                <dd>
+                                  {{ mem.resa_par }}
+                                </dd>
+                                <dt>
+                                  Perception:
+                                </dt>
+                                <dd>
+                                  {{ mem.resa_from }}
+                                </dd>
+                                <dt>
+                                  Restitution:
+                                </dt>
+                                <dd>
+                                  {{ mem.resa_to }}
+                                </dd>
 
-      {% endfor %}
+                              </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </td>
+                    {% endif %}
+
+                    {% if loop.last and dow != 6 %}
+                      <td colspan="{{ 6 - dow }}">
+                        &nbsp;
+                      </td>
+                    {% endif %}
+                    {% if dow == 6 %}
+                      {% set dow = 0 %}
+                    </tr>
+                    <tr>
+                    {% else %}
+                      {% set dow = dow + 1 %}
+                  {% endif %}
+                {% endfor %}
+              </tr>
+            </tbody>
+          </table>
+
+        {% endfor %}
+      {% endif %}
 
       {% if affichage == 'h' %}
         <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
@@ -321,6 +414,24 @@
           </li>
           <li>
             <a href="/parc/tdb/{{ fin|date_modify(" +1 days")|date('Y-m-d') }}/{{ fin|date_modify(" +7 days")|date('Y-m-d') }}/h" class="fr-btn fr-btn--secondary fr-icon-arrow-right-s-line">
+              Semaine suivante
+            </a>
+          </li>
+        </ul>
+      {% elseif affichage == 'j' %}
+        <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
+          <li>
+            <a href="/parc/tdb/{{ debut|date_modify(" -1 days")|date('Y-m-d') }}/{{ debut|date_modify(" -1 days")|date('Y-m-d') }}/j" class="fr-btn fr-btn--secondary fr-icon-arrow-left-s-line">
+              Semaine précédente
+            </a>
+          </li>
+          <li>
+            <a href="/parc/tdb/{{ now }}/{{ now }}/j" class="fr-btn fr-btn--secondary">
+              Aujourd'hui
+            </a>
+          </li>
+          <li>
+            <a href="/parc/tdb/{{ fin|date_modify(" +1 days")|date('Y-m-d') }}/{{ fin|date_modify(" +1 days")|date('Y-m-d') }}/j" class="fr-btn fr-btn--secondary fr-icon-arrow-right-s-line">
               Semaine suivante
             </a>
           </li>
