@@ -316,9 +316,13 @@ class ParcController extends AbstractController
         ));
     }
 
-    #[Route('/parc/tdb/{debut}/{fin}')]
-    public function tdb(ManagerRegistry $doctrine, \DateTime $debut, \DateTime $fin): Response
+    #[Route('/parc/tdb/{debut}/{fin}/{affichage}')]
+    public function tdb(ManagerRegistry $doctrine, \DateTime $debut, \DateTime $fin, ?string $affichage = "m"): Response
     {
+
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
         $em = $doctrine->getManager();
         $this->setAppConst();
 
@@ -363,7 +367,8 @@ class ParcController extends AbstractController
                 'fin' => $fin,
                 'max' => $max,
                 'vehicules' => $vehicules,
-                'reservations' => $reservations
+                'reservations' => $reservations,
+                'affichage' => $affichage
             ]
         ));
     }

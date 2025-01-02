@@ -1,30 +1,33 @@
 {% set time = "now"| date('Y-m-d') %}
+{% set curr_day = time | date('d') %}
 {% set prev_monday = "now"| date_modify('previous monday')| date('Y-m-d') %}
 {% set next_sunday = "now"| date_modify('next sunday')| date('Y-m-d') %}
-{% set plus1month = "now" | date_modify('last day of next month') | date('Y-m-d') %}
+{% set debut_mois = curr_day > 15 ? time|date('Y-m-d') : time|date('Y-m-01') %}
+{% set plus1month = curr_day > 15 ? "now" | date_modify('last day of next month') | date('Y-m-d') : "now"| date('Y-m-t') %}
 {% set plus3months = "now"| date_modify('+3 months')| date('Y-m-d') %}
+
 <nav	class="fr-summary"	role="navigation"	aria-labelledby="fr-go_to_tdb-title">
 	<h2	class="fr-summary__title"	id="fr-go_to_tdb-title">
 		Afficher le tableau de bord des réservations:
 	</h2>
 	<ol>
-		<li>
-			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ time }}/{{ time }}">
+		{# <li>
+			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ time }}/{{ time }}/j">
 				tableau de bord journalier
 			</a>
-		</li>
+		</li> #}
 		<li>
-			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ prev_monday }}/{{ next_sunday }}">
+			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ prev_monday }}/{{ next_sunday }}/h">
 				tableau de bord hebdomadaire
 			</a>
 		</li>
 		<li>
-			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ time }}/{{ plus1month }}">
+			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ debut_mois }}/{{ plus1month }}/m">
 				tableau de bord mensuel
 			</a>
 		</li>
 		<li>
-			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ time }}/{{ plus3months }}">
+			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ debut_mois }}/{{ plus3months }}/t">
 				afficher tout
 			</a>
 		</li>

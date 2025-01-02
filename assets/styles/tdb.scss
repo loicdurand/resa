@@ -11,14 +11,14 @@
 
   & th,
   & td {
-    min-width: calc(100% /7);
+    min-width: calc(100vw /7);
   }
 
-  & th.week-end,
-  & td.week-end {
-    font-weight: initial;
-    opacity: 0.5;
-  }
+  // & th.week-end,
+  // & td.week-end {
+  //   font-weight: initial;
+  //   opacity: 0.5;
+  // }
 
   & tbody tr td .cs-td-daynum.striked {
     text-decoration: none;
@@ -53,6 +53,11 @@
           margin-left: 1rem;
         }
       }
+    }
+
+    &.before_now+div,
+    &.after_limit+div {
+      opacity: .5;
     }
   }
 }
