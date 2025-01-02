@@ -93,3 +93,26 @@
   }
 
 }
+
+.cs-tooltip {
+  border: 1px solid var(--grey-5);
+  border-radius: 3px;
+
+  & * {
+    z-index: 2000;
+  }
+
+  & h3 {
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
+
+  & dl dt {
+    font-weight: 900;
+  }
+
+  & dl dd {
+    font-weight: 400;
+  }
+
+}

@@ -214,7 +214,10 @@
                                 'sort': striked_debut ? striked_debut : striked_fin ? striked_fin : '00:00', 
                                 'debut': striked_debut, 
                                 'fin': striked_fin, 
-                                'vl': reservation.vehicule 
+                                'vl': reservation.vehicule,
+                                'resa_from': reservation.dateDebut | date('d/m/Y \\à ') ~ reservation.heureDebut,
+                                'resa_to': reservation.dateFin | date('d/m/Y \\à ') ~ reservation.heureFin,
+                                'resa_par': reservation.user
                               }]) %}
                           {% set mems = mems|merge(mem) %}
 
@@ -229,10 +232,10 @@
                         {# {% if striked_debut %}
                           
                         {% endif %} #}
-                          {% for mem in ( mems|sort((a, b)=>a.sort <=> b.sort)) %}
+                          {% for j, mem in ( mems|sort((a, b)=>a.sort <=> b.sort)) %}
 
                             {% if (mem.debut or mem.fin) %}
-                              <p style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"> {% if mem.debut %}
+                              <p aria-describedby="tooltip-{{ day ~ i ~ j }}" style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"> {% if mem.debut %}
                                 <span>
                                   &rarr;&nbsp;
                                   {{ mem.debut }}
@@ -246,54 +249,86 @@
                               {% endif %}
                             </p>
                           {% else %}
-                            <p style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"></p>
+                            <p aria-describedby="tooltip-{{ day ~ i ~ j }}" style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"></p>
                           {% endif %}
-                        {% endfor %}
+                          <div class="fr-tooltip fr-placement cs-tooltip" id="tooltip-{{ day ~ i ~ j }}" role="tooltip" aria-hidden="true" style="background-color: {{ mem.vl.couleurVignette }};">
+                            <h3>
+                              {{ mem.vl.marque ~ ' ' ~ mem.vl.modele }}
+                            </h3>
+                            <dl>
+                              <dt>
+                                Immatriculation:
+                              </dt>
+                              <dd>
+                                {{ mem.vl.immatriculation }}
+                              </dd>
+                              <dt>
+                                Réservé par:
+                              </dt>
+                              <dd>
+                                {{ mem.resa_par }}
+                              </dd>
+                              <dt>
+                                Perception:
+                              </dt>
+                              <dd>
+                                {{ mem.resa_from }}
+                              </dd>
+                              <dt>
+                                Restitution:
+                              </dt>
+                              <dd>
+                                {{ mem.resa_to }}
+                              </dd>
+
+                            </div>
+                          {% endfor %}
+                        </div>
                       </div>
-                    </div>
-                  </td>
+                    </td>
+                  {% endif %}
+
+                  {% if loop.last and dow != 6 %}
+                    <td colspan="{{ 6 - dow }}">
+                      &nbsp;
+                    </td>
+                  {% endif %}
+                  {% if dow == 6 %}
+                    {% set dow = 0 %}
+                  </tr>
+                  <tr>
+                  {% else %}
+                    {% set dow = dow + 1 %}
                 {% endif %}
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
 
-                {% if loop.last and dow != 6 %}
-                  <td colspan="{{ 6 - dow }}">
-                    &nbsp;
-                  </td>
-                {% endif %}
-                {% if dow == 6 %}
-                  {% set dow = 0 %}
-                </tr>
-                <tr>
-                {% else %}
-                  {% set dow = dow + 1 %}
-              {% endif %}
-            {% endfor %}
-          </tr>
-        </tbody>
-      </table>
+      {% endfor %}
 
-    {% endfor %}
+      {% if affichage == 'h' %}
+        <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
+          <li>
+            <a href="/parc/tdb/{{ debut|date_modify(" -7 days")|date('Y-m-d') }}/{{ debut|date_modify(" -1 days")|date('Y-m-d') }}/h" class="fr-btn fr-btn--secondary fr-icon-arrow-left-s-line">
+              Semaine précédente
+            </a>
+          </li>
+          <li>
+            <a href="/parc/tdb/{{ prev_monday }}/{{ next_sunday }}/h" class="fr-btn fr-btn--secondary">
+              Semaine courante
+            </a>
+          </li>
+          <li>
+            <a href="/parc/tdb/{{ fin|date_modify(" +1 days")|date('Y-m-d') }}/{{ fin|date_modify(" +7 days")|date('Y-m-d') }}/h" class="fr-btn fr-btn--secondary fr-icon-arrow-right-s-line">
+              Semaine suivante
+            </a>
+          </li>
+        </ul>
+      {% endif %}
 
-    {% if affichage == 'h' %}
-      <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
-        <li>
-          <a href="/parc/tdb/{{ debut|date_modify("-7 days")|date('Y-m-d') }}/{{debut|date_modify("-1 days")|date('Y-m-d')}}/h" class="fr-btn fr-btn--secondary fr-icon-arrow-left-s-line">
-            Semaine précédente
-          </a>
-        </li>
-        <li>
-          <a href="/parc/tdb/{{ prev_monday }}/{{ next_sunday }}/h" class="fr-btn fr-btn--secondary">
-            Semaine courante
-          </a>
-        </li>
-        <li>
-          <a href="/parc/tdb/{{ fin|date_modify("+1 days")|date('Y-m-d') }}/{{fin|date_modify("+7 days")|date('Y-m-d')}}/h" class="fr-btn fr-btn--secondary fr-icon-arrow-right-s-line">
-            Semaine suivante
-          </a>
-        </li>
-      </ul>
-    {% endif %}
+    </div>
+  {# FIN CALENDRIERS #}
 
   </div>
-{# FIN CALENDRIERS #}
-
-</div>{% endblock %}
+{% endblock %}
