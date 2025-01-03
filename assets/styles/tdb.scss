@@ -99,6 +99,56 @@
   border: 1px solid var(--grey-5);
   border-radius: 3px;
 
+  & .cs-affichage-reservation {
+
+    & h2.debut {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    & dl dt,
+    & dl dd {
+      color: white;
+    }
+
+    & dl dd {
+      font-weight: 100;
+    }
+
+    & h2.fin {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+
+  }
+
+  // &.starts,
+  // &.ends {
+  //   width: 17vw;
+  // }
+
+  & .cs-affichage-reservation:hover dl dt,
+  & .cs-affichage-reservation:hover dl dd {
+    display: block;
+  }
+
+  & .cs-affichage-reservation dl dt,
+  & .cs-affichage-reservation dl dd {
+    display: none;
+  }
+
+  &.starts .cs-affichage-reservation {
+    top: 0;
+    left: 0;
+  }
+
+  &.ends .cs-affichage-reservation {
+    bottom: 0;
+    left: 0;
+  }
+
   & * {
     z-index: 2000;
   }
@@ -116,26 +166,37 @@
     font-weight: 400;
   }
 
-  & .cs-affichage-journee {
-
-    padding: 6px;
-
-    & dl dt,
-    & dl dd {
-      color: white;
-    }
-
-    & dl dd {
-      font-weight: 100;
-    }
-
-  }
-
 }
 
-.affichage-journalier tbody{
+.affichage-journalier {
 
-  & tbody, & tr ,& td {
-    border: 1px solid;
+  // & tbody,
+  // & tr,
+  // & td {
+  //   border: 1px solid;
+  // }
+
+  // & tbody tr td {
+  //   vertical-align: middle;
+  // }
+
+  & tbody tr {
+    height: 1vh;
+  }
+
+  & td.td-H,
+  & td.td-M {
+    width: 4rem;
+    vertical-align: middle;
+    font-size: .75rem;
+    line-height: .5;
+  }
+
+  & td.td-M div {
+    position: absolute;
+    top: -0.25rem;
+    left: 25%;
+    background: #fff;
+    padding: 0 3px;
   }
 }

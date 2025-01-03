@@ -337,6 +337,8 @@ class ParcController extends AbstractController
             ->getRepository(HoraireOuverture::class)
             ->findAll();
 
+        $horaires_csag = $this->horaires_to_arr($horaires);
+
         $reservations = $em->getRepository(Reservation::class)
             ->findBetween($debut, $fin);
 
@@ -357,8 +359,11 @@ class ParcController extends AbstractController
             }
 
             if ($affichage === 'j') {
-                $heure_debut = $reservation->getDateDebut()->format('Ymd') === $debut->format('Ymd') ? $reservation->getHeureDebut() : '00:00';
-                $reservation->rowspan = $this->get_rowspan($reservation, $debut->format('Ymd'));
+                $reservation->starts = $reservation->getDateDebut()->format('Ymd') === $debut->format('Ymd');
+                $reservation->ends = $reservation->getDateFin()->format('Ymd') === $debut->format('Ymd');
+                $reservation->nor = !($reservation->starts || $reservation->ends);
+                $heure_debut = $reservation->starts ? $reservation->getHeureDebut() : '00:00';
+                $reservation->rowspan = $this->get_rowspan($reservation, $debut, $horaires_csag);
                 $reservation->heure_affichee = $heure_debut;
             }
         }
@@ -368,7 +373,7 @@ class ParcController extends AbstractController
             $this->params,
             [
                 'limit_resa' => $limit_resa,
-                'horaires' => $this->horaires_to_arr($horaires),
+                'horaires' => $horaires_csag,
                 'debut' => $debut,
                 'fin' => $fin,
                 'max' => $max,
@@ -426,20 +431,26 @@ class ParcController extends AbstractController
         return $out;
     }
 
-    private function get_rowspan(Reservation $reservation, $date_ref)
+    private function get_rowspan(Reservation $reservation, $date_ref, $horaires_csag)
     {
         $intervalles_minutes = $this->app_const['APP_MINUTES_SELECT_INTERVAL'];
 
+        $days = ['LU', 'MA', 'ME', 'JE', 'VE', 'SA', 'DI'];
+        $D = $date_ref->format('w');
+        $dow = $D == 0 ? 6 : $D - 1;
+        $horaires = explode(',', $horaires_csag[$days[$dow]]);
+
+        $curr_date = $date_ref->format('Ymd');
         $date_debut = $reservation->getDateDebut()->format('Ymd');
         $date_fin = $reservation->getDateFin()->format('Ymd');
-        $heure_debut = $date_debut === $date_ref ? $reservation->getHeureDebut() : '00:00';
-        $heure_fin = $date_ref === $date_fin ? $reservation->getHeureFin() : '24:00';
+        $heure_debut = $date_debut === $curr_date ? $reservation->getHeureDebut() : $horaires[0] . ':00';
+        $heure_fin = $curr_date === $date_fin ? $reservation->getHeureFin() : (1 + ($horaires[array_key_last($horaires)] == "" ? '23' : $horaires[array_key_last($horaires)])) . ':00';
 
         [$hd, $md] = explode(':', $heure_debut);
-        $d = $hd * 60 + $md;
+        $d = intval($hd) * 60 + intval($md);
 
         [$hf, $mf] = explode(':', $heure_fin);
-        $f = $hf * 60 + $mf;
+        $f = intval($hf) * 60 + intval($mf);
 
         $diff = $f - $d;
         $rowspan = $diff / $intervalles_minutes;
