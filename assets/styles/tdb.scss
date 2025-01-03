@@ -60,6 +60,7 @@
       opacity: .5;
     }
   }
+
 }
 
 .cs-tdb-legend {
@@ -115,4 +116,26 @@
     font-weight: 400;
   }
 
+  & .cs-affichage-journee {
+
+    padding: 6px;
+
+    & dl dt,
+    & dl dd {
+      color: white;
+    }
+
+    & dl dd {
+      font-weight: 100;
+    }
+
+  }
+
+}
+
+.affichage-journalier tbody{
+
+  & tbody, & tr ,& td {
+    border: 1px solid;
+  }
 }

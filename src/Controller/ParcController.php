@@ -355,6 +355,12 @@ class ParcController extends AbstractController
                     'color' => $vl->getCouleurVignette()
                 ];
             }
+
+            if ($affichage === 'j') {
+                $heure_debut = $reservation->getDateDebut()->format('Ymd') === $debut->format('Ymd') ? $reservation->getHeureDebut() : '00:00';
+                $reservation->rowspan = $this->get_rowspan($reservation, $debut->format('Ymd'));
+                $reservation->heure_affichee = $heure_debut;
+            }
         }
 
         return $this->render('parc/tdb.html.twig', array_merge(
@@ -418,5 +424,26 @@ class ParcController extends AbstractController
             $out[$day] =  $out[$day] . ($out[$day] === '' ? '' : ',') . implode(',', range($hd, $hf - 1));
         }
         return $out;
+    }
+
+    private function get_rowspan(Reservation $reservation, $date_ref)
+    {
+        $intervalles_minutes = $this->app_const['APP_MINUTES_SELECT_INTERVAL'];
+
+        $date_debut = $reservation->getDateDebut()->format('Ymd');
+        $date_fin = $reservation->getDateFin()->format('Ymd');
+        $heure_debut = $date_debut === $date_ref ? $reservation->getHeureDebut() : '00:00';
+        $heure_fin = $date_ref === $date_fin ? $reservation->getHeureFin() : '24:00';
+
+        [$hd, $md] = explode(':', $heure_debut);
+        $d = $hd * 60 + $md;
+
+        [$hf, $mf] = explode(':', $heure_fin);
+        $f = $hf * 60 + $mf;
+
+        $diff = $f - $d;
+        $rowspan = $diff / $intervalles_minutes;
+
+        return $rowspan;
     }
 }

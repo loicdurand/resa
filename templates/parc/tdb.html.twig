@@ -55,7 +55,7 @@
 
   </ul>
 
-  <div class="cs-fiche-vehicule cs-tdb">
+  <div class="cs-fiche-vehicule{{affichage == 'j' ? '' : ' cs-tdb' }}">
 
     <div class="fr-grid-row">
 
@@ -153,52 +153,71 @@
 
           {% endif %}
         {% endfor %}
-        <table>
+        <table class="affichage-journalier">
           <thead>
             <tr>
-              <th colspan="3">
+              <th colspan="{{ 2 + reservations|length }}">
                 {{ days_list_long[dow] ~ debut|date(' d ') ~ trans_day_hash[debut|date('F')] ~ debut|date(' Y') }}
               </th>
             </tr>
           </thead>
           <tbody>
-            {% for h in range(0, 23) %}
-              <tr>
-                <td rowspan="4">
-                  {{ h | length < 2 ? '0' ~ h : h }}
-                </td>
-                <td>
-                  00
-                </td>
-                <td>
-                  {{ (h | length < 2 ? '0' ~ h : h)~':00' }}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  15
-                </td>
-                <td>
-                  {{ (h | length < 2 ? '0' ~ h : h)~':15' }}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  30
-                </td>
-                <td>
-                  {{ (h | length < 2 ? '0' ~ h : h)~':30' }}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  45
-                </td>
-                <td>
-                  {{ (h | length < 2 ? '0' ~ h : h)~':45' }}
-                </td>
-              </tr>
+            {% for index_heure ,h in range(0, 23) %}
+              {% set H = h | length < 2 ? '0' ~ h : h %}
+              {% for index_minute, x in range(0, (60 / APP_MINUTES_SELECT_INTERVAL) - 1 ) %}
+                {% set m = index_minute * APP_MINUTES_SELECT_INTERVAL %}
+                {% set M = m | length < 2 ? '0' ~ m : m %}
+                <tr>
+                  {% if index_minute == 0 %}
+                    <td rowspan="4" class="td-H">
+                      {{ H }}
+                    </td>
+                  {% endif %}
+                  <td class="td-M">
+                    {{ M }}
+                  </td>
+                  {% for reservation in reservations %}
+                    {% set name = H ~ ':' ~ M %}
+                    {% if reservation.heure_affichee == name %}
+                      
+                      <td class="cs-tooltip" rowspan="{{ reservation.rowspan }}" style="background-color: {{ reservation.vehicule.couleurVignette }};">
+                      <div class="cs-affichage-journee">
+                      <h3>
+                        {{ reservation.vehicule.marque ~ ' ' ~ reservation.vehicule.modele }}
+                      </h3>
+                      <dl>
+                        <dt>
+                          Immatriculation:
+                        </dt>
+                        <dd>
+                          {{ reservation.vehicule.immatriculation }}
+                        </dd>
+                        <dt>
+                          Réservé par:
+                        </dt>
+                        <dd>
+                          {{ reservation.user }}
+                        </dd>
+                        <dt>
+                          Perception:
+                        </dt>
+                        <dd>
+                          {{ reservation.dateDebut | date('d/m/Y \\à ') ~ reservation.heureDebut }}
+                        </dd>
+                        <dt>
+                          Restitution:
+                        </dt>
+                        <dd>
+                          {{ reservation.dateFin | date('d/m/Y \\à ') ~ reservation.heureFin }}
+                        </dd>
 
+                      </div>
+                      </td>
+
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+              {% endfor %}
             {% endfor %}
           </tbody>
         </table>
