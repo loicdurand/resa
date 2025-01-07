@@ -46,7 +46,7 @@ updater.addEventListener('update', filter);
   document.getElementById('btn-go-step2') // 
 ].forEach(btn => {
 
-  btn.addEventListener('click', e => {
+  btn.addEventListener('click', () => {
     if (!init)
       init = updater.init();
 
@@ -61,7 +61,7 @@ updater.addEventListener('update', filter);
   document.getElementById('btn-go-step1')
 ].forEach(btn => {
 
-  btn.addEventListener('click', e => {
+  btn.addEventListener('click', () => {
     if (!init)
       init = updater.init();
 
@@ -105,7 +105,6 @@ function addTag(msg = '', field = '', updater) {
       case 'nbplaces':
         form_elt = document.getElementById('input--nb-places');
         form_elt.value = 'Indifférent';
-      default:
         break;
     }
     updater.dataset[field] = '*';
@@ -135,7 +134,7 @@ function filter(e) {
     FR = en_date => {
       const // 
         [date, heure] = en_date.split(/\s|T|\+/),
-        [YYYY, MM, DD] = date.split('-'),
+        [, MM, DD] = date.split('-'),
         [hh, mm] = heure.split(/:/);
       return `${DD}/${MM} ${hh}:${mm}`;
     },
@@ -148,12 +147,6 @@ function filter(e) {
   if (debut !== '*' && fin !== '*') {
     filtres_appliques.push(addTag(`${FR(debut)}&nbsp;&rarr;&nbsp;${FR(fin)}`));
   }
-
-  console.log({
-    data,
-    debut,
-    fin
-  });
 
   filtres_elt.innerText = '';
   no_result.classList.add('hidden');
@@ -174,6 +167,7 @@ function filter(e) {
   }
 
   vls.forEach(vl => {
+    let dates = '';
     const // 
       {
         dataset: {
@@ -184,14 +178,16 @@ function filter(e) {
       href = vl.getAttribute('href'),
       [page, v_id] = href.split(/\//).filter(Boolean);
     vl.classList.remove('hidden');
-    vl.setAttribute('href', `/${page}/${v_id}/${debut}/${fin}`);
+    if (debut && debut !== '*')
+      dates += `/${debut}/${fin}`;
+    vl.setAttribute('href', `/${page}/${v_id}${dates}`);
 
     const // 
       resas = reservations.split('|'),
       is_indispo = resas.find(resa => {
 
-        if (debut !== '*' && fin !== '*')
-          return false;
+        // if (debut !== '*' && fin !== '*')
+        //   return false;
 
         const // 
           iDebut = +debut.replace(/[^\d]/g, ''),
@@ -213,7 +209,6 @@ function filter(e) {
         if (data[field] !== '*') {
           if (field === 'nbplaces') {
             if (+data[field] > +vl.dataset[field]) {
-              console.log(data[field], vl.dataset[field]);
               vl.classList.add('hidden');
               if (!mem.includes(vl_idx)) {
                 count_vls--;
