@@ -179,7 +179,7 @@ function filter(e) {
       [page, v_id] = href.split(/\//).filter(Boolean);
     vl.classList.remove('hidden');
     if (debut && debut !== '*')
-      dates += `/${debut}/${fin}`;
+      dates += `/${debut.replace(/\s/, 'T')}/${fin.replace(/\s/, 'T')}`;
     vl.setAttribute('href', `/${page}/${v_id}${dates}`);
 
     const // 
