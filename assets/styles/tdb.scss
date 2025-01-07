@@ -22,6 +22,7 @@
 
   & tbody tr td .cs-td-daynum.striked {
     text-decoration: none;
+    background-image: none;
 
     &+div {
       background: transparent;
@@ -101,6 +102,17 @@
 
   & .cs-affichage-reservation {
 
+    & h2.debut,
+    & h2.fin {
+      font-weight: 400;
+      font-size: 1rem;
+      background: #fff;
+      border-radius: 5px;
+      padding: 0 3px;
+      margin: 3px 3px;
+      line-height: 1.5;
+    }
+
     & h2.debut {
       position: absolute;
       top: 0;
@@ -128,6 +140,10 @@
   // &.ends {
   //   width: 17vw;
   // }
+
+  & .cs-affichage-reservation:hover dl {
+    margin-bottom: 1.5rem;
+  }
 
   & .cs-affichage-reservation:hover dl dt,
   & .cs-affichage-reservation:hover dl dd {
@@ -186,7 +202,7 @@
 
   & td.td-H,
   & td.td-M {
-    width: 4rem;
+    width: 12.5vw;
     vertical-align: middle;
     font-size: .75rem;
     line-height: .5;

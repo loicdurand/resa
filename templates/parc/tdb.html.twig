@@ -147,7 +147,7 @@
 
                     {% set horaire_ouverture = horaires_csag[0] %}
                     {% set horaire_fermeture = (horaires_csag|last) %}
-                    {% set horaire_fermeture = horaire_fermeture == '' ? 23 : horaire_fermeture %}
+
                     {% for index_heure ,h in range(horaire_ouverture, horaire_fermeture) %}
                       {% set H = h | length < 2 ? '0' ~ h : h %}
                       {% for index_minute, x in range(0, (60 / APP_MINUTES_SELECT_INTERVAL) - 1 ) %}
@@ -169,11 +169,12 @@
                             {% set name = H ~ ':' ~ M %}
                             {% if reservation.heure_affichee == name or ( not reservation.starts and index_heure == 0 and index_minute == 0 ) %}
 
-                              <td class="cs-tooltip relative{{ reservation.starts ? ' starts' : '' }}{{ reservation.ends ? ' ends' : '' }}" rowspan="{{ reservation.rowspan }}" style="background-color: {{ reservation.vehicule.couleurVignette }};">
+                              <td class="cs-tooltip relative{{ reservation.starts ? ' starts' : '' }}{{ reservation.ends ? ' ends' : '' }}" rowspan="{{ reservation.rowspan }}" style="width: calc(75vw/{{ reservations|length }});background-color: {{ reservation.vehicule.couleurVignette }};">
                                 <div class="cs-affichage-reservation">
                                   {% if reservation.starts %}
                                     <h2 class="debut" title="{{ reservation.vehicule.marque ~ ' ' ~ reservation.vehicule.modele ~ ' - ' ~ reservation.vehicule.immatriculation }}">
                                       &nbsp;&rarr;&nbsp;
+                                      Perception:
                                       {{ reservation.heureDebut }}
                                     </h2>
                                   {% endif %}
@@ -197,6 +198,7 @@
                                       </dd>
                                       {% if reservation.ends %}
                                         <h2 class="fin" title="{{ reservation.vehicule.marque ~ ' ' ~ reservation.vehicule.modele ~ ' - ' ~ reservation.vehicule.immatriculation }}">
+                                          Restitution:
                                           {{ reservation.heureFin }}
                                           &nbsp;&larr;&nbsp;
                                         </h2>
@@ -338,9 +340,9 @@
                               {% endif %}
                             {% endfor %}
 
-                            <div {{ striked_fin ? 'data-heure_fin=' ~ striked_fin }} data-ref="{{ days_list[dow] }}" class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" {{ csag_ferme ? 'title="En dehors des horaires d\'ouverture du CSAG"' : '' }}>
+                            <a href="/parc/tdb/{{ curr_date|date('Y-m-d') }}/{{ curr_date|date('Y-m-d') }}/j" title="Afficher la journée" {{ striked_fin ? 'data-heure_fin=' ~ striked_fin }} data-ref="{{ days_list[dow] }}" class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" {{ csag_ferme ? 'title="En dehors des horaires d\'ouverture du CSAG"' : '' }}>
                               {{ day }}
-                            </div>
+                            </a>
                             <div>
                               {# day content here #}
                               {# {% if striked_debut %}

@@ -368,6 +368,12 @@ class ParcController extends AbstractController
             }
         }
 
+        foreach ($horaires_csag as $day => $heures) {
+            if ($heures === "")
+                // replissage par défaut pour les jours où le CSAG est fermé
+                $horaires_csag[$day] = '8,9,10,11,14,15,16';
+        }
+
         return $this->render('parc/tdb.html.twig', array_merge(
             $this->getAppConst(),
             $this->params,
@@ -439,12 +445,16 @@ class ParcController extends AbstractController
         $D = $date_ref->format('w');
         $dow = $D == 0 ? 6 : $D - 1;
         $horaires = explode(',', $horaires_csag[$days[$dow]]);
+        if (count($horaires) === 1) {
+            // replissage par défaut pour les jours où le CSAG est fermé
+            $horaires = ["8", "9", "10", "11", "14", "15", "16"];
+        }
 
         $curr_date = $date_ref->format('Ymd');
         $date_debut = $reservation->getDateDebut()->format('Ymd');
         $date_fin = $reservation->getDateFin()->format('Ymd');
         $heure_debut = $date_debut === $curr_date ? $reservation->getHeureDebut() : $horaires[0] . ':00';
-        $heure_fin = $curr_date === $date_fin ? $reservation->getHeureFin() : (1 + ($horaires[array_key_last($horaires)] == "" ? '23' : $horaires[array_key_last($horaires)])) . ':00';
+        $heure_fin = $curr_date === $date_fin ? $reservation->getHeureFin() : (1 + $horaires[array_key_last($horaires)]) . ':00';
 
         [$hd, $md] = explode(':', $heure_debut);
         $d = intval($hd) * 60 + intval($md);
