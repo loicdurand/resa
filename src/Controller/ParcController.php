@@ -465,6 +465,6 @@ class ParcController extends AbstractController
         $diff = $f - $d;
         $rowspan = $diff / $intervalles_minutes;
 
-        return $rowspan;
+        return $rowspan === 0 ? 1 : $rowspan;
     }
 }

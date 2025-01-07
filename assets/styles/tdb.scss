@@ -1,5 +1,17 @@
+.cs-tdb-legend+.cs-fiche-vehicule #calendars-container .fr-table__wrapper {
+
+  & table {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
 // surcharge 'reserver.scss' pour ne pas "striker" les dates
 .cs-fiche-vehicule.cs-tdb table {
+
+  & [href] {
+    background-image: none;
+  }
 
   & td {
     padding: 5px 0;
@@ -22,7 +34,6 @@
 
   & tbody tr td .cs-td-daynum.striked {
     text-decoration: none;
-    background-image: none;
 
     &+div {
       background: transparent;
@@ -101,6 +112,7 @@
   border-radius: 3px;
 
   & .cs-affichage-reservation {
+    margin: 2rem 0;
 
     & h2.debut,
     & h2.fin {
@@ -172,6 +184,7 @@
   & h3 {
     font-size: 1rem;
     margin-bottom: 0;
+    line-height: 1;
   }
 
   & dl dt {
@@ -197,7 +210,7 @@
   // }
 
   & tbody tr {
-    height: 1vh;
+    height: 1vh;//7rem;
   }
 
   & td.td-H,
