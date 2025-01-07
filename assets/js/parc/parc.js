@@ -1,8 +1,6 @@
 
 console.log('=== parc ===');
 
-let selected_vl;
-
 const // 
   [table] = document.getElementsByTagName('table'),
   btns = {

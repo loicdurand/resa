@@ -20,10 +20,12 @@ use App\Entity\CategorieVehicule;
 use App\Entity\GenreVehicule;
 use App\Entity\Permission;
 use App\Entity\TransmissionVehicule;
+use App\Entity\Reservation;
 use App\Entity\Vehicule;
 use App\Entity\Photo;
 use App\Form\PhotoType;
 use App\Form\VehiculeType;
+use App\Entity\HoraireOuverture;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -314,6 +316,80 @@ class ParcController extends AbstractController
         ));
     }
 
+    #[Route('/parc/tdb/{debut}/{fin}/{affichage}')]
+    public function tdb(ManagerRegistry $doctrine, \DateTime $debut, \DateTime $fin, ?string $affichage = "m"): Response
+    {
+
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('login');
+
+        $em = $doctrine->getManager();
+        $this->setAppConst();
+
+        $tmp = new \DateTime('now');
+        $max = new \DateTime($tmp->format('Y-m-d') . ' 23:59:59');
+        $max->modify('+' . $this->app_const['APP_LIMIT_RESA_MONTHS'] . ' months');
+
+        $limit_resa = $this->app_const['APP_LIMIT_RESA_MONTHS'];
+        $limit_resa = $limit_resa . ' mois';
+
+        $horaires = $em
+            ->getRepository(HoraireOuverture::class)
+            ->findAll();
+
+        $horaires_csag = $this->horaires_to_arr($horaires);
+
+        $reservations = $em->getRepository(Reservation::class)
+            ->findBetween($debut, $fin);
+
+        $vehicules = [];
+        $ids = [];
+
+        foreach ($reservations as $reservation) {
+            $vl = $reservation->getVehicule();
+            if (!in_array($vl->getId(), $ids)) {
+                $ids[] = $vl->getId();
+                $vehicules[] = [
+                    'id' => $vl->getId(),
+                    'immatriculation' => $vl->getImmatriculation(),
+                    'marque' => $vl->getMarque(),
+                    'modele' => $vl->getModele(),
+                    'color' => $vl->getCouleurVignette()
+                ];
+            }
+
+            if ($affichage === 'j') {
+                $reservation->starts = $reservation->getDateDebut()->format('Ymd') === $debut->format('Ymd');
+                $reservation->ends = $reservation->getDateFin()->format('Ymd') === $debut->format('Ymd');
+                $reservation->nor = !($reservation->starts || $reservation->ends);
+                $heure_debut = $reservation->starts ? $reservation->getHeureDebut() : '00:00';
+                $reservation->rowspan = $this->get_rowspan($reservation, $debut, $horaires_csag);
+                $reservation->heure_affichee = $heure_debut;
+            }
+        }
+
+        foreach ($horaires_csag as $day => $heures) {
+            if ($heures === "")
+                // replissage par défaut pour les jours où le CSAG est fermé
+                $horaires_csag[$day] = '8,9,10,11,14,15,16';
+        }
+
+        return $this->render('parc/tdb.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'limit_resa' => $limit_resa,
+                'horaires' => $horaires_csag,
+                'debut' => $debut,
+                'fin' => $fin,
+                'max' => $max,
+                'vehicules' => $vehicules,
+                'reservations' => $reservations,
+                'affichage' => $affichage
+            ]
+        ));
+    }
+
     private function getAppConst()
     {
         return $this->app_const;
@@ -337,5 +413,58 @@ class ParcController extends AbstractController
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
+    }
+
+    private function horaires_to_arr(array $horaires)
+    {
+        $out = [
+            'LU' => '',
+            'MA' => '',
+            'ME' => '',
+            'JE' => '',
+            'VE' => '',
+            'SA' => '',
+            'DI' => ''
+        ];
+        foreach ($horaires as $horaire) {
+            $day = $horaire->getJour();
+            [$Hd] = explode(':', $horaire->getDebut());
+            $hd = intval($Hd);
+            [$Hf] = explode(':', $horaire->getFin());
+            $hf = intval($Hf);
+            $out[$day] =  $out[$day] . ($out[$day] === '' ? '' : ',') . implode(',', range($hd, $hf - 1));
+        }
+        return $out;
+    }
+
+    private function get_rowspan(Reservation $reservation, $date_ref, $horaires_csag)
+    {
+        $intervalles_minutes = $this->app_const['APP_MINUTES_SELECT_INTERVAL'];
+
+        $days = ['LU', 'MA', 'ME', 'JE', 'VE', 'SA', 'DI'];
+        $D = $date_ref->format('w');
+        $dow = $D == 0 ? 6 : $D - 1;
+        $horaires = explode(',', $horaires_csag[$days[$dow]]);
+        if (count($horaires) === 1) {
+            // replissage par défaut pour les jours où le CSAG est fermé
+            $horaires = ["8", "9", "10", "11", "14", "15", "16"];
+        }
+
+        $curr_date = $date_ref->format('Ymd');
+        $date_debut = $reservation->getDateDebut()->format('Ymd');
+        $date_fin = $reservation->getDateFin()->format('Ymd');
+        $heure_debut = $date_debut === $curr_date ? $reservation->getHeureDebut() : $horaires[0] . ':00';
+        $heure_fin = $curr_date === $date_fin ? $reservation->getHeureFin() : (1 + $horaires[array_key_last($horaires)]) . ':00';
+
+        [$hd, $md] = explode(':', $heure_debut);
+        $d = intval($hd) * 60 + intval($md);
+
+        [$hf, $mf] = explode(':', $heure_fin);
+        $f = intval($hf) * 60 + intval($mf);
+
+        $diff = $f - $d;
+        $rowspan = $diff / $intervalles_minutes;
+
+        return $rowspan;
     }
 }

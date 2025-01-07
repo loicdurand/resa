@@ -93,10 +93,16 @@ class AppFixtures extends Fixture
                 'defaut' => ['SOLC', 'CSAG']
             ],
             [
+                'nom' => 'AFFICHER_TDB',
+                'libelle' => 'Afficher le tableau de bord',
+                'template' => 'compte/tdb.html.twig',
+                'defaut' => ['SOLC', 'CSAG']
+            ],
+            [
                 'nom' => 'VALIDER_RESAS',
                 'libelle' => 'Valider les réservations de véhicules',
                 'template' => 'compte/valider_resas.html.twig', //'validation_reservation',
-                'defaut' => ['VDT']
+                'defaut' => ['SOLC', 'VDT']
             ],
             [
                 'nom' => 'RESERVER_VL',

@@ -14,6 +14,9 @@ new Router('/', {
   '/reserver': () => {
     import('./js/accueil/reserver/reserver');
   },
+  '/parc/tdb': () => {
+    import('./js/parc/tdb');
+  },
   '/parc': () => {
     import('./js/parc/parc');
   },

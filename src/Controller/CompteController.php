@@ -47,6 +47,8 @@ class CompteController extends AbstractController
 
         $this->setAppConst();
 
+        $open = $this->request->get('open');
+
         $this->request = Request::createFromGlobals();
         $this->requestStack = $requestStack;
         $this->session = $this->requestStack->getSession();
@@ -83,7 +85,8 @@ class CompteController extends AbstractController
             ]);
 
         $action_params = [
-            'roles' => $roles,
+            'open' => $open,
+            'roles' => $roles
         ];
 
         if (!is_null($permission)) {
@@ -124,7 +127,9 @@ class CompteController extends AbstractController
                     $em->flush();
                 }
 
-                return $this->redirectToRoute('compte');
+                return $this->redirectToRoute('compte', [
+                    'open' => 'compte/gestion_horaires.html.twig'
+                ]);
             }
 
             $action_params['form'] = $form;

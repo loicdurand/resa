@@ -175,16 +175,15 @@
 
             {# PAS DE RÉSA À VENIR MAIS RÉSAS PASSÉES #}
             {% if (passees | length) == (reservations | length) and (passees | length > 0) %}
-              {% set vehicule = reservation.vehicule %}
               <div class="cs-noborder cursor-initial">
-                <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
+                <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow cs-no-result">
 
-                  <figure class="cs-img-container left">
+                  {# <figure class="cs-img-container left">
                     <img class="cs-img" src="{{ asset('images/no_image.jpg') }}" alt="Aucune image d'illustration">
                       <figcaption class="hidden">
                         Aucune image d'illustration
                       </figcaption>
-                    </figure>
+                    </figure> #}
 
                     <div class="left cs-descr-container">
                       <dl>
@@ -192,9 +191,9 @@
                           Aucun résultat
                         </dt>
                         <dd>
-                          <h3>
+                          {# <h3> #}
                             Vous n'avez pas de réservation à venir.
-                          </h3>
+                          {# </h3> #}
                         </dd>
                       </dl>
                     </div>
