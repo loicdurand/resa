@@ -249,6 +249,23 @@ table td {
         }
     }
 
+    .cs-img-container .cs-img {
+        width: 170px;
+    }
+
+    .cs-fiche-vehicule {
+        & .cs-gallerie {
+            & .fr-col-3 .cs-figure .cs-gallerie-btn img {
+                object-fit: scale-down;
+            }
+        }
+
+        & .cs-gallerie-btn {
+            background-color: unset;
+
+        }
+    }
+
 }
 
 /* FORMAT LAPTOP
