@@ -1,0 +1,67 @@
+.valid-resa {
+
+  visibility: visible;
+  opacity: 1;
+  height: 100%;
+  transition: opacity 1s linear;
+
+  &.removed {
+    visibility: hidden;
+    opacity: 0;
+    height: 0;
+    transition: visibility 0s 1s, opacity 1s linear, height 1s linear;
+  }
+
+  & .loader {
+    display: none;
+  }
+
+  & .loader.loading {
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    z-index: 2;
+
+    & svg {
+      margin-top: 3rem;
+
+      & path,
+      & rect {
+        fill: #FF6700;
+      }
+    }
+  }
+
+  &:hover .valid-resa--menu {
+    display: block;
+    position: absolute;
+    background-color: rgba(255, 255, 255, .5);
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+
+    & .fr-btn {
+      margin-top: 5rem;
+
+      &.fr-btn--secondary {
+        background-color: #fff;
+      }
+    }
+  }
+
+  & .valid-resa--menu {
+    display: none;
+  }
+}
+
+.cs-go.cs-go-compte {
+  bottom: 0;
+}
+
+@media all and (max-width: 641px) {
+  .valid-resa:hover .valid-resa--menu .fr-btn {
+    margin-top: 0;
+  }
+}

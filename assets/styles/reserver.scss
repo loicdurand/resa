@@ -1,0 +1,223 @@
+.cs-fiche-vehicule {
+  & .cs-gallerie-btn {
+    padding: 0;
+  }
+
+  & .cs-marque {
+    font-weight: 900;
+    font-size: 1.5rem;
+  }
+
+  & dl,
+  & dd {
+    padding-inline-start: 0;
+  }
+
+  .cs-gallerie {
+    border: 1px solid var(--grey-6);
+    margin-bottom: 2rem;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, .05);
+
+    & .cs-figure {
+      border: 1px solid var(--grey-2);
+      border-radius: 3px;
+      height: 425px;
+      object-fit: contain; //scale-down;
+    }
+
+    & .fr-col-3 .cs-figure {
+      height: auto;
+
+      & img {
+        height: 130px;
+      }
+    }
+
+    & .fr-col-6 .cs-figure {
+      width: auto;
+
+      & img {
+        height: 423px;
+      }
+    }
+  }
+
+  .cs-informations {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+  // Surcharge du filtre Début -> Fin
+  & .cs-filtres-container {
+    position: relative;
+    padding: 8px 0;
+    height: auto;
+
+    &.fix {
+      position: fixed;
+      top: 0;
+      padding: 8px 8px;
+      background: var(--grey-0);
+
+      &:before {
+        content: "Votre réservation:";
+        line-height: 2.5rem;
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin-bottom: .5rem;
+        display: block;
+      }
+    }
+
+    & .cs-date-ctnr {
+      height: 3rem;
+
+      & .cs-btn-from-to {
+        line-height: 2.5rem;
+
+        &.bordered {
+          border: 2px solid var(--blue-5);
+
+          &.red {
+            border-color: var(--red-5);
+          }
+        }
+
+        & .cs-from-to-value {
+          font-size: .8rem;
+
+          & .cs-from-to-value--date,
+          & .cs-from-to-value--date .hide-s {
+            text-transform: lowercase;
+          }
+
+          & .cs-from-to-value--heure {
+            margin-top: -1.5rem;
+            font-size: .7rem;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+
+  & table {
+    & thead tr {
+      &.cs-row-days th {
+        padding: 1rem;
+        font-size: .8rem;
+      }
+
+      & th {
+        text-align: center;
+
+      }
+    }
+
+    & tbody tr td .cs-td-daynum {
+      font-weight: 900;
+      cursor: pointer;
+
+      &+div {
+        width: 6px;
+        height: 6px;
+        border-radius: 6px;
+        margin: 0 auto;
+      }
+
+      &.striked {
+        text-decoration-line: line-through;
+        cursor: initial;
+
+        &.striked_debut,
+        &.striked_fin {
+          text-decoration-line: none;
+        }
+      }
+
+      &.striked+div,
+      &.striked_debut+div,
+      &.striked_fin+div {
+        background: var(--red-5);
+      }
+
+      &.csag_ferme[data-date][data-ref]:not(.desactivee-from, .desactivee-to) {
+        opacity: 1;
+      }
+
+      // &.striked,
+      &.before_now,
+      &.after_limit,
+      &.csag_ferme,
+      &.after_limit.csag_ferme[data-date][data-ref],
+      &.desactivee-from,
+      &.desactivee-to {
+        cursor: initial;
+        font-weight: initial;
+        opacity: .5;
+      }
+
+      &.selected-from,
+      &.selected-to,
+      &.between,
+      &.aie {
+        border: 1px solid var(--grey-5);
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+      }
+
+      &.aie {
+        background-color: var(--red-4);
+        color: var(--grey-5);
+        font-weight: 100;
+      }
+
+      &.selected-from {
+        background-color: var(--blue-4);
+        color: var(--grey-0);
+      }
+
+      &.between {
+        background-color: var(--blue-3);
+        color: var(--grey-0);
+      }
+
+      &.selected-to {
+        background-color: var(--blue-5);
+        color: var(--grey-0);
+      }
+
+      // &.between,
+      // &.selected-to {
+
+      //   &:before {
+      //     content: "→";
+      //     position: absolute;
+      //     font-size: 0.75rem;
+      //     line-height: 2;
+      //     color: var(--blue-5);
+      //     opacity: 1;
+      //     font-weight: 900;
+      //     left: 0;
+      //   }
+
+      //   &.selected-to:before {
+      //     left: -1rem;
+      //   }
+
+      // }
+    }
+  }
+
+}
+
+.fr-modal .cs-date-lib {
+  text-transform: lowercase;
+}
+
+.fr-modal--opened~.cs-fiche-vehicule .cs-filtres-container .bordered {
+  border: 1px solid var(--grey-5) !important;
+}

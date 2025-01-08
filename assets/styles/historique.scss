@@ -1,0 +1,132 @@
+.cs-border {
+  border: 1px solid var(--grey-5);
+}
+
+.cs-border,
+.cs-noborder {
+
+  border-radius: 3px;
+  position: relative;
+
+  .cs-card.cs-histo-card.vehicule-card.vehicule-card--result {
+    border: none;
+    border-radius: 0;
+
+    &.cursor-initial {
+      cursor: initial;
+    }
+
+    & dl dd {
+      font-size: .65rem;
+    }
+
+    & .cs-img-container .cs-img,
+    & .cs-descr-container {
+      max-height: 127px;
+
+      & .cs-resa-statut {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+
+        &.en.attente {
+          border: 1px solid var(--grey-5);
+        }
+
+        &.confirmee {
+          background-color: var(--green-9);
+          color: var(--grey-0);
+        }
+
+        &.en.cours {
+          background: var(--teal-9);
+          color: var(--grey-0);
+        }
+        &.annulee {
+          background: var(--red-9);
+          color: var(--grey-0);
+        }
+      }
+    }
+
+    & .cs-img-container .cs-img {
+      border-radius: 6px 0 0 0;
+    }
+
+  }
+
+  & .cs-from-to {
+    background-color: var(--grey-4);
+    max-height: 2.5em;
+
+    &.confirmee {
+      background-color: var(--green-9);
+      color: var(--grey-0);
+    }
+
+    &.en.cours {
+      background: var(--teal-9);
+      color: var(--grey-0);
+    }
+    &.annulee {
+      background: var(--red-9);
+      color: var(--grey-0);
+    }
+
+    &.terminee {
+      background-color: var(--grey-10);
+      color: var(--grey-5);
+    }
+
+    & p {
+      line-height: 1.0rem;
+      font-size: 0.75rem;
+      margin-top: .125rem;
+    }
+  }
+
+}
+
+.cs-go-histo {
+  display: block;
+  position: absolute;
+  right: 16px;
+  bottom: 6px;
+}
+
+@media screen and (max-width:640px) {
+  .cs-border {
+
+    border: 1px solid var(--grey-5);
+    border-radius: 3px;
+    position: relative;
+
+    .cs-card.cs-histo-card.vehicule-card.vehicule-card--result {
+      border: none;
+      border-radius: 0;
+
+      & .cs-resa-statut {
+        position: absolute;
+        top: 12px;
+        left: -12px;
+        border-radius: 3px;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      & .cs-img-container .cs-img {
+        width: unset;
+      }
+
+      & dl {
+        dt.cs-marque {
+          font-size: .8rem !important;
+        }
+
+        dd {
+          font-size: .65rem;
+        }
+      }
+    }
+  }
+}

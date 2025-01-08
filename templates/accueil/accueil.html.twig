@@ -1,0 +1,453 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	{# Fil d'Arianne #}
+	<nav	role="navigation"	class="hide-s hide-m fr-breadcrumb"	aria-label="vous êtes ici :">
+		<button	class="fr-breadcrumb__button"	aria-expanded="false"	aria-controls="breadcrumb-1">
+			Voir le fil d’Ariane
+		</button>
+		<div	class="fr-collapse"	id="breadcrumb-1">
+			<ol	class="fr-breadcrumb__list">
+				<li>
+					<a	class="fr-breadcrumb__link"	aria-current="page">
+						Accueil
+					</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+
+	{# Filtres de recherche #}
+	<div	id="hideOnScroll"	class="cs-filtres-container cs-recherche">
+
+		{# DE ... -> À ... #}
+		<div	class="cs-btn-ctnr cs-date-ctnr">
+			<button	id="to-step-1-btn"	class="cs-btn cs-btn-from-to cs-btn--left"	data-fr-opened="false"	aria-controls="fr-modal--from-to">
+				<span	class="cs-from-to">
+					Début
+				</span>
+				<span	id="select-from-date--target"	class="cs-from-to-value">
+					<span	class="hide-s hide-m">
+						__ {# Aujourd'hui #}
+					</span>
+					<span	class="hide-l hide-xl">
+						__ {# Aujourd'hui #}
+					</span>
+					<span	id="select-from-heure--target"></span>
+				</span>
+			</button>
+			<div	class="separator"></div>
+			<button	id="to-step-2-btn"	class="cs-btn cs-btn-from-to cs-btn--right"	data-fr-opened="false"	aria-controls="fr-modal--from-to">
+				<span	class=" cs-from-to">
+					Fin
+				</span>
+				<span	id="select-to-date--target"	class="cs-from-to-value">
+					<span	class="hide-s hide-m">
+						__ {# Demain #}
+					</span>
+					<span	class="hide-l hide-xl">
+						__ {# Demain #}
+					</span>
+					<span	id="select-to-heure--target"></span>
+				</span>
+			</button>
+		</div>
+
+		{# TAGS #}
+		<div	class="cs-btn-ctnr cs-tags-ctnr">
+			<button	class="cs-btn cs-btn-tag cs-btn-tag--left"	data-fr-opened="false"	aria-controls="fr-modal--categorie">
+				<span	class="cs-tag">
+					Catégorie
+				</span>
+			</button>
+			<button	class="cs-btn cs-btn-tag cs-btn-tag--right"	data-fr-opened="false"	aria-controls="fr-modal--autres-filtres">
+				<span	class="cs-tag fr-btn--icon-left fr-icon-equalizer-line">
+					Filtres
+				</span>
+			</button>
+		</div>
+
+	</div>
+
+	<div	class="fr-grid-row fr-grid-row--gutters cs-main">
+
+		<p	id="X-vls-dispos"	class="cs-nb-vehicules fr-col-12 fr-col-sm-12 fr-h6">
+			{{ vehicules|length }}
+			{{ vehicules|length > 1 ? 'véhicules' : 'véhicule' }}
+			{{ (vehicules|length)>1 ? 'disponibles' : 'disponible' }}
+			.
+		</p>
+
+		<ul	id="filtres_appliques"	class="cs-filtres-appliques fr-tags-group"></ul>
+
+		{# carte affichée si aucun véhicule disponible #}
+		<div	id="no-result"	class="hidden vehicule-card vehicule-card--no-result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow">
+			<figure	class="cs-img-container left">
+				<img	class="cs-img"	src="{{ asset('images/no_image.jpg') }}"	alt="Renault 4l sérigraphiée">
+					<figcaption	class="hidden">
+						Renault 4l sérigraphiée
+					</figcaption>
+				</figure>
+
+				<div	class="left cs-descr-container">
+					<dl>
+						<dt	class="cs-marque">
+							Aucun résultat.
+						</dt>
+						{% if vehicules|length %}
+							<dd>
+								{{ vehicules|length }}
+								{{ vehicules|length > 1 ? 'véhicules' : 'véhicule' }}
+								<span	class="hide-s">
+									{{ (vehicules|length)>1 ? 'pourraient' : 'pourrait' }}
+									vous être
+									{{ (vehicules|length)>1 ? 'proposés' : 'proposés' }}
+								</span>
+								en élargissant vos critères de recherche.
+								.
+							</dd>
+						{% endif %}
+
+					</dl>
+				</div>
+			</div>
+
+			{# Affichage des véhicules #}
+			{% for n, vehicule in vehicules %}
+				{% set resas = '' %}
+				{% for reservation in vehicule.reservations %}
+					{% set resas = resas ~ (reservation.dateDebut|date('Y-m-d h:i:00')) ~ '_' ~ (reservation.dateFin|date('Y-m-d h:i:00')) ~ (loop.last ? '' :'|') %}
+				{% endfor %}
+
+				<a	data-reservations="{{ resas }}"	href="/reserver/{{ vehicule.id }}/"	class="vehicule-card vehicule-card--result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow"	data-index="{{ n }}"	data-categorie="{{ vehicule.categorie.libelle }}"	data-serigraphie="{{ vehicule.serigraphie ? 'Oui' : 'Non' }}"	data-transmission="{{ vehicule.transmission.code }}"	data-nbplaces="{{ vehicule.NbPlaces }}">
+					<figure	class="cs-img-container left">
+						<img	class="cs-img"	src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}"	alt="{{ vehicule.marque ~ ' ' ~ vehicule.modele }}">
+							<figcaption	class="hidden">
+								Photo principale du véhicule
+							</figcaption>
+						</figure>
+
+						<div	class="left cs-descr-container">
+							<dl>
+								<dt	class="cs-marque">
+									{{ vehicule.marque }}
+									&nbsp;
+									<span	class="cs-modele">
+										{{ vehicule.modele }}
+									</span>
+								</dt>
+								{% if (vehicule.motorisation ~ vehicule.finition) is empty %}
+									<br/>
+								{% else %}
+									<dd>
+										{{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
+									</dd>
+								{% endif %}
+								<dd>
+									<ul	class="fr-tags-group cs-tags">
+										<li>
+											<p	class="fr-tag fr-tag--sm">
+												{{ vehicule.transmission.code }}
+											</p>
+										</li>
+										<li>
+											<p	class="fr-tag fr-tag--sm">
+												{{ vehicule.carburant.libelle }}
+											</p>
+										</li>
+									</ul>
+								</dd>
+								<dd	title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
+									{% for i in range(1, vehicule.NbPlaces) %}
+										<i	class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
+									{% endfor %}
+								</dd>
+							</dl>
+						</div>
+					</a>
+				{% endfor %}
+
+			</div>
+
+			{# MODALES #}
+
+			{# modal ->  Catégorie: _ _ #}
+			<dialog	aria-labelledby="fr-modal--categorie"	role="dialog"	id="fr-modal--categorie"	class="fr-modal cs-modal-from-left">
+				<div	class="fr-container fr-container--fluid">
+					<div	class="fr-grid-row fr-grid-row--center">
+						<div	class="fr-col-12">
+							<div	class="fr-modal__body">
+								<div	class="fr-modal__header">
+									<button	class="fr-btn--close fr-btn"	title="Fermer la fenêtre modale"	aria-controls="fr-modal--categorie"></button>
+								</div>
+								<div	class="fr-modal__content">
+									<h1	id="fr-modal--categorie"	class="fr-modal__title">
+										<span	class="fr-icon-arrow-right-line fr-icon--lg"></span>
+										Catégorie
+									</h1>
+									<ul	class="fr-btns-group">
+										<li>
+											<button	class="cs-btn"	data-categorie="*"	aria-controls="fr-modal--categorie">
+												<figure>
+													<svg	xmlns="http://www.w3.org/2000/svg"	viewBox="0 0 24 24"	fill="currentColor">
+														<path	d="M5.46257 4.43262C7.21556 2.91688 9.5007 2 12 2C17.5228 2 22 6.47715 22 12C22 14.1361 21.3302 16.1158 20.1892 17.7406L17 12H20C20 7.58172 16.4183 4 12 4C9.84982 4 7.89777 4.84827 6.46023 6.22842L5.46257 4.43262ZM18.5374 19.5674C16.7844 21.0831 14.4993 22 12 22C6.47715 22 2 17.5228 2 12C2 9.86386 2.66979 7.88416 3.8108 6.25944L7 12H4C4 16.4183 7.58172 20 12 20C14.1502 20 16.1022 19.1517 17.5398 17.7716L18.5374 19.5674Z"></path>
+													</svg>
+													<figcaption>
+														Toutes les catégories
+													</figcaption>
+												</figure>
+											</button>
+										</li>
+										{% for categorie in categories | sort((a, b) => a.id <=> b.id) %}
+											<li>
+												<button	class="cs-btn"	data-categorie="{{ categorie.libelle }}"	aria-controls="fr-modal--categorie">
+													<figure>
+														<img	src="{{ asset('images/icons/'~categorie.illustration) }}"	alt="{{ categorie.libelle }}">
+															<figcaption>
+																{{ categorie.libelle }}
+															</figcaption>
+														</figure>
+													</button>
+												</li>
+											{% endfor %}
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</dialog>
+
+				{# modal -> Autres filtres: _ _ #}
+				<dialog	aria-labelledby="fr-modal--autres-filtres"	role="dialog"	id="fr-modal--autres-filtres"	class="fr-modal cs-modal-from-right">
+					<div	class="fr-container fr-container--fluid">
+						<div	class="fr-grid-row fr-grid-row--center">
+							<div	class="fr-col-12">
+								<div	class="fr-modal__body">
+									<div	class="fr-modal__header">
+										<button	class="fr-btn--close fr-btn"	title="Fermer la fenêtre modale"	aria-controls="fr-modal--autres-filtres"></button>
+									</div>
+									<div	class="fr-modal__content">
+										<h1	id="fr-modal--autres-filtres"	class="fr-modal__title">
+											<span	class="fr-icon-arrow-right-line fr-icon--lg"></span>
+											Filtres
+										</h1>
+
+										<fieldset	class="fr-fieldset"	id="radio--serigraphie"	aria-labelledby="radio--serigraphie-legend">
+											<legend	class="fr-fieldset__legend--bold fr-fieldset__legend"	id="radio--serigraphie-legend">
+												Sérigraphie
+											</legend>
+											<div	class="fr-fieldset__element">
+												<div	class="fr-radio-group">
+													<input	type="radio"	id="radio--serigraphie-1"	checked	name="radio--serigraphie"	value="*">
+														<label	class="fr-label"	for="radio--serigraphie-1">
+															Indifférent
+														</label>
+													</div>
+												</div>
+												<div	class="fr-fieldset__element">
+													<div	class="fr-radio-group">
+														<input	type="radio"	id="radio--serigraphie-2"	name="radio--serigraphie"	value="Oui">
+															<label	class="fr-label"	for="radio--serigraphie-2">
+																Oui
+															</label>
+														</div>
+													</div>
+													<div	class="fr-fieldset__element">
+														<div	class="fr-radio-group">
+															<input	type="radio"	id="radio--serigraphie-3"	name="radio--serigraphie"	value="Non">
+																<label	class="fr-label"	for="radio--serigraphie-3">
+																	Non
+																</label>
+															</div>
+														</div>
+														<div	class="fr-messages-group"	id="radio--serigraphie-messages"	aria-live="assertive"></div>
+													</fieldset>
+
+													<div	class="fr-input-group fr-grid-row">
+														<label	class="fr-label bold fr-mb-1w"	for="input--nb-places">
+															Nombre de places (minimum)
+															<span	class="fr-hint-text fw-initial">
+																Sélectionnez &lt; 2 ou &gt; 9 pour réinitialiser.
+															</span>
+														</label>
+														<div	class="cs-nb-places--container">
+															<button	id="cs-nb-places--button-subtract"	class="fr-btn fr-icon-subtract-line cs-nb-places--button cs-nb-places--button-subtract"	title="Diminuer">
+																Diminuer
+															</button>
+															<input	class="fr-input cs-nb-places--input"	readonly	disabled	value="Indifférent"	type="text"	id="input--nb-places"	name="input--nb-places">
+																<button	id="cs-nb-places--button-add"	class="fr-btn cs-nb-places--button cs-nb-places--button-add fr-icon-add-line"	title="Augmenter">
+																	Augmenter
+																</button>
+															</div>
+														</div>
+
+														{% if transmissions|length > 1 %}
+															<fieldset	class="fr-fieldset"	id="radio--transmission"	aria-labelledby="radio--transmission-legend">
+																<legend	class="fr-fieldset__legend--bold fr-fieldset__legend"	id="radio--transmission-legend">
+																	Transmission
+																</legend>
+																<div	class="fr-fieldset__element">
+																	<div	class="fr-radio-group">
+																		<input	type="radio"	id="radio--transmission-any"	checked	name="radio--transmission"	value="*">
+																			<label	class="fr-label"	for="radio--transmission-any">
+																				Indifférent
+																			</label>
+																		</div>
+																	</div>
+																	{% for i, transmission in transmissions %}
+																		<div	class="fr-fieldset__element">
+																			<div	class="fr-radio-group">
+																				<input	type="radio"	id="radio--transmission-{{ i }}"	name="radio--transmission"	value="{{ transmission.code }}">
+																					<label	class="fr-label"	for="radio--transmission-{{ i }}">
+																						{{ transmission.libelle }}
+																					</label>
+																				</div>
+																			</div>
+																		{% endfor %}
+																	</fieldset>
+																{% endif %}
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</dialog>
+
+										{# modal -> Début:_ _ | Fin: _ _ #}
+										<dialog	aria-labelledby="fr-modal--from-to-title"	id="fr-modal--from-to"	class="fr-modal"	role="dialog">
+											<div	class="fr-container fr-container--fluid fr-container-md">
+												<div	class="fr-grid-row fr-grid-row--center">
+													<div	class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+
+														<div	class="fr-modal__body">
+															{# étape DÉBUT #}
+															<div	id="step-1"	class="fr-mt-1w fr-modal__content fr-grid-row">
+																{# stepper #}
+																<div	id="fr-modal--from-to-title"	class="fr-stepper">
+																	<h2	class="fr-stepper__title">
+																		Début de la réservation
+																		<span	class="fr-stepper__state">
+																			Étape 1 sur 2
+																		</span>
+																	</h2>
+																	<div	class="fr-stepper__steps"	data-fr-current-step="1"	data-fr-steps="2"></div>
+																</div>
+
+															<div class="divider fr-mt-0w"></div>
+
+																<div	class="fr-grid-row fr-mb-2w">
+																	<div	class="fr-select-group fr-col-6 fr-col-sm-6">
+																		<label	class="fr-label"	for="select-from-date">
+																			Date
+																		</label>
+																		<select	class="fr-select"	id="select-from-date"	name="select-from-date">
+																			{% for i, date in dates %}
+																				<option	value="{{ date.en }}"	{{ i==0 ? 'selected':'' }}	data-short="{{ date.short }}"	data-am="{{ date.horaires.AM is defined ? date.horaires.AM:'' }}"	data-pm="{{ date.horaires.PM is defined ? date.horaires.PM:'' }}"	class="center"	{{ date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':"" }}>
+																					{{ date.fr }}
+																				</option>
+																			{% endfor %}
+																		</select>
+																	</div>
+																	<div	class=" fr-select-group fr-col fr-col-sm-3 fr-pl-1w">
+																		<label	class="fr-label"	for="select-from-heure">
+																			Heure
+																		</label>
+																		<select	class="fr-select"	id="select-from-heure"	name="select-from-heure">
+																			<option	value="8"	selected>
+																				08
+																			</option>
+																		</select>
+																	</div>
+																	<div	class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-3 fr-pl-1w cs-select-minutes">
+																		<label	class="fr-label"	for="select-from-minute">
+																			&nbsp;
+																		</label>
+																		<select	disabled	class="fr-select"	id="select-from-minute"	name="select-from-minute">
+																			<option	value="00"	selected	disabled	hidden>
+																				00
+																			</option>
+																		</select>
+																	</div>
+																</div>
+
+																<div	class="cs-btns-group fr-btns-group">
+																	<button	type="button"	id="btn-go-step2"	class="fr-btn fr-btn--tertiary-no-outline">
+																		Date de fin &#8594;
+																	</button>
+																</div>
+
+															</div>
+															{# fin étape DÉBUT #}
+
+															{# étape FIN #}
+															<div	id="step-2"	class="fr-mt-1w fr-modal__content fr-grid-row hidden">
+																{# stepper #}
+																<div	id="fr-modal--from-to-title"	class="fr-stepper">
+																	<h2	class="fr-stepper__title">
+																		Fin de la réservation
+																		<span	class="fr-stepper__state">
+																			Étape 2 sur 2
+																		</span>
+																	</h2>
+																	<div	class="fr-stepper__steps"	data-fr-current-step="2"	data-fr-steps="2"></div>
+																</div>
+
+															<div class="divider fr-mt-0w"></div>
+
+																<div	id="step-2-form-content"	class="fr-grid-row fr-mb-2w">
+																	<div	class="fr-select-group fr-col-6 fr-col-sm-6">
+																		<label	class="fr-label"	for="select-to-date">
+																			Date
+																		</label>
+																		<select	class="fr-select"	id="select-to-date"	name="select-to-date">
+																			{% for i, date in dates_fin %}
+																				<option	{{ date.en == last_date.en ?	"selected":"" }}	value="{{ date.en }}"	data-short="{{ date.short }}"	data-am="{{ date.horaires.AM is defined ? date.horaires.AM:'' }}"	data-pm="{{ date.horaires.PM is defined ? date.horaires.PM:'' }}"	class="center"	{{ date.horaires|length == 0 ? 'disabled title="En dehors des horaires d\'ouverture du CSAG"':'' }}>
+																					{{ date.fr }}
+																				</option>
+																			{% endfor %}
+																		</select>
+																	</div>
+																	<div	class=" fr-select-group fr-col fr-col-sm-3 fr-pl-1w">
+																		<label	class="fr-label"	for="select-to-heure">
+																			Heure
+																		</label>
+																		<select	class="fr-select"	id="select-to-heure"	name="select-to-heure">
+																			<option	value="08"	selected>
+																				09
+																			</option>
+																		</select>
+																	</div>
+																	<div	class="fr-select-group fr-select-group--disabled fr-col fr-col-sm-3 fr-pl-1w cs-select-minutes">
+																		<label	class="fr-label"	for="select-to-minute">
+																			&nbsp;
+																		</label>
+																		<select	disabled	class="fr-select"	id="select-to-minute"	name="select-to-minute">
+																			<option	value="00"	selected	disabled	hidden>
+																				00
+																			</option>
+																		</select>
+																	</div>
+																</div>
+
+																<div	class="cs-btns-group fr-btns-group fr-btns-group--inline fr-btns-group--icon-right">
+																	<button	type="button"	id="btn-go-step1"	class="fr-btn fr-btn--tertiary-no-outline">
+																		&#8592; Date de début
+																	</button>
+																	<button	type="button"	id="btn-appliquer"	aria-controls="fr-modal--from-to"	class="fr-btn fr-icon-checkbox-circle-line fr-btn--secondary">
+																		Appliquer
+																	</button>
+																</div>
+
+															</div>
+														{# fin étape FIN #}
+														</div>
+
+													</div>
+												</div>
+											</div>
+										</dialog>
+										
+									{% endblock %}
+									

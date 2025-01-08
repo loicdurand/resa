@@ -1,0 +1,303 @@
+@use "./starter-complet";
+@use "./accueil";
+@use "./reserver";
+@use "./historique";
+@use "./compte";
+@use "./validation";
+@use "./tdb.scss";
+
+// @font-face {
+// 	font-family: "Raleway";
+// 	src: url("./fonts/Raleway-Regular.ttf");
+// }
+
+// body {
+//     font-family:
+//         /*"Raleway",*/
+//         Helvetica, Arial, Courier New, sans-serif;
+// }
+
+body.container .debug {
+    z-index: 2;
+    position: fixed;
+    top: 6px;
+    right: 6px;
+    border: 1px solid var(--grey-5);
+    background: rgba(255, 255, 255, .8);
+    border-radius: 3px;
+    font-size: 0.6rem;
+    line-height: 1;
+    margin: 3px;
+    padding: 0 3px;
+
+    & p {
+        margin-bottom: 0;
+        font-size: .8rem;
+    }
+
+    & dl {
+        padding-inline-start: 0;
+
+        & dd {
+            font-weight: 900;
+
+            & .cs-deconnexion-tooltip {
+                background: rgba(0, 0, 0, .8);
+                color: var(--grey-0);
+                padding: 6px;
+                border-radius: 3px;
+            }
+        }
+    }
+
+    & dt dd {
+        display: inline;
+    }
+}
+
+.cs-main {
+    margin-top: 10.5rem !important;
+}
+
+body.container .fr-tags-group .fr-tag {
+    background: var(--indigo-6);
+    color: var(--grey-0);
+}
+
+table th,
+table td {
+    text-align: center !important;
+}
+
+/* FOOTER */
+
+.cs-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    margin: 0 0 -1px 0;
+    background-color: var(--grey-0);
+    border-top: 1px solid var(--grey-5);
+    z-index: 1;
+
+    & .cs-menu {
+        padding: 5px 1px;
+        position: relative;
+
+        & .explain {
+            position: absolute;
+            display: block;
+            text-align: center;
+            width: 100%;
+            bottom: -28px;
+            font-size: 12px;
+            color: var(--grey-10);
+        }
+
+        &.cs-menu-accueil .cs-menu__item,
+        &.cs-menu-historique .cs-menu__item,
+        &.cs-menu-compte .cs-menu__item {
+            border-right: 1px solid var(--grey-8);
+
+            &[aria-current="true"] svg {
+                fill: var(--teal-4);
+                stroke: var(--teal-4);
+                stroke-width: 1px;
+
+                &+.explain {
+                    font-weight: 600;
+                    color: var(--teal-4);
+                }
+            }
+        }
+
+        & .cs-menu__item {
+
+            width: 100%;
+            border: none;
+            background: unset;
+            // min-height: 60px;
+            display: block;
+
+            & .icon {
+
+                height: 24px;
+                stroke: var(--grey-10);
+                fill: var(--grey-10);
+                stroke-width: 0;
+                width: 100%;
+                margin-top: 6px;
+                margin-bottom: 3px;
+
+            }
+        }
+    }
+}
+
+/* FOOTER */
+
+// MODALES 
+
+.cs-select-minutes {
+    & .fr-select:disabled {
+        color: var(--text-default-grey) !important;
+        background: none;
+        opacity: 1;
+    }
+
+    &:before {
+        content: ":";
+        position: absolute;
+        left: 0;
+        top: 2.5rem;
+        font-weight: 900;
+    }
+}
+
+.cs-btns-group {
+    position: absolute;
+    bottom: 0;
+    right: 1rem;
+}
+
+/* modale s'ouvrant à gauche */
+.fr-modal.cs-modal-from-left .fr-container {
+    left: 0;
+}
+
+.fr-modal.cs-modal-from-right .fr-container {
+    right: 0;
+}
+
+.fr-modal.cs-modal-from-left,
+.fr-modal.cs-modal-from-right {
+
+    & .fr-container {
+        width: 70%;
+        position: fixed;
+        top: 0;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        background: var(--grey-0);
+
+        & .fr-modal__body {
+            max-height: 100vh !important;
+
+            & .fr-modal__content {
+
+                & .cs-btn {
+                    border: 1px solid var(--grey-5);
+                    border-radius: 6px;
+                    margin: 3px 15%;
+                    background-color: var(--grey-0);
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+                    outline: none;
+                    position: relative;
+                    width: 70%;
+                    text-align: center;
+
+                    &.selected {
+                        border-color: var(--blue-5);
+                        border-width: 2px;
+                        box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px var(--blue-1), 4px 4px 5px 0px var(--blue-2);
+                    }
+
+                    & img,
+                    & svg {
+                        width: 50%;
+                        max-height: 97px;
+                    }
+
+                    & svg {
+                        max-height: 55px;
+                    }
+                }
+            }
+        }
+    }
+
+    & .fr-btn--close {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}
+
+/* fin modale s'ouvrant à gauche */
+
+/* FORMAT TABLETTE
+========================================================================== */
+
+@media all and (min-width: 640px) {
+
+    .fr-modal.cs-modal-from-left,
+    .fr-modal.cs-modal-from-right {
+
+        & .fr-container {
+            width: 45%;
+        }
+    }
+
+    .cs-fiche-vehicule.cs-tdb table tbody tr td .cs-td-daynum.striked+div p {
+        &:empty {
+            width: 10px;
+            height: 10px;
+            margin: 0px auto 5px auto;
+        }
+    }
+
+    .cs-img-container .cs-img {
+        width: 170px;
+    }
+
+    .cs-fiche-vehicule {
+        & .cs-gallerie {
+            & .fr-col-3 .cs-figure .cs-gallerie-btn img {
+                object-fit: scale-down;
+            }
+        }
+
+        & .cs-gallerie-btn {
+            background-color: unset;
+
+        }
+    }
+
+}
+
+/* FORMAT LAPTOP
+========================================================================== */
+
+@media all and (min-width: 992px) {
+
+    .cs-filtres-container.cs-recherche {
+        position: relative;
+        display: block;
+        margin-top: 1rem;
+        padding: 0;
+        border: none;
+
+        &.hiddenOnScroll {
+            top: 0;
+        }
+
+        & .cs-btn-ctnr .cs-from-to-value span {
+            font-size: 1rem;
+        }
+    }
+
+    .cs-main {
+        margin-top: 1rem !important;
+    }
+
+    .fr-modal.cs-modal-from-left,
+    .fr-modal.cs-modal-from-right {
+
+        & .fr-container {
+            width: 35%;
+        }
+    }
+}
