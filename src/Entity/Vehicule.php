@@ -69,6 +69,9 @@ class Vehicule
     #[ORM\Column(length: 8, nullable: false)]
     private ?string $couleur_vignette = null;
 
+    #[ORM\Column(length: 1024, nullable: true)]
+    private ?string $observation = null;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
@@ -338,5 +341,17 @@ class Vehicule
         $b = hexdec($htmlCode[4] . $htmlCode[5]);
 
         return [$r, $g, $b];
+    }
+
+    public function getObservation(): ?string
+    {
+        return $this->observation;
+    }
+
+    public function setObservation(?string $observation): static
+    {
+        $this->observation = $observation;
+
+        return $this;
     }
 }

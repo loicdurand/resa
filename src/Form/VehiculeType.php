@@ -8,7 +8,7 @@ use App\Entity\GenreVehicule;
 use App\Entity\TransmissionVehicule;
 use App\Entity\Vehicule;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -90,6 +90,15 @@ class VehiculeType extends AbstractType
                 'row_attr' => ['class' => 'fr-select-group fr-col-6 fr-col-sm-6'],
                 'label_attr' => ['class' => 'fr-label'],
                 'help_attr' => ['content' => 'Faculatif.']
+            ])
+            ->add('observation', TextareaType::class, [
+                'required' => false,
+                'row_attr' => ['class' => 'fr-col-12 fr-col-sm-12'],
+                'help_attr' => ['content' => 'Faculatif (1024 caractères maximum).'],
+                'attr' => [
+                    'placeholder' => 'Information utile à donner aux utilisateurs, etc...',
+                    'class' => 'fr-input'
+                ],
             ])
         ;
     }
