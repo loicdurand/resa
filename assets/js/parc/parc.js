@@ -6,7 +6,21 @@ const //
   btns = {
     suppr: document.getElementById('suppr'),
     mod: document.getElementById('mod')
-  };
+  },
+  // clicks sur les images
+  images_sur_le_cote = [...document.getElementsByClassName('cs-gallerie-btn')];
+
+images_sur_le_cote.forEach(btn => {
+  btn.addEventListener('click', ({ currentTarget: image_cliquee }) => {
+    const // 
+      image_correspondante = image_cliquee.querySelector('img'),
+      image_correspondante_src = image_correspondante.getAttribute('src'),
+      image_principale = document.querySelector('.cs-figure--main'),
+      image_principale_src = image_principale.getAttribute('src');
+    image_correspondante.setAttribute('src', image_principale_src);
+    image_principale.setAttribute('src', image_correspondante_src);
+  });
+});
 
 if (table) {
 
