@@ -24,6 +24,7 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
+        "start": "php -S localhost:8080 -t public",
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "serve": "symfony serve",
