@@ -13,7 +13,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\Persistence\ManagerRegistry;
 
 use App\Entity\User;
+use App\Entity\Role;
+
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
+use App\Service\LdapService;
 
 class ConnexionController extends AbstractController
 {
@@ -48,9 +52,13 @@ class ConnexionController extends AbstractController
     //   return $this->redirectToRoute('index');
     // }
 
-    $users = $entityManager
+    $users = [];
+
+    if($this->env !== 'production'){
+      $users = $entityManager
       ->getRepository(User::class)
       ->findAll();
+    }
 
     $form = $this->createForm(UserType::class);
 
@@ -59,11 +67,12 @@ class ConnexionController extends AbstractController
     if ($form->isSubmitted() && $form->isValid()) {
 
       $data = $form->getData();
-      $user = $entityManager
-        ->getRepository(User::class)
-        ->findOneBy(['nigend' => $data->getNigend()]);
+      $nigend = $data->getNigend();
 
-      if (is_null($user)) {
+      $ldap = new LdapService();
+      $ldap_user = $ldap->get_user_from_ldap($nigend);
+
+      if(is_null($ldap_user)) {
         return $this->render('accueil/login.html.twig', array_merge($this->getAppConst(), [
           'form' => $form,
           'users' => $users,
@@ -71,7 +80,24 @@ class ConnexionController extends AbstractController
         ]));
       }
 
-      $entityManager->flush();
+      $user = $entityManager
+        ->getRepository(User::class)
+        ->findOneBy(['nigend' => $nigend]);
+
+      if(is_null($user)){
+        $profil = $entityManager
+          ->getRepository(Role::class)
+          ->findOneBy(['nom'=>$ldap_user->profil]);
+
+        $entity = new User();
+        $entity->setNigend($nigend);
+        $entity->setUnite($ldap_user->unite_id);
+        $entity->setProfil($ldap_user->profil);
+        $entityManager->persist($entity);
+        $entityManager->flush();
+        $user = $entity;
+      }
+
       $nigend = $user->getNigend();
       $profil = $user->getProfil();
       $unite = $user->getUnite();
