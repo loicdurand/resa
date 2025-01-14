@@ -38,7 +38,7 @@ class LdapService
 
         $ldap_user = $this->ldapSearch($filter);
 
-        if($ldap_user === "0")
+        if($ldap_user === "0" || !$ldap_user)
           return null;
 
         $user = new \stdClass();

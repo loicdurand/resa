@@ -54,10 +54,10 @@ class ConnexionController extends AbstractController
 
     $users = [];
 
-    if($this->env !== 'production'){
+    if ($this->env !== 'production') {
       $users = $entityManager
-      ->getRepository(User::class)
-      ->findAll();
+        ->getRepository(User::class)
+        ->findAll();
     }
 
     $form = $this->createForm(UserType::class);
@@ -72,7 +72,7 @@ class ConnexionController extends AbstractController
       $ldap = new LdapService();
       $ldap_user = $ldap->get_user_from_ldap($nigend);
 
-      if(is_null($ldap_user)) {
+      if (is_null($ldap_user) && $this->env !== 'chrome') {
         return $this->render('accueil/login.html.twig', array_merge($this->getAppConst(), [
           'form' => $form,
           'users' => $users,
@@ -84,10 +84,17 @@ class ConnexionController extends AbstractController
         ->getRepository(User::class)
         ->findOneBy(['nigend' => $nigend]);
 
-      if(is_null($user)){
+      if ($this->env === 'chrome') {
+        $ldap_user = new \stdClass();
+        $ldap_user->nigend = $nigend;
+        $ldap_user->unite = $user->getUnite();
+        $ldap_user->profil = $user->getProfil();
+      }
+
+      if (is_null($user)) {
         $profil = $entityManager
           ->getRepository(Role::class)
-          ->findOneBy(['nom'=>$ldap_user->profil]);
+          ->findOneBy(['nom' => $ldap_user->profil]);
 
         $entity = new User();
         $entity->setNigend($nigend);
