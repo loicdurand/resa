@@ -23,54 +23,58 @@
 
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
+			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
 
 		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
 	</head>
 
 	<body	class="container">
 
-		<div	class="debug"	style="{{ APP_ENV != 'production' ? 'block': 'none' }};"	onclick="this.style.display = 'none';">
+		{% if APP_ENV != 'production' %}
+			<div	class="debug"	onclick="this.style.display = 'none';">
 
-			<p>
-				Environnement:
-				<span	class="bold">
-					{{ APP_ENV }}
-				</span>
-			</p>
-
-			<dl>
-				<dt>
-					Utilisateur:
-				</dt>
-				<dd>
-					<a	href="/logout"	aria-describedby="tooltip-logout"	title="déconnexion">
-						{{ nigend is defined? nigend }}
-					</a>
-					<span	class="fr-tooltip fr-placement cs-deconnexion-tooltip"	id="tooltip-logout"	role="tooltip"	aria-hidden="true">
-						Se déconnecter
+				<p>
+					Environnement:
+					<span	class="bold">
+						{{ APP_ENV }}
 					</span>
+				</p>
 
-				</dd>
+				<dl>
+					<dt>
+						Utilisateur:
+					</dt>
+					<dd>
+						<a	href="/logout"	aria-describedby="tooltip-logout"	title="déconnexion">
+							{{ nigend is defined? nigend }}
+						</a>
+						<span	class="fr-tooltip fr-placement cs-deconnexion-tooltip"	id="tooltip-logout"	role="tooltip"	aria-hidden="true">
+							Se déconnecter
+						</span>
 
-				<dt>
-					Unité
-				</dt>
-				<dd>
-					{{ unite is defined ? unite }}
-				</dd>
+					</dd>
 
-				<dt>
-					Profil:
-				</dt>
-				<dd	id="debug-profil">
-					{{ profil is defined ? profil }}
-				</dd>
-			</dl>
+					<dt>
+						Unité
+					</dt>
+					<dd>
+						{{ unite is defined ? unite }}
+					</dd>
 
-		</div>
+					<dt>
+						Profil:
+					</dt>
+					<dd	id="debug-profil">
+						{{ profil is defined ? profil }}
+					</dd>
+				</dl>
+
+			</div>
+		{% endif %}
 
 		{# HEADER #}
 
@@ -109,17 +113,17 @@
 							</div>
 						</div>
 
-						<div class="fr-header__tools">
-                    <div class="fr-header__tools-links">
-                        <ul class="fr-btns-group">
-                            <li>
-                                <a class="fr-btn fr-icon-logout-box-r-line" href="/logout">
-                                    Se déconnecter
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+						<div	class="fr-header__tools">
+							<div	class="fr-header__tools-links">
+								<ul	class="fr-btns-group">
+									<li>
+										<a	class="fr-btn fr-icon-logout-box-r-line"	href="/logout">
+											Se déconnecter
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
 
 					</div>
 				</div>

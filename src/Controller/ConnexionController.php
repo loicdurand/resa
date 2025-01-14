@@ -44,9 +44,9 @@ class ConnexionController extends AbstractController
 
     $this->env = $this->getParameter('app.env');
 
-    if ($this->env === 'production' && !$this->session->get('HTTP_NIGEND')) {
-      return $this->redirectToRoute('index');
-    }
+    // if ($this->env === 'production' && !$this->session->get('HTTP_NIGEND')) {
+    //   return $this->redirectToRoute('index');
+    // }
 
     $users = $entityManager
       ->getRepository(User::class)
