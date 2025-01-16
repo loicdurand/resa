@@ -40,7 +40,7 @@ class LdapService
 
         if($ldap_user === "0" || !$ldap_user)
           return null;
-
+        
         $user = new \stdClass();
         $user->nigend = $ldap_user[0]['employeenumber'][0];
         $user->nom = $ldap_user[0]['sn'][0];
@@ -51,8 +51,15 @@ class LdapService
 
         $mail_unite = $ldap_user[0]['mailuniteorganique'][0];
         $is_solc = str_starts_with($mail_unite, 'solc') || str_starts_with($mail_unite, 'dsolc');
+        $is_csag = str_starts_with($mail_unite, 'csag');
+        $is_validateur = str_starts_with($mail_unite, 'comgend');
+
         if ($is_solc)
             $user->profil = 'SOLC';
+        else if ($is_csag)
+            $user->profil = 'CSAG';
+        else if ($is_validateur)
+            $user->profil = 'VDT';
 
         // if ($ldap_user[0]['poste'][0] === 'chef de groupe en cybermenaces')
         //     $user->roles[] = ['libelle' => 'chef_groupe_solc'];
