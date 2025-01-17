@@ -35,6 +35,7 @@ class AppFixtures extends Fixture
             $user->setNigend($nigend);
             $user->setUnite($code_unite);
             $user->setProfil($profil);
+            $user->setDepartement(971);
             $manager->persist($user);
             $manager->flush();
         }
@@ -248,6 +249,7 @@ class AppFixtures extends Fixture
 
         $atelier = new Atelier();
         $atelier->setCodeUnite('00056751');
+        $atelier->setDepartement(971);
         $atelier->setNomCourt('CSAG 971');
         $atelier->setNomLong('Centre de Soutien Automobile de la Gendarmerie de Baie-Mahault');
         $manager->persist($atelier);
@@ -327,6 +329,8 @@ class AppFixtures extends Fixture
             $VL->setNbPlaces($pl);
             $VL->setImmatriculation($immat);
             $VL->setSerigraphie($serig);
+            $VL->setDepartement(971);
+            $VL->setUnite(56751);
             $manager->persist($VL);
             $manager->flush();
         }

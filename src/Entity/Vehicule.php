@@ -72,6 +72,12 @@ class Vehicule
     #[ORM\Column(length: 1024, nullable: true)]
     private ?string $observation = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $departement = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $unite = null;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
@@ -351,6 +357,30 @@ class Vehicule
     public function setObservation(?string $observation): static
     {
         $this->observation = $observation;
+
+        return $this;
+    }
+
+    public function getDepartement(): ?int
+    {
+        return $this->departement;
+    }
+
+    public function setDepartement(?int $departement): static
+    {
+        $this->departement = $departement;
+
+        return $this;
+    }
+
+    public function getUnite(): ?int
+    {
+        return $this->unite;
+    }
+
+    public function setUnite(?int $unite): static
+    {
+        $this->unite = $unite;
 
         return $this;
     }

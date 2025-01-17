@@ -30,6 +30,9 @@ class User
     #[ORM\OneToMany(targetEntity: Token::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $tokens;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $departement = null;
+
     public function __construct()
     {
         $this->tokens = new ArrayCollection();
@@ -110,6 +113,18 @@ class User
                 $token->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDepartement(): ?int
+    {
+        return $this->departement;
+    }
+
+    public function setDepartement(?int $departement): static
+    {
+        $this->departement = $departement;
 
         return $this;
     }

@@ -30,6 +30,9 @@ class Atelier
     #[ORM\OneToMany(targetEntity: HoraireOuverture::class, mappedBy: 'code_unite', orphanRemoval: true)]
     private Collection $horaires_ouverture;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $departement = null;
+
     public function __construct()
     {
         $this->horaires_ouverture = new ArrayCollection();
@@ -102,6 +105,18 @@ class Atelier
                 $horairesOuverture->setCodeUnite(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDepartement(): ?int
+    {
+        return $this->departement;
+    }
+
+    public function setDepartement(?int $departement): static
+    {
+        $this->departement = $departement;
 
         return $this;
     }
