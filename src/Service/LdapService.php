@@ -11,7 +11,6 @@ class LdapService
     {
         $this->ldaphost = "ldap://ldap.gendarmerie.fr";
         $this->ldapport = "389";
-        return $this;
     }
 
     public function ldapSearch($filter)

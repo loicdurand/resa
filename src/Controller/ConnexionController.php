@@ -72,7 +72,7 @@ class ConnexionController extends AbstractController
       $ldap = new LdapService();
       $ldap_user = $ldap->get_user_from_ldap($nigend);
 
-      if (is_null($ldap_user) && $this->env !== 'chrome') {
+      if (is_null($ldap_user) && $this->app_const['APP_MACHINE'] !== 'chrome') {
         return $this->render('accueil/login.html.twig', array_merge($this->getAppConst(), [
           'form' => $form,
           'users' => $users,
@@ -84,7 +84,7 @@ class ConnexionController extends AbstractController
         ->getRepository(User::class)
         ->findOneBy(['nigend' => $nigend]);
 
-      if ($this->env === 'chrome') {
+      if ($this->app_const['APP_MACHINE'] !== 'chrome') {
         $ldap_user = new \stdClass();
         $ldap_user->nigend = $nigend;
         $ldap_user->unite = $user->getUnite();
@@ -147,6 +147,7 @@ class ConnexionController extends AbstractController
     foreach (
       [
         'app.env',
+        'app.machine',
         'app.name',
         'app.tagline',
         'app.slug',
