@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -99,6 +100,20 @@ class VehiculeType extends AbstractType
                     'placeholder' => 'Information utile à donner aux utilisateurs, etc...',
                     'class' => 'fr-input'
                 ],
+            ])
+            ->add('departement', NumberType::class, [
+                'row_attr' => ['class' => 'fr-col-6 fr-col-sm-6'],
+                'help_attr' => ['content' => 'Obligatoire (3 chiffres maximum).'],
+                'attr' => [
+                    'placeholder' => '971, 972, 973, etc...'
+                ]
+            ])
+            ->add('unite', NumberType::class, [
+                'row_attr' => ['class' => 'fr-col-6 fr-col-sm-6'],
+                'help_attr' => ['content' => 'Code unité uniquement. Obligatoire (8 chiffres maximum).'],
+                'attr' => [
+                    'placeholder' => '123456, 56751, 0056751, etc...'
+                ]
             ])
         ;
     }

@@ -69,7 +69,7 @@ class ConnexionController extends AbstractController
       $data = $form->getData();
       $nigend = $data->getNigend();
 
-      $ldap = new LdapService();
+      $ldap = new LdapService(); 
       $ldap_user = $ldap->get_user_from_ldap($nigend);
 
       if (is_null($ldap_user) && $this->app_const['APP_MACHINE'] !== 'chrome') {
@@ -89,6 +89,7 @@ class ConnexionController extends AbstractController
         $ldap_user->nigend = $nigend;
         $ldap_user->unite = $user->getUnite();
         $ldap_user->profil = $user->getProfil();
+        $ldap_user->departement = $user->getDepartement();
       }
 
       if (is_null($user)) {
@@ -100,6 +101,7 @@ class ConnexionController extends AbstractController
         $entity->setNigend($nigend);
         $entity->setUnite($ldap_user->unite_id);
         $entity->setProfil($ldap_user->profil);
+        $entity->setDepartement($ldap_user->departement);
         $entityManager->persist($entity);
         $entityManager->flush();
         $user = $entity;
@@ -108,11 +110,13 @@ class ConnexionController extends AbstractController
       $nigend = $user->getNigend();
       $profil = $user->getProfil();
       $unite = $user->getUnite();
+      $dept = $user->getDepartement();
 
       // En session, on ne garde que les infos qui se trouvaient autrefois dans le Zend_Registry
       $this->session->set('HTTP_NIGEND', $nigend);
       $this->session->set('HTTP_UNITE', $unite);
       $this->session->set('HTTP_PROFIL', $profil);
+      $this->session->set('HTTP_DEPARTEMENT', $dept);
 
       return $this->redirectToRoute('accueil');
     }

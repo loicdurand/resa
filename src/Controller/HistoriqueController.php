@@ -30,7 +30,8 @@ class HistoriqueController extends AbstractController
         $this->params = [
             'nigend' => $this->session->get('HTTP_NIGEND'),
             'unite' => $this->session->get('HTTP_UNITE'),
-            'profil' => $this->session->get('HTTP_PROFIL')
+            'profil' => $this->session->get('HTTP_PROFIL'),
+            'departement' => $this->session->get('HTTP_DEPARTEMENT'),
         ];
     }
 

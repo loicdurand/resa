@@ -49,7 +49,8 @@ class ParcController extends AbstractController
         $this->params = [
             'nigend' => $this->session->get('HTTP_NIGEND'),
             'unite' => $this->session->get('HTTP_UNITE'),
-            'profil' => $this->session->get('HTTP_PROFIL')
+            'profil' => $this->session->get('HTTP_PROFIL'),
+            'departement' => $this->session->get('HTTP_DEPARTEMENT'),
         ];
     }
 
@@ -63,9 +64,10 @@ class ParcController extends AbstractController
         $this->setAppConst();
 
         $em = $doctrine->getManager();
+        $departement = $this->params['departement'];
         $vehicules = $em
             ->getRepository(Vehicule::class)
-            ->findAll();
+            ->findBy(['departement' => $departement]);
 
         //dd($vehicules);
 
@@ -111,7 +113,9 @@ class ParcController extends AbstractController
             ->setGenre($genre)
             ->setCategorie($categ)
             ->setCarburant($carb)
-            ->setTransmission($transm);
+            ->setTransmission($transm)
+            ->setDepartement($this->params['departement'])
+            ->setUnite($this->params['unite']);
 
         $form = $this->createForm(VehiculeType::class, $vl);
 

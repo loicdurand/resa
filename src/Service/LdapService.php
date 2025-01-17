@@ -47,6 +47,9 @@ class LdapService
         $user->nigend = $ldap_user[0]['employeenumber'][0];
         $user->unite_id = $ldap_user[0]['codeunite'][0];
         $user->profil = 'USR';
+        // TODO: recherche du département
+        // dd($ldap_user[0]);
+        $user->departement = 971;
 
         $mail_unite = $ldap_user[0]['mailuniteorganique'][0];
         $is_solc = str_starts_with($mail_unite, 'solc') || str_starts_with($mail_unite, 'dsolc');
