@@ -19,6 +19,22 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// clicks sur les images
+const // 
+  images_sur_le_cote = [...document.getElementsByClassName('cs-gallerie-btn')];
+
+images_sur_le_cote.forEach(btn => {
+  btn.addEventListener('click', ({ currentTarget: image_cliquee }) => {
+    const // 
+      image_correspondante = image_cliquee.querySelector('img'),
+      image_correspondante_src = image_correspondante.getAttribute('src'),
+      image_principale = document.querySelector('.cs-figure--main'),
+      image_principale_src = image_principale.getAttribute('src');
+    image_correspondante.setAttribute('src', image_principale_src);
+    image_principale.setAttribute('src', image_correspondante_src);
+  });
+});
+
 const // 
   calendriers = document.getElementById('calendars-container'),
   select = {
@@ -42,64 +58,65 @@ const //
     },
     submit: document.getElementById('form-submit-ctnr')
   },
-  modal = new ModalManager(),
-  periode = new Periode()
+  modal = new ModalManager();
 
-    // mise en place de tous les évènements "onclick" modifiant la période actuelle (début -> fin)
-    .onClickEvents([
-      {
-        elt: document.getElementById('cs-btn--from'),
-        cb: (periode, { target }) => {
-          periode.set('from');
-          if (!target.classList.contains('bordered'))
-            [...document.getElementsByClassName('desactivee-from')].forEach(elt => elt.classList.remove('desactivee-from'))
-        }
-      },
-      {
-        elt: document.getElementById('cs-btn--to'),
-        cb: (periode, { target }) => {
-          periode.set('to');
-          if (!target.classList.contains('bordered'))
-            [...document.getElementsByClassName('desactivee-to')].forEach(elt => elt.classList.remove('desactivee-to'));
+new Periode()
 
-        }
-      },
-      {
-        elt: document.getElementById('modal-suivant'),
-        cb: periode => periode.set('to')
-      },
-      {
-        elt: document.getElementById('modal-fermer'),
-        cb: periode => periode.set('from')
-      },
-      {
-        elt: calendriers,
-        cb: click_on_date
-      },
-      {
-        elt: document.getElementById('fr-modal--from'),
-        cb: (periode, { target }) => target.matches('#fr-modal--from') && periode.set('to')
-      },
-      {
-        elt: document.getElementById('fr-modal--to'),
-        cb: (periode, { target }) => target.matches('#fr-modal--to') && periode.set('from')
+  // mise en place de tous les évènements "onclick" modifiant la période actuelle (début -> fin)
+  .onClickEvents([
+    {
+      elt: document.getElementById('cs-btn--from'),
+      cb: (periode, { target }) => {
+        periode.set('from');
+        if (!target.classList.contains('bordered'))
+          [...document.getElementsByClassName('desactivee-from')].forEach(elt => elt.classList.remove('desactivee-from'))
       }
-    ])
+    },
+    {
+      elt: document.getElementById('cs-btn--to'),
+      cb: (periode, { target }) => {
+        periode.set('to');
+        if (!target.classList.contains('bordered'))
+          [...document.getElementsByClassName('desactivee-to')].forEach(elt => elt.classList.remove('desactivee-to'));
 
-    // fonction appelée à chaque fois que la période (debut -> fin) change
-    .then(periode => {
+      }
+    },
+    {
+      elt: document.getElementById('modal-suivant'),
+      cb: periode => periode.set('to')
+    },
+    {
+      elt: document.getElementById('modal-fermer'),
+      cb: periode => periode.set('from')
+    },
+    {
+      elt: calendriers,
+      cb: click_on_date
+    },
+    {
+      elt: document.getElementById('fr-modal--from'),
+      cb: (periode, { target }) => target.matches('#fr-modal--from') && periode.set('to')
+    },
+    {
+      elt: document.getElementById('fr-modal--to'),
+      cb: (periode, { target }) => target.matches('#fr-modal--to') && periode.set('from')
+    }
+  ])
 
-      modal.setPeriode(periode.get());
+  // fonction appelée à chaque fois que la période (debut -> fin) change
+  .then(periode => {
 
-      // bordure bleue au dessus des boutons Début: __ -> Fin: __
-      document.getElementById(`cs-btn--${periode.get()}`).classList.add('bordered');
-      document.getElementById(`cs-btn--${periode.other}`).classList.remove('bordered');
+    modal.setPeriode(periode.get());
 
-      [...document.querySelectorAll(`div[aria-controls="fr-modal--${periode.other}"]`)].forEach(elt => {
-        elt.setAttribute('aria-controls', `fr-modal--${periode.get()}`);
-      });
+    // bordure bleue au dessus des boutons Début: __ -> Fin: __
+    document.getElementById(`cs-btn--${periode.get()}`).classList.add('bordered');
+    document.getElementById(`cs-btn--${periode.other}`).classList.remove('bordered');
 
+    [...document.querySelectorAll(`div[aria-controls="fr-modal--${periode.other}"]`)].forEach(elt => {
+      elt.setAttribute('aria-controls', `fr-modal--${periode.get()}`);
     });
+
+  });
 
 ['heure', 'minute'].forEach(field => {
   ['from', 'to'].forEach(periode => {

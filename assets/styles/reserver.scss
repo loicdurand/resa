@@ -129,6 +129,7 @@
 
       &.striked {
         text-decoration-line: line-through;
+        cursor: initial;
 
         &.striked_debut,
         &.striked_fin {

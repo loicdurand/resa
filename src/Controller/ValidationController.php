@@ -192,6 +192,7 @@ class ValidationController extends AbstractController
         foreach (
             [
                 'app.env',
+                'app.machine',
                 'app.name',
                 'app.tagline',
                 'app.slug',

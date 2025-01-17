@@ -30,7 +30,8 @@
         "serve": "symfony serve",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
-        "ngrok": "ngrok http http://resa:80"
+        "ngrok": "ngrok http http://resa:80",
+        "usb": "rsync -zavAr --exclude=.git --exclude=.idea --exclude=vendor --exclude=node_modules --exclude=var /var/www/resa/ /media/loic-j.durand/0019-A801/chromeos/resa/"
     },
     "dependencies": {
         "@bleckert/router": "^0.2.0",
