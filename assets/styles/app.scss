@@ -17,11 +17,11 @@
 //         Helvetica, Arial, Courier New, sans-serif;
 // }
 
-body.container .debug {
-    z-index: 2;
+body.container .debug { 
+    z-index: 1000;
     position: fixed;
     top: 6px;
-    right: 6px;
+    left: 6px;
     border: 1px solid var(--grey-5);
     background: rgba(255, 255, 255, .8);
     border-radius: 3px;

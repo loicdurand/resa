@@ -1,3 +1,6 @@
+/assets/images/uploads/*.*
+/assets/images/uploads/mini/
+
 /.idea/*
 ###> symfony/framework-bundle ###
 /.env.local

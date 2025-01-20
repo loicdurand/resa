@@ -47,9 +47,14 @@ class LdapService
         $user->nigend = $ldap_user[0]['employeenumber'][0];
         $user->unite_id = $ldap_user[0]['codeunite'][0];
         $user->profil = 'USR';
-        // TODO: recherche du département
-        // dd($ldap_user[0]);
-        $user->departement = 971;
+
+        // recherche du département
+        $ldap_unite = $this->get_unite_from_ldap($user->unite_id);
+        $unite = $this->format_ldap_unite($ldap_unite);
+
+        $cp = $ldap_unite[0]['postalcode'][0];
+        $dpt = self::getDept($cp);
+        $user->departement = $dpt;
 
         $mail_unite = $ldap_user[0]['mailuniteorganique'][0];
         $is_solc = str_starts_with($mail_unite, 'solc') || str_starts_with($mail_unite, 'dsolc');
@@ -71,10 +76,19 @@ class LdapService
 
     public function get_unite_from_ldap($code_unite)
     {
-        $filter = "(&(objectclass=organizationalUnit)(codeunite=" . $code_unite . "))";
+        $filter = "(&(objectclass=organizationalUnit)(codeunite=" . ltrim($code_unite, '0') . "))";
         $ldap_unite = $this->ldapSearch($filter);
+        return $ldap_unite;
+    }
 
-        return $this::format_unite($ldap_unite);
+    public function format_ldap_unite($ldap_unite){
+        $unite = new \stdClass();
+        $unite->code = $ldap_unite[0]['codeunite'][0];
+        $unite->nom = $ldap_unite[0]['description'][0];
+        $unite->nom_court = $ldap_unite[0]['businessou'][0];
+        $unite->adresse =  $ldap_unite[0]['postaladdress'][0];
+
+        return $unite;
     }
 
     public function get_unites_sub_from_ldap($code_unite)
@@ -137,7 +151,7 @@ class LdapService
 
     public static function format_unite($ldap_unite)
     {
-        if (!array_key_exists('postaladdress', $ldap_unite[0]))
+        if (!array_key_exists('postaladdress', $ldap_unite))
             return false;
 
         $unite = new \stdClass();

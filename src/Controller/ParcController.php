@@ -122,6 +122,16 @@ class ParcController extends AbstractController
         $form->handleRequest($this->request);
         if ($form->isSubmitted() && $form->isValid()) {
             $vehicule = $form->getData();
+            
+            // @TODO - insertion de l'unité si on ne la connait pas
+            // $code_unite = $vehicule->getUnite();
+            // $unite_en_bdd = $em
+            //     ->getRepository(Unite::class)
+            //     ->findOneBy(['code_unite' => $code_unite]);
+            // if(is_null($unite_en_bdd)){
+            //     // ....
+            // }
+
             if (!$vehicule->getId()) {
                 $em->persist($vehicule);
             }
