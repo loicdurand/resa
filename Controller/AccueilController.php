@@ -8,7 +8,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 
-
 use App\Entity\HoraireOuverture;
 use App\Entity\StatutReservation;
 use App\Entity\Vehicule;
@@ -79,7 +78,7 @@ class AccueilController extends AbstractController
 
         $atelier = $this->em
         ->getRepository(Atelier::class)
-        ->findOneBy(['departement' => $this->params['departement']]);
+        ->findOneBy(['code_unite'=>$this->params['unite']]);
 
         $horaires = $this->em
             ->getRepository(HoraireOuverture::class)
@@ -101,6 +100,7 @@ class AccueilController extends AbstractController
                         $horaire->setDebut('14:00');
                         $horaire->setFin('17:00');
                     }
+
                     $this->em->persist($horaire);
                     $this->em->flush();
                 }

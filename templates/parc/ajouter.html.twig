@@ -88,7 +88,15 @@
 					</div>
 				</fieldset>
 
-				{{ form_rest(form) }}
+				{{ form_rest(form) }} 
+
+				<datalist id="unites-list">
+				{% for unite in unites %}
+					<option value="{{ unite.codeUnite }}">
+					{{ unite.nomCourt ~ ' (' ~ unite.codeUnite ~ ')' }}
+					</option>
+				{% endfor %}
+				</datalist> 
 
 				<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
 					{% if(action == 'ajouter') %}

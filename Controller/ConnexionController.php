@@ -83,7 +83,7 @@ class ConnexionController extends AbstractController
 
       $user = $entityManager
         ->getRepository(User::class)
-        ->findOneBy(['nigend' => $nigend]);
+        ->findOneBy(['nigend' => $nigend]); 
 
       if (is_null($user)) {
         $profil = $entityManager
@@ -113,12 +113,12 @@ class ConnexionController extends AbstractController
       $unite = $user->getUnite();
       $dept = $user->getDepartement();
 
-      if ($profil === 'CSAG') {
+      if($profil === 'CSAG'){
         $atelier = $entityManager
           ->getRepository(Atelier::class)
           ->findOneBy(['code_unite' => $unite]);
-
-        if (is_null($atelier)) {
+        
+        if(is_null($atelier)){
           $ldap_unite = $ldap->get_unite_from_ldap($unite);
           $unite = $ldap->format_ldap_unite($ldap_unite);
 

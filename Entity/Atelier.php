@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\UniteRepository;
+use App\Repository\AtelierRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UniteRepository::class)]
-class Unite
+#[ORM\Entity(repositoryClass: AtelierRepository::class)]
+class Atelier
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -33,16 +33,9 @@ class Unite
     #[ORM\Column(nullable: true)]
     private ?int $departement = null;
 
-    /**
-     * @var Collection<int, Vehicule>
-     */
-    #[ORM\OneToMany(targetEntity: Vehicule::class, mappedBy: 'unite')]
-    private Collection $vehicules;
-
     public function __construct()
     {
         $this->horaires_ouverture = new ArrayCollection();
-        $this->vehicules = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,36 +117,6 @@ class Unite
     public function setDepartement(?int $departement): static
     {
         $this->departement = $departement;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Vehicule>
-     */
-    public function getVehicules(): Collection
-    {
-        return $this->vehicules;
-    }
-
-    public function addVehicule(Vehicule $vehicule): static
-    {
-        if (!$this->vehicules->contains($vehicule)) {
-            $this->vehicules->add($vehicule);
-            $vehicule->setUnite($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVehicule(Vehicule $vehicule): static
-    {
-        if ($this->vehicules->removeElement($vehicule)) {
-            // set the owning side to null (unless already changed)
-            if ($vehicule->getUnite() === $this) {
-                $vehicule->setUnite(null);
-            }
-        }
 
         return $this;
     }

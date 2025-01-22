@@ -90,7 +90,7 @@
 						</thead>
 						<tbody>
 
-							{% for i, vl in vehicules %}
+							{% for i, vl in vehicules %} 
 
 								<tr	id="table-row-key-1"	data-row-key="1"	data-id="{{ vl.id }}">
 									<th	class="fr-cell--fixed"	scope="row">
@@ -112,7 +112,7 @@
 											{{ vl.modele ~ ' ' ~ vl.motorisation ~ ' ' ~ vl.finition }}
 										</td>
 										<td>
-											{{ vl.unite }}
+											{{ vl.unite.nomCourt }}
 										</td>
 										<td>
 											<abbr	title="{{ vl.carburant.libelle }}">
