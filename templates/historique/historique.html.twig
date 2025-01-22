@@ -143,7 +143,7 @@
                 <div class="fr-col-12">
                   <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
                     <figure class="cs-img-container left">
-                      <img class="cs-img" src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}" alt="{{ vehicule.marque ~ ' ' ~ vehicule.modele }}">
+                      <img class="cs-img" src="{{ asset('images/no_image.jpg') }}" alt="Aucune image d'illustration">
                         <figcaption class="hidden">
                           Image principale du véhicule
                         </figcaption>

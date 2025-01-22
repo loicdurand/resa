@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\Persistence\ManagerRegistry;
 
 use App\Entity\User;
+use App\Entity\Atelier;
 use App\Entity\Role;
 
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -27,7 +28,7 @@ class ConnexionController extends AbstractController
   private $session;
   private $app_const;
 
-  public function __construct(RequestStack $requestStack)
+  public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager)
   {
     $this->request = Request::createFromGlobals();
     $this->requestStack = $requestStack;
@@ -84,13 +85,6 @@ class ConnexionController extends AbstractController
         ->getRepository(User::class)
         ->findOneBy(['nigend' => $nigend]);
 
-      if ($this->app_const['APP_MACHINE'] !== 'chrome') {
-        $ldap_user = new \stdClass();
-        $ldap_user->nigend = $nigend;
-        $ldap_user->unite = $user->getUnite();
-        $ldap_user->profil = $user->getProfil();
-      }
-
       if (is_null($user)) {
         $profil = $entityManager
           ->getRepository(Role::class)
@@ -100,19 +94,50 @@ class ConnexionController extends AbstractController
         $entity->setNigend($nigend);
         $entity->setUnite($ldap_user->unite_id);
         $entity->setProfil($ldap_user->profil);
+        $entity->setDepartement($ldap_user->departement);
         $entityManager->persist($entity);
         $entityManager->flush();
         $user = $entity;
       }
 
+      if ($this->app_const['APP_MACHINE'] === 'chrome') {
+        $ldap_user = new \stdClass();
+        $ldap_user->nigend = $nigend;
+        $ldap_user->unite = $user->getUnite();
+        $ldap_user->profil = $user->getProfil();
+        $ldap_user->departement = $user->getDepartement();
+      }
+
       $nigend = $user->getNigend();
       $profil = $user->getProfil();
       $unite = $user->getUnite();
+      $dept = $user->getDepartement();
+
+      if ($profil === 'CSAG') {
+        $atelier = $entityManager
+          ->getRepository(Atelier::class)
+          ->findOneBy(['code_unite' => $unite]);
+
+        if (is_null($atelier)) {
+          $ldap_unite = $ldap->get_unite_from_ldap($unite);
+          $unite = $ldap->format_ldap_unite($ldap_unite);
+
+          $entity = new Atelier();
+          $entity->setCodeUnite($unite->code);
+          $entity->setNomCourt($unite->nom_court);
+          $entity->setNomLong($unite->nom);
+          $entity->setDepartement($dept);
+          $entityManager->persist($entity);
+          $entityManager->flush();
+          $code_unite = $unite->code;
+        }
+      }
 
       // En session, on ne garde que les infos qui se trouvaient autrefois dans le Zend_Registry
       $this->session->set('HTTP_NIGEND', $nigend);
       $this->session->set('HTTP_UNITE', $unite);
       $this->session->set('HTTP_PROFIL', $profil);
+      $this->session->set('HTTP_DEPARTEMENT', $dept);
 
       return $this->redirectToRoute('accueil');
     }

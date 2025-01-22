@@ -14,16 +14,15 @@
           Chargement d'un nigend dans la base pour test :
         </label>
 
-        <select class="fr-select" name="select-nigend" {{ result == false ?  'aria-describedby="select-error-desc-error"' : '' }}>
-          <option value="" selected disabled hidden>
-            Sélectionner un utilisateur
-          </option>
+        <input class="fr-input" list="users-list" type="text" id="select-nigend" name="select-nigend">
+
+        <datalist id="users-list">
           {% for user in users %}
             <option value="{{ user.nigend }}">
-              {{ user.nigend ~ ' (' ~ user.profil ~ ')' }}
+              {{ user.nigend ~ ' (' ~ user.profil ~ ' - ' ~ user.departement ~ ')' }}
             </option>
           {% endfor %}
-        </select>
+        </datalist> 
 
         <p id="select-error-desc-error" class="fr-error-text{{ result == false ? '' : ' hidden' }}">
           Aucun nigend sélectionné.

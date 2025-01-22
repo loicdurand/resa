@@ -7,9 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
+
 use App\Entity\HoraireOuverture;
 use App\Entity\StatutReservation;
 use App\Entity\Vehicule;
+use App\Entity\Atelier;
+
 use App\Form\ReservationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -32,7 +35,8 @@ class AccueilController extends AbstractController
         $this->params = [
             'nigend' => $this->session->get('HTTP_NIGEND'),
             'unite' => $this->session->get('HTTP_UNITE'),
-            'profil' => $this->session->get('HTTP_PROFIL')
+            'profil' => $this->session->get('HTTP_PROFIL'),
+            'departement' => $this->session->get('HTTP_DEPARTEMENT'),
         ];
     }
 
@@ -47,7 +51,7 @@ class AccueilController extends AbstractController
 
         $vehicules = $this->em
             ->getRepository(Vehicule::class)
-            ->findAll();
+            ->findBy(['departement' => $this->params['departement']]);
 
         $categories = [];
         $transmissions = [];
@@ -72,9 +76,39 @@ class AccueilController extends AbstractController
             }
         }
 
+        $atelier = $this->em
+        ->getRepository(Atelier::class)
+        ->findOneBy(['departement' => $this->params['departement']]);
+
         $horaires = $this->em
             ->getRepository(HoraireOuverture::class)
-            ->findAll();
+            ->findBy(['code_unite' => $atelier]);
+
+        if(count($horaires)==0){
+            $jours_ouvrables = ['LU', 'MA', 'ME', 'JE', 'VE'];
+            foreach ($jours_ouvrables as $jour) {
+                for ($i = 0; $i <= 1; $i++) {
+                    $horaire = new HoraireOuverture();
+                    $horaire->setCodeUnite($atelier);
+                    $horaire->setJour($jour);
+                    if ($i === 0) {
+                        $horaire->setCreneau('AM');
+                        $horaire->setDebut('08:00');
+                        $horaire->setFin('12:00');
+                    } else {
+                        $horaire->setCreneau('PM');
+                        $horaire->setDebut('14:00');
+                        $horaire->setFin('17:00');
+                    }
+
+                    $this->em->persist($horaire);
+                    $this->em->flush();
+                }
+            };
+            $horaires = $this->em
+                ->getRepository(HoraireOuverture::class)
+                ->findBy(['code_unite' => $atelier]);
+        }
 
         $dates = [];
         $dates_fin = [];
