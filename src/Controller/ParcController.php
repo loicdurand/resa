@@ -251,6 +251,7 @@ class ParcController extends AbstractController
                             $dest = $photosDirectory . '/mini/' . $newFilename;
                             $photoservice->createThumbnail($src, $dest, 320, null);
                         } catch (\Throwable $th) {
+                            throw $th;
                         }
 
 
@@ -263,8 +264,8 @@ class ParcController extends AbstractController
                     }
                 }
 
-                return $this->redirectToRoute('parc');
-            }
+                //return $this->redirectToRoute('parc');
+            }else dd($form->getErrors(true));
         }
 
         return $this->render('parc/upload.html.twig', array_merge(

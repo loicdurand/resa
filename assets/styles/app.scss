@@ -17,7 +17,7 @@
 //         Helvetica, Arial, Courier New, sans-serif;
 // }
 
-body.container .debug { 
+body.container .debug {
     z-index: 1000;
     position: fixed;
     top: 6px;
@@ -62,6 +62,19 @@ body.container .debug {
 body.container .fr-tags-group .fr-tag {
     background: var(--indigo-6);
     color: var(--grey-0);
+
+    &.cs-location-tag {
+        background-color: var(--blue-7);
+
+        &.cs-location-tag--selectable:hover,
+        &.cs-location-tag--selectable.selected {
+            background-color: var(--blue-9);
+        }
+
+        &:before {
+            background-color: red;
+        }
+    }
 }
 
 table th,

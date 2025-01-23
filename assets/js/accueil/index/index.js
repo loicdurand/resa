@@ -1,7 +1,7 @@
 import {
   pluralize,
 } from '../../lib/utils';
-import TimeUpdate from './Updater';
+import Updater from './Updater';
 
 console.log('=== accueil ===');
 
@@ -9,7 +9,7 @@ let init = false;
 const //
   scrollLen = 160,
   hideOnScroll = document.getElementById('hideOnScroll'),
-  updater = new TimeUpdate();
+  updater = new Updater();
 
 // masquage des filtres de recherche au SCROLL sur petits écrans
 hideOnScroll.addEventListener('click', () => {
@@ -157,12 +157,15 @@ function filter(e) {
     nbplaces: 'Nb places: ',
     categorie: '',
     serigraphie: 'Sérigraphie: ',
-    transmission: ''
+    transmission: '',
   };
 
   for (let field in data) {
     if (data[field] !== '*') {
-      filtres_appliques.push(addTag(`${fields[field]}${data[field]}`, field, target));
+      if (field !== 'unite')
+        filtres_appliques.push(addTag(`${fields[field]}${data[field]}`, field, target));
+      else
+        filtres_appliques.push(addTag(`unites: ${data[field].replaceAll(/,/g, ', ')}`, field, target));
     }
   }
 
@@ -186,6 +189,8 @@ function filter(e) {
       resas = reservations.split('|'),
       is_indispo = resas.find(resa => {
 
+        if (!resa)
+          return false;
         // if (debut !== '*' && fin !== '*')
         //   return false;
 
@@ -214,6 +219,13 @@ function filter(e) {
                 count_vls--;
                 mem.push(vl_idx);
               }
+            }
+          } else if (field === 'unite' && !mem.includes(vl_idx)) {
+            const unites = data[field].split(',');
+            if (!unites.includes(vl.dataset.unite)) {
+              vl.classList.add('hidden');
+              count_vls--;
+              mem.push(vl_idx);
             }
           } else if (vl.dataset[field] !== data[field]) {
             vl.classList.add('hidden');

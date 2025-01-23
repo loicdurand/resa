@@ -120,7 +120,7 @@
 					{% set resas = resas ~ (reservation.dateDebut|date('Y-m-d h:i:00')) ~ '_' ~ (reservation.dateFin|date('Y-m-d h:i:00')) ~ (loop.last ? '' :'|') %}
 				{% endfor %}
 
-				<a	data-reservations="{{ resas }}"	href="/reserver/{{ vehicule.id }}/"	class="vehicule-card vehicule-card--result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow"	data-index="{{ n }}"	data-categorie="{{ vehicule.categorie.libelle }}"	data-serigraphie="{{ vehicule.serigraphie ? 'Oui' : 'Non' }}"	data-transmission="{{ vehicule.transmission.code }}"	data-nbplaces="{{ vehicule.NbPlaces }}">
+				<a	data-reservations="{{ resas }}"	href="/reserver/{{ vehicule.id }}/"	class="vehicule-card vehicule-card--result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow"	data-index="{{ n }}" data-unite={{ vehicule.unite.codeUnite }}	data-categorie="{{ vehicule.categorie.libelle }}"	data-serigraphie="{{ vehicule.serigraphie ? 'Oui' : 'Non' }}"	data-transmission="{{ vehicule.transmission.code }}"	data-nbplaces="{{ vehicule.NbPlaces }}">
 					<figure	class="cs-img-container left">
 						<img	class="cs-img"	src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}"	alt="{{ vehicule.marque ~ ' ' ~ vehicule.modele }}">
 							<figcaption	class="hidden">
@@ -146,6 +146,11 @@
 								{% endif %}
 								<dd>
 									<ul	class="fr-tags-group cs-tags">
+										<li>
+											<p class="fr-tag fr-tag--sm fr-fi-map-pin-2-fill fr-tag--icon-left cs-location-tag" title="{{ vehicule.unite.nomLong }}">
+											{{ vehicule.unite.nomCourt }}
+											</p>
+										</li>
 										<li>
 											<p	class="fr-tag fr-tag--sm">
 												{{ vehicule.transmission.code }}
@@ -263,6 +268,21 @@
 															</div>
 														</div>
 														<div	class="fr-messages-group"	id="radio--serigraphie-messages"	aria-live="assertive"></div>
+													</fieldset>
+
+													<fieldset	class="fr-fieldset"	id="radio--unite"	aria-labelledby="radio--unite-legend">
+														<legend	class="fr-fieldset__legend--bold fr-fieldset__legend"	id="radio--unite-legend">
+															Localisation
+														</legend>
+														<div	class="fr-fieldset__element">
+															<ul class="fr-tags-group">
+																{% for unite in unites %}
+																<li>
+																	<button type="button" value={{unite.codeUnite}} class="fr-tag fr-tag--sm fr-fi-map-pin-2-fill fr-tag--icon-left cs-location-tag cs-location-tag--selectable">{{unite.nomCourt}}</a>
+																</li>
+																{% endfor %}
+															</ul>
+														</div>
 													</fieldset>
 
 													<div	class="fr-input-group fr-grid-row">

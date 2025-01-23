@@ -8,7 +8,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 
-
 use App\Entity\HoraireOuverture;
 use App\Entity\StatutReservation;
 use App\Entity\Vehicule;
@@ -58,11 +57,20 @@ class AccueilController extends AbstractController
         $transmissions = [];
         $category_ids = [];
         $transmission_ids = [];
+        $unites= [];
+        $unites_ids = [];
         foreach ($vehicules as $vl) {
             $cat = $vl->getCategorie();
             $cat_id = $cat->getId();
             $trans = $vl->getTransmission();
             $trans_id = $trans->getId();
+            $unt = $vl->getUnite();
+            $unt_id = $unt->getId();
+
+            if(!in_array($unt_id, $unites_ids)){
+                $unites_ids[] = $unt_id;
+                $unites[] = $unt;
+            }
 
             if (!in_array($cat_id, $category_ids)) {
                 $category_ids[] = $cat_id;
@@ -79,7 +87,7 @@ class AccueilController extends AbstractController
 
         $atelier = $this->em
         ->getRepository(Atelier::class)
-        ->findOneBy(['departement' => $this->params['departement']]);
+        ->findOneBy(['code_unite'=>$this->params['unite']]);
 
         $horaires = $this->em
             ->getRepository(HoraireOuverture::class)
@@ -101,6 +109,7 @@ class AccueilController extends AbstractController
                         $horaire->setDebut('14:00');
                         $horaire->setFin('17:00');
                     }
+
                     $this->em->persist($horaire);
                     $this->em->flush();
                 }
@@ -163,6 +172,7 @@ class AccueilController extends AbstractController
                 'dates' => $dates,
                 'dates_fin' => $dates_fin,
                 'last_date' => $last_date,
+                'unites' => $unites
             ]
         ));
     }

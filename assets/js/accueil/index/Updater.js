@@ -121,6 +121,19 @@ export default class Updater extends Emitter {
       });
     });
 
+    [...document.querySelectorAll('#radio--unite .cs-location-tag--selectable')].forEach((btn, i, btns) => {
+      btn.addEventListener('click', ({ currentTarget: target }) => {
+
+        if (!this.is_init)
+          this.is_init = this.init();
+
+        target.classList.toggle('selected');
+        const values = btns.filter(btn => btn.classList.contains('selected')).map(({value})=>value);
+        this.evtEmitter.dataset.unite = values.length ? values : '*';
+        this.evtEmitter.dispatchEvent(this.update);
+      })
+    });
+
 
     return this;
 

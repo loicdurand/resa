@@ -24,15 +24,16 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
-        "start": "php -S localhost:9000 -t public",
+        "start": "php -S localhost:8080 -t public",
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "serve": "symfony serve",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
         "ngrok": "ngrok http http://resa:80",
-        "usb": "(git diff-tree --no-commit-id --name-only -r HEAD) | sort -u | xargs tar cvzf /media/loic-j.durand/0019-A801/chromeos/resa/$(date '+%Y-%m-%d_%H%M%S').tar.gz"
-    },
+        "usb": "(git diff-tree --no-commit-id --name-only -r HEAD) | sort -u | xargs tar cvzf /media/loic-j.durand/TRUSTEDBOOT/resa/$(date '+%Y-%m-%d_%H%M%S').tar.gz",
+        "rsync": "rsync -zavAr --no-group /media/loic-j.durand/TRUSTEDBOOT/resa/rm/ /media/loic-j.durand/TRUSTEDBOOT/resa/tmp/ --exclude=.env.production --exclude=migrations"
+    },  
     "dependencies": {
         "@bleckert/router": "^0.2.0",
         "@gouvfr/dsfr": "^1.12.1",
