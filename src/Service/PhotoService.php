@@ -87,7 +87,7 @@ class PhotoService
       // if is portrait
       // use ratio to scale height to fit in square
       if ($width > $height) {
-        $is_portrait = true;
+        // $is_portrait = true;
         $targetHeight = floor($targetWidth / $ratio);
       }
       // if is landscape

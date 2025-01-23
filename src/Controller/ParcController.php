@@ -251,7 +251,6 @@ class ParcController extends AbstractController
                             $dest = $photosDirectory . '/mini/' . $newFilename;
                             $photoservice->createThumbnail($src, $dest, 320, null);
                         } catch (\Throwable $th) {
-                            throw $th;
                         }
 
 
