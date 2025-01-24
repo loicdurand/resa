@@ -57,7 +57,7 @@ class AccueilController extends AbstractController
         $transmissions = [];
         $category_ids = [];
         $transmission_ids = [];
-        $unites= [];
+        $unites = [];
         $unites_ids = [];
         foreach ($vehicules as $vl) {
             $cat = $vl->getCategorie();
@@ -67,7 +67,7 @@ class AccueilController extends AbstractController
             $unt = $vl->getUnite();
             $unt_id = $unt->getId();
 
-            if(!in_array($unt_id, $unites_ids)){
+            if (!in_array($unt_id, $unites_ids)) {
                 $unites_ids[] = $unt_id;
                 $unites[] = $unt;
             }
@@ -86,14 +86,18 @@ class AccueilController extends AbstractController
         }
 
         $atelier = $this->em
-        ->getRepository(Atelier::class)
-        ->findOneBy(['code_unite'=>$this->params['unite']]);
+            ->getRepository(Atelier::class)
+            ->findOneBy(
+                $this->params['profil'] === 'CSAG' ?
+                    ['code_unite' => $this->params['unite']] :
+                    ['departement' => $this->params['departement']]
+            );
 
         $horaires = $this->em
             ->getRepository(HoraireOuverture::class)
             ->findBy(['code_unite' => $atelier]);
 
-        if(count($horaires)==0){
+        if (count($horaires) == 0) {
             $jours_ouvrables = ['LU', 'MA', 'ME', 'JE', 'VE'];
             foreach ($jours_ouvrables as $jour) {
                 for ($i = 0; $i <= 1; $i++) {

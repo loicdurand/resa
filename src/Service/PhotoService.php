@@ -161,9 +161,13 @@ class PhotoService
     }
   }
 
-  public function rotate($src, $angle = 90)
+  public function rotate($src, $rotation = 90)
   {
     $type = exif_imagetype($src);
+    $path = $src;
+    $angle = -$rotation;
+    if($angle < 0)
+      $angle = 360 + $angle;
 
     // if no valid type or no handler found -> exit
     if (!$type || !$this->IMAGE_HANDLERS[$type]) {
@@ -177,20 +181,26 @@ class PhotoService
     if (!$image) {
       return null;
     }
+
     // Content type
     header('Content-type: ' . $this->IMAGE_HANDLERS[$type]['mimetype']);
     // Load
-    $source = $this->IMAGE_HANDLERS[$type]['load']($src);
+
+    $source = $this->IMAGE_HANDLERS[$type]['load']($path);
     // Rotate
-    $rotate = imagerotate($source, 90 * 3, 0);
+    $rotate = imagerotate($image, $angle, 0);
     // Output
     call_user_func(
       $this->IMAGE_HANDLERS[$type]['save'],
       $rotate,
-      $source,
+      $path,
       $this->IMAGE_HANDLERS[$type]['quality']
     );
+
+    return 1;
+
   }
+
 
   //exit;
   // }

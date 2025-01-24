@@ -24,7 +24,7 @@ valid_resa.forEach(btn => btn.addEventListener('click', ({ target }) => {
   if (!target.classList.contains('valid-resa'))
     return false;
 
-  valid_resa_confirm.dataset.id = id;
+  valid_resa_confirm.dataset.id = id; 
 
 }));
 

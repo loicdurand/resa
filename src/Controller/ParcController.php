@@ -208,12 +208,12 @@ class ParcController extends AbstractController
         }
 
         $vehicule = $em->getRepository(Vehicule::class)->findOneBy(['id' => $vehicule_id]);
-        if (count($vehicule->getPhotos()) > 0) {
-            return $this->redirectToRoute('editer_images', [
-                'vehicule' => $vehicule->getId(),
-                'action' => $action
-            ]);
-        }
+        // if (count($vehicule->getPhotos()) > 0) {
+        //     return $this->redirectToRoute('editer_images', [
+        //         'vehicule' => $vehicule->getId(),
+        //         'action' => $action
+        //     ]);
+        // }
 
         $random_hex = bin2hex(random_bytes(18));
         $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/parc/upload?vehicule=' . $vehicule_id . '&action=ajouter';
@@ -239,6 +239,10 @@ class ParcController extends AbstractController
                 /** @var UploadedFile $photoFile */
 
                 $photos = $form->get('photos')->getData();
+
+                // if (count($photos) === 0) {
+                //     return $this->redirectToRoute('parc');
+                // }
 
                 foreach ($photos as $photoFile) {
 
@@ -522,6 +526,39 @@ class ParcController extends AbstractController
             ]
         ));
     }
+
+    #[Route('/parc/rotate', name: 'rotate', methods: ['POST'])]
+    public function rotate(
+        ManagerRegistry $doctrine,
+        RequestStack $requestStack,
+        #[Autowire('%kernel.project_dir%/assets/images/uploads')] string $photosDirectory
+    ) {
+        $em = $doctrine->getManager();
+        $images = (array) json_decode($this->request->getContent());
+        foreach ($images as $image) {
+            $id = $image->id;
+            $angle = intval($image->rotation);
+            if ($image->suppr) {
+                $photo = $em
+                    ->getRepository(Photo::class)
+                    ->findOneBy(['id' => $id]);
+                $vl = $photo->getVehicule();
+                $vl->removePhoto($photo);
+                $em->flush();
+            } else if (!$angle) {
+                continue;
+            } else {
+                $photo = $em
+                    ->getRepository(Photo::class)
+                    ->findOneBy(['id' => $id]);
+                $src = $photosDirectory . '/' . $photo->getPath();
+                $photoservice = new PhotoService();
+                $photoservice->rotate($src, $angle);
+            }
+        }
+        return $this->json($images);
+    }
+
 
     private function getAppConst()
     {
