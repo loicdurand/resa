@@ -239,6 +239,21 @@
 											Filtres
 										</h1>
 
+										<fieldset	class="fr-fieldset"	id="radio--unite"	aria-labelledby="radio--unite-legend">
+														<legend	class="fr-fieldset__legend--bold fr-fieldset__legend"	id="radio--unite-legend">
+															Localisation du véhicule
+														</legend>
+														<div	class="fr-fieldset__element">
+															<ul class="fr-tags-group">
+																{% for unite in unites %}
+																<li>
+																	<button type="button" value={{unite.codeUnite}} class="fr-tag fr-tag--sm fr-fi-map-pin-2-fill fr-tag--icon-left cs-location-tag cs-location-tag--selectable">{{unite.nomCourt}}</a>
+																</li>
+																{% endfor %}
+															</ul>
+														</div>
+													</fieldset>
+
 										<fieldset	class="fr-fieldset"	id="radio--serigraphie"	aria-labelledby="radio--serigraphie-legend">
 											<legend	class="fr-fieldset__legend--bold fr-fieldset__legend"	id="radio--serigraphie-legend">
 												Sérigraphie
@@ -268,21 +283,6 @@
 															</div>
 														</div>
 														<div	class="fr-messages-group"	id="radio--serigraphie-messages"	aria-live="assertive"></div>
-													</fieldset>
-
-													<fieldset	class="fr-fieldset"	id="radio--unite"	aria-labelledby="radio--unite-legend">
-														<legend	class="fr-fieldset__legend--bold fr-fieldset__legend"	id="radio--unite-legend">
-															Localisation
-														</legend>
-														<div	class="fr-fieldset__element">
-															<ul class="fr-tags-group">
-																{% for unite in unites %}
-																<li>
-																	<button type="button" value={{unite.codeUnite}} class="fr-tag fr-tag--sm fr-fi-map-pin-2-fill fr-tag--icon-left cs-location-tag cs-location-tag--selectable">{{unite.nomCourt}}</a>
-																</li>
-																{% endfor %}
-															</ul>
-														</div>
 													</fieldset>
 
 													<div	class="fr-input-group fr-grid-row">

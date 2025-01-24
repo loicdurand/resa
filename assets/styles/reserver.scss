@@ -41,6 +41,24 @@
         height: 423px;
       }
     }
+
+    &+ div .cs-image-editor {
+      border: 1px solid var(--grey-6);
+      border-radius: 3px;
+      background-color: rgba(0, 0, 0, 0.05);
+
+      & li button {
+        margin-top: 1rem;
+        border-radius: 50%;
+        background-color: var(--blue-5);
+        &.fr-icon-delete-line{
+          background-color: var(--red-5);
+        }
+        &.fr-icon-upload-2-line{
+          background-color: var(--green-5);
+        }
+      }
+    }
   }
 
   .cs-informations {

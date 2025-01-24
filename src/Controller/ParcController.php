@@ -91,9 +91,9 @@ class ParcController extends AbstractController
 
         $em = $doctrine->getManager();
 
-        $unites = $em 
+        $unites = $em
             ->getRepository(Unite::class)
-            ->findBy(['departement'=>$this->params['departement']]);
+            ->findBy(['departement' => $this->params['departement']]);
 
         $genre = $em
             ->getRepository(GenreVehicule::class)
@@ -111,9 +111,9 @@ class ParcController extends AbstractController
             ->getRepository(TransmissionVehicule::class)
             ->findOneBy(['code' => 'BVM']);
 
-        $atelier = $em 
+        $atelier = $em
             ->getRepository(Unite::class)
-            ->findOneBy(['code_unite'=>$this->params['unite']]);
+            ->findOneBy(['code_unite' => $this->params['unite']]);
 
         $vl = new Vehicule();
         $vl
@@ -131,13 +131,13 @@ class ParcController extends AbstractController
         $form->handleRequest($this->request);
         if ($form->isSubmitted() && $form->isValid()) {
             $vehicule = $form->getData();
-            
+
             $code_unite = $vehicule->getUnite()->getCodeUnite();
             $unite_en_bdd = $em
                 ->getRepository(Unite::class)
                 ->findOneBy(['code_unite' => $code_unite]);
 
-            if(is_null($unite_en_bdd) && $this->app_const['APP_MACHINE'] !== 'chrome') {
+            if (is_null($unite_en_bdd) && $this->app_const['APP_MACHINE'] !== 'chrome') {
                 $ldap = new LdapService();
                 $ldap_unite = $ldap->get_unite_from_ldap($code_unite);
                 $unite = $ldap->format_ldap_unite($ldap_unite);
@@ -208,6 +208,12 @@ class ParcController extends AbstractController
         }
 
         $vehicule = $em->getRepository(Vehicule::class)->findOneBy(['id' => $vehicule_id]);
+        if (count($vehicule->getPhotos()) > 0) {
+            return $this->redirectToRoute('editer_images', [
+                'vehicule' => $vehicule->getId(),
+                'action' => $action
+            ]);
+        }
 
         $random_hex = bin2hex(random_bytes(18));
         $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/parc/upload?vehicule=' . $vehicule_id . '&action=ajouter';
@@ -264,8 +270,11 @@ class ParcController extends AbstractController
                     }
                 }
 
-                //return $this->redirectToRoute('parc');
-            }else dd($form->getErrors(true));
+                return $this->redirectToRoute('editer_images', [
+                    'vehicule' => $vehicule->getId(),
+                    'action' => $action
+                ]);
+            }
         }
 
         return $this->render('parc/upload.html.twig', array_merge(
@@ -281,6 +290,68 @@ class ParcController extends AbstractController
         ));
     }
 
+    #[Route('/parc/editer_images', name: 'editer_images')]
+    public function editer_images(
+        ManagerRegistry $doctrine,
+        SluggerInterface $slugger,
+        #[Autowire('%kernel.project_dir%/assets/images/uploads')] string $photosDirectory
+    ): Response {
+
+        $this->setAppConst();
+
+        $vehicule_id = $this->request->get('vehicule');
+        $action = $this->request->get('action');
+        $token = $this->request->get('token');
+        $em = $doctrine->getManager();
+
+        if (is_null($this->params['nigend']) && is_null($token)) {
+            return $this->redirectToRoute('login');
+        } else if (!is_null($token)) {
+            $tkn = $em->getRepository(Token::class)->findOneBy(['token' => $token]);
+            if (is_null($tkn))
+                return $this->redirectToRoute('login');
+            $user = $tkn->getUser();
+            if ($this->app_const['APP_TOKEN_GIVES_FULL_ACCESS'] === true) {
+                $this->session->set('HTTP_NIGEND', $user->getNigend());
+                $this->session->set('HTTP_UNITE', $user->getUnite());
+                $this->session->set('HTTP_PROFIL', $user->getProfil());
+            }
+            $this->params = [
+                'nigend' => $user->getNigend(),
+                'unite' => $user->getUnite(),
+                'profil' => $user->getProfil()
+            ];
+        }
+
+        $vehicule = $em->getRepository(Vehicule::class)->findOneBy(['id' => $vehicule_id]);
+
+        $random_hex = bin2hex(random_bytes(18));
+        $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/parc/upload?vehicule=' . $vehicule_id . '&action=ajouter';
+        $url = $baseurl . '&token=' . $random_hex;
+
+        $tkn = $em->getRepository(Token::class)->findOneBy(['url' => $baseurl]);
+        if (is_null($tkn)) {
+            $usr = $em->getRepository(User::class)->findOneBy(['nigend' => $this->params['nigend']]);
+            $tkn = new Token();
+            $tkn->setUser($usr);
+            $tkn->setToken($random_hex);
+            $tkn->setUrl($baseurl);
+            $em->persist($tkn);
+            $em->flush();
+        }
+
+        return $this->render('parc/upload_confirmation.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'action' => $action,
+                'url' => $url,
+                'vehicule' => $vehicule,
+                'token' => is_null($token) ? false : $token
+            ]
+        ));
+    }
+
     #[Route('/parc/modifier/{vehicule_id}')]
     public function modifier(string $vehicule_id, ManagerRegistry $doctrine): Response
     {
@@ -291,9 +362,9 @@ class ParcController extends AbstractController
 
         $em = $doctrine->getManager();
 
-        $unites = $em 
+        $unites = $em
             ->getRepository(Unite::class)
-            ->findBy(['departement'=>$this->params['departement']]);
+            ->findBy(['departement' => $this->params['departement']]);
 
 
         $vl = $em
@@ -310,7 +381,7 @@ class ParcController extends AbstractController
             $unite_en_bdd = $em
                 ->getRepository(Unite::class)
                 ->findOneBy(['code_unite' => $code_unite]);
-            if(is_null($unite_en_bdd) && $this->app_const['APP_MACHINE'] !== 'chrome') {
+            if (is_null($unite_en_bdd) && $this->app_const['APP_MACHINE'] !== 'chrome') {
                 $ldap = new LdapService();
                 $ldap_unite = $ldap->get_unite_from_ldap($code_unite);
                 $unite = $ldap->format_ldap_unite($ldap_unite);

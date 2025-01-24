@@ -32,7 +32,7 @@
 				</li>
 				<li>
 					<a	class="fr-breadcrumb__link"	aria-current="page">
-						Ajouter des images
+						Mise en forme des photographies
 					</a>
 				</li>
 			</ol>
@@ -40,12 +40,11 @@
 	</nav>
 
 	<h2	class="fr-mt-2w">
-		Ajouter des photographies
+		Mise en forme des photographies
 	</h2>
 
 	<p	class="fr-text--sm">
-		Les photographies des véhicules rendent le site plus attrayant pour les utilisateurs, tout en les aidant à se faire une idée du véhicule
-		qu'ils souhaitent réserver.
+		Les photographies que vous venez d'ajouter peuvent etre mises en forme avant d'apparaitre sur le site.
 	</p>
 
 	<div	class="fr-container">
@@ -61,7 +60,7 @@
 					<div	class="cs-gallerie fr-grid-row fr-grid-row--gutters">
 						{# vue principale #}
 						<figure	class="fr-col-{{ len == 1 ? '12' : len == 2 ? '6' : '9' }}">
-							<img	src="{{ asset('images/uploads/' ~ vehicule.photos[0].path) }}"	class="fr-responsive-img cs-figure cs-figure--main"	alt="Vue principale du véhicule">
+							<img	src="{{ asset('images/uploads/' ~ vehicule.photos[0].path) }}"	class="fr-responsive-img cs-figure cs-figure--main fr-mt-6w"	alt="Vue principale du véhicule">
 								<figcaption	class="hidden">
 									Vue principale du véhicule
 								</figcaption>
@@ -69,7 +68,7 @@
 
 							{# vue de profil #}
 							{% if(len > 1) %}
-								<div	class="fr-col-{{ len == 2 ? '6' : '3 fr-mt-1w' }}">
+								<div	class="fr-col-{{ len == 2 ? '6' : '3 fr-mt-1w' }} fr-mt-2w">
 									<figure	class="cs-figure">
 										<button	class="fr-btn cs-gallerie-btn">
 											<img	src="{{ asset('images/uploads/' ~ vehicule.photos[1].path) }}"	class="fr-responsive-img"	alt="Vue de l'avant du véhicule"></button>
@@ -80,7 +79,7 @@
 
 										{# vue de l'avant #}
 										{% if(len > 2) %}
-											<figure	class="cs-figure">
+											<figure	class="cs-figure fr-mt-6w">
 												<button	class="fr-btn cs-gallerie-btn">
 													<img	src="{{ asset('images/uploads/' ~ vehicule.photos[2].path) }}"	class="fr-responsive-img"	alt="Vue de l'avant du véhicule"></button>
 													<figcaption	class="hidden">
@@ -91,7 +90,7 @@
 
 											{# vue de l'arrière #}
 											{% if(len > 3) %}
-												<figure	class="cs-figure">
+												<figure	class="cs-figure fr-mt-6w fr-mb-2w">
 													<button	class="fr-btn cs-gallerie-btn">
 														<img	src="{{ asset('images/uploads/' ~ vehicule.photos[3].path) }}"	class="fr-responsive-img"	alt="Vue de l'arrière du véhicule"></button>
 														<figcaption	class="hidden">
@@ -101,80 +100,66 @@
 												{% endif %}
 											</div>
 										{% endif %}
+
 									</div>
+
 								{% endif %}
 								{# FIN GALERIE #}
 
-								<p	class="bold">
-									Vous n'avez pas d'image du véhicule sur cet appareil?
-								</p>
+								<div	class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
+									{# éditeur d'image #}
+									
+									<ul	id="editor"	class="cs-image-editor fr-col-{{ len == 1 ? '12' : len == 2 ? '6' : '9' }} fr-btns-group fr-btns-group--inline-lg fr-btns-group--center">
+										<li>
+											<button	title="Faire pivoter de 90 degrés vers la gauche" type="button"	id="rotation-negative"	class="rotation-negative fr-btn fr-icon-arrow-go-back-line">
+												- 90 degrés
+											</button>
+										</li>
+										<li>
+											<button	title="Faire pivoter de 90 degrés vers la droite" type="button"	id="rotation-positive"	class="rotation-positive fr-btn fr-icon-arrow-go-forward-line">
+												+ 90 degrés
+											</button>
+										</li>
+										<li>
+											<button	title="Télécharger une photographie supplémentaire" type="button"	class="fr-btn fr-icon-upload-2-line">
+												Ajouter
+											</button>
+										</li>
+										<li>
+											<button	title="Supprimer cette photo" type="button"	class="fr-btn fr-icon-delete-line">
+												Supprimer
+											</button>
+										</li>
+									</ul>
+									{# fin éditeur d'image #}
 
-								<p>
-									Vous avez la possibilité de prendre le véhicule en photo
-									<span	class="bold">
-										à l'aide de votre téléphone Néogend
-									</span>
-									!
-									Flashez le QR-code ci-dessous, et vous serez redirigé sur cette page sans avoir à vous reconnecter.
-								</p>
+									<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
 
-								{{ form_start(form) }}
+										<li>
+											<!-- Bouton d'ouverture de la modale -->
+											<button	type="button"	data-fr-opened="false"	aria-controls="confirm--no-img"	class="fr-btn fr-btn--secondary">
+												Réinitialiser
+											</button>
 
-								<div	class="cs-qr-ctnr fr-grid-row fr-mt-2w">
-									<div	class="fr-col-{{ token == false ? '8' : '12' }}">
-										<div	class="fr-upload-group">
-											<label	class="fr-label"	for="photo_photos">
-												Ajouter des images
-												<span	class="fr-hint-text">
-													Taille maximale : 10 Mo. Formats supportés : jpg, png, pdf. Plusieurs fichiers possibles.
-												</span>
-											</label>
-											{{ form_widget(form.photos) }}
-										</div>
-									</div>
+										</li>
 
-									{% if (token == false ) %}
+										<li>
+											<button	type="submit"	class="fr-btn">
+												Transmettre
+											</button>
+										</li>
 
-										<div	class="fr-col-4">
-											<div	class="qr-ctnr">
-												<figure>
-													<img	height="100"	src="{{ qr_code_url(url) }}" />
-													<figcaption>
-														Ajouter des images depuis mon Néo
-													</figcaption>
-												</figure>
-											</div>
-										</div>
-
-									{% endif %}
+									</ul>
 
 								</div>
-
-								<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
-
-									<li>
-										<!-- Bouton d'ouverture de la modale -->
-										<button	type="button"	data-fr-opened="false"	aria-controls="confirm--no-img"	class="fr-btn fr-btn--secondary">
-											Pas de photo à insérer
-										</button>
-
-									</li>
-
-									<li>
-										<button	type="submit"	class="fr-btn">
-											Enregistrer (et mettre en forme si nécessaire)
-										</button>
-									</li>
-
-								</ul>
-
-								{{ form_end(form) }}
 
 							</div>
 
 						</div>
 
-						<dialog	aria-labelledby="confirm--no-img-title"	id="confirm--no-img"	class="fr-modal"	role="dialog">
+					</div>
+
+					<dialog	aria-labelledby="confirm--no-img-title"	id="confirm--no-img"	class="fr-modal"	role="dialog">
 							<div	class="fr-container fr-container--fluid fr-container-md">
 								<div	class="fr-grid-row fr-grid-row--center">
 									<div	class="fr-col-12 fr-col-md-8 fr-col-lg-6">
@@ -190,13 +175,13 @@
 													Confirmation
 												</h1>
 												<p>
-													Quitter cette page et revenir à la gestion du parc de véhicules?
+													Réinitialiser les modifications apportées aux photographies? Les photographies seront remises à leur état initial.
 												</p>
 											</div>
 											<div	class="fr-modal__footer">
 												<div	class="fr-btns-group fr-btns-group--right fr-btns-group--icon-left fr-btns-group--inline-md">
-													<a href="/parc"	class="fr-btn fr-icon-close-line fr-btn--icon-left fr-btn--secondary">
-														Quitter la page
+													<a href="/parc/editer_images?vehicule={{ vehicule.id }}&action=modifier"	class="fr-btn fr-icon-close-line fr-btn--icon-left fr-btn--secondary">
+													Réinitialiser
 													</a>
 												</div>
 											</div>
@@ -206,5 +191,5 @@
 							</div>
 						</dialog>
 
-					{% endblock %}
-					
+				{% endblock %}
+				

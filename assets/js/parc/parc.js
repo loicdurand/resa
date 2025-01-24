@@ -7,8 +7,19 @@ const //
     suppr: document.getElementById('suppr'),
     mod: document.getElementById('mod')
   },
+  editor = document.getElementById('editor'),
+
   // clicks sur les images
   images_sur_le_cote = [...document.getElementsByClassName('cs-gallerie-btn')];
+
+let //
+  current_image = document.getElementsByClassName('cs-figure--main')[0],
+  { clientWidth: w, clientHeight: h } = current_image != null ? current_image : { clientWidth: 0, clientHeight: 0 },
+  wasPortrait = h > w,
+  isPortrait = wasPortrait,
+  ratio = h / w,
+  rotation = 0,
+  angle = 90;
 
 images_sur_le_cote.forEach(btn => {
   btn.addEventListener('click', ({ currentTarget: image_cliquee }) => {
@@ -19,6 +30,22 @@ images_sur_le_cote.forEach(btn => {
       image_principale_src = image_principale.getAttribute('src');
     image_correspondante.setAttribute('src', image_principale_src);
     image_principale.setAttribute('src', image_correspondante_src);
+
+    if (editor != null) {
+      current_image = document.getElementsByClassName('cs-figure--main')[0];
+      w = current_image.clientWidth;
+      h = current_image.clientHeight;
+      wasPortrait = h > w;
+      isPortrait = wasPortrait;
+      rotation = 0;
+      ratio = h / w;
+
+      image_correspondante.style.transform = image_principale.style.transform;
+      image_correspondante.style['object-fit'] = image_principale.style['object-fit'];
+
+      image_principale.style.transform = image_correspondante.style.transform;
+      image_principale.style['object-fit'] = image_correspondante.style['object-fit'];
+    }
   });
 });
 
@@ -49,4 +76,25 @@ if (table) {
     }
   });
 
+}
+
+if (editor !== null) {
+
+  const // 
+    pos = document.getElementById('rotation-positive'),
+    neg = document.getElementById('rotation-negative');
+
+  console.log({ ratio });
+
+  pos.addEventListener('click', rotateImage);
+
+  neg.addEventListener('click', () => rotateImage(true));
+
+  function rotateImage(negative = false) {
+    console.log({ pos, neg });
+    rotation = negative ? (rotation - angle) % 360 : (rotation + angle) % 360;
+    isPortrait = !isPortrait;
+    current_image.style.transform = `rotate(${rotation}deg)`;
+    current_image.style['object-fit'] = !wasPortrait && isPortrait ? 'scale-down' : 'contain';
+  }
 }
