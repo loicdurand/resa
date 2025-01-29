@@ -475,9 +475,8 @@ class ParcController extends AbstractController
             ->findAll();
 
         $horaires_csag = $this->horaires_to_arr($horaires);
-
         $reservations = $em->getRepository(Reservation::class)
-            ->findBetween($debut, $fin);
+            ->findBetween($this->params['departement'], $debut, $fin); 
 
         $vehicules = [];
         $ids = [];

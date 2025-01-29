@@ -50,6 +50,10 @@
         border-radius: 5px;
         max-width: 50px;
 
+        &.en.attente{
+          opacity: .2;
+        }
+
         &:empty {
           display: inline-block;
           width: 6px;

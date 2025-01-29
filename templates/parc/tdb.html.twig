@@ -333,7 +333,9 @@
                                 'vl': reservation.vehicule,
                                 'resa_from': reservation.dateDebut | date('d/m/Y \\à ') ~ reservation.heureDebut,
                                 'resa_to': reservation.dateFin | date('d/m/Y \\à ') ~ reservation.heureFin,
-                                'resa_par': reservation.user
+                                'resa_par': reservation.user,
+                                'statut_code': reservation.statut.code,
+                                'statut_libelle': reservation.statut.libelle
                               }]) %}
                                 {% set mems = mems|merge(mem) %}
 
@@ -351,7 +353,7 @@
                                 {% for j, mem in ( mems|sort((a, b)=>a.sort <=> b.sort)) %}
 
                                   {% if (mem.debut or mem.fin) %}
-                                    <p aria-describedby="tooltip-{{ day ~ i ~ j }}" style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"> {% if mem.debut %}
+                                    <p class="{{ mem.statut_code | lower }}" aria-describedby="tooltip-{{ day ~ i ~ j }}" style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"> {% if mem.debut %}
                                       <span>
                                         &rarr;&nbsp;
                                         {{ mem.debut }}
@@ -365,18 +367,24 @@
                                     {% endif %}
                                   </p>
                                 {% else %}
-                                  <p aria-describedby="tooltip-{{ day ~ i ~ j }}" style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"></p>
+                                  <p class="{{ mem.statut_code | lower }}" aria-describedby="tooltip-{{ day ~ i ~ j }}" style="background-color: {{ mem.vl.couleurVignette }};" title="{{ mem.vl.marque ~ ' ' ~ mem.vl.modele ~ ' - ' ~ mem.vl.immatriculation }}"></p>
                                 {% endif %}
                                 <div class="fr-tooltip fr-placement cs-tooltip" id="tooltip-{{ day ~ i ~ j }}" role="tooltip" aria-hidden="true" style="background-color: {{ mem.vl.couleurVignette }};">
                                   <h3>
                                     {{ mem.vl.marque ~ ' ' ~ mem.vl.modele }}
                                   </h3>
-                                  <dl>
+                                  <dl class="fr-mt-1w">
                                     <dt>
                                       Immatriculation:
                                     </dt>
                                     <dd>
                                       {{ mem.vl.immatriculation }}
+                                    </dd>
+                                    <dt>
+                                      Statut:
+                                    </dt>
+                                    <dd>
+                                      {{ mem.statut_libelle }}
                                     </dd>
                                     <dt>
                                       Réservé par:
