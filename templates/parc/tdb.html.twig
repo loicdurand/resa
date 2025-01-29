@@ -143,6 +143,8 @@
                     </tr>
                   </thead>
                   <tbody>
+
+                  {% if reservations | length %}
                     {% set horaires_csag = horaires[days_list[dow]] | split(',') %}
 
                     {% set horaire_ouverture = horaires_csag[0] %}
@@ -221,10 +223,19 @@
                                   </td>
 
                                 {% endif %}
+                                
                               {% endfor %}
+                              
                             </tr>
                           {% endfor %}
                         {% endfor %}
+
+                      {# aucune réservation  #}
+                      {% else %}
+                        <tr>
+                          <td>Il n'y a aucune réservation à cette date.</td>
+                        </tr>
+                      {% endif %}
                       </tbody>
                     </table>
 
@@ -463,10 +474,28 @@
                   Semaine précédente
                 </a>
               </li>
+
               <li>
-                <a href="/parc/tdb/{{ now }}/{{ now }}/j" class="fr-btn fr-btn--secondary">
-                  Aujourd'hui
-                </a>
+                <div class="fr-select-group">
+                  <select class="fr-select fr-btn fr-btn--secondary" id="select-goto-date" name="select">
+                    <option value="{{ now }}/{{ now }}">
+                        Aujourd'hui
+                    </option>
+                    <option value="{{ now | date_modify("+1 days")|date('Y-m-d') }}/{{ now |date_modify("+1 days")|date('Y-m-d') }}">
+                        Demain
+                    </option>
+                    
+                    {% set current = now | date_modify("+1 days") %}
+                    {% set end = current | date_modify("+" ~ APP_LIMIT_RESA_MONTHS ~ "months") %}
+                    {% set condition = true %}
+
+                    {% for curr in dates %}
+                      <option value="{{ curr }}/{{ curr | date('Y-m-d') }}">
+                        {{ curr | date('d/m/Y') }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
               </li>
               <li>
                 <a href="/parc/tdb/{{ fin|date_modify(" +1 days")|date('Y-m-d') }}/{{ fin|date_modify(" +1 days")|date('Y-m-d') }}/j" class="fr-btn fr-btn--secondary fr-icon-arrow-right-s-line">

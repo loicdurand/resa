@@ -1,6 +1,7 @@
 console.log('=== parc/tdb ===');
 
 const // 
+  select_goto = document.getElementById('select-goto-date'),
   select_affichage = document.getElementById('select-type-affichage'),
   first_table = document.querySelector('table:first-of-type'),
   row_days = first_table.querySelector('thead tr.cs-row-days'),
@@ -28,3 +29,5 @@ if (table_suivante !== null) {
 }
 
 select_affichage.addEventListener('change', ({ target: { value } }) => location.href = value);
+
+select_goto.addEventListener('change', ({ target: { value } }) => location.href = `/parc/tdb/${value}/j`);

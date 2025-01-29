@@ -470,6 +470,13 @@ class ParcController extends AbstractController
         $limit_resa = $this->app_const['APP_LIMIT_RESA_MONTHS'];
         $limit_resa = $limit_resa . ' mois';
 
+        $dates = [];
+        $tomorrow = $tmp->modify('+1 days');
+        for ($i = 0; $tomorrow->format("Y-m-d") !== $max->format("Y-m-d"); $i++){
+            $dates[] = $tomorrow->format("Y-m-d");
+            $tomorrow->modify('+ 1 days');
+        }
+
         $horaires = $em
             ->getRepository(HoraireOuverture::class)
             ->findAll();
@@ -521,7 +528,8 @@ class ParcController extends AbstractController
                 'max' => $max,
                 'vehicules' => $vehicules,
                 'reservations' => $reservations,
-                'affichage' => $affichage
+                'affichage' => $affichage,
+                'dates' => $dates
             ]
         ));
     }
