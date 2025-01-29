@@ -112,8 +112,17 @@
 }
 
 .cs-tooltip {
-  border: 1px solid var(--grey-5);
+  border: 1px solid var(--grey-5); 
   border-radius: 3px;
+  &.en.attente{
+    opacity: .2;
+    & h3{
+      // on écrit la marque, modèle, immat' en noir 
+      // du fait qu'ils ne sont plus plus visible à
+      // cause de l'opacité à 0,2
+      color: #FFF;
+    }
+  }
 
   & .cs-affichage-reservation {
     margin: 2rem 0;

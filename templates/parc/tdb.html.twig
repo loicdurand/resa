@@ -169,7 +169,7 @@
                             {% set name = H ~ ':' ~ M %}
                             {% if reservation.heure_affichee == name or ( not reservation.starts and index_heure == 0 and index_minute == 0 ) %}
 
-                              <td class="cs-tooltip relative{{ reservation.starts ? ' starts' : '' }}{{ reservation.ends ? ' ends' : '' }}" rowspan="{{ reservation.rowspan }}" style="width: calc(75vw/{{ reservations|length }});background-color: {{ reservation.vehicule.couleurVignette }};">
+                              <td class="cs-tooltip relative {{reservation.statut.code | lower }}{{ reservation.starts ? ' starts' : '' }}{{ reservation.ends ? ' ends' : '' }}" rowspan="{{ reservation.rowspan }}" style="width: calc(75vw/{{ reservations|length }});background-color: {{ reservation.vehicule.couleurVignette }};">
                                 <div class="cs-affichage-reservation">
                                   {% if reservation.starts %}
                                     <h2 class="debut" title="{{ reservation.vehicule.marque ~ ' ' ~ reservation.vehicule.modele ~ ' - ' ~ reservation.vehicule.immatriculation }}">
@@ -184,6 +184,12 @@
                                       {{ reservation.vehicule.immatriculation }}
                                     </h3>
                                     <dl>
+                                      <dt>
+                                        Statut:
+                                      </dt>
+                                      <dd>
+                                        {{ reservation.statut.libelle }}
+                                      </dd>
                                       <dt>
                                         Réservé par:
                                       </dt>
