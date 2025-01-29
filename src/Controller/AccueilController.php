@@ -93,11 +93,12 @@ class AccueilController extends AbstractController
                     ['departement' => $this->params['departement']]
             );
 
-        $horaires = $this->em
+        $horaires = $this->getBaseHoraires();
+
+        $base_horaires = $this->em
             ->getRepository(HoraireOuverture::class)
             ->findBy(['code_unite' => $atelier]);
-
-        if (count($horaires) == 0) {
+        if (count($base_horaires) == 0) {
             $jours_ouvrables = ['LU', 'MA', 'ME', 'JE', 'VE'];
             foreach ($jours_ouvrables as $jour) {
                 for ($i = 0; $i <= 1; $i++) {
@@ -118,9 +119,6 @@ class AccueilController extends AbstractController
                     $this->em->flush();
                 }
             };
-            $horaires = $this->em
-                ->getRepository(HoraireOuverture::class)
-                ->findBy(['code_unite' => $atelier]);
         }
 
         $dates = [];
@@ -350,5 +348,45 @@ class AccueilController extends AbstractController
         }
 
         return $out;
+    }
+
+    private function getBaseHoraires(): array
+    {
+        $horaires = [];
+        $jours_ouvrables = ['LU', 'MA', 'ME', 'JE', 'VE'];
+        if ($this->getParameter('app.filtres_ouvert_weekend'))
+            $jours_ouvrables = array_merge($jours_ouvrables, ['SA', 'DI']);
+
+        $matin_starts = $this->addZeros($this->getParameter('app.filtres_matin_starts_at'), 2) . ':00';
+        $matin_ends = $this->addZeros($this->getParameter('app.filtres_matin_ends_at'), 2) . ':00';
+        $aprem_starts = $this->addZeros($this->getParameter('app.filtres_aprem_starts_at'), 2) . ':00';
+        $aprem_ends = $this->addZeros($this->getParameter('app.filtres_aprem_ends_at'), 2) . ':00';
+
+        foreach ($jours_ouvrables as $jour) {
+            for ($i = 0; $i <= 1; $i++) {
+                $horaire = new HoraireOuverture();
+                $horaire->setCodeUnite(new Atelier());
+                $horaire->setJour($jour);
+                if ($i === 0) {
+                    $horaire->setCreneau('AM');
+                    $horaire->setDebut($matin_starts);
+                    $horaire->setFin($matin_ends);
+                } else {
+                    $horaire->setCreneau('PM');
+                    $horaire->setDebut($aprem_starts);
+                    $horaire->setFin($aprem_ends);
+                }
+                $horaires[] = $horaire;
+            }
+        };
+        return $horaires;
+    }
+
+    private function addZeros($str, $maxlen = 2)
+    {
+        $str = '' . $str;
+        while (strlen($str) < $maxlen)
+            $str = "0" . $str;
+        return $str;
     }
 }

@@ -14,6 +14,12 @@ parameters:
     app.max_resa_duration: '+ 3 weeks'
     app.minutes_select_interval: 15
     app.token_gives_full_access: true
+    app.filtres_ouvert_weekend: true
+    app.filtres_matin_starts_at: 7
+    app.filtres_matin_ends_at: 12
+    app.filtres_aprem_starts_at: 14
+    app.filtres_aprem_ends_at: 18
+
 
 services:
     # default configuration for services in *this* file
