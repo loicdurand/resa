@@ -1,0 +1,50 @@
+.fr-table .cs-table-horaires td .cs-btn--icon-on-hover {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  text-align: left;
+  vertical-align: middle;
+  color: var(--text-default-grey);
+
+  &:after {
+    opacity: 0;
+  }
+
+  &:hover,
+  &:hover:after {
+    opacity: 1;
+    color: var(--text-action-high-blue-france);
+  }
+
+}
+
+form[name="horaire_ouverture"] input {
+  text-align: center;
+}
+
+form[name="photo"] {
+  width: 100%;
+
+  .cs-qr-ctnr {
+    width: 100%;
+
+    & figure {
+      & img {
+        display: block;
+        margin: 0 auto;
+      }
+
+      & figcaption {
+        text-align: center;
+      }
+    }
+  }
+}
+
+.fr-accordion__title .fr-accordion__btn.cs-deconnexion {
+  color: var(--red-8);
+  background-image: none;
+  &:after{
+    display: none;
+  }
+}

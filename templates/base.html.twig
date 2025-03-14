@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html	lang="fr">
+	<head>
+		<meta	charset="UTF-8">
+		<meta	name="viewport"	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<title>
+			{% block title %}
+				{{ APP_NAME | raw }}
+				-
+				{{ APP_TAGLINE }}
+			{% endblock %}
+		</title>
+
+		{# FAVICON #}
+		<link	rel="apple-touch-icon"	href="/favicons/apple-touch-icon.png">
+
+		<!-- 180×180 -->
+		<link	rel="icon"	href="/favicons/favicon.svg"	type="image/svg+xml">
+		<link	rel="shortcut icon"	href="/favicons/favicon.ico"	type="image/x-icon">
+
+		<!-- 32×32 -->
+		<link	rel="manifest"	href="/favicons/manifest.webmanifest"	crossorigin="use-credentials">
+
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
+	</head>
+
+	<body	class="container">
+
+		{% if APP_ENV != 'production' %}
+			<div	class="debug"	onclick="this.style.display = 'none';">
+
+				<p>
+					Environnement:
+					<span	class="bold">
+						{{ APP_ENV }}
+					</span>
+				</p>
+
+				<dl>
+					<dt>
+						Utilisateur:
+					</dt>
+					<dd>
+						<a	href="/logout"	aria-describedby="tooltip-logout"	title="déconnexion">
+							{{ nigend is defined? nigend }}
+						</a>
+						<span	class="fr-tooltip fr-placement cs-deconnexion-tooltip"	id="tooltip-logout"	role="tooltip"	aria-hidden="true">
+							Se déconnecter
+						</span>
+
+					</dd>
+
+					<dt>
+						Unité
+					</dt>
+					<dd>
+						{{ unite is defined ? unite }}
+					</dd>
+
+					<dt>
+						Profil:
+					</dt>
+					<dd	id="debug-profil">
+						{{ profil is defined ? profil }}
+					</dd>
+				</dl>
+
+			</div>
+		{% endif %}
+
+		{# HEADER #}
+
+		<header	role="banner"	class="fr-header fr-header hide-s hide-m">
+			<div	class="fr-header__body">
+				<div	class="fr-container">
+					<div	class="fr-header__body-row">
+						<div	class="fr-header__brand fr-enlarge-link">
+							<div	class="fr-header__brand-top">
+								<div	class="fr-header__logo">
+									<a	href="/"	title="Accueil - {{ APP_NAME | raw }} - {{ APP_TAGLINE }}">
+										<p	class="fr-logo">
+											Gendarmerie
+											<br/>
+											Nationale
+										</p>
+									</a>
+								</div>
+								<div	class="fr-header__navbar">
+									<button	class="fr-btn--menu fr-btn"	data-fr-opened="false"	aria-controls="modal-491"	id="button-492"	title="Menu">
+										Menu
+									</button>
+								</div>
+							</div>
+							<div	class="fr-header__service">
+								<a	href="/"	title="Accueil - {{ APP_NAME | raw }} - {{ APP_TAGLINE }}">
+									<p	class="fr-header__service-title">
+										{{ APP_NAME | raw }}
+										-
+										{{ APP_TAGLINE }}
+									</p>
+								</a>
+								<p	class="fr-header__service-tagline">
+									{{ APP_SLUG }}
+								</p>
+							</div>
+						</div>
+
+						<div	class="fr-header__tools">
+							<div	class="fr-header__tools-links">
+								<ul	class="fr-btns-group">
+									<li>
+										<a	class="fr-btn fr-icon-logout-box-r-line"	href="/logout">
+											Se déconnecter
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div	class="fr-header__menu fr-modal"	id="modal-491"	aria-labelledby="button-492">
+				<div	class="fr-container">
+					<button	class="fr-btn--close fr-btn"	aria-controls="modal-491"	title="Fermer">
+						Fermer
+					</button>
+					<div	class="fr-header__menu-links"></div>
+					<nav	class="fr-nav"	role="navigation"	aria-label="Menu principal">
+						<ul	class="fr-nav__list">
+							<li	class="fr-nav__item">
+								<a	class="fr-nav__link"	aria-current="{{ app.request.pathinfo == '/' ? 'true' : 'false' }}"	href="/"	target="_self">
+									Recherche
+								</a>
+							</li>
+							<li	class="fr-nav__item">
+								<a	class="fr-nav__link"	aria-current="{{ app.request.pathinfo == '/historique' ? 'true' : 'false' }}"	href="/historique"	target="_self">
+									Historique
+								</a>
+							</li>
+							<li	class="fr-nav__item">
+								<a	class="fr-nav__link"	aria-current="{{ app.request.pathinfo == '/compte' ? 'true' : 'false' }}"	href="/compte"	target="_self">
+									Compte
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+
+		{# BODY #}
+		<div	class="fr-mb-12w fr-container">
+			{% block body %}{% endblock %}
+		</div>
+
+		{# FOOTER #}
+
+		<footer	class="grid cs-footer hide-l hide-xl">
+			<div	class="col s4 cs-menu cs-menu-accueil">
+				<a	aria-current="{{ app.request.pathinfo == '/' ? 'true' : 'false' }}"	href="/"	target="_self"	class="cs-menu__item"	style="--bgColorItem: #f54888;">
+					{# icone "search" #}
+					<svg	class="icon"	xmlns="http://www.w3.org/2000/svg"	viewbox="0 0 24 24"	fill="currentColor">
+						<path	d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"></path>
+					</svg>
+					<p	class="explain">
+						Accueil
+					</p>
+				</a>
+			</div>
+			<div	class="col s4 cs-menu cs-menu-historique">
+				<a	aria-current="{{ app.request.pathinfo == '/historique' ? 'true' : 'false' }}"	href="/historique"	target="_self"	class="cs-menu__item"	style="--bgColorItem: #4343f5;">
+					{# icone "history" #}
+					<svg	class="icon"	xmlns="http://www.w3.org/2000/svg"	viewbox="0 0 24 24"	fill="currentColor">
+						<path	d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12H4C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C9.25022 4 6.82447 5.38734 5.38451 7.50024L8 7.5V9.5H2V3.5H4L3.99989 5.99918C5.82434 3.57075 8.72873 2 12 2ZM13 7L12.9998 11.585L16.2426 14.8284L14.8284 16.2426L10.9998 12.413L11 7H13Z"></path>
+					</svg>
+					<p	class="explain">
+						Historique
+					</p>
+				</a>
+			</div>
+			<div	class="col s4 cs-menu cs-menu-compte">
+				<a	aria-current="{{ app.request.pathinfo == '/compte' ? 'true' : 'false' }}"	href="/compte"	target="_self"	class="cs-menu__item"	style="--bgColorItem: #e0b115;">
+					{# icone "account" #}
+					<svg	class="icon"	xmlns="http://www.w3.org/2000/svg"	viewbox="0 0 24 24"	fill="currentColor">
+						<path	d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12.1597 16C10.1243 16 8.29182 16.8687 7.01276 18.2556C8.38039 19.3474 10.114 20 12 20C13.9695 20 15.7727 19.2883 17.1666 18.1081C15.8956 16.8074 14.1219 16 12.1597 16ZM12 4C7.58172 4 4 7.58172 4 12C4 13.8106 4.6015 15.4807 5.61557 16.8214C7.25639 15.0841 9.58144 14 12.1597 14C14.6441 14 16.8933 15.0066 18.5218 16.6342C19.4526 15.3267 20 13.7273 20 12C20 7.58172 16.4183 4 12 4ZM12 5C14.2091 5 16 6.79086 16 9C16 11.2091 14.2091 13 12 13C9.79086 13 8 11.2091 8 9C8 6.79086 9.79086 5 12 5ZM12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7Z"></path>
+					</svg>
+					<p	class="explain">
+						Mon compte
+					</p>
+				</a>
+			</div>
+		</footer>
+
+	</body>
+</html>

@@ -1,0 +1,542 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+        {# MODALE Début #}
+        <dialog aria-labelledby="fr-modal--from-title" id="fr-modal--from" class="fr-modal" role="dialog">
+          <div class="fr-container fr-container--fluid fr-container-md">
+            <div class="fr-grid-row fr-grid-row--center">
+              <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+
+                <div class="fr-modal__body">
+                  <div id="step-1" class="fr-mt-1w fr-modal__content fr-grid-row">
+                    {# stepper #}
+                    <div id="fr-modal--from-title" class="fr-stepper fr-col-12">
+                      <h2 class="fr-stepper__title">
+                        Début de la réservation
+                        <span class="fr-stepper__state">
+                          Étape 1 sur 2
+                        </span>
+                      </h2>
+                      <div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="2"></div>
+                    </div>
+
+                    <h3 class="fr-col-12 cs-date-lib" id="from-date-lib"></h3>
+
+                    <div id="notice-resa-from" class="hidden fr-col-12 fr-notice fr-notice--info">
+                      <div class="fr-container">
+                          <div class="fr-notice__body">
+                              <p>
+                                  <span class="fr-notice__title">Information:</span>
+                                  <div class="fr-notice__desc">
+                                    Le véhicule est déjà réservé:&nbsp;<ul id="text-resa-from"></ul>
+                                  </div>
+                              </p>
+                              <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
+                          </div>
+                      </div>
+                  </div>
+
+                    <div class="fr-grid-row fr-mb-2w">
+                      <div class=" fr-select-group fr-col fr-col-6 fr-pl-1w">
+                        <label class="fr-label" for="select-from-heure">
+                          Heure
+                        </label>
+                        <select class="fr-select" id="select-from-heure" name="select-from-heure"></select>
+                        
+                      </div>
+                      <div class="fr-select-group fr-select-group--disabled fr-col fr-col-6 fr-pl-1w cs-select-minutes">
+                        <label class="fr-label" for="select-from-minute">
+                          &nbsp;
+                        </label>
+                        <select class="fr-select" id="select-from-minute" name="select-from-minute">
+                          {% for i in range(0, 60, APP_MINUTES_SELECT_INTERVAL) %}
+                            {% if i < 60 %}
+                              <option value="{{ i | length > 1 ? i : '0' ~ i }}" {{ i == 0 ? 'selected' }}>
+                                {{ i | length > 1 ? i : '0' ~ i }}
+                              </option>
+                            {% endif %}
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="cs-btns-group fr-btns-group">
+                      <button id="modal-suivant" type="button" aria-controls="fr-modal--from" class="fr-btn fr-btn--tertiary-no-outline">
+                        Date de fin &#8594;
+                      </button>
+                    </div>
+
+                  </div>
+                {# fin étape DÉBUT #}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </dialog>
+        {# FIN MODALE Début #}
+
+        {# MODALE Fin #}
+        <dialog aria-labelledby="fr-modal--to-title" id="fr-modal--to" class="fr-modal" role="dialog">
+          <div class="fr-container fr-container--fluid fr-container-md">
+            <div class="fr-grid-row fr-grid-row--center">
+              <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+
+                <div class="fr-modal__body">
+                  <div id="step-1" class="fr-mt-1w fr-modal__content fr-grid-row">
+                    {# stepper #}
+                    <div id="fr-modal--to-title" class="fr-stepper fr-col-12">
+                      <h2 class="fr-stepper__title">
+                        Fin de la réservation
+                        <span class="fr-stepper__state">
+                          Étape 2 sur 2
+                        </span>
+                      </h2>
+                      <div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="2"></div>
+                    </div>
+
+                    <h3 class="fr-col-12 cs-date-lib" id="to-date-lib"></h3>
+
+                    <div id="notice-resa-to" class="hidden fr-col-12 fr-notice fr-notice--info">
+                    <div class="fr-container">
+                        <div class="fr-notice__body">
+                            <p>
+                                <span class="fr-notice__title">Information:</span>
+                                <div class="fr-notice__desc">
+                                  Le véhicule est déjà réservé:&nbsp;<ul id="text-resa-to"></ul>
+                                </div>
+                            </p>
+                            <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="fr-grid-row fr-mb-2w">
+                      <div class=" fr-select-group fr-col fr-col-6 fr-pl-1w">
+                        <label class="fr-label" for="select-to-heure">
+                          Heure
+                        </label>
+                        <select class="fr-select" id="select-to-heure" name="select-to-heure">
+                          <option value="8" selected>
+                            08
+                          </option>
+                        </select>
+                      </div>
+                      <div class="fr-select-group fr-select-group--disabled fr-col fr-col-6 fr-pl-1w cs-select-minutes">
+                        <label class="fr-label" for="select-to-minute">
+                          &nbsp;
+                        </label>
+                        <select class="fr-select" id="select-to-minute" name="select-to-minute">
+                        {% for i in range(0, 60, APP_MINUTES_SELECT_INTERVAL) %}
+                        {% if i < 60 %}
+                          <option value="{{ i | length > 1 ? i : '0' ~ i }}" {{ i == 0 ? 'selected' }}>
+                            {{ i | length > 1 ? i : '0' ~ i }}
+                          </option>
+                        {% endif %}
+                      {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="cs-btns-group fr-btns-group">
+                      <button id="modal-fermer" type="button" aria-controls="fr-modal--to" id="btn-go-step2" class="fr-btn fr-btn--tertiary-no-outline">
+                        Fermer
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </dialog>
+      {# FIN MODALE Fin #}
+
+  {# Fil d'Arianne #}
+  <nav role="navigation" class="hide-s hide-m fr-breadcrumb" aria-label="vous êtes ici :">
+    <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+      Voir le fil d’Ariane
+    </button>
+    <div class="fr-collapse">
+      <ol class="fr-breadcrumb__list">
+        <li>
+          <a href="/" class="fr-breadcrumb__link">
+            Accueil
+          </a>
+        </li>
+        <li>
+          <a class="fr-breadcrumb__link" aria-current="page">
+            Réserver un véhicule
+          </a>
+        </li>
+      </ol>
+    </div>
+  </nav>
+
+  {# fiche véhicule #}
+  <div id="fiche-vehicule" class="cs-fiche-vehicule">
+
+    {# GALLERIE #}
+    {% set len = vehicule.photos|length %}
+
+      <div	class="cs-gallerie fr-grid-row fr-grid-row--gutters">
+        {# vue principale #}
+        <figure	class="fr-col-{{ len <= 1 ? '12' : len == 2 ? '6' : '9' }}">
+          <img	src="{{ len > 0 ?  asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}"	class="fr-responsive-img cs-figure cs-figure--main"	alt="Vue principale du véhicule">
+            <figcaption	class="hidden">
+              Vue principale du véhicule
+            </figcaption>
+          </figure>
+
+          {# vue de profil #}
+          {% if(len > 1) %}
+            <div	class="fr-col-{{ len == 2 ? '6' : '3 fr-mt-1w' }}">
+              <figure	class="cs-figure">
+                <button	class="fr-btn cs-gallerie-btn">
+                  <img	src="{{ asset('images/uploads/' ~ vehicule.photos[1].path) }}"	class="fr-responsive-img"	alt="Vue de l'avant du véhicule"></button>
+                  <figcaption	class="hidden">
+                    Vue de profil du véhicule
+                  </figcaption>
+                </figure>
+
+                {# vue de l'avant #}
+                {% if(len > 2) %}
+                  <figure	class="cs-figure">
+                    <button	class="fr-btn cs-gallerie-btn">
+                      <img	src="{{ asset('images/uploads/' ~ vehicule.photos[2].path) }}"	class="fr-responsive-img"	alt="Vue de l'avant du véhicule"></button>
+                      <figcaption	class="hidden">
+                        Vue de l'avant du véhicule
+                      </figcaption>
+                    </figure>
+                  {% endif %}
+
+                  {# vue de l'arrière #}
+                  {% if(len > 3) %}
+                    <figure	class="cs-figure">
+                      <button	class="fr-btn cs-gallerie-btn">
+                        <img	src="{{ asset('images/uploads/' ~ vehicule.photos[3].path) }}"	class="fr-responsive-img"	alt="Vue de l'arrière du véhicule"></button>
+                        <figcaption	class="hidden">
+                          Vue de l'arrière du véhicule
+                        </figcaption>
+                      </figure>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+
+              {# FIN GALERIE #}
+
+            {# DESCRIPTION VL #}
+            <dl class="fr-col-12">
+              <dt class="cs-marque">
+                {{ vehicule.marque }}
+                <span class="cs-modele">
+                  {{ vehicule.modele }}
+                </span>
+              </dt>
+              {% if (vehicule.motorisation ~ vehicule.finition) is empty %}
+                <br/>
+              {% else %}
+                <dd>
+                  {{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
+                </dd>
+              {% endif %}
+              <dd>
+                <ul class="fr-tags-group cs-tags">
+                <li>
+                    <p class="fr-tag fr-tag--sm fr-fi-map-pin-2-fill fr-tag--icon-left cs-location-tag" title="{{ vehicule.unite.nomLong }}">
+                      {{ vehicule.unite.nomCourt }}
+                    </p>
+                  </li>
+                  <li>
+                    <p class="fr-tag fr-tag--sm">
+                      {{ vehicule.transmission.code }}
+                    </p>
+                  </li>
+                  <li>
+                    <p class="fr-tag fr-tag--sm">
+                      {{ vehicule.carburant.libelle }}
+                    </p>
+                  </li>
+                  <li>
+                    <p class="fr-tag fr-tag--sm">
+                      {{ vehicule.NbPlaces }}
+                      {{ vehicule.NbPlaces > 1 ? 'places' : 'place' }}
+                    </p>
+                  </li>
+                </ul>
+              </dd>
+            </dl>
+            {# FIN DESCRIPTION VL #}
+
+            {# INFORMATIONS #}
+            <div class="fr-col-12">
+              <p class="cs-informations">
+                Informations
+              </p>
+              <ul>
+                <li>
+                  Néant
+                </li>
+              </ul>
+            </div>
+            {# FIN INFORMATIONS #}
+
+            {# JE RÉSERVE #}
+
+            {{ form_start(form) }}
+
+            <div class="fr-col-12">
+              <p class="cs-informations">
+                Disponibilités
+              </p>
+
+              <div id="cs-filtres-container" class="cs-filtres-container">
+
+              <input
+                  id="form-field--date_debut"
+                  type="hidden"
+                  name="{{ field_name(form.date_debut) }}"
+                  value="{{ field_value(form.date_debut) }}"
+                  class="form-control"
+              >
+
+              <input
+                  id="form-field--heure_debut"
+                  type="hidden"
+                  name="{{ field_name(form.heure_debut) }}"
+                  value="{{ field_value(form.heure_debut) }}"
+                  class="form-control"
+              >                
+              
+              <input
+                  id="form-field--date_fin"
+                  type="hidden"
+                  name="{{ field_name(form.date_fin) }}"
+                  value="{{ field_value(form.date_fin) }}"
+                  class="form-control"
+              >
+
+              <input
+                  id="form-field--heure_fin"
+                  type="hidden"
+                  name="{{ field_name(form.heure_fin) }}"
+                  value="{{ field_value(form.heure_fin) }}"
+                  class="form-control"
+              >  
+              
+              <input
+                  id="form-field--user"
+                  type="hidden"
+                  name="{{ field_name(form.user) }}"
+                  value="{{ field_value(form.user) }}"
+                  class="form-control"
+              >
+
+              <input
+                  id="form-field--vehicule"
+                  type="hidden"
+                  name="{{ field_name(form.vehicule) }}"
+                  value="{{ field_value(form.vehicule) }}"
+                  class="form-control"
+              >  
+
+              <input
+                  id="form-field--statut"
+                  type="hidden"
+                  name="{{ field_name(form.statut) }}"
+                  value="{{ field_value(form.statut) }}"
+                  class="form-control"
+              >  
+                
+                {# DE ... -> À ... #}
+                <div class="cs-btn-ctnr cs-date-ctnr">
+                  <button type="button" id="cs-btn--from" class="bordered cs-btn cs-btn-from-to cs-btn--left">
+                    <span class="cs-from-to">
+                      Début
+                    </span>
+                    <span id="select-from-date--target" class="cs-from-to-value">
+                      <div id="from-value--date" class="cs-from-to-value--date">
+                        {{ filtered ? from.date : '__' }}&nbsp;<span class="hide-s">{{ filtered ? year}}</span>
+                      </div>
+                      <div id="from-value--heure" class="cs-from-to-value--heure">
+                        {{ filtered ? from.heure }}
+                    </div>
+                    </span>
+                  </button>
+                  <div class="separator"></div>
+                  <button type="button" id="cs-btn--to" class="cs-btn cs-btn-from-to cs-btn--right">
+                    <span class=" cs-from-to">
+                      Fin
+                    </span>
+                    <span id="select-to-date--target" class="cs-from-to-value">
+                      <div id="to-value--date" class="cs-from-to-value--date">
+                        {{ filtered ? to.date : '__' }}&nbsp;<span class="hide-s">{{ filtered ? year}}</span>
+                      </div>
+                      <div  id="to-value--heure" class="cs-from-to-value--heure">
+                        {{ filtered ? to.heure }}
+                    </div>
+                    </span>
+                  </button>
+                </div>
+
+                {# Bandeau d'information #}
+                <div id="bandeau-info" class="fr-notice fr-notice--warning hidden">
+                    <div class="fr-container">
+                        <div class="fr-notice__body">
+                            <p>
+                                <span class="fr-notice__title">Conflit</span>
+                                <p class="fr-notice__desc">
+                              Il y a déjà une réservation dans la période que vous venez de sélectionner.
+                              </p>
+                            </p>
+                            {# <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1305" class="fr-btn--close fr-btn">Masquer le message</button> #}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="form-submit-ctnr" class="{{filtered ? '' : 'hidden ' }}fr-btns-group--right fr-mt-2w fr-mr-1w">
+                  <span>
+                    <button id="form-submit-btn" type="submit" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-right">
+                    Je réserve
+                  </button>
+                  </span>
+              </div>
+
+              </div>
+            </div>
+
+            {{ form_end(form) }}
+
+            {# FIN JE RÉSERVE #}
+
+            {# CALENDRIERS #}
+            <div id="calendars-container">
+              {# source: https://gist.github.com/aknosis/3932192 #}
+              {% set time = "now"| date('Y-m-15') | date_modify('-1 months')| date("U") %}
+              {% for i in range(0,APP_LIMIT_RESA_MONTHS) %}
+                {% set time =  time | date_modify('+1 months') %}
+                <table>
+                  <thead>
+                    {% if loop.first %}
+                      <tr class="cs-row-days">
+                        <th width="15%" id="th-LU" data-horaires="{{ horaires.LU }}">
+                  Lu<span class="hide-s">ndi</span>
+                        </th>
+                        <th width="15%" id="th-MA" data-horaires="{{ horaires.MA }}">
+                          Ma<span class="hide-s">rdi</span>
+                        </th>
+                        <th width="16%" id="th-ME" data-horaires="{{ horaires.ME }}">
+                          Me<span class="hide-s">rcredi</span>
+                        </th>
+                        <th width="15%" id="th-JE" data-horaires="{{ horaires.JE }}">
+                          Je<span class="hide-s">udi</span>
+                        </th>
+                        <th width="15%" id="th-VE" data-horaires="{{ horaires.VE }}">
+                          Ve<span class="hide-s">ndredi</span>
+                        </th>
+                        <th width="12%" id="th-SA" data-horaires="{{ horaires.SA }}">
+                          Sa<span class="hide-s">medi</span>
+                        </th>
+                        <th width="12%" id="th-DI" data-horaires="{{ horaires.DI }}">
+                          Di<span class="hide-s">manche</span>
+                        </th>
+                      </tr>
+                    {% endif %}
+                    <tr>
+                      {% set trans_day_hash = { 
+                    "January": "Janvier", 
+                    "February": "Février", 
+                    "March": "Mars", 
+                    "April": "Avril", 
+                    "May": "Mai", 
+                    "June": "Juin", 
+                    "July": "Juillet" ,
+                    "August":"Août",
+                    "September":"Septembre",
+                    "October":"Octobre",
+                    "November":"Novembre",
+                    "December":"Décembre"
+                } %}
+                      {% set days_list = [
+                  'LU','MA','ME','JE','VE','SA','DI'
+                ] %}
+                      <th colspan="7">
+                        {{ trans_day_hash[time|date('F')] }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      {% set daysInMonth = time|date('t') %}
+                      {% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
+                      {% set dow = startDow %}
+                      {% for day in range(1,daysInMonth) %}
+                        {% if loop.first and startDow != 0 %}
+                          <td colspan="{{ startDow }}"></td>
+                        {% endif %}
+                        {% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:00')|date('U') %}
+                        {% set before_now = curr_date <= ('now'|date('Y-m-d 00:00:00')|date('U') )? true : false %}
+                        {% set after_limit = curr_date > (max|date('Y-m-d 00:00:00')|date('U') )? true : false %}
+                        {% set csag_ferme =  horaires[days_list[dow]] == '' %}
+                        <td class="target">
+                          <div class="relative">
+
+                            {% set striked = false %}
+                            {% set striked_debut = false %}
+                            {% set striked_fin = false %}
+                            {% set mems = [] %}
+
+                            {% for i, reservation in vehicule.reservations %}
+                              {% if 
+                              curr_date|date('Y-m-d')|date('U') >= date(reservation.dateDebut)|date('Y-m-d')|date('U') 
+                                and 
+                              curr_date|date('Y-m-d')|date('U') <= date(reservation.dateFin)|date('Y-m-d')|date('U') 
+                              %}
+                                
+                              {% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) ? reservation.heureDebut : false %}
+                              {% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) ? reservation.heureFin : false %}
+                              {# {% set striked = striked_debut or striked_fin ? false : true %} #}
+                              {% set striked = true %}
+
+                              {% set mem = [] %}
+                              {% set mem = mem|merge([{'debut': striked_debut, 'fin': striked_fin}]) %}
+                              {% set mems = mems|merge(mem) %}
+
+                              {% endif %}
+                            {% endfor %}
+
+                          <div {% for i, mem in mems %}  data-resa_{{i}}_debut="{{ mem.debut }}" data-resa_{{i}}_fin="{{ mem.fin }}" {% endfor %} {{striked_debut ? 'data-heure_debut=' ~ striked_debut }} {{striked_fin ? 'data-heure_fin=' ~ striked_fin }}  data-ref="{{ days_list[dow] }}" {{ (striked and striked_debut == false and striked_fin == false) or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" title="{{ striked ? "Il y a une ou plusieurs réservations à cette date." : striked_debut or striked_fin ? "Le véhicule est réservé une partie de la journée" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
+                              {{ day }}
+                            </div>
+                            <div>{# day content here #}
+                            </div>
+                          </div>
+                        </td>
+                        {% if loop.last and dow != 6 %}
+                          <td colspan="{{ 6 - dow }}">
+                            &nbsp;
+                          </td>
+                        {% endif %}
+                        {% if dow == 6 %}
+                          {% set dow = 0 %}
+                        </tr>
+                        <tr>
+                        {% else %}
+                          {% set dow = dow + 1 %}
+                      {% endif %}
+                    {% endfor %}
+                  </tr>
+                </tbody>
+              </table>
+            {% endfor %}
+          </div>
+        {# FIN CALENDRIERS #}
+
+        </div>
+        {# fin fiche véhicule #}
+
+      {% endblock %}
+      

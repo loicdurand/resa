@@ -1,0 +1,166 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	{# Fil d'Arianne #}
+	<nav	role="navigation"	class="fr-breadcrumb"	aria-label="vous êtes ici :">
+		<button	class="fr-breadcrumb__button"	aria-expanded="false"	aria-controls="breadcrumb-1">
+			Voir le fil d’Ariane
+		</button>
+		<div	class="fr-collapse"	id="breadcrumb-1">
+			<ol	class="fr-breadcrumb__list">
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/">
+						Accueil
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/compte/">
+						Compte
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/parc/">
+						Parc
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	aria-current="page">
+						{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }}
+						un véhicule
+					</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+
+	<h2	class="fr-mt-2w">
+		{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }}
+		un véhicule
+	</h2>
+
+	{% if (action=='ajouter') %}
+		<p	class="fr-text--sm">
+			Le formulaire suivant permet d'ajouter un véhicule, quelle que soit sa catégorie (VL, PL, moto, etc...), à votre parc.
+			<span	class="hide-s">
+				<br/>
+				Les seuls champs obligatoires sont la marque, le modèle et l'immatriculation du véhicule.
+				<br/>
+				Les champs facultatifs permettront aux utilisateurs de rechercher un véhicule en fonction de leur besoin, via les filtres de recherche.
+			</span>
+		</p>
+	{% elseif (action=='modifier') %}
+		<p	class="fr-text--sm">
+			Le formulaire suivant permet de modifier les caractéristiques du véhicule sélectionné.
+			<br>
+				Cliquez sur ce lien pour
+				<a	class="fr-link bold" href="/parc/upload?vehicule={{ vehicule_id }}&action=modifier">
+				mettre à jour les photos
+				</a>
+				de ce véhicule.
+			</p>
+		{% elseif (action=='supprimer') %}
+			<p	class="fr-text--sm">
+				Vous êtes sur le point de supprimer
+				<span	class="underline">
+					définitivement
+				</span>
+				le véhicule sélectionné.
+			</p>
+		{% endif %}
+
+		{{ form_start(form) }}
+
+		<div	class="fr-container">
+
+			<div	class="fr-mt-2w fr-grid-row fr-grid-row--gutters">
+
+				<fieldset	class="fr-col-12 fr-col-sm-12 fr-fieldset"	id="checkboxes"	aria-labelledby="checkboxes-legend checkboxes-messages">
+					<legend	class="fr-fieldset__legend--regular fr-fieldset__legend"	id="checkboxes-legend">
+						Sérigraphie
+					</legend>
+					<div	class="fr-fieldset__element">
+						<div	class="fr-checkbox-group">
+							{{ form_widget(form.serigraphie) }}
+							{{ form_label(form.serigraphie) }}
+							<div	class="fr-messages-group"	id="checkboxes-1-messages"	aria-live="assertive"></div>
+						</div>
+					</div>
+				</fieldset>
+
+				{{ form_rest(form) }} 
+
+				<datalist id="unites-list">
+				{% for unite in unites %}
+					<option value="{{ unite.codeUnite }}">
+					{{ unite.nomCourt ~ ' (' ~ unite.codeUnite ~ ')' }}
+					</option>
+				{% endfor %}
+				</datalist> 
+
+				<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
+					{% if(action == 'ajouter') %}
+						<li>
+							<!-- Bouton d'ouverture de la modale -->
+							<button	class="fr-btn fr-btn--secondary"	data-fr-opened="false"	aria-controls="fr-modal--reset-ajouter">
+								Réinitialiser le formulaire
+							</button>
+
+						</li>
+					{% endif %}
+
+					<li>
+						<button	type="submit"	class="fr-btn">
+							{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }}
+							le véhicule
+						</button>
+					</li>
+
+				</ul>
+
+			</div>
+
+		</div>
+
+		{{ form_end(form) }}
+
+		{# MODALE DE CONFIRMATION DE RÉINITIALISATION DU FORMULAIRE #}
+		<dialog	aria-labelledby="fr-modal--reset-ajouter-title"	id="fr-modal--reset-ajouter"	class="fr-modal"	role="dialog">
+			<div	class="fr-container fr-container--fluid fr-container-md">
+				<div	class="fr-grid-row fr-grid-row--center">
+					<div	class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+						<div	class="fr-modal__body">
+							<div	class="fr-modal__header">
+								<button	class="fr-btn--close fr-btn"	aria-controls="fr-modal--reset-ajouter">
+									Fermer
+								</button>
+							</div>
+							<div	class="fr-modal__content">
+								<h1	id="fr-modal--reset-ajouter-title"	class="fr-modal__title">
+									<span	class="fr-icon-arrow-right-line fr-icon--lg"></span>
+									Confirmer
+								</h1>
+								<p>
+									Vous allez réinitialiser le formulaire.
+									<br/>
+									Tous les champs remplis précédemment vont être effacés.
+									<br/>
+									Cliquez sur le bouton ci-dessous pour confirmer cette action.
+								</p>
+							</div>
+							<div	class="fr-modal__footer">
+								<div	class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+									<button	type="reset"	class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary"	aria-controls="fr-modal--reset-ajouter">
+										Réinitialiser le formulaire
+									</button>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</dialog>
+
+	{% endblock %}
+	

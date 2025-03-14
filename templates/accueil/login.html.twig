@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+  <div class="fr-grid-row">
+
+    {{ form_start(form) }}
+
+    <div class="fr-mt-12w fr-col-8 fr-col-offset-2">
+
+      <div class="fr-select-group{{ result == false ? ' fr-select-group--error' : '' }}">
+
+        <label class="fr-label" for="select-nigend">
+          Chargement d'un nigend dans la base pour test :
+        </label>
+
+        <input class="fr-input" list="users-list" type="text" id="select-nigend" name="select-nigend">
+
+        <datalist id="users-list">
+          {% for user in users %}
+            <option value="{{ user.nigend }}">
+              {{ user.nigend ~ ' (' ~ user.profil ~ ' - ' ~ user.departement ~ ')' }}
+            </option>
+          {% endfor %}
+        </datalist> 
+
+        <p id="select-error-desc-error" class="fr-error-text{{ result == false ? '' : ' hidden' }}">
+          Aucun nigend sélectionné.
+        </p>
+
+        {{ form_widget(form.nigend) }}
+
+      </div>
+
+      <br/>
+
+      <input type="submit" class="fr-btn fr-btn--primary" value="Charger le profil" />
+
+    </div>
+
+    {{ form_end(form) }}
+
+  </div>
+
+{% endblock %}

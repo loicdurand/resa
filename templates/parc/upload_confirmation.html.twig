@@ -1,0 +1,248 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	{# Fil d'Arianne #}
+	<nav	role="navigation"	class="fr-breadcrumb"	aria-label="vous êtes ici :">
+		<button	class="fr-breadcrumb__button"	aria-expanded="false"	aria-controls="breadcrumb-1">
+			Voir le fil d’Ariane
+		</button>
+		<div	class="fr-collapse"	id="breadcrumb-1">
+			<ol	class="fr-breadcrumb__list">
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/">
+						Accueil
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/compte/">
+						Compte
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/parc/">
+						Parc
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	href="/parc/{{action}}/{{ vehicule.id }}">
+						{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }}
+						un véhicule
+					</a>
+				</li>
+				<li>
+					<a	class="fr-breadcrumb__link"	aria-current="page">
+						Mise en forme des photographies
+					</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+
+	<img id="no-img" hidden class="hidden" src="{{asset('images/no_image.jpg')}}" alt="une image vide, pour illustration">
+
+	<h2	class="fr-mt-2w">
+		Mise en forme des photographies
+	</h2>
+
+	<p	class="fr-text--sm">
+		Les photographies que vous venez d'ajouter peuvent etre mises en forme avant d'apparaitre sur le site.
+	</p>
+
+	<div	class="fr-container">
+
+		<div	class="fr-mt-2w fr-grid-row fr-grid-row--gutters">
+
+			<div	id="fiche-vehicule"	class="cs-fiche-vehicule">
+
+				{# GALLERIE #}
+				{% set len = vehicule.photos|length %}
+
+				{% if(len > 0) %}
+					<div	class="cs-gallerie fr-grid-row fr-grid-row--gutters relative">
+
+									<div class="loader hidden">
+										<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+											<path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+												s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+											c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
+											<path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+												C22.32,8.481,24.301,9.057,26.013,10.047z">
+												<animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="0.5s" repeatCount="indefinite" />
+											</path>
+										</svg>
+									</div>
+									
+						{# vue principale #}
+						<figure	class="fr-col-{{ len == 1 ? '12' : len == 2 ? '6' : '9' }}">
+						
+							<img	data-id={{vehicule.photos[0].id}} data-rotation="0"  src="{{ asset('images/uploads/' ~ vehicule.photos[0].path) }}"	class="fr-responsive-img cs-figure cs-figure--main fr-mt-6w"	alt="Vue principale du véhicule">
+								<figcaption	class="hidden">
+									Vue principale du véhicule
+								</figcaption>
+								
+							</figure>
+
+							{# vue de profil #}
+							{% if(len > 1) %}
+								<div	class="fr-col-{{ len == 2 ? '6' : '3 fr-mt-1w' }} fr-mt-2w">
+									<figure	class="cs-figure">
+									
+										<button	class="fr-btn cs-gallerie-btn">
+											<img	data-id={{vehicule.photos[1].id}} data-rotation="0" src="{{ asset('images/uploads/' ~ vehicule.photos[1].path) }}"	class="fr-responsive-img"	alt="Vue de l'avant du véhicule"></button>
+											<figcaption	class="hidden">
+												Vue de profil du véhicule
+											</figcaption>
+										</figure>
+
+										{# vue de l'avant #}
+										{% if(len > 2) %}
+											<figure	class="cs-figure fr-mt-6w">
+												<button	class="fr-btn cs-gallerie-btn">
+													<img	data-id={{vehicule.photos[2].id}} data-rotation="0" src="{{ asset('images/uploads/' ~ vehicule.photos[2].path) }}"	class="fr-responsive-img"	alt="Vue de l'avant du véhicule"></button>
+													<figcaption	class="hidden">
+														Vue de l'avant du véhicule
+													</figcaption>
+												</figure>
+											{% endif %}
+
+											{# vue de l'arrière #}
+											{% if(len > 3) %}
+												<figure	class="cs-figure fr-mt-6w fr-mb-2w">
+													<button	class="fr-btn cs-gallerie-btn">
+														<img data-id={{vehicule.photos[3].id}} data-rotation="0"	src="{{ asset('images/uploads/' ~ vehicule.photos[3].path) }}"	class="fr-responsive-img"	alt="Vue de l'arrière du véhicule"></button>
+														<figcaption	class="hidden">
+															Vue de l'arrière du véhicule
+														</figcaption>
+													</figure>
+												{% endif %}
+											</div>
+										{% endif %}
+
+									</div>
+
+								{% endif %}
+								{# FIN GALERIE #}
+
+								<div	class="fr-grid-row fr-grid-row--gutters fr-mt-2w">
+									{# éditeur d'image #}
+									
+									<ul	id="editor"	class="cs-image-editor fr-col-{{ len == 1 ? '12' : len == 2 ? '6' : '9' }} fr-btns-group fr-btns-group--inline-lg fr-btns-group--center">
+										<li>
+											<button	title="Faire pivoter de 90 degrés vers la gauche" type="button"	id="rotation-negative"	class="rotation-negative fr-btn fr-icon-arrow-go-back-line">
+												- 90 degrés
+											</button>
+										</li>
+										<li>
+											<button	title="Faire pivoter de 90 degrés vers la droite" type="button"	id="rotation-positive"	class="rotation-positive fr-btn fr-icon-arrow-go-forward-line">
+												+ 90 degrés
+											</button>
+										</li>
+										<li>
+											<button	title="Télécharger une ou plusieurs photographies supplémentaires" 	data-fr-opened="false"	aria-controls="confirm--go-upload" type="button"	class="fr-btn fr-icon-upload-2-line">
+												Ajouter
+											</button>
+										</li>
+										<li>
+											<button	title="Supprimer cette photo" id="suppr" type="button"	class="fr-btn fr-icon-delete-line">
+												Supprimer
+											</button>
+										</li>
+									</ul>
+									{# fin éditeur d'image #}
+
+									<div class="divider"></div>
+
+									<ul	class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
+
+										<li>
+											<!-- Bouton d'ouverture de la modale -->
+											<button	type="button"	data-fr-opened="false"	aria-controls="confirm--no-img"	class="fr-btn fr-btn--secondary">
+												Réinitialiser
+											</button>
+
+										</li>
+
+										<li>
+											<button	type="submit"	id="submit" class="fr-btn">
+												Transmettre
+											</button>
+										</li>
+
+									</ul>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<dialog	aria-labelledby="confirm--no-img-title"	id="confirm--no-img"	class="fr-modal"	role="dialog">
+							<div	class="fr-container fr-container--fluid fr-container-md">
+								<div	class="fr-grid-row fr-grid-row--center">
+									<div	class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+										<div	class="fr-modal__body">
+											<div	class="fr-modal__header">
+												<button	class="fr-btn--close fr-btn"	aria-controls="confirm--no-img">
+													Fermer
+												</button>
+											</div>
+											<div	class="fr-modal__content">
+												<h1	id="confirm--no-img-title"	class="fr-modal__title">
+													<span	class="fr-icon-arrow-right-line fr-icon--lg"></span>
+													Confirmation
+												</h1>
+												<p>
+													Réinitialiser les modifications apportées aux photographies? Les photographies seront remises à leur état initial.
+												</p>
+											</div>
+											<div	class="fr-modal__footer">
+												<div	class="fr-btns-group fr-btns-group--right fr-btns-group--icon-left fr-btns-group--inline-md">
+													<a href="/parc/editer_images?vehicule={{ vehicule.id }}&action=modifier"	class="fr-btn fr-icon-close-line fr-btn--icon-left fr-btn--secondary">
+													Réinitialiser
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</dialog>
+
+						<dialog	aria-labelledby="confirm--go-upload-title"	id="confirm--go-upload"	class="fr-modal"	role="dialog">
+						<div	class="fr-container fr-container--fluid fr-container-md">
+							<div	class="fr-grid-row fr-grid-row--center">
+								<div	class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+									<div	class="fr-modal__body">
+										<div	class="fr-modal__header">
+											<button	class="fr-btn--close fr-btn"	aria-controls="confirm--go-upload">
+												Fermer
+											</button>
+										</div>
+										<div	class="fr-modal__content">
+											<h1	id="confirm--go-upload-title"	class="fr-modal__title">
+												<span	class="fr-icon-arrow-right-line fr-icon--lg"></span>
+												Confirmation
+											</h1>
+											<p>
+												Vous allez etre redirigé vers la page d'ajout de photographies. Vous confirmez? 
+											</p>
+										</div>
+										<div	class="fr-modal__footer">
+											<div	class="fr-btns-group fr-btns-group--right fr-btns-group--icon-left fr-btns-group--inline-md">
+												<a href="/parc/upload?vehicule={{ vehicule.id }}&action=modifier"	class="fr-btn fr-icon-close-line fr-btn--icon-left">
+												Quitter la page
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</dialog>
+
+				
+					{% endblock %}
+				

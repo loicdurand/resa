@@ -1,0 +1,248 @@
+.cs-tdb-legend+.cs-fiche-vehicule #calendars-container .fr-table__wrapper {
+
+  & table {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+// surcharge 'reserver.scss' pour ne pas "striker" les dates
+.cs-fiche-vehicule.cs-tdb table {
+
+  & [href] {
+    background-image: none;
+  }
+
+  & td {
+    padding: 5px 0;
+
+    &:empty {
+      padding: 0;
+    }
+  }
+
+  // & th,
+  // & td {
+  //   min-width: calc(100vw /7);
+  // }
+
+  // & th.week-end,
+  // & td.week-end {
+  //   font-weight: initial;
+  //   opacity: 0.5;
+  // }
+
+  & tbody tr td .cs-td-daynum.striked {
+    text-decoration: none;
+
+    &+div {
+      background: transparent;
+      height: fit-content;
+      width: 100%;
+      text-align: center;
+
+      & p {
+        margin: 3px auto;
+        color: #fff;
+        padding: 0 2px;
+        font-size: 10px;
+        line-height: 1.5;
+        border-radius: 5px;
+        max-width: 50px;
+
+        &.en.attente{
+          opacity: .2;
+        }
+
+        &:empty {
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          margin: 0;
+        }
+
+        & span {
+          line-break: auto;
+        }
+
+        & span>span {
+          margin-left: 1rem;
+        }
+      }
+    }
+
+    &.before_now+div,
+    &.after_limit+div {
+      opacity: .5;
+    }
+  }
+
+}
+
+.cs-tdb-legend {
+
+  display: inline-block;
+  vertical-align: top;
+
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background: #FFF;
+  padding: 15px;
+  font-size: 13px;
+  box-shadow: 1px 1px 0 #DDD,
+    2px 2px 0 #BBB;
+
+  & li {
+    height: 1.25em;
+    margin-bottom: 0.7em;
+    padding-left: 0.5em;
+    border-left: 1.25em solid black;
+  }
+
+  & em {
+    font-style: normal;
+  }
+
+  & span {
+    float: right;
+    margin-left: 1rem;
+  }
+
+}
+
+.cs-tooltip {
+  border: 1px solid var(--grey-5); 
+  border-radius: 3px;
+  &.en.attente{
+    opacity: .2;
+    & h3{
+      // on écrit la marque, modèle, immat' en noir 
+      // du fait qu'ils ne sont plus plus visible à
+      // cause de l'opacité à 0,2
+      color: #FFF;
+    }
+  }
+
+  & .cs-affichage-reservation {
+    margin: 2rem 0;
+
+    & h2.debut,
+    & h2.fin {
+      font-weight: 400;
+      font-size: 1rem;
+      background: #fff;
+      border-radius: 5px;
+      padding: 0 3px;
+      margin: 3px 3px;
+      line-height: 1.5;
+    }
+
+    & h2.debut {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    & dl dt,
+    & dl dd {
+      color: white;
+    }
+
+    & dl dd {
+      font-weight: 100;
+    }
+
+    & h2.fin {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+
+  }
+
+  // &.starts,
+  // &.ends {
+  //   width: 17vw;
+  // }
+
+  & .cs-affichage-reservation:hover dl {
+    margin-bottom: 1.5rem;
+  }
+
+  & .cs-affichage-reservation:hover dl dt,
+  & .cs-affichage-reservation:hover dl dd {
+    display: block;
+  }
+
+  & .cs-affichage-reservation dl dt,
+  & .cs-affichage-reservation dl dd {
+    display: none;
+  }
+
+  &.starts .cs-affichage-reservation {
+    top: 0;
+    left: 0;
+  }
+
+  &.ends .cs-affichage-reservation {
+    bottom: 0;
+    left: 0;
+  }
+
+  & * {
+    z-index: 2000;
+  }
+
+  & h3 {
+    font-size: 1rem;
+    margin-bottom: 0;
+    line-height: 1;
+  }
+
+  & dl dt {
+    font-weight: 900;
+  }
+
+  & dl dd {
+    font-weight: 400;
+  }
+
+}
+
+.affichage-journalier {
+
+  // & tbody,
+  // & tr,
+  // & td {
+  //   border: 1px solid;
+  // }
+
+  // & tbody tr td {
+  //   vertical-align: middle;
+  // }
+
+  & tbody tr {
+    height: 1vh;//7rem;
+  }
+
+  & td.td-H,
+  & td.td-M {
+    width: 12.5vw;
+    vertical-align: middle;
+    font-size: .75rem;
+    line-height: .5;
+  }
+
+  & td.td-M div {
+    position: absolute;
+    top: -0.25rem;
+    left: 25%;
+    background: #fff;
+    padding: 0 3px;
+  }
+}
+
+.fr-select.fr-btn{
+  min-width: 8rem;
+}
