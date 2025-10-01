@@ -41,11 +41,11 @@ class ValidationController extends AbstractController
         ];
     }
 
-    #[Route('/validation', name: 'validation')]
+    #[Route('/validation', name: 'resa_validation')]
     public function validation(ManagerRegistry $doctrine, RequestStack $requestStack): Response
     {
         if (is_null($this->params['nigend']))
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
 
         $this->setAppConst();
 
@@ -71,7 +71,7 @@ class ValidationController extends AbstractController
         ));
     }
 
-    #[Route('/validation/vehicules', name: 'vehicules', methods: ['POST'])]
+    #[Route('/validation/vehicules', name: 'resa_vehicules', methods: ['POST'])]
     public function vehicules(ManagerRegistry $doctrine, RequestStack $requestStack)
     {
         $data = (array) json_decode($this->request->getContent());
@@ -90,7 +90,7 @@ class ValidationController extends AbstractController
         ]);
     }
 
-    #[Route('/validation/valid', name: 'valid', methods: ['POST'])]
+    #[Route('/validation/valid', name: 'resa_valid', methods: ['POST'])]
     public function valid(ManagerRegistry $doctrine, RequestStack $requestStack)
     {
         $data = (array) json_decode($this->request->getContent());
@@ -117,7 +117,7 @@ class ValidationController extends AbstractController
         ]);
     }
 
-    #[Route('/validation/modif', name: 'modif', methods: ['POST'])]
+    #[Route('/validation/modif', name: 'resa_validation_modif', methods: ['POST'])]
     public function modif(ManagerRegistry $doctrine, RequestStack $requestStack)
     {
         $data = (array) json_decode($this->request->getContent());
@@ -151,7 +151,7 @@ class ValidationController extends AbstractController
         ]);
     }
 
-    #[Route('/validation/suppr', name: 'suppr', methods: ['POST'])]
+    #[Route('/validation/suppr', name: 'resa_suppr', methods: ['POST'])]
     public function suppr(ManagerRegistry $doctrine, RequestStack $requestStack)
     {
         $data = (array) json_decode($this->request->getContent());

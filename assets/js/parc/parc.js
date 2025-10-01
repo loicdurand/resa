@@ -78,8 +78,8 @@ if (table) {
 
       if (is_checked) {
         const { id: selected_vl } = parent_row.dataset;
-        btns.suppr.setAttribute('href', `/parc/supprimer/${selected_vl}`);
-        btns.mod.setAttribute('href', `/parc/modifier/${selected_vl}`);
+        btns.suppr.setAttribute('href', `/resa971/parc/supprimer/${selected_vl}`);
+        btns.mod.setAttribute('href', `/resa971/parc/modifier/${selected_vl}`);
       } else {
         Object.entries(btns).forEach(([_, link]) => link.removeAttribute('href'));
       }
@@ -111,9 +111,9 @@ if (editor !== null) {
       data = imgs.map(({ src, dataset: { id, rotation } }) => ({ id, rotation, suppr: src.endsWith(no_img.getAttribute('src')) }));
     loader.classList.remove('hidden');
     loader.classList.add('loading');
-    axios.post('/parc/rotate', data).then(({ data = {} }) => {
+    axios.post('/resa971/parc/rotate', data).then(({ data = {} }) => {
       loader.classList.remove('loading');
-      location.replace('/parc');
+      location.replace('/resa971/parc');
     })
       .catch(err => {
         loader.classList.remove('loading');

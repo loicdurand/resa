@@ -12,7 +12,7 @@ const //
   updater = new Updater();
 
 // masquage des filtres de recherche au SCROLL sur petits écrans
-hideOnScroll.addEventListener('click', () => {
+hideOnScroll?.addEventListener('click', () => {
   let i = document.body.scrollTop || document.documentElement.scrollTop;
   while (i > scrollLen) {
     (function (i) {
@@ -46,7 +46,7 @@ updater.addEventListener('update', filter);
   document.getElementById('btn-go-step2') // 
 ].forEach(btn => {
 
-  btn.addEventListener('click', () => {
+  btn?.addEventListener('click', () => {
     if (!init)
       init = updater.init();
 
@@ -61,7 +61,7 @@ updater.addEventListener('update', filter);
   document.getElementById('btn-go-step1')
 ].forEach(btn => {
 
-  btn.addEventListener('click', () => {
+  btn?.addEventListener('click', () => {
     if (!init)
       init = updater.init();
 

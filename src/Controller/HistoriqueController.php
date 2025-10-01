@@ -35,11 +35,11 @@ class HistoriqueController extends AbstractController
         ];
     }
 
-    #[Route(path: '/historique/confirmation', name: 'success')]
+    #[Route(path: '/historique/confirmation', name: 'resa_success')]
     public function confirmation(): Response
     {
         if (is_null($this->params['nigend'])) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
         }
 
         $this->setAppConst();
@@ -59,11 +59,11 @@ class HistoriqueController extends AbstractController
         ));
     }
 
-    #[Route(path: '/historique', name: 'historique')]
+    #[Route(path: '/historique', name: 'resa_historique')]
     public function historique(): Response
     {
         if (is_null($this->params['nigend'])) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
         }
 
         $this->setAppConst();

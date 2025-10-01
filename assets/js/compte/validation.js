@@ -38,7 +38,7 @@ valid_resa_confirm.addEventListener('click', ({ target }) => {
   loader.classList.add('loading');
   close_modale('confirmation');
 
-  axios.post('/validation/valid', { id })
+  axios.post('/resa971/validation/valid', { id })
     .then(({ status, data = {} }) => {
 
       loader.classList.remove('loading');
@@ -71,7 +71,7 @@ modif_resa.forEach(btn => btn.addEventListener('click', ({ target }) => {
   modif_resa_confirm.dataset.id = id;
   modif_resa_confirm.disabled = true;
 
-  axios.post('/validation/vehicules', { id })
+  axios.post('/resa971/validation/vehicules', { id })
     .then(({ status, data = {} }) => {
       const vls = data.vl;
       select_vl.innerHTML = '';
@@ -100,7 +100,7 @@ modif_resa_confirm.addEventListener('click', ({ target }) => {
   loader.classList.add('loading');
   close_modale('modification');
 
-  axios.post('/validation/modif', { id, vl: selected.value })
+  axios.post('/resa971/validation/modif', { id, vl: selected.value })
     .then(({ status, data = {} }) => {
       loader.classList.remove('loading');
       const // 
@@ -158,7 +158,7 @@ annul_resa_confirm.addEventListener('click', ({ target: { dataset: { id } } }) =
   loader.classList.add('loading');
   close_modale('suppression');
 
-  axios.post('/validation/suppr', { id })
+  axios.post('/resa971/validation/suppr', { id })
     .then(({ status, data = {} }) => {
 
       loader.classList.remove('loading');

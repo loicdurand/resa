@@ -10,25 +10,30 @@
 		<div	class="fr-collapse"	id="breadcrumb-1">
 			<ol	class="fr-breadcrumb__list">
 				<li>
-					<a	class="fr-breadcrumb__link"	href="/">
+					<a	class="fr-breadcrumb__link"	href="{{ path('resa_accueil') }}">
 						Accueil
 					</a>
 				</li>
 				<li>
-					<a	class="fr-breadcrumb__link"	href="/compte/">
+					<a	class="fr-breadcrumb__link"	href="{{ path('resa_compte') }}">
 						Compte
 					</a>
 				</li>
 				<li>
-					<a	class="fr-breadcrumb__link"	href="/parc/">
+					<a	class="fr-breadcrumb__link"	href="{{ path('resa_parc') }}">
 						Parc
 					</a>
 				</li>
 				<li>
-					<a	class="fr-breadcrumb__link"	href="/parc/{{action}}/{{ vehicule.id }}">
-						{{ action == 'supprimer' ? 'Supprimer': action=='modifier' ? 'Modifier': 'Ajouter' }}
-						un véhicule
-					</a>
+					{% if action == 'modifier' %}
+						<a	class="fr-breadcrumb__link"	href="{{ path('resa_parc_ajouter', { vehicule_id: vehicule.id })}}">
+							Ajouter un véhicule
+						</a>
+					{% else %}
+						<a	class="fr-breadcrumb__link"	href="{{ path('resa_parc_supprimer', { vehicule_id: vehicule.id })}}">
+							Supprimer un véhicule
+						</a>
+					{% endif %}
 				</li>
 				<li>
 					<a	class="fr-breadcrumb__link"	aria-current="page">
@@ -195,7 +200,7 @@
 											</div>
 											<div	class="fr-modal__footer">
 												<div	class="fr-btns-group fr-btns-group--right fr-btns-group--icon-left fr-btns-group--inline-md">
-													<a href="/parc"	class="fr-btn fr-icon-close-line fr-btn--icon-left fr-btn--secondary">
+													<a href="{{ path('resa_parc') }}"	class="fr-btn fr-icon-close-line fr-btn--icon-left fr-btn--secondary">
 														Quitter la page
 													</a>
 												</div>

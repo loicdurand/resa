@@ -58,11 +58,11 @@ class ParcController extends AbstractController
     }
 
 
-    #[Route('/parc', name: 'parc')]
+    #[Route('/parc', name: 'resa_parc')]
     public function afficher(ManagerRegistry $doctrine): Response
     {
         if (is_null($this->params['nigend']))
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
 
         $this->setAppConst();
 
@@ -81,11 +81,11 @@ class ParcController extends AbstractController
         ));
     }
 
-    #[Route('/parc/ajouter')]
+    #[Route('/parc/ajouter', name: 'resa_parc_ajouter')]
     public function ajouter(ManagerRegistry $doctrine): Response
     {
         if (is_null($this->params['nigend']))
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
 
         $this->setAppConst();
 
@@ -157,7 +157,7 @@ class ParcController extends AbstractController
                 $em->persist($vehicule);
             }
             $em->flush();
-            return $this->redirectToRoute('upload', [
+            return $this->redirectToRoute('resa_upload', [
                 'vehicule' => $vehicule->getId(),
                 'action' => 'ajouter'
             ]);
@@ -174,7 +174,7 @@ class ParcController extends AbstractController
         ));
     }
 
-    #[Route('/parc/upload', name: 'upload')]
+    #[Route('/parc/upload', name: 'resa_parc_upload')]
     public function upload(
         ManagerRegistry $doctrine,
         SluggerInterface $slugger,
@@ -189,11 +189,11 @@ class ParcController extends AbstractController
         $em = $doctrine->getManager();
 
         if (is_null($this->params['nigend']) && is_null($token)) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
         } else if (!is_null($token)) {
             $tkn = $em->getRepository(Token::class)->findOneBy(['token' => $token]);
             if (is_null($tkn))
-                return $this->redirectToRoute('login');
+                return $this->redirectToRoute('resa_login');
             $user = $tkn->getUser();
             if ($this->app_const['APP_TOKEN_GIVES_FULL_ACCESS'] === true) {
                 $this->session->set('HTTP_NIGEND', $user->getNigend());
@@ -215,7 +215,7 @@ class ParcController extends AbstractController
         //     ]);
         // }
 
-        $random_hex = bin2hex(random_bytes(18));
+        $random_hex = bin2hex(\random_bytes(18));
         $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/parc/upload?vehicule=' . $vehicule_id . '&action=ajouter';
         $url = $baseurl . '&token=' . $random_hex;
 
@@ -274,7 +274,7 @@ class ParcController extends AbstractController
                     }
                 }
 
-                return $this->redirectToRoute('editer_images', [
+                return $this->redirectToRoute('resa_editer_images', [
                     'vehicule' => $vehicule->getId(),
                     'action' => $action
                 ]);
@@ -294,7 +294,7 @@ class ParcController extends AbstractController
         ));
     }
 
-    #[Route('/parc/editer_images', name: 'editer_images')]
+    #[Route('/parc/editer_images', name: 'resa_editer_images')]
     public function editer_images(
         ManagerRegistry $doctrine,
         SluggerInterface $slugger,
@@ -309,11 +309,11 @@ class ParcController extends AbstractController
         $em = $doctrine->getManager();
 
         if (is_null($this->params['nigend']) && is_null($token)) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
         } else if (!is_null($token)) {
             $tkn = $em->getRepository(Token::class)->findOneBy(['token' => $token]);
             if (is_null($tkn))
-                return $this->redirectToRoute('login');
+                return $this->redirectToRoute('resa_login');
             $user = $tkn->getUser();
             if ($this->app_const['APP_TOKEN_GIVES_FULL_ACCESS'] === true) {
                 $this->session->set('HTTP_NIGEND', $user->getNigend());
@@ -329,7 +329,7 @@ class ParcController extends AbstractController
 
         $vehicule = $em->getRepository(Vehicule::class)->findOneBy(['id' => $vehicule_id]);
 
-        $random_hex = bin2hex(random_bytes(18));
+        $random_hex = bin2hex(\random_bytes(18));
         $baseurl = $this->request->getScheme() . '://' . $this->request->getHttpHost() . '/parc/upload?vehicule=' . $vehicule_id . '&action=ajouter';
         $url = $baseurl . '&token=' . $random_hex;
 
@@ -356,11 +356,11 @@ class ParcController extends AbstractController
         ));
     }
 
-    #[Route('/parc/modifier/{vehicule_id}')]
+    #[Route('/parc/modifier/{vehicule_id}', name: 'resa_parc_modifier')]
     public function modifier(string $vehicule_id, ManagerRegistry $doctrine): Response
     {
         if (is_null($this->params['nigend']))
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
 
         $this->setAppConst();
 
@@ -403,7 +403,7 @@ class ParcController extends AbstractController
             $em->persist($vehicule);
             $em->flush();
 
-            return $this->redirectToRoute('parc');
+            return $this->redirectToRoute('resa_parc');
         }
 
         return $this->render('parc/ajouter.html.twig', array_merge(
@@ -418,11 +418,11 @@ class ParcController extends AbstractController
         ));
     }
 
-    #[Route('/parc/supprimer/{vehicule_id}')]
+    #[Route('/parc/supprimer/{vehicule_id}', name: 'resa_parc_supprimer')]
     public function supprimer(string $vehicule_id, ManagerRegistry $doctrine): Response
     {
         if (is_null($this->params['nigend']))
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
 
         $this->setAppConst();
 
@@ -440,7 +440,7 @@ class ParcController extends AbstractController
             $em->remove($vehicule);
             $em->flush();
 
-            return $this->redirectToRoute('parc');
+            return $this->redirectToRoute('resa_parc');
         }
 
         return $this->render('parc/ajouter.html.twig', array_merge(
@@ -453,12 +453,12 @@ class ParcController extends AbstractController
         ));
     }
 
-    #[Route('/parc/tdb/{debut}/{fin}/{affichage}')]
+    #[Route('/parc/tdb/{debut}/{fin}/{affichage}', name: 'resa_parc_tdb')]
     public function tdb(ManagerRegistry $doctrine, \DateTime $debut, \DateTime $fin, ?string $affichage = "m"): Response
     {
 
         if (is_null($this->params['nigend']))
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
 
         $em = $doctrine->getManager();
         $this->setAppConst();
@@ -472,7 +472,7 @@ class ParcController extends AbstractController
 
         $dates = [];
         $tomorrow = $tmp->modify('+1 days');
-        for ($i = 0; $tomorrow->format("Y-m-d") !== $max->format("Y-m-d"); $i++){
+        for ($i = 0; $tomorrow->format("Y-m-d") !== $max->format("Y-m-d"); $i++) {
             $dates[] = $tomorrow->format("Y-m-d");
             $tomorrow->modify('+ 1 days');
         }
@@ -483,7 +483,7 @@ class ParcController extends AbstractController
 
         $horaires_csag = $this->horaires_to_arr($horaires);
         $reservations = $em->getRepository(Reservation::class)
-            ->findBetween($this->params['departement'], $debut, $fin); 
+            ->findBetween($this->params['departement'], $debut, $fin);
 
         $vehicules = [];
         $ids = [];
@@ -534,7 +534,7 @@ class ParcController extends AbstractController
         ));
     }
 
-    #[Route('/parc/rotate', name: 'rotate', methods: ['POST'])]
+    #[Route('/parc/rotate', name: 'resa_rotate', methods: ['POST'])]
     public function rotate(
         ManagerRegistry $doctrine,
         RequestStack $requestStack,

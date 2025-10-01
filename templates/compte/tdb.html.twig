@@ -12,22 +12,22 @@
 	</h2>
 	<ol>
 		<li>
-			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ time }}/{{ time }}/j">
+			<a	class="fr-summary__link"	target="_self"	href="{{ path('resa_parc_tdb', { debut: time, fin: time, affichage: 'j'}) }}">
 				tableau de bord journalier
 			</a>
 		</li>
 		<li>
-			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ prev_monday }}/{{ next_sunday }}/h">
+			<a	class="fr-summary__link"	target="_self"	href="{{ path('resa_parc_tdb', { debut: prev_monday, fin: next_sunday, affichage:'h'}) }}">
 				tableau de bord hebdomadaire
 			</a>
 		</li>
 		<li>
-			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ debut_mois }}/{{ plus1month }}/m">
+			<a	class="fr-summary__link"	target="_self"	href="{{ path('resa_parc_tdb', { debut: debut_mois, fin: plus1month,affichage: 'm'}) }}">
 				tableau de bord mensuel
 			</a>
 		</li>
 		<li>
-			<a	class="fr-summary__link"	target="_self"	href="/parc/tdb/{{ debut_mois }}/{{ plus3months }}/t">
+			<a	class="fr-summary__link"	target="_self"	href="{{ path('resa_parc_tdb', { debut: debut_mois, fin: plus3months, affichage: 't' }) }}">
 				afficher tout
 			</a>
 		</li>

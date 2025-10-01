@@ -40,12 +40,12 @@ class AccueilController extends AbstractController
         ];
     }
 
-    #[Route('/', name: 'accueil')]
+    #[Route('/', name: 'resa_accueil')]
     public function accueil(): Response
     {
 
         if (is_null($this->params['nigend']))
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
 
         $this->setAppConst();
 
@@ -179,12 +179,12 @@ class AccueilController extends AbstractController
         ));
     }
 
-    #[Route(path: '/reserver/{vl_id}', name: 'reserver')]
-    #[Route(path: '/reserver/{vl_id}/{from}/{to}', name: 'reserver')]
+    #[Route(path: '/reserver/{vl_id}', name: 'resa_reserver')]
+    #[Route(path: '/reserver/{vl_id}/{from}/{to}', name: 'resa_reserver')]
     public function reserver(string $vl_id, string $from = '', string $to = ''): Response
     {
         if (is_null($this->params['nigend']))
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
 
         $this->setAppConst();
 
@@ -242,7 +242,7 @@ class AccueilController extends AbstractController
                 $this->em->persist($reservation);
             }
             $this->em->flush();
-            return $this->redirectToRoute('success');
+            return $this->redirectToRoute('resa_success');
         }
 
         // dd($vehicule->getReservations()[1]->getDateFin());
