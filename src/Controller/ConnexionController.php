@@ -19,6 +19,7 @@ use App\Entity\Role;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 use App\Service\LdapService;
+use App\Service\SsoService;
 
 class ConnexionController extends AbstractController
 {
@@ -27,12 +28,14 @@ class ConnexionController extends AbstractController
   private $env;
   private $session;
   private $app_const;
+  private $sso;
 
   public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager)
   {
     $this->request = Request::createFromGlobals();
     $this->requestStack = $requestStack;
     $this->session = $this->requestStack->getSession();
+    $this->sso = new SsoService();
   }
 
   #[Route('/logout', name: 'resa_logout')]
@@ -55,7 +58,68 @@ class ConnexionController extends AbstractController
 
     $users = [];
 
-    if ($this->env !== 'production') {
+    if ($this->env === 'prod') {
+	$sso_user = $this->sso::user();
+	$nigend = $sso_user->nigend;
+        $ldap = new LdapService();
+        $ldap_user = $ldap->get_user_from_ldap($nigend);
+
+      $user = $entityManager
+        ->getRepository(User::class)
+        ->findOneBy(['nigend' => $nigend]);
+
+      if (is_null($user)) {
+        $profil = $entityManager
+          ->getRepository(Role::class)
+          ->findOneBy(['nom' => $ldap_user->profil]);
+
+        $entity = new User();
+        $entity->setNigend($nigend);
+        $entity->setUnite($ldap_user->unite_id);
+        $entity->setProfil($ldap_user->profil);
+        $entity->setDepartement($ldap_user->departement);
+        $entityManager->persist($entity);
+        $entityManager->flush();
+        $user = $entity;
+      }
+
+      $nigend = $user->getNigend();
+      $profil = $user->getProfil();
+      $unite = $user->getUnite();
+      $dept = $user->getDepartement();
+
+      if ($profil === 'CSAG') {
+        $atelier = $entityManager
+          ->getRepository(Atelier::class)
+          ->findOneBy(['code_unite' => $unite]);
+
+        if (is_null($atelier)) {
+          $ldap_unite = $ldap->get_unite_from_ldap($unite);
+          $unite = $ldap->format_ldap_unite($ldap_unite);
+
+          $entity = new Atelier();
+          $entity->setCodeUnite($unite->code);
+          $entity->setNomCourt($unite->nom_court);
+          $entity->setNomLong($unite->nom);
+          $entity->setDepartement($dept);
+          $entityManager->persist($entity);
+          $entityManager->flush();
+          $code_unite = $unite->code;
+        }
+      }
+
+      // En session, on ne garde que les infos qui se trouvaient autrefois dans le Zend_Registry
+      $this->session->set('HTTP_NIGEND', $nigend);
+      $this->session->set('HTTP_UNITE', $unite);
+      $this->session->set('HTTP_PROFIL', $profil);
+      $this->session->set('HTTP_DEPARTEMENT', $dept);
+
+      return $this->redirectToRoute('resa_accueil');
+
+
+    }
+
+    if ($this->env !== 'prod') {
       $users = $entityManager
         ->getRepository(User::class)
         ->findAll();
@@ -71,7 +135,7 @@ class ConnexionController extends AbstractController
       $data = $form->getData();
       $nigend = $data->getNigend();
 
-      if ($this->env === 'production') {
+      if ($this->env === 'prod') {
         $ldap = new LdapService();
         $ldap_user = $ldap->get_user_from_ldap($nigend);
       }
