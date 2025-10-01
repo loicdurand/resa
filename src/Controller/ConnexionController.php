@@ -35,7 +35,7 @@ class ConnexionController extends AbstractController
     $this->request = Request::createFromGlobals();
     $this->requestStack = $requestStack;
     $this->session = $this->requestStack->getSession();
-    $this->sso = new SsoService();
+    $this->sso = $_ENV['APP_ENV'] == 'prod' ? new SsoService() : null;
   }
 
   #[Route('/logout', name: 'resa_logout')]
@@ -59,10 +59,10 @@ class ConnexionController extends AbstractController
     $users = [];
 
     if ($this->env === 'prod') {
-	$sso_user = $this->sso::user();
-	$nigend = $sso_user->nigend;
-        $ldap = new LdapService();
-        $ldap_user = $ldap->get_user_from_ldap($nigend);
+      $sso_user = $this->sso::user();
+      $nigend = $sso_user->nigend;
+      $ldap = new LdapService();
+      $ldap_user = $ldap->get_user_from_ldap($nigend);
 
       $user = $entityManager
         ->getRepository(User::class)
@@ -115,8 +115,6 @@ class ConnexionController extends AbstractController
       $this->session->set('HTTP_DEPARTEMENT', $dept);
 
       return $this->redirectToRoute('resa_accueil');
-
-
     }
 
     if ($this->env !== 'prod') {
