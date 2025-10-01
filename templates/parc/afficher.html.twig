@@ -10,12 +10,12 @@
 		<div	class="fr-collapse"	id="breadcrumb-1">
 			<ol	class="fr-breadcrumb__list">
 				<li>
-					<a	class="fr-breadcrumb__link"	href="/">
+					<a	class="fr-breadcrumb__link"	href="{{ path('resa_accueil') }}">
 						Accueil
 					</a>
 				</li>
 				<li>
-					<a	class="fr-breadcrumb__link"	href="/compte/">
+					<a	class="fr-breadcrumb__link"	href="{{ path('resa_compte') }}">
 						Compte
 					</a>
 				</li>
@@ -30,7 +30,7 @@
 
 	<ul	class="fr-mt-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--right">
 		<li>
-			<a	target="_self"	href="/parc/ajouter"	class="fr-btn fr-btn--secondary">
+			<a	target="_self"	href="{{ path('resa_parc_ajouter') }}"	class="fr-btn fr-btn--secondary">
 				Ajouter un véhicule
 			</a>
 		</li>

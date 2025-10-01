@@ -35,14 +35,14 @@ class ConnexionController extends AbstractController
     $this->session = $this->requestStack->getSession();
   }
 
-  #[Route('/logout', name: 'logout')]
+  #[Route('/logout', name: 'resa_logout')]
   public function logout()
   {
     $this->session->clear();
-    return $this->redirectToRoute('login');
+    return $this->redirectToRoute('resa_login');
   }
 
-  #[Route('/connexion', name: 'login')]
+  #[Route('/connexion', name: 'resa_login')]
   public function login(EntityManagerInterface $entityManager)
   {
     $this->setAppConst();
@@ -50,7 +50,7 @@ class ConnexionController extends AbstractController
     $this->env = $this->getParameter('app.env');
 
     // if ($this->env === 'production' && !$this->session->get('HTTP_NIGEND')) {
-    //   return $this->redirectToRoute('index');
+    //   return $this->redirectToRoute('resa_accueil');
     // }
 
     $users = [];
@@ -142,7 +142,7 @@ class ConnexionController extends AbstractController
       $this->session->set('HTTP_PROFIL', $profil);
       $this->session->set('HTTP_DEPARTEMENT', $dept);
 
-      return $this->redirectToRoute('accueil');
+      return $this->redirectToRoute('resa_accueil');
     }
 
     return $this->render('accueil/login.html.twig', array_merge(

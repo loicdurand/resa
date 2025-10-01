@@ -10,12 +10,12 @@
     <div class="fr-collapse">
       <ol class="fr-breadcrumb__list">
         <li>
-          <a href="/" class="fr-breadcrumb__link">
+          <a href="{{ path('resa_accueil') }}" class="fr-breadcrumb__link">
             Accueil
           </a>
         </li>
         <li>
-          <a class="fr-breadcrumb__link" href="/compte/">
+          <a class="fr-breadcrumb__link" href="{{ path('resa_compte') }}">
             Compte
           </a>
         </li>
@@ -359,7 +359,7 @@
                               {% endif %}
                             {% endfor %}
 
-                            <a href="/parc/tdb/{{ curr_date|date('Y-m-d') }}/{{ curr_date|date('Y-m-d') }}/j" title="Afficher la journée" {{ striked_fin ? 'data-heure_fin=' ~ striked_fin }} data-ref="{{ days_list[dow] }}" class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" {{ csag_ferme ? 'title="En dehors des horaires d\'ouverture du CSAG"' : '' }}>
+                            <a href="{{ path('resa_parc_tdb', { debut: curr_date|date('Y-m-d'), fin: curr_date|date('Y-m-d'), affichage: 'j'}) }}" title="Afficher la journée" {{ striked_fin ? 'data-heure_fin=' ~ striked_fin }} data-ref="{{ days_list[dow] }}" class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" {{ csag_ferme ? 'title="En dehors des horaires d\'ouverture du CSAG"' : '' }}>
                               {{ day }}
                             </a>
                             <div>
@@ -452,17 +452,17 @@
           {% if affichage == 'h' %}
             <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
               <li>
-                <a href="/parc/tdb/{{ debut|date_modify(" -7 days")|date('Y-m-d') }}/{{ debut|date_modify(" -1 days")|date('Y-m-d') }}/h" class="fr-btn fr-btn--secondary fr-icon-arrow-left-s-line">
+                <a href="{{ path('resa_parc_tdb', { debut: debut|date_modify(" -7 days")|date('Y-m-d'), fin: debut|date_modify(" -1 days")|date('Y-m-d'), affichage: 'h'}) }}" class="fr-btn fr-btn--secondary fr-icon-arrow-left-s-line">
                   Semaine précédente
                 </a>
               </li>
               <li>
-                <a href="/parc/tdb/{{ prev_monday }}/{{ next_sunday }}/h" class="fr-btn fr-btn--secondary">
+                <a href="{{ path('resa_parc_tdb', { debut: prev_monday, fin: next_sunday, affichage: 'h'}) }}" class="fr-btn fr-btn--secondary">
                   Semaine courante
                 </a>
               </li>
               <li>
-                <a href="/parc/tdb/{{ fin|date_modify(" +1 days")|date('Y-m-d') }}/{{ fin|date_modify(" +7 days")|date('Y-m-d') }}/h" class="fr-btn fr-btn--secondary fr-icon-arrow-right-s-line">
+                <a href="{{ path('resa_parc_tdb', { debut: fin|date_modify(" +1 days")|date('Y-m-d'), fin: fin|date_modify(" +7 days")|date('Y-m-d'), affichage: 'h'}) }}" class="fr-btn fr-btn--secondary fr-icon-arrow-right-s-line">
                   Semaine suivante
                 </a>
               </li>
@@ -470,7 +470,7 @@
           {% elseif affichage == 'j' %}
             <ul class="fr-btns-group fr-btns-group--inline fr-btns-group--sm fr-btns-group--center">
               <li>
-                <a href="/parc/tdb/{{ debut|date_modify(" -1 days")|date('Y-m-d') }}/{{ debut|date_modify(" -1 days")|date('Y-m-d') }}/j" class="fr-btn fr-btn--secondary fr-icon-arrow-left-s-line">
+                <a href="{{ path('resa_parc_tdb', { debut: debut|date_modify(" -1 days")|date('Y-m-d'), fin: debut|date_modify(" -1 days")|date('Y-m-d'), affichage: 'j'}) }}" class="fr-btn fr-btn--secondary fr-icon-arrow-left-s-line">
                   Semaine précédente
                 </a>
               </li>
@@ -498,7 +498,7 @@
                 </div>
               </li>
               <li>
-                <a href="/parc/tdb/{{ fin|date_modify(" +1 days")|date('Y-m-d') }}/{{ fin|date_modify(" +1 days")|date('Y-m-d') }}/j" class="fr-btn fr-btn--secondary fr-icon-arrow-right-s-line">
+                <a href="{{ path('resa_parc_tdb', { debut: fin|date_modify(" +1 days")|date('Y-m-d'), fin: fin|date_modify(" +1 days")|date('Y-m-d'), affichage: 'j'}) }}" class="fr-btn fr-btn--secondary fr-icon-arrow-right-s-line">
                   Semaine suivante
                 </a>
               </li>

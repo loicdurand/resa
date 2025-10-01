@@ -1,23 +1,21 @@
 const Encore = require('@symfony/webpack-encore');
-const path = require('path');
-const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
-require("dotenv").config();
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
-if (!Encore.isRuntimeEnvironmentConfigured()) {
-    Encore.configureRuntimeEnvironment('production');
-    Encore.disableCssExtraction();
-}
+const env = process.env.NODE_ENV || 'dev';
 
+if (!Encore.isRuntimeEnvironmentConfigured()) {
+    Encore.configureRuntimeEnvironment(env);
+}
 
 Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
-    .setPublicPath('/build')
+    .setPublicPath(env !== 'prod' ? '/resa971/build' : "https://comgend971.local.gendarmerie.fr/resa971/build")
+
     // only needed for CDN's or subdirectory deploy
-    //.setManifestKeyPrefix('build/')
+    .setManifestKeyPrefix('build/') // <- à tester
 
     /*
      * ENTRY CONFIG
@@ -29,6 +27,9 @@ Encore
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
+
+    // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
+    .enableStimulusBridge('./assets/controllers.json')
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
@@ -42,7 +43,10 @@ Encore
      * https://symfony.com/doc/current/frontend.html#adding-more-features
      */
     .cleanupOutputBeforeBuild()
-    .enableBuildNotifications()
+
+    // Displays build status system notifications to the user
+    // .enableBuildNotifications()
+
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
@@ -62,7 +66,7 @@ Encore
     .enableSassLoader()
 
     // uncomment if you use TypeScript
-    //.enableTypeScriptLoader()
+    // .enableTypeScriptLoader()
 
     // uncomment if you use React
     //.enableReactPreset()
@@ -73,43 +77,6 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
-
-    .configureDevServerOptions(options => {
-        options.liveReload = true;
-        options.static = {
-            watch: false
-        };
-        options.watchFiles = {
-            paths: ['src/**/*.php', 'templates/**/*'],
-        };
-    })
-    // .addPlugin(new BrowserSyncPlugin(
-    //     {
-    //         host: "localhost",
-    //         port: 3000,
-    //         proxy: process.env.PROXY,
-    //         files: [
-    //             {
-    //                 match: ["src/**/*.php"],
-    //             },
-    //             {
-    //                 match: ["templates/**/*.twig"],
-    //             },
-    //             {
-    //                 match: ["assets/**/*.js"],
-    //             },
-    //             {
-    //                 match: ["assets/**/*.css"],
-    //             },
-    //         ],
-    //         notify: false,
-    //     },
-
-    //     {
-
-    //         reload: true,
-    //     }
-    // ))
     ;
 
 module.exports = Encore.getWebpackConfig();

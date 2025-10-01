@@ -10,17 +10,17 @@
 		<div	class="fr-collapse"	id="breadcrumb-1">
 			<ol	class="fr-breadcrumb__list">
 				<li>
-					<a	class="fr-breadcrumb__link"	href="/">
+					<a	class="fr-breadcrumb__link"	href="{{ path('resa_accueil') }}">
 						Accueil
 					</a>
 				</li>
 				<li>
-					<a	class="fr-breadcrumb__link"	href="/compte/">
+					<a	class="fr-breadcrumb__link"	href="{{ path('resa_compte') }}">
 						Compte
 					</a>
 				</li>
 				<li>
-					<a	class="fr-breadcrumb__link"	href="/parc/">
+					<a	class="fr-breadcrumb__link"	href="{{ path('resa_parc') }}">
 						Parc
 					</a>
 				</li>
@@ -54,7 +54,7 @@
 			Le formulaire suivant permet de modifier les caractéristiques du véhicule sélectionné.
 			<br>
 				Cliquez sur ce lien pour
-				<a	class="fr-link bold" href="/parc/upload?vehicule={{ vehicule_id }}&action=modifier">
+				<a	class="fr-link bold" href="{{ path('resa_parc_upload', { vehicule: vehicule_id, action: 'modifier'}) }}">
 				mettre à jour les photos
 				</a>
 				de ce véhicule.

@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class QrCodeGeneratorController extends AbstractController
 {
-    #[Route('/qr/code/generator', name: 'app_qr_code_generator')]
+    #[Route('/qr/code/generator', name: 'resa_qr_code_generator')]
     public function index(): Response
     {
         return $this->render('qr_code_generator/index.html.twig', [
