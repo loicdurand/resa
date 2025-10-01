@@ -39,11 +39,11 @@ class CompteController extends AbstractController
         ];
     }
 
-    #[Route('/compte', name: 'compte')]
+    #[Route('/compte', name: 'resa_compte')]
     public function compte(ManagerRegistry $doctrine, RequestStack $requestStack): Response
     {
         if (is_null($this->params['nigend'])) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('resa_login');
         }
 
         $this->setAppConst();
@@ -128,7 +128,7 @@ class CompteController extends AbstractController
                     $em->flush();
                 }
 
-                return $this->redirectToRoute('compte', [
+                return $this->redirectToRoute('resa_compte', [
                     'open' => 'compte/gestion_horaires.html.twig'
                 ]);
             }

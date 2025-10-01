@@ -30,4 +30,4 @@ if (table_suivante !== null) {
 
 select_affichage.addEventListener('change', ({ target: { value } }) => location.href = value);
 
-select_goto.addEventListener('change', ({ target: { value } }) => location.href = `/parc/tdb/${value}/j`);
+select_goto.addEventListener('change', ({ target: { value } }) => location.href = `/resa971/parc/tdb/${value}/j`);

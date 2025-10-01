@@ -65,7 +65,7 @@ export default class Updater extends Emitter {
         btn = document.getElementById(`cs-nb-places--button-${field}`),
         min = 2,
         max = 9;
-      btn.addEventListener('click', e => {
+      btn !== null && btn.addEventListener('click', e => {
 
         if (!this.is_init)
           this.is_init = this.init();

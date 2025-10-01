@@ -8,25 +8,25 @@ import "/node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module";
 import Router from '@bleckert/router';
 
 new Router('/', {
-  '/connexion': () => {
+  '/resa971/connexion': () => {
     import('./js/accueil/login')
   },
-  '/reserver': () => {
+  '/resa971/reserver': () => {
     import('./js/accueil/reserver/reserver');
   },
-  '/parc/tdb': () => {
+  '/resa971/parc/tdb': () => {
     import('./js/parc/tdb');
   },
-  '/parc': () => {
+  '/resa971/parc': () => {
     import('./js/parc/parc');
   },
-  '/compte':()=>{
+  '/resa971/compte':()=>{
     import('./js/compte/compte');
   },
-  '/validation':()=>{
+  '/resa971/validation':()=>{
     import('./js/compte/validation');
   },
-  '^$': () => {
+  '/resa971': () => {
     import('./js/accueil/index/index');
   }
 });

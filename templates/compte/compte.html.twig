@@ -10,7 +10,7 @@
 		<div	class="fr-collapse"	id="breadcrumb-1">
 			<ol	class="fr-breadcrumb__list">
 				<li>
-					<a	class="fr-breadcrumb__link"	href="/">
+					<a	class="fr-breadcrumb__link"	href="{{ path('resa_accueil') }}">
 						Accueil
 					</a>
 				</li>
@@ -81,7 +81,7 @@
 				{% endfor %}
 				<section class="fr-accordion">
 					<h3 class="fr-accordion__title">
-							<a href="/logout" title="Se déconnecter" class="fr-accordion__btn cs-deconnexion" aria-expanded="false">Se déconnecter</a>
+							<a href="{{ path('resa_logout') }}" title="Se déconnecter" class="fr-accordion__btn cs-deconnexion" aria-expanded="false">Se déconnecter</a>
 					</h3>
 			</section>
 			</div>

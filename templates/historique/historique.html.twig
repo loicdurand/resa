@@ -10,12 +10,12 @@
     <div class="fr-collapse" id="breadcrumb-1">
       <ol class="fr-breadcrumb__list">
         <li>
-          <a class="fr-breadcrumb__link" href="/">
+          <a class="fr-breadcrumb__link" href="{{ path('resa_accueil') }}">
             Accueil
           </a>
         </li>
         <li>
-          <a class="fr-breadcrumb__link" href="/historique" aria-current="page">
+          <a class="fr-breadcrumb__link" href="{{ path('resa_historique') }}" aria-current="page">
             Historique
           </a>
         </li>
@@ -58,7 +58,7 @@
         {% for i, reservation in reservations %}
           {% if( reservation.dateFin | date('U')) >= ('now'|date('U')) %}
             {% set vehicule = reservation.vehicule %}
-            <div class="fr-grid-row cs-border cursor-initial fr-mb-1w" href="/historique">
+            <div class="fr-grid-row cs-border cursor-initial fr-mb-1w" href="{{ path('resa_historique') }}">
               <div class="fr-col-12">
                 <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
                   <figure class="cs-img-container left">
@@ -161,7 +161,7 @@
                             </h3>
                           </dd>
                           <dd>
-                            <a href="/" class="cs-go cs-go-histo fr-link fr-icon-arrow-right-line fr-link--icon-right" data-fr-js-link-actionee="true">
+                            <a href="{{ path('resa_accueil') }}" class="cs-go cs-go-histo fr-link fr-icon-arrow-right-line fr-link--icon-right" data-fr-js-link-actionee="true">
                               Réserver un véhicule
                             </a>
                           </dd>
@@ -214,7 +214,7 @@
                 {% set reservation = reservations[i] %}
                 {% set vehicule = reservation.vehicule %}
 
-                <div class="fr-grid-row cs-border fr-mb-1w" href="/historique">
+                <div class="fr-grid-row cs-border fr-mb-1w" href="{{ path('resa_historique') }}">
                   <div class="fr-col-12">
                     <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
                       <figure class="cs-img-container left">
