@@ -37,9 +37,9 @@ class LdapService
 
         $ldap_user = $this->ldapSearch($filter);
 
-        if($ldap_user === "0" || !$ldap_user)
-          return null;
-        
+        if ($ldap_user === "0" || !$ldap_user)
+            return null;
+
         $user = new \stdClass();
         $user->nigend = $ldap_user[0]['employeenumber'][0];
         $user->nom = $ldap_user[0]['sn'][0];
@@ -81,7 +81,8 @@ class LdapService
         return $ldap_unite;
     }
 
-    public function format_ldap_unite($ldap_unite){
+    public function format_ldap_unite($ldap_unite)
+    {
         $unite = new \stdClass();
         $unite->code = $ldap_unite[0]['codeunite'][0];
         $unite->nom = $ldap_unite[0]['description'][0];
@@ -201,5 +202,4 @@ class LdapService
 
         return $unite;
     }
-
 }
