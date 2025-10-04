@@ -5,6 +5,8 @@
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
+/.env.remote
+/.env.prod
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
