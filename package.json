@@ -4,7 +4,7 @@
         "@babel/preset-env": "^7.16.0",
         "@eslint/js": "^9.17.0",
         "@symfony/webpack-encore": "^5.0.0",
-        "browser-sync": "^2.29.3",
+        "browser-sync": "^3.0.4",
         "browser-sync-webpack-plugin": "^2.3.0",
         "core-js": "^3.38.0",
         "dotenv": "^16.4.5",
@@ -33,7 +33,7 @@
         "ngrok": "ngrok http http://resa:80",
         "usb": "(git diff-tree --no-commit-id --name-only -r HEAD) | sort -u | xargs tar cvzf /media/loic-j.durand/TRUSTEDBOOT/resa/$(date '+%Y-%m-%d_%H%M%S').tar.gz",
         "rsync": "rsync -zavAr --no-group /media/loic-j.durand/TRUSTEDBOOT/resa/rm/ /media/loic-j.durand/TRUSTEDBOOT/resa/tmp/ --exclude=.env.production --exclude=migrations"
-    },  
+    },
     "dependencies": {
         "@bleckert/router": "^0.2.0",
         "@gouvfr/dsfr": "^1.12.1",
