@@ -381,7 +381,6 @@ class ParcController extends AbstractController
         $form->handleRequest($this->request);
         if ($form->isSubmitted() && $form->isValid()) {
             $vehicule = $form->getData();
-            $restriction = $vehicule->getRestriction();
 
             $code_unite = $vehicule->getUnite()->getCodeUnite();
             $unite_en_bdd = $em
@@ -402,11 +401,7 @@ class ParcController extends AbstractController
             }
 
             $vehicule->setUnite($unite_en_bdd);
-            // dd($vehicule->getRestriction());
 
-            // if ($vehicule->getRestriction()->getCode() === "NONE") {
-            //     $vehicule->setRestriction(null);
-            // }
             $em->persist($vehicule);
             $em->flush();
 

@@ -53,6 +53,10 @@ class AccueilController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findBy(['departement' => $this->params['departement']]);
 
+        $vehicules = array_filter($vehicules, function ($vl) {
+            return $vl->getRestriction()->getCode() !== 'ATELIER';
+        });
+
         $categories = [];
         $transmissions = [];
         $category_ids = [];
