@@ -252,3 +252,16 @@
         color: inherit;
     }
 }
+
+@media all and (max-width: 450px) {
+    .cs-card {
+        & .cs-img-container {
+            width: 25%;
+
+            &+.cs-descr-container {
+                width: 75%;
+                max-width: 75%;
+            }
+        }
+    }
+}
