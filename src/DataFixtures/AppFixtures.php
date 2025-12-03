@@ -16,12 +16,13 @@ use App\Entity\HoraireOuverture;
 use App\Entity\StatutReservation;
 use App\Entity\User;
 use App\Entity\Vehicule;
+use App\Entity\Restriction;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager): void    
+    public function load(ObjectManager $manager): void
     {
 
         // GESTION DES ROLES
@@ -297,6 +298,26 @@ class AppFixtures extends Fixture
             }
         };
 
+        $restrictions = [
+            ['NONE', 'Aucune restriction', 'Aucune restriction particulière pour ce véhicule'],
+            ['EM', 'Réservé Etat-Major', 'Ce véhicule ne peut être réservé que par les membres de l\'Etat-Major'],
+            ['NON_OPE', 'Usage opérationel exclu', 'Ce véhicule n\'a pas encore fait l\'objet d\'une attribution via jugement.\n Son utilisation dans le cadre d\'une mission opérationelle est strictement interdit.\n Il peut toutefois être réservé pour des usages ne présentant que peu de risques, tels que des liaisons administratives.'],
+            ['ATELIER', 'En maintenance', 'Ce véhicule est actuellement en maintenance à l\'atelier']
+        ];
+
+        foreach ($restrictions as [$code, $libelle, $description]) {
+            $entity = new Restriction();
+            $entity->setCode($code);
+            $entity->setLibelle($libelle);
+            $entity->setDescription($description);
+            $manager->persist($entity);
+            $manager->flush();
+        };
+
+        $no_restriction = $manager
+            ->getRepository(Restriction::class)
+            ->findOneBy(['code' => 'NONE']);
+
         $vls = [
             [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'GS-517-PF', 0],
             [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 3, 'GY-057-GF', 0],
@@ -340,6 +361,7 @@ class AppFixtures extends Fixture
             $VL->setSerigraphie($serig);
             $VL->setDepartement(971);
             $VL->setUnite($atelier);
+            $VL->setRestriction($no_restriction);
             $manager->persist($VL);
             $manager->flush();
         }

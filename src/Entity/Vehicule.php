@@ -78,6 +78,9 @@ class Vehicule
     #[ORM\ManyToOne(inversedBy: 'vehicules')]
     private ?Unite $unite = null;
 
+    #[ORM\ManyToOne]
+    private ?Restriction $restriction = null;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
@@ -381,6 +384,18 @@ class Vehicule
     public function setUnite(?Unite $unite): static
     {
         $this->unite = $unite;
+
+        return $this;
+    }
+
+    public function getRestriction(): ?Restriction
+    {
+        return $this->restriction;
+    }
+
+    public function setRestriction(?Restriction $restriction): static
+    {
+        $this->restriction = $restriction;
 
         return $this;
     }
