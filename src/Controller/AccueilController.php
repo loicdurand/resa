@@ -259,7 +259,8 @@ class AccueilController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $reservation = $form->getData();
             if (!$reservation->getId()) {
-                $this->em->persist($reservation);
+                // @TODO envoi de mail au(x) validateur(s)
+                $this->em->persist($reservation);  
             }
             $this->em->flush();
             return $this->redirectToRoute('resa_success');
