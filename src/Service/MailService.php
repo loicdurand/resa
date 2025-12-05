@@ -19,6 +19,7 @@ class MailService
   private $csag_code_unite = null;
 
   private const IS_CSAG = "IS_CSAG";
+  private const IS_EM = "IS_EM";
 
   public function __construct(ObjectManager $manager)
   {
@@ -32,10 +33,14 @@ class MailService
     $vehicule = $reservation->getVehicule();
     $vehicule_unite = $vehicule->getUnite();
     $code_unite = $vehicule_unite->getCodeUnite();
-    if ($this->isCSAG($code_unite)) {
-      $this->setRecipients($this::IS_CSAG);
-    }
 
+    if ($vehicule->getRestriction()->getCode() === 'EM') {
+      $this->setRecipients($this::IS_EM);
+    } else if ($this->isCSAG($code_unite)) {
+      $this->setRecipients($this::IS_CSAG);
+    } else {
+      $this->setRecipients($code_unite);
+    }
 
     $this->setSubject("Nouvelle réservation effectuée sur le site Résa971");
     $this->setBody("Une nouvelle réservation a été effectuée.\n\n" .
@@ -77,8 +82,8 @@ class MailService
         'profil' => 'VDT',
         'unite' => $this->getCSAGCodeUnite()
       ]);
-    } else {
-      $env_unites_em = $_ENV['APP_UNITES_EM']??'';
+    } else if($type === $this::IS_EM){
+      $env_unites_em = $_ENV['APP_UNITES_EM'] ?? '';
       $raw_unites_em = explode(',', $env_unites_em);
       $unites_em = [];
       foreach ($raw_unites_em as $code_unite) {

@@ -14,6 +14,8 @@ use App\Entity\Vehicule;
 use App\Entity\Atelier;
 use App\Entity\User;
 
+use App\Service\MailService;
+
 use App\Form\ReservationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -260,6 +262,9 @@ class AccueilController extends AbstractController
             $reservation = $form->getData();
             if (!$reservation->getId()) {
                 // @TODO envoi de mail au(x) validateur(s)
+                $mail = new MailService($this->em);
+                $params = $mail->mailForReservation($reservation);
+                dd($params);
                 $this->em->persist($reservation);  
             }
             $this->em->flush();
