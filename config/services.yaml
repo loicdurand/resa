@@ -9,6 +9,7 @@ parameters:
     app.name: '%env(APP_NAME)%' 
     app.tagline: '%env(APP_TAGLINE)%'
     app.slug: '%env(APP_SLUG)%'
+    app.unites_em: '%env(APP_UNITES_EM)%'
     app.limit_resa: '+ 3 months'
     app.limit_resa_months: 3
     app.max_resa_duration: '+ 3 weeks'

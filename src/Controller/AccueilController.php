@@ -12,6 +12,7 @@ use App\Entity\HoraireOuverture;
 use App\Entity\StatutReservation;
 use App\Entity\Vehicule;
 use App\Entity\Atelier;
+use App\Entity\User;
 
 use App\Form\ReservationType;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,12 +50,27 @@ class AccueilController extends AbstractController
 
         $this->setAppConst();
 
+        $curr_user = $this->em
+            ->getRepository(User::class)
+            ->findOneBy(['nigend' => $this->params['nigend']]);
+
+        $env_vars = $this->getAppConst();
+        $liste_unites_em = $env_vars['APP_UNITES_EM'] ?? [];
+        $unites_em = explode(',', $liste_unites_em);
+        $curr_unite = "" . (+$curr_user->getUnite()); // code unité en string sans zéro devant
+
         $vehicules = $this->em
             ->getRepository(Vehicule::class)
             ->findBy(['departement' => $this->params['departement']]);
 
-        $vehicules = array_filter($vehicules, function ($vl) {
-            return $vl->getRestriction()->getCode() !== 'ATELIER';
+        $vehicules = array_filter($vehicules, function ($vl) use ($unites_em, $curr_unite) {
+            // On enlève les VLs en maintenance
+            if ($vl->getRestriction()->getCode() === 'ATELIER')
+                return false;
+            // Si VL Etat-Major, on vérifie que l'utilisateur appartient à une unité EM
+            if ($vl->getRestriction()->getCode() === 'EM')
+                return in_array($curr_unite, $unites_em);
+            return true;
         });
 
         $categories = [];
@@ -297,7 +313,8 @@ class AccueilController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
-                'app.token_gives_full_access'
+                'app.token_gives_full_access',
+                'app.unites_em'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));

@@ -147,6 +147,7 @@
     width: 100%;
     background-image: none;
     cursor: pointer;
+    position: relative;
 
     & .cs-img-container {
         width: 35%;
@@ -204,6 +205,15 @@
             background-color: transparent;
             color: var(--text-default-grey);
         }
+
+        &+.cs-restriction_ctnr {
+            display: inline-block;
+            right: 0;
+            position: absolute;
+            top: 0;
+            border-top-right-radius: 6px;
+            padding: 12px;
+        }
     }
 }
 
@@ -253,6 +263,12 @@
     }
 }
 
+@media all and (max-width: 641px) {
+    .cs-card .cs-img-container+.cs-descr-container+.cs-restriction_ctnr {
+        padding: 26px 24px;
+    }
+}
+
 @media all and (max-width: 450px) {
     .cs-card {
         & .cs-img-container {
@@ -261,6 +277,10 @@
             &+.cs-descr-container {
                 width: 75%;
                 max-width: 75%;
+
+                &+.cs-restriction_ctnr {
+                    padding: 26px 24px;
+                }
             }
         }
     }
