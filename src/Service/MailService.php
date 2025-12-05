@@ -68,19 +68,32 @@ class MailService
 
   public function setRecipients($type)
   {
+    $user_repo = $this->manager
+      ->getRepository(User::class);
+    $validateurs = [];
     $this->recipients = [];
     if ($type === $this::IS_CSAG) {
-      $validateurs = $this->manager
-        ->getRepository(User::class)
-        ->findBy([
-          'profil' => 'VDT',
-          'unite' => $this->getCSAGCodeUnite()
-        ]);
-      foreach ($validateurs as $validateur) {
-        $mail = $validateur->getMail();
-        if (!is_null($mail))
-          $this->recipients[] = $mail;
+      $validateurs = $user_repo->findBy([
+        'profil' => 'VDT',
+        'unite' => $this->getCSAGCodeUnite()
+      ]);
+    } else {
+      $env_unites_em = $_ENV['APP_UNITES_EM']??'';
+      $raw_unites_em = explode(',', $env_unites_em);
+      $unites_em = [];
+      foreach ($raw_unites_em as $code_unite) {
+        $unites_em[] = $this->addZeros($code_unite, 8);
       }
+
+      $validateurs = $user_repo->findBy([
+        'profil' => 'VDT',
+        'unite' => $unites_em
+      ]);
+    }
+    foreach ($validateurs as $validateur) {
+      $mail = $validateur->getMail();
+      if (!is_null($mail))
+        $this->recipients[] = $mail;
     }
   }
 
@@ -107,5 +120,13 @@ class MailService
   private function isCSAG($code_unite)
   {
     return +$code_unite === +$this->getCSAGCodeUnite();
+  }
+
+  private function addZeros($str, $maxlen = 2)
+  {
+    $str = '' . $str;
+    while (strlen($str) < $maxlen)
+      $str = "0" . $str;
+    return $str;
   }
 }
