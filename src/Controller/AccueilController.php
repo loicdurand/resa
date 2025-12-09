@@ -15,6 +15,7 @@ use App\Entity\Atelier;
 use App\Entity\User;
 
 use App\Service\MailService;
+use App\Service\SsoService;
 
 use App\Form\ReservationType;
 use Symfony\Component\HttpFoundation\Request;
@@ -264,8 +265,15 @@ class AccueilController extends AbstractController
                 // @TODO envoi de mail au(x) validateur(s)
                 $mail = new MailService($this->em);
                 $params = $mail->mailForReservation($reservation);
-                dd($params);
-                $this->em->persist($reservation);  
+                if ($_ENV['APP_ENV'] === 'prod') {
+                    SsoService::mail(
+                        $params->getSubject(),
+                        $params->getBody(),
+                        $params->getRecipients(),
+                        true
+                    );
+                }
+                $this->em->persist($reservation);
             }
             $this->em->flush();
             return $this->redirectToRoute('resa_success');

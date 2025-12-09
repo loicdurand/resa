@@ -301,11 +301,7 @@ class AppFixtures extends Fixture
         $restrictions = [
             ['NONE', 'Aucune restriction', 'Aucune restriction particulière pour ce véhicule'],
             ['EM', 'Réservé Etat-Major', 'Ce véhicule est réservé aux unités placées dans l\'arborescence Etat-Major'],
-            ['NON_OPE', 'Usage opérationnel exclu','
-Ce véhicule n\'a pas encore fait l\'objet d\'une attribution via jugement.
-Son utilisation dans le cadre d\'une mission opérationelle est strictement interdit.
-Il peut toutefois être réservé pour des usages ne présentant que peu de risques, tels que des liaisons administratives.'
-            ],
+            ['NON_OPE', 'Avant jugement','Ce ne peut être utilisé qu\'à des fins de liaison, à l\'exclusion de toute autre mission.'],
             ['ATELIER', 'En maintenance', 'Ce véhicule est actuellement en maintenance à l\'atelier']
         ];
 
