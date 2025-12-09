@@ -33,6 +33,9 @@ class User
     #[ORM\Column(nullable: true)]
     private ?int $departement = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $mail = null;
+
     public function __construct()
     {
         $this->tokens = new ArrayCollection();
@@ -125,6 +128,18 @@ class User
     public function setDepartement(?int $departement): static
     {
         $this->departement = $departement;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(?string $mail): static
+    {
+        $this->mail = $mail;
 
         return $this;
     }

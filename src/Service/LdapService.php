@@ -9,8 +9,8 @@ class LdapService
 
     public function __construct()
     {
-        $this->ldaphost = "ldap://ldap.gendarmerie.fr";
-        $this->ldapport = "389";
+        $this->ldaphost = $_ENV['APP_LDAP_HOST']; //  "ldap://ldap.gendarmerie.fr";
+        $this->ldapport = $_ENV['APP_LDAP_PORT']; //  "389";
     }
 
     public function ldapSearch($filter)

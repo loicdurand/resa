@@ -3,24 +3,24 @@
 {% block body %}
 
 	{# Fil d'Arianne #}
-	<nav	role="navigation"	class="fr-breadcrumb"	aria-label="vous êtes ici :">
-		<button	class="fr-breadcrumb__button"	aria-expanded="false"	aria-controls="breadcrumb-1">
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
 			Voir le fil d’Ariane
 		</button>
-		<div	class="fr-collapse"	id="breadcrumb-1">
-			<ol	class="fr-breadcrumb__list">
+		<div class="fr-collapse" id="breadcrumb-1">
+			<ol class="fr-breadcrumb__list">
 				<li>
-					<a	class="fr-breadcrumb__link"	href="{{ path('resa_accueil') }}">
+					<a class="fr-breadcrumb__link" href="{{ path('resa_accueil') }}">
 						Accueil
 					</a>
 				</li>
 				<li>
-					<a	class="fr-breadcrumb__link"	href="{{ path('resa_compte') }}">
+					<a class="fr-breadcrumb__link" href="{{ path('resa_compte') }}">
 						Compte
 					</a>
 				</li>
 				<li>
-					<a	class="fr-breadcrumb__link"	aria-current="page">
+					<a class="fr-breadcrumb__link" aria-current="page">
 						Parc
 					</a>
 				</li>
@@ -28,122 +28,127 @@
 		</div>
 	</nav>
 
-	<ul	class="fr-mt-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--right">
+	<ul class="fr-mt-2w fr-btns-group fr-btns-group--inline-sm fr-btns-group--right">
 		<li>
-			<a	target="_self"	href="{{ path('resa_parc_ajouter') }}"	class="fr-btn fr-btn--secondary">
+			<a target="_self" href="{{ path('resa_parc_ajouter') }}" class="fr-btn fr-btn--secondary">
 				Ajouter un véhicule
 			</a>
 		</li>
 		<li>
-			<a	id="suppr"	class="fr-btn fr-btn--secondary">
+			<a id="suppr" class="fr-btn fr-btn--secondary">
 				Supprimer le véhicule
 			</a>
 		</li>
 		<li>
-			<a	id="mod"	class="fr-btn fr-btn--secondary">
+			<a id="mod" class="fr-btn fr-btn--secondary">
 				Modifier le véhicule
 			</a>
 		</li>
 	</ul>
 
-	<div	class="fr-table">
-		<div	class="fr-table__wrapper">
-			<div	class="fr-table__container">
-				<div	class="fr-table__content">
+	<div class="fr-table">
+		<div class="fr-table__wrapper">
+			<div class="fr-table__container">
+				<div class="fr-table__content">
 					<table>
-						<caption	class="w100">
+						<caption class="w100">
 							Mon parc de véhicules
 						</caption>
 						<thead>
 							<tr>
-								<th	class="fr-cell--fixed"	role="columnheader">
-									<span	class="fr-sr-only">
+								<th class="fr-cell--fixed" role="columnheader">
+									<span class="fr-sr-only">
 										Sélectionner
 									</span>
 								</th>
-								<th	scope="col">
+								<th scope="col">
 									Immatriculation
 								</th>
-								<th	scope="col">
+								<th scope="col">
 									Marque
 								</th>
-								<th	scope="col">
+								<th scope="col">
 									Modèle
 								</th>
-								<th	scope="col">
+								<th scope="col">
 									Unité
 								</th>
-								<th	scope="col">
+								<th scope="col">
 									Carburant
 								</th>
-								<th	scope="col">
+								<th scope="col">
 									Places
 								</th>
-								<th	scope="col">
+								<th scope="col">
 									Sérigraphié
 								</th>
-								<th	scope="col">
+								<th scope="col">
 									Genre
+								</th>
+								<th scope="col">
+									Restrictions
 								</th>
 
 							</tr>
 						</thead>
 						<tbody>
 
-							{% for i, vl in vehicules %} 
+							{% for i, vl in vehicules %}
 
-								<tr	id="table-row-key-1"	data-row-key="1"	data-id="{{ vl.id }}">
-									<th	class="fr-cell--fixed"	scope="row">
-										<div	class="fr-checkbox-group fr-checkbox-group--sm">
-											<input	name="row-select"	id="table-select-checkbox-7748--0"	type="checkbox">
-												<label	class="fr-label"	for="table-select-checkbox-7748--0">
-													Sélectionner la ligne
-													{{ i+1 }}
-												</label>
-											</div>
-										</th>
-										<td>
-											{{ vl.immatriculation }}
-										</td>
-										<td>
-											{{ vl.marque }}
-										</td>
-										<td>
-											{{ vl.modele ~ ' ' ~ vl.motorisation ~ ' ' ~ vl.finition }}
-										</td>
-										<td>
-											{{ vl.unite.nomCourt }}
-										</td>
-										<td>
-											<abbr	title="{{ vl.carburant.libelle }}">
-												{{ vl.carburant.code }}
-											</abbr>
-										</td>
-										<td>
-											{{ vl.nbplaces }}
-										</td>
-										<td>
-											{{ vl.serigraphie? 'OUI':'NON' }}
-										</td>
-										<td>
-											{{ vl.genre.code }}
-										</td>
-									</tr>
+								<tr id="table-row-key-1" data-row-key="1" data-id="{{ vl.id }}">
+									<th class="fr-cell--fixed" scope="row">
+										<div class="fr-checkbox-group fr-checkbox-group--sm">
+											<input name="row-select" id="table-select-checkbox-7748--0" type="checkbox">
+											<label class="fr-label" for="table-select-checkbox-7748--0">
+												Sélectionner la ligne
+												{{ i+1 }}
+											</label>
+										</div>
+									</th>
+									<td>
+										{{ vl.immatriculation }}
+									</td>
+									<td>
+										{{ vl.marque }}
+									</td>
+									<td>
+										{{ vl.modele ~ ' ' ~ vl.motorisation ~ ' ' ~ vl.finition }}
+									</td>
+									<td>
+										{{ vl.unite.nomCourt }}
+									</td>
+									<td>
+										<abbr title="{{ vl.carburant.libelle }}">
+											{{ vl.carburant.code }}
+										</abbr>
+									</td>
+									<td>
+										{{ vl.nbplaces }}
+									</td>
+									<td>
+										{{ vl.serigraphie? 'OUI':'NON' }}
+									</td>
+									<td>
+										{{ vl.genre.code }}
+									</td>
+									<td title="{{ vl.restriction.description}}">
+										{{ vl.restriction.libelle }}
+									</td>
+								</tr>
 
-								{% else %}
+							{% else %}
 
-									<tr	id="table-row-key-1"	data-row-key="1">
-										<td	colspan="9">
-											Il n'y a encore aucun véhicule dans votre parc.
-										</td>
-									</tr>
+								<tr id="table-row-key-1" data-row-key="1">
+									<td colspan="9">
+										Il n'y a encore aucun véhicule dans votre parc.
+									</td>
+								</tr>
 
-								{% endfor %}
-							</tbody>
-						</table>
-					</div>
+							{% endfor %}
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
-	{% endblock %}
-	
+	</div>
+{% endblock %}

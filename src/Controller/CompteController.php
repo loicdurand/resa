@@ -166,7 +166,8 @@ class CompteController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
-                'app.token_gives_full_access'
+                'app.token_gives_full_access',
+                'app.unites_em'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));

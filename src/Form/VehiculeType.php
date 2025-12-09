@@ -7,6 +7,7 @@ use App\Entity\CarburantVehicule;
 use App\Entity\CategorieVehicule;
 use App\Entity\GenreVehicule;
 use App\Entity\TransmissionVehicule;
+use App\Entity\Restriction;
 use App\Entity\Vehicule;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -16,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-use Symfony\Component\Validator\Constraints\File;
+// use Symfony\Component\Validator\Constraints\File;
 
 class VehiculeType extends AbstractType
 {
@@ -116,6 +117,13 @@ class VehiculeType extends AbstractType
                     'list' => 'unites-list',
                     'placeholder' => '123456, 56751, 0056751, etc...'
                 ]
+            ])
+            ->add('restriction', EntityType::class, [
+                'class' => Restriction::class,
+                'choice_label' => 'libelle',
+                'row_attr' => ['class' => 'fr-select-group fr-col-12 fr-col-sm-12'],
+                'label_attr' => ['class' => 'fr-label'],
+                'help_attr' => ['content' => 'Facultatif'],
             ])
         ;
     }

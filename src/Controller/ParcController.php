@@ -28,6 +28,7 @@ use App\Entity\Photo;
 use App\Form\PhotoType;
 use App\Form\VehiculeType;
 use App\Entity\HoraireOuverture;
+use App\Entity\Restriction;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -157,7 +158,7 @@ class ParcController extends AbstractController
                 $em->persist($vehicule);
             }
             $em->flush();
-            return $this->redirectToRoute('resa_upload', [
+            return $this->redirectToRoute('resa_parc_upload', [
                 'vehicule' => $vehicule->getId(),
                 'action' => 'ajouter'
             ]);
@@ -359,6 +360,7 @@ class ParcController extends AbstractController
     #[Route('/parc/modifier/{vehicule_id}', name: 'resa_parc_modifier')]
     public function modifier(string $vehicule_id, ManagerRegistry $doctrine): Response
     {
+
         if (is_null($this->params['nigend']))
             return $this->redirectToRoute('resa_login');
 
@@ -369,7 +371,6 @@ class ParcController extends AbstractController
         $unites = $em
             ->getRepository(Unite::class)
             ->findBy(['departement' => $this->params['departement']]);
-
 
         $vl = $em
             ->getRepository(Vehicule::class)
@@ -400,6 +401,7 @@ class ParcController extends AbstractController
             }
 
             $vehicule->setUnite($unite_en_bdd);
+
             $em->persist($vehicule);
             $em->flush();
 
@@ -428,6 +430,10 @@ class ParcController extends AbstractController
 
         $em = $doctrine->getManager();
 
+        $unites = $em
+            ->getRepository(Unite::class)
+            ->findBy(['departement' => $this->params['departement']]);
+
         $vl = $em
             ->getRepository(Vehicule::class)
             ->findOneBy(['id' => $vehicule_id]);
@@ -448,6 +454,7 @@ class ParcController extends AbstractController
             $this->params,
             [
                 'form' => $form,
+                'unites' => $unites,
                 'action' => 'supprimer'
             ]
         ));
@@ -585,7 +592,8 @@ class ParcController extends AbstractController
                 'app.limit_resa_months',
                 'app.max_resa_duration',
                 'app.minutes_select_interval',
-                'app.token_gives_full_access'
+                'app.token_gives_full_access',
+                'app.unites_em'
             ] as $param
         ) {
             $AppConstName = strToUpper(str_replace('.', '_', $param));
