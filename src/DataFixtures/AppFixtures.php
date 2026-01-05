@@ -17,6 +17,7 @@ use App\Entity\StatutReservation;
 use App\Entity\User;
 use App\Entity\Vehicule;
 use App\Entity\Restriction;
+use App\Entity\TypeDemande;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -298,10 +299,28 @@ class AppFixtures extends Fixture
             }
         };
 
+        $typesdemandes = [
+            [
+                'code' => 'ope',
+                'libelle' => 'Opérationnel'
+            ],
+            [
+                'code' => 'non_ope',
+                'libelle' => 'Non opérationnel'
+            ]
+        ];
+        foreach ($typesdemandes as $type) {
+            $typedemande = new TypeDemande();
+            $typedemande->setCode($type['code']);
+            $typedemande->setLibelle($type['libelle']);
+            $manager->persist($typedemande);
+            $manager->flush();
+        }
+
         $restrictions = [
             ['NONE', 'Aucune restriction', 'Aucune restriction particulière pour ce véhicule'],
             ['EM', 'Réservé Etat-Major', 'Ce véhicule est réservé aux unités placées dans l\'arborescence Etat-Major'],
-            ['NON_OPE', 'Avant jugement','Ce ne peut être utilisé qu\'à des fins de liaison, à l\'exclusion de toute autre mission.'],
+            ['NON_OPE', 'Avant jugement', 'Ce ne peut être utilisé qu\'à des fins de liaison, à l\'exclusion de toute autre mission.'],
             ['ATELIER', 'En maintenance', 'Ce véhicule est actuellement en maintenance à l\'atelier']
         ];
 

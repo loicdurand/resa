@@ -390,11 +390,12 @@
 													<label class="fr-label" for="select-1">
 														Précisez le type de demande (opérationnel ou non)
 													</label>
-													<select class="fr-select" aria-describedby="select-1-messages" id="select-1" name="select-1">
-														<option value="" selected disabled>Sélectionnez une option</option>
-														<option value="ope">Opérationnel</option>
-														<option value="non_ope">Non opérationnel</option>
-													</select>
+													{# <select class="fr-select" aria-describedby="select-1-messages" id="select-1" name="select-1">
+																											<option value="" selected disabled>Sélectionnez une option</option>
+																											<option value="ope">Opérationnel</option>
+																											<option value="non_ope">Non opérationnel</option>
+																										</select> #}
+													{{ form_widget(form.type_demande) }}
 													<div class="fr-messages-group" id="select-1-messages" aria-live="polite"></div>
 												</div>
 
