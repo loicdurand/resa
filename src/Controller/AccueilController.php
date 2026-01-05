@@ -261,6 +261,7 @@ class AccueilController extends AbstractController
         $form->handleRequest($this->request);
         if ($form->isSubmitted() && $form->isValid()) {
             $reservation = $form->getData();
+            dd($reservation);
             if (!$reservation->getId()) {
                 // @TODO envoi de mail au(x) validateur(s)
                 $mail = new MailService($this->em);

@@ -41,6 +41,12 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private ?StatutReservation $statut = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $observation = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $type = null;
+
     public function __construct(){
         $this->createdAt = new \DateTime('now', new \DateTimeZone('America/Guadeloupe'));
     }
@@ -142,6 +148,30 @@ class Reservation
     public function setStatut(?StatutReservation $statut): static
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getObservation(): ?string
+    {
+        return $this->observation;
+    }
+
+    public function setObservation(?string $observation): static
+    {
+        $this->observation = $observation;
+
+        return $this;
+    }
+
+    public function isType(): ?bool
+    {
+        return $this->type;
+    }
+
+    public function setType(?bool $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }
