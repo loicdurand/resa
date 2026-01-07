@@ -261,7 +261,6 @@ class AccueilController extends AbstractController
         $form->handleRequest($this->request);
         if ($form->isSubmitted() && $form->isValid()) {
             $reservation = $form->getData();
-            dd($reservation);
             if (!$reservation->getId()) {
                 // @TODO envoi de mail au(x) validateur(s)
                 $mail = new MailService($this->em);
@@ -273,6 +272,12 @@ class AccueilController extends AbstractController
                         $params->getRecipients(),
                         true
                     );
+                } else {
+                    dd([
+                        'subject' => $params->getSubject(),
+                        'body' => $params->getBody(),
+                        'recipients' => $params->getRecipients(),
+                    ]);
                 }
                 $this->em->persist($reservation);
             }
