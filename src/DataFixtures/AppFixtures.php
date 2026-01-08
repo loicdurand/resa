@@ -106,13 +106,13 @@ class AppFixtures extends Fixture
                 'nom' => 'VALIDER_RESAS',
                 'libelle' => 'Valider les réservations de véhicules',
                 'template' => 'compte/valider_resas.html.twig', //'validation_reservation',
-                'defaut' => ['SOLC', 'VDT']
+                'defaut' => ['SOLC', 'VDT', 'CSAG', 'SOLC']
             ],
             [
                 'nom' => 'RESERVER_VL',
                 'libelle' => 'Réserver un véhicule',
                 'template' => 'compte/reserver_vl.html.twig',
-                'defaut' => ['USR', 'CSAG', 'VDT', 'CDT', 'SOLC']
+                'defaut' => ['SOLC', 'VDT', 'CSAG', 'VDT', 'SOLC', 'CDT', 'USR']
             ]
         ];
 

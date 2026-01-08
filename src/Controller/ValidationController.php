@@ -10,16 +10,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-use App\Entity\Role;
-use App\Entity\Action;
-use App\Entity\Atelier;
-use App\Entity\HoraireOuverture;
-use App\Entity\Permission;
+use App\Entity\User;
 use App\Entity\Vehicule;
 use App\Entity\Reservation;
 use App\Entity\StatutReservation;
-use App\Form\HoraireOuvertureType;
-
 
 class ValidationController extends AbstractController
 {
@@ -51,6 +45,33 @@ class ValidationController extends AbstractController
 
         $em = $doctrine->getManager();
 
+        // On a besoin de connaître le "type" de valideur (CSAG, unité PJ ou Etat-Major)
+        $filtre_validateur = "";
+
+        $nigend = $this->params['nigend'];
+        $user = $em->getRepository(User::class)
+            ->findOneBy(['nigend' => $nigend]);
+        $code_unite = $user->getUnite();
+
+        $env_unites_pj = $_ENV['APP_UNITES_PJ'] ?? '';
+        $raw_unites_pj = explode(',', $env_unites_pj);
+        $unites_pj = [];
+        foreach ($raw_unites_pj as $code_unite) {
+            $unites_pj[] = $this->addZeros($code_unite, 8);
+        }
+
+        // IS Unité PJ
+        if (in_array($code_unite, $unites_pj)) {
+            $filtre_validateur = "PJ";
+        } else {
+            $code_unite_CSAG = $this->addZeros($_ENV['APP_CSAG_CODE_UNITE'], 8);
+            if ($code_unite == $code_unite_CSAG) {
+                $filtre_validateur = "CSAG";
+            } else {
+                $filtre_validateur = "EM";
+            }
+        }
+
         $statut_en_attente = $em
             ->getRepository(StatutReservation::class)
             ->findOneBy(['code' => 'En attente']);
@@ -62,11 +83,37 @@ class ValidationController extends AbstractController
                 ['date_debut' => 'ASC']
             );
 
+        $resas = array_filter($resas_en_attente, function ($resa) use ($filtre_validateur) {
+            $type_demande = $resa->getTypeDemande();
+            // si valideur PJ --> uniquement les VLs dont le demandeur a selectionné "opérationnel"
+            if ($filtre_validateur === "PJ") {
+                if ($type_demande->getCode() === "ope") {
+                    return true;
+                }
+                return false;
+            }
+            // Si valideur EM --> uniquement les VLs qui ont la restriction "Etat-Major"
+            $vl = $resa->getVehicule();
+            $restriction = $vl->getRestriction();
+            $restriction_code = $restriction->getCode();
+
+            if ($filtre_validateur === "EM") {
+                if ($restriction_code === "EM") {
+                    return true;
+                }
+                return false;
+            }
+
+            // Le valideur CSAG prend ce qu'il reste 
+            return true;
+        });
+
         return $this->render('validation/validation.html.twig', array_merge(
             $this->getAppConst(),
             $this->params,
             [
                 'reservations' => $resas_en_attente,
+                'filtre_validateur' => $filtre_validateur
             ]
         ));
     }
@@ -207,5 +254,13 @@ class ValidationController extends AbstractController
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
+    }
+
+    private function addZeros($str, $maxlen = 2)
+    {
+        $str = '' . $str;
+        while (strlen($str) < $maxlen)
+            $str = "0" . $str;
+        return $str;
     }
 }
