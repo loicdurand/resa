@@ -56,12 +56,13 @@ class ValidationController extends AbstractController
         $env_unites_pj = $_ENV['APP_UNITES_PJ'] ?? '';
         $raw_unites_pj = explode(',', $env_unites_pj);
         $unites_pj = [];
-        foreach ($raw_unites_pj as $code_unite) {
-            $unites_pj[] = $this->addZeros($code_unite, 8);
+        foreach ($raw_unites_pj as $code) {
+            $unites_pj[] = $this->addZeros($code, 8);
         }
 
-        // IS Unité PJ
-        if (in_array($code_unite, $unites_pj)) {
+        if ($user->getProfil() === "SOLC") {
+            $filtre_validateur = 'SOLC';
+        } else if (in_array($code_unite, $unites_pj)) {
             $filtre_validateur = "PJ";
         } else {
             $code_unite_CSAG = $this->addZeros($_ENV['APP_CSAG_CODE_UNITE'], 8);
@@ -84,6 +85,8 @@ class ValidationController extends AbstractController
             );
 
         $resas = array_filter($resas_en_attente, function ($resa) use ($filtre_validateur) {
+            if ($filtre_validateur === "SOLC")
+                return true;
             $type_demande = $resa->getTypeDemande();
             // si valideur PJ --> uniquement les VLs dont le demandeur a selectionné "opérationnel"
             if ($filtre_validateur === "PJ") {
@@ -112,7 +115,7 @@ class ValidationController extends AbstractController
             $this->getAppConst(),
             $this->params,
             [
-                'reservations' => $resas_en_attente,
+                'reservations' => $resas,
                 'filtre_validateur' => $filtre_validateur
             ]
         ));
