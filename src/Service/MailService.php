@@ -56,6 +56,29 @@ class MailService
     return $this;
   }
 
+  public function mailForInvalidation($reservation)
+  {
+    $demandeur = $reservation->getUser();
+    $mail_demandeur = $this
+      ->manager
+      ->getRepository(User::class)
+      ->findOneBy(['nigend' => $demandeur])
+      ->getMail();
+
+    $this->recipients[] = $mail_demandeur;
+
+    $this
+      ->setSubject("Annulation de votre demande de réservation effectuée sur le site Résa971")
+      ->setBody("Votre demande de réservation a été annulée par votre valideur.\n\n" .
+        "DÉTAILS DE LA DEMANDE\n" .
+        ($reservation->getId() ? "ID de la réservation : " . $reservation->getId() . "\n" : "") .
+        "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . " " . $reservation->getVehicule()->getImmatriculation() . "\n" .
+        "Date de début : " . $reservation->getDateDebut()->format('d/m/Y H:i') . "\n" .
+        "Date de fin : " . $reservation->getDateFin()->format('d/m/Y H:i') . "\n" .
+        "Utilisateur : " . $reservation->getUser() . "\n");
+    return $this;
+  }
+
   public function getRecipients()
   {
     return $this->recipients;

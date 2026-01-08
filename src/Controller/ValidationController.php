@@ -15,6 +15,9 @@ use App\Entity\Vehicule;
 use App\Entity\Reservation;
 use App\Entity\StatutReservation;
 
+use App\Service\MailService;
+use App\Service\SsoService;
+
 class ValidationController extends AbstractController
 {
     private $app_const;
@@ -208,15 +211,26 @@ class ValidationController extends AbstractController
         $id = $data['id'];
         $em = $doctrine->getManager();
 
-        if ($this->getParameter('app.env') == 'dev')
-            sleep(seconds: 1.5);
-
         $statut_annulee = $em
             ->getRepository(StatutReservation::class)
             ->findOneBy(['code' => 'Annulée']);
 
         $reservation = $em->getRepository(Reservation::class)
             ->findOneBy(['id' => $id]);
+
+        $mailer = new MailService($em);
+        $mail = $mailer->mailForInvalidation($reservation);
+        if ($this->getParameter('app.env') == 'prod') {
+            // Envoi du mail via le SSO
+            SsoService::mail(
+                $mail->getSubject(),
+                $mail->getBody(),
+                $mail->getRecipients(),
+                true
+            );
+        } else {
+            sleep(seconds: 1.5);
+        }
 
         $reservation->setStatut($statut_annulee);
         $em->persist($reservation);
