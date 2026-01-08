@@ -47,9 +47,9 @@ class MailService
       ->setRecipients($recipient)
       ->setSubject("Nouvelle demande de réservation effectuée sur le site Résa971")
       ->setBody("Une nouvelle demande de réservation a été effectuée.\n\n" .
-        "DÉTAILS DE LA DEMANDE DE RÉSERVATION\n" .
+        "DÉTAILS DE LA DEMANDE\n" .
         ($reservation->getId() ? "ID de la réservation : " . $reservation->getId() . "\n" : "") .
-        "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . "\n" .
+        "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . " " . $reservation->getVehicule()->getImmatriculation() . "\n" .
         "Date de début : " . $reservation->getDateDebut()->format('d/m/Y H:i') . "\n" .
         "Date de fin : " . $reservation->getDateFin()->format('d/m/Y H:i') . "\n" .
         "Utilisateur : " . $reservation->getUser() . "\n");
@@ -69,7 +69,6 @@ class MailService
     $this->recipients = [];
 
     if ($type === $this::IS_EM) {
-      die('em');
       $env_unites_em = $_ENV['APP_UNITES_EM'] ?? '';
       $raw_unites_em = explode(',', $env_unites_em);
       $unites_em = [];
@@ -88,12 +87,12 @@ class MailService
         foreach ($raw_unites_pj as $code_unite) {
           $unites_pj[] = $this->addZeros($code_unite, 8);
         }
+
         $validateurs = $user_repo->findBy([
           'profil' => 'VDT',
           'unite' => $unites_pj
         ]);
       } else {
-        die('autre');
         $validateurs = $user_repo->findBy([
           'profil' => ['VDT', 'CSAG'],
           'unite' => $this->addZeros($_ENV['APP_CSAG_CODE_UNITE'], 8)
@@ -131,11 +130,6 @@ class MailService
     $this->body = $body;
     return $this;
   }
-
-  // private function isCSAG($code_unite)
-  // {
-  //   return +$code_unite === +$this->getCSAGCodeUnite();
-  // }
 
   private function addZeros($str, $maxlen = 2)
   {

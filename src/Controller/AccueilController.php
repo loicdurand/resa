@@ -272,13 +272,13 @@ class AccueilController extends AbstractController
                         $params->getRecipients(),
                         true
                     );
-                } else {
+                } /*else {
                     dd([
                         'subject' => $params->getSubject(),
                         'body' => $params->getBody(),
                         'recipients' => $params->getRecipients(),
                     ]);
-                }
+                }*/
                 $this->em->persist($reservation);
             }
             $this->em->flush();

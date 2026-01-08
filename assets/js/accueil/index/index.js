@@ -11,26 +11,30 @@ const //
   hideOnScroll = document.getElementById('hideOnScroll'),
   updater = new Updater();
 
-// masquage des filtres de recherche au SCROLL sur petits écrans
-hideOnScroll?.addEventListener('click', () => {
-  let i = document.body.scrollTop || document.documentElement.scrollTop;
-  while (i > scrollLen) {
-    (function (i) {
-      setTimeout(function () {
-        document.body.scrollTop -= 1;
-        document.documentElement.scrollTop -= 1;
-      }, i / 100)
-    })(i--)
-  }
-});
+if (hideOnScroll !== null) {
 
-window.addEventListener('scroll', () => {
-  if (document.body.scrollTop > scrollLen || document.documentElement.scrollTop > scrollLen) {
-    hideOnScroll.classList.add('hiddenOnScroll');
-  } else {
-    hideOnScroll.classList.remove('hiddenOnScroll');
-  }
-});
+  // masquage des filtres de recherche au SCROLL sur petits écrans
+  hideOnScroll.addEventListener('click', () => {
+    let i = document.body.scrollTop || document.documentElement.scrollTop;
+    while (i > scrollLen) {
+      (function (i) {
+        setTimeout(function () {
+          document.body.scrollTop -= 1;
+          document.documentElement.scrollTop -= 1;
+        }, i / 100)
+      })(i--)
+    }
+  });
+
+  window.addEventListener('scroll', () => {
+    if (document.body.scrollTop > scrollLen || document.documentElement.scrollTop > scrollLen) {
+      hideOnScroll.classList.add('hiddenOnScroll');
+    } else {
+      hideOnScroll.classList.remove('hiddenOnScroll');
+    }
+  });
+
+}
 
 // Début du code
 
