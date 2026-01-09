@@ -363,97 +363,187 @@
 							<p class="fr-notice__desc">
 								Il y a déjà une réservation dans la période que vous venez de sélectionner.
 							</p>
-						</p>
-						{# <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1305" class="fr-btn--close fr-btn">Masquer le message</button> #}
+							{# </p> #}
+							{# <button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1305" class="fr-btn--close fr-btn">Masquer le message</button> #}
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div id="form-submit-ctnr" class="{{filtered ? '' : 'hidden ' }}fr-btns-group--right fr-mt-2w fr-mr-1w">
-				<span>
-          {% if vehicule.restriction.code == 'NONE' or vehicule.restriction.code == 'EM' %}
-            <button id="form-submit-btn" type="submit" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-right">
-              Je réserve
-            </button>
-          {% else %}
-            <button id="form-submit-btn" aria-controls="modal-restriction" data-fr-opened="false" type="button" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-right">
-						  Je réserve
-					  </button>
-            <dialog id="modal-restriction" class="fr-modal" aria-labelledby="modal-restriction-title" data-fr-concealing-backdrop="true">
-              <div class="fr-container fr-container--fluid fr-container-md">
-                <div class="fr-grid-row fr-grid-row--center">
-                  <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
-                    <div class="fr-modal__body">
-                      <div class="fr-modal__header">
-                      </div>
-                      <div class="fr-modal__content">
-                        <h2 id="modal-restriction-title" class="fr-modal__title align-left">
-                          <span class="fr-icon-info-line fr-icon--lg" aria-hidden="true"></span> {{ vehicule.restriction.libelle }}
-                        </h2>
-                        <p class="align-left">{{ vehicule.restriction.description }}</p>
-                      </div>
-                      <div class="fr-modal__footer">
-                        <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-                          <li>
-                            <button id="form-submit-btn" type="submit" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-left">
-                              Je réserve
-                            </button>
-                          </li>
-                          <li>
-                            <button type="reset" aria-controls="modal-restriction" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary">Fermer</button>
-                          </li>
-                        </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </dialog>
-          {% endif %}
-				</span>
-			</div>
+				<div id="form-submit-ctnr" class="{{filtered ? '' : 'hidden ' }}fr-btns-group--right fr-mt-2w fr-mr-1w">
+					<div>
+						{% if vehicule.restriction.code == 'NONE' or vehicule.restriction.code == 'EM' %}
 
+							<button id="form-submit-btn" aria-controls="modal-select_valideur" data-fr-opened="false" type="button" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-right">
+								Je réserve
+							</button>
+
+						{% else %}
+
+							<button id="form-submit-btn" aria-controls="modal-restriction" data-fr-opened="false" type="button" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-right">
+								Je réserve
+							</button>
+
+						{% endif %}
+
+					</div>
+				</div>
+
+			</div>
 		</div>
-	</div>
 
-	{{ form_end(form) }}
+		{# MODALE opé #}
+		<dialog id="modal-select_valideur" class="fr-modal" aria-labelledby="modal-select_valideur-title" data-fr-concealing-backdrop="true">
+			<div class="fr-container fr-container--fluid fr-container-md">
+				<div class="fr-grid-row fr-grid-row--center">
+					<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+						<div class="fr-modal__body">
+							<div class="fr-modal__header"></div>
+							<!-- fr-modal__header -->
 
-	{# FIN JE RÉSERVE #}
+							<div class="fr-modal__content">
+								<h2 id="modal-select_valideur-title" class="fr-modal__title align-left">
+									Dernière étape
+								</h2>
 
-	{# CALENDRIERS #}
-		<div
-		id="calendars-container"> {# source: https://gist.github.com/aknosis/3932192 #}
-		{% set time = "now"| date('Y-m-15') | date_modify('-1 months')| date("U") %}
-		{% for i in range(0,APP_LIMIT_RESA_MONTHS) %}
-			{% set time =  time | date_modify('+1 months') %}
-			<table>
-				<thead>
-					{% if loop.first %}
-						<tr class="cs-row-days">
-							<th width="15%" id="th-LU" data-horaires="{{ horaires.LU }}">
-								Lu<span class="hide-s">ndi</span>
-							</th>
-							<th width="15%" id="th-MA" data-horaires="{{ horaires.MA }}">
-								Ma<span class="hide-s">rdi</span>
-							</th>
-							<th width="16%" id="th-ME" data-horaires="{{ horaires.ME }}">
-								Me<span class="hide-s">rcredi</span>
-							</th>
-							<th width="15%" id="th-JE" data-horaires="{{ horaires.JE }}">
-								Je<span class="hide-s">udi</span>
-							</th>
-							<th width="15%" id="th-VE" data-horaires="{{ horaires.VE }}">
-								Ve<span class="hide-s">ndredi</span>
-							</th>
-							<th width="12%" id="th-SA" data-horaires="{{ horaires.SA }}">
-								Sa<span class="hide-s">medi</span>
-							</th>
-							<th width="12%" id="th-DI" data-horaires="{{ horaires.DI }}">
-								Di<span class="hide-s">manche</span>
-							</th>
-						</tr>
-					{% endif %}
-					<tr>
-						{% set trans_day_hash = { 
+								<div class="fr-select-group align-left">
+									<label class="fr-label" for="select-1">
+										Précisez le type de demande (opérationnel ou non)
+									</label>
+
+									{{ form_widget(form.type_demande) }}
+
+									<div class="fr-messages-group" id="select-1-messages" aria-live="polite"></div>
+								</div>
+
+								<div class="fr-input-group align-left" id="input-group-31">
+									<label class="fr-label" for="{{ field_name(form.observation) }}">
+										Observations (aide votre valideur à apprécier l'opportunité de la demande).
+									</label>
+									<textarea class="fr-input" aria-describedby="{{ field_name(form.observation) }}-messages" id="{{ field_name(form.observation) }}" name="{{ field_name(form.observation) }}" value="{{ field_value(form.observation) }}"></textarea>
+									<div class="fr-messages-group" id="{{ field_name(form.observation) }}-messages" aria-live="polite"></div>
+								</div>
+
+							</div>
+							<!-- fr-modal__content -->
+
+							<div class="fr-modal__footer">
+								<ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+									<li>
+										<button id="form-submit-btn" type="submit" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-left">
+											Je réserve
+										</button>
+									</li>
+									<li>
+										<button type="reset" aria-controls="modal-select_valideur" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary">
+											Fermer
+										</button>
+									</li>
+								</ul>
+							</div>
+							<!-- fr-modal__footer -->
+
+						</div>
+						<!-- fr-modal__body -->
+
+					</div>
+					<!--fr-col-lg-6 -->
+
+				</div>
+				<!--fr-grid-row -->
+
+			</div>
+			<!--fr-container -->
+
+		</dialog>
+		{# FIN MODALE opé #}
+
+		{# MODALE avant jugement #}
+		<dialog id="modal-restriction" class="fr-modal" aria-labelledby="modal-restriction-title" data-fr-concealing-backdrop="true">
+
+			<div class="fr-container fr-container--fluid fr-container-md">
+				<div class="fr-grid-row fr-grid-row--center">
+					<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+						<div class="fr-modal__body">
+
+							<div class="fr-modal__header"></div>
+
+							<div class="fr-modal__content">
+								<h2 id="modal-restriction-title" class="fr-modal__title align-left">
+									<span class="fr-icon-info-line fr-icon--lg" aria-hidden="true"></span>
+									{{ vehicule.restriction.libelle }}
+								</h2>
+								<p class="align-left">{{ vehicule.restriction.description }}</p>
+							</div>
+							<!-- fr-modal__content -->
+
+							<div class="fr-modal__footer">
+								<ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+									<li>
+										<button id="form-submit-btn" type="submit" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-left">
+											J'ai compris et je réserve
+										</button>
+									</li>
+									<li>
+										<button type="reset" aria-controls="modal-restriction" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary">Fermer</button>
+									</li>
+								</ul>
+							</div>
+							<!-- fr-modal__footer -->
+
+						</div>
+						<!-- fr-modal__body -->
+
+					</div>
+					<!-- fr-col-lg-6 -->
+
+				</div>
+				<!-- fr-grid-row -->
+
+			</div>
+			<!-- fr-container -->
+
+		</dialog>
+		{# FIN MODALE avant jugement #}
+
+		{{ form_end(form) }}
+
+		{# FIN JE RÉSERVE #}
+
+		{# CALENDRIERS #}
+			<div
+			id="calendars-container"> {# source: https://gist.github.com/aknosis/3932192 #}
+			{% set time = "now"| date('Y-m-15') | date_modify('-1 months')| date("U") %}
+			{% for i in range(0,APP_LIMIT_RESA_MONTHS) %}
+				{% set time =  time | date_modify('+1 months') %}
+				<table>
+					<thead>
+						{% if loop.first %}
+							<tr class="cs-row-days">
+								<th width="15%" id="th-LU" data-horaires="{{ horaires.LU }}">
+									Lu<span class="hide-s">ndi</span>
+								</th>
+								<th width="15%" id="th-MA" data-horaires="{{ horaires.MA }}">
+									Ma<span class="hide-s">rdi</span>
+								</th>
+								<th width="16%" id="th-ME" data-horaires="{{ horaires.ME }}">
+									Me<span class="hide-s">rcredi</span>
+								</th>
+								<th width="15%" id="th-JE" data-horaires="{{ horaires.JE }}">
+									Je<span class="hide-s">udi</span>
+								</th>
+								<th width="15%" id="th-VE" data-horaires="{{ horaires.VE }}">
+									Ve<span class="hide-s">ndredi</span>
+								</th>
+								<th width="12%" id="th-SA" data-horaires="{{ horaires.SA }}">
+									Sa<span class="hide-s">medi</span>
+								</th>
+								<th width="12%" id="th-DI" data-horaires="{{ horaires.DI }}">
+									Di<span class="hide-s">manche</span>
+								</th>
+							</tr>
+						{% endif %}
+						<tr>
+							{% set trans_day_hash = { 
                     "January": "Janvier", 
                     "February": "Février", 
                     "March": "Mars", 
@@ -467,78 +557,77 @@
                     "November":"Novembre",
                     "December":"Décembre"
                 } %}
-						{% set days_list = [
+							{% set days_list = [
                   'LU','MA','ME','JE','VE','SA','DI'
                 ] %}
-						<th colspan="7">
-							{{ trans_day_hash[time|date('F')] }}
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						{% set daysInMonth = time|date('t') %}
-						{% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
-						{% set dow = startDow %}
-						{% for day in range(1,daysInMonth) %}
-							{% if loop.first and startDow != 0 %}
-								<td colspan="{{ startDow }}"></td>
-							{% endif %}
-							{% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:00')|date('U') %}
-							{% set before_now = curr_date <= ('now'|date('Y-m-d 00:00:00')|date('U') )? true : false %}
-							{% set after_limit = curr_date > (max|date('Y-m-d 00:00:00')|date('U') )? true : false %}
-							{% set csag_ferme =  horaires[days_list[dow]] == '' %}
-							<td class="target">
-								<div class="relative">
+							<th colspan="7">
+								{{ trans_day_hash[time|date('F')] }}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							{% set daysInMonth = time|date('t') %}
+							{% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
+							{% set dow = startDow %}
+							{% for day in range(1,daysInMonth) %}
+								{% if loop.first and startDow != 0 %}
+									<td colspan="{{ startDow }}"></td>
+								{% endif %}
+								{% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:00')|date('U') %}
+								{% set before_now = curr_date <= ('now'|date('Y-m-d 00:00:00')|date('U') )? true : false %}
+								{% set after_limit = curr_date > (max|date('Y-m-d 00:00:00')|date('U') )? true : false %}
+								{% set csag_ferme =  horaires[days_list[dow]] == '' %}
+								<td class="target">
+									<div class="relative">
 
-									{% set striked = false %}
-									{% set striked_debut = false %}
-									{% set striked_fin = false %}
-									{% set mems = [] %}
+										{% set striked = false %}
+										{% set striked_debut = false %}
+										{% set striked_fin = false %}
+										{% set mems = [] %}
 
-									{% for i, reservation in vehicule.reservations %}
-										{% if 
+										{% for i, reservation in vehicule.reservations %}
+											{% if 
                               curr_date|date('Y-m-d')|date('U') >= date(reservation.dateDebut)|date('Y-m-d')|date('U') 
                                 and 
                               curr_date|date('Y-m-d')|date('U') <= date(reservation.dateFin)|date('Y-m-d')|date('U') 
                               %}
 
-											{% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) ? reservation.heureDebut : false %}
-											{% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) ? reservation.heureFin : false %}
-											{# {% set striked = striked_debut or striked_fin ? false : true %} #}
-											{% set striked = true %}
+												{% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) ? reservation.heureDebut : false %}
+												{% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) ? reservation.heureFin : false %}
+												{# {% set striked = striked_debut or striked_fin ? false : true %} #}
+												{% set striked = true %}
 
-											{% set mem = [] %}
-											{% set mem = mem|merge([{'debut': striked_debut, 'fin': striked_fin}]) %}
-											{% set mems = mems|merge(mem) %}
+												{% set mem = [] %}
+												{% set mem = mem|merge([{'debut': striked_debut, 'fin': striked_fin}]) %}
+												{% set mems = mems|merge(mem) %}
 
-										{% endif %}
-									{% endfor %}
+											{% endif %}
+										{% endfor %}
 
-									<div {% for i, mem in mems %} data-resa_ {{i}} _debut="{{ mem.debut }}" data-resa_ {{i}} _fin="{{ mem.fin }}" {% endfor %} {{striked_debut ? 'data-heure_debut=' ~ striked_debut }} {{striked_fin ? 'data-heure_fin=' ~ striked_fin }} data-ref="{{ days_list[dow] }}" {{ (striked and striked_debut == false and striked_fin == false) or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" title="{{ striked ? "Il y a une ou plusieurs réservations à cette date." : striked_debut or striked_fin ? "Le véhicule est réservé une partie de la journée" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
-										{{ day }}
+										<div {% for i, mem in mems %} data-resa_ {{i}} _debut="{{ mem.debut }}" data-resa_ {{i}} _fin="{{ mem.fin }}" {% endfor %} {{striked_debut ? 'data-heure_debut=' ~ striked_debut }} {{striked_fin ? 'data-heure_fin=' ~ striked_fin }} data-ref="{{ days_list[dow] }}" {{ (striked and striked_debut == false and striked_fin == false) or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" title="{{ striked ? "Il y a une ou plusieurs réservations à cette date." : striked_debut or striked_fin ? "Le véhicule est réservé une partie de la journée" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
+											{{ day }}
+										</div>
+										<div>
+											{# day content here #}
+										</div>
 									</div>
-									<div>
-										{# day content here #}
-									</div>
-								</div>
-							</td>
-							{% if loop.last and dow != 6 %}
-								<td colspan="{{ 6 - dow }}">
-									&nbsp;
 								</td>
+								{% if loop.last and dow != 6 %}
+									<td colspan="{{ 6 - dow }}">
+										&nbsp;
+									</td>
+								{% endif %}
+								{% if dow == 6 %}
+									{% set dow = 0 %}
+								</tr>
+								<tr>
+								{% else %}
+									{% set dow = dow + 1 %}
 							{% endif %}
-							{% if dow == 6 %}
-								{% set dow = 0 %}
-							</tr>
-							<tr>
-							{% else %}
-								{% set dow = dow + 1 %}
-						{% endif %}
-					{% endfor %}
-				</tr>
-			</tbody>
-		</table>
-	{% endfor %}
-</div>
-{# FIN CALENDRIERS #}</div>{# fin fiche véhicule #}{% endblock %}
+						{% endfor %}
+					</tr>
+				</tbody>
+			</table>
+		{% endfor %}
+	</div>{# FIN CALENDRIERS #}</div>{# fin fiche véhicule #}{% endblock %}

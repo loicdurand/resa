@@ -44,6 +44,12 @@ class AccueilController extends AbstractController
         ];
     }
 
+    // #[Route('/access_denied', name: 'resa_access_denied')]
+    // public function accessDenied(): Response
+    // {
+    //     $this->setAppConst();
+    // }
+
     #[Route('/', name: 'resa_accueil')]
     public function accueil(): Response
     {
@@ -262,14 +268,23 @@ class AccueilController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $reservation = $form->getData();
             if (!$reservation->getId()) {
-                // @TODO envoi de mail au(x) validateur(s)
-                $mail = new MailService($this->em);
-                $params = $mail->mailForReservation($reservation);
+                // Préparation d'un objet Mail destiné au(x) validateur(s)
+                $mailer = new MailService($this->em);
+                $mail = $mailer->mailForReservation($reservation);
                 if ($_ENV['APP_ENV'] === 'prod') {
+                    // Envoi du mail via le SSO
                     SsoService::mail(
-                        $params->getSubject(),
-                        $params->getBody(),
-                        $params->getRecipients(),
+                        $mail->getSubject(),
+                        $mail->getBody(),
+                        $mail->getRecipients(),
+                        true
+                    );
+                    // Envoi d'une copie au demandeur
+                    $user_mail = $reservation->getUser()->getMail();
+                    SsoService::mail(
+                        "[Copie]: " . $mail->getSubject(),
+                        $mail->getBody(),
+                        $user_mail,
                         true
                     );
                 }

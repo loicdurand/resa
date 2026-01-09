@@ -16,78 +16,126 @@ class MailService
   private $subject;
   private $body;
   private array $recipients;
-  private $throwExceptionIfExpired = false;
-  private $csag_code_unite = null;
 
   private const IS_CSAG = "IS_CSAG";
+  private const IS_JUD = "IS_JUD";
   private const IS_EM = "IS_EM";
 
   public function __construct(ObjectManager $manager)
   {
     $this->manager = $manager;
-    $this->setCSAGCodeUnite();
     return $this;
   }
 
   public function mailForReservation(Reservation $reservation)
   {
-    $vehicule = $reservation->getVehicule();
-    $vehicule_unite = $vehicule->getUnite();
-    $code_unite = $vehicule_unite->getCodeUnite();
+    $valideur_type = $this->getValideurType($reservation);
 
     $this
-      ->setRecipients(
-        $vehicule->getRestriction()->getCode() === 'EM' ?
-          $this::IS_EM : (
-            $this->isCSAG($code_unite) ?
-            $this::IS_CSAG :
-            $code_unite
-          )
-      )
-      ->setSubject("Nouvelle réservation effectuée sur le site Résa971")
-      ->setBody("Une nouvelle réservation a été effectuée.\n\n" .
-        "Détails de la réservation :\n" .
-        "ID de la réservation : " . $reservation->getId() . "\n" .
-        "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . "\n" .
+      ->setValideursAsRecipient($valideur_type)
+      ->setSubject("Nouvelle demande de réservation effectuée sur le site Résa971")
+      ->setBody("Une nouvelle demande de réservation a été effectuée.\n\n" .
+        "DÉTAILS DE LA DEMANDE\n" .
+        ($reservation->getId() ? "ID de la réservation : " . $reservation->getId() . "\n" : "") .
+        "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . " " . $reservation->getVehicule()->getImmatriculation() . "\n" .
         "Date de début : " . $reservation->getDateDebut()->format('d/m/Y H:i') . "\n" .
         "Date de fin : " . $reservation->getDateFin()->format('d/m/Y H:i') . "\n" .
         "Utilisateur : " . $reservation->getUser() . "\n");
     return $this;
   }
 
-  public function getCSAGCodeUnite()
+  public function mailForValidation($reservation)
   {
-    if (is_null($this->csag_code_unite)) {
-      $this->setCSAGCodeUnite();
-    }
-    return $this->csag_code_unite;
-  }
+    $nigend = $reservation->getUser();
+    $demandeur = $this
+      ->manager
+      ->getRepository(User::class)
+      ->findOneBy(['nigend' => $nigend]);
 
-  public function setCSAGCodeUnite()
-  {
-    $this->csag_code_unite = $this->addZeros($_ENV['APP_CSAG_CODE_UNITE'], 8);
+    $this->setRecipients([$demandeur]);
+
+    $this
+      ->setSubject("Validation de votre demande de réservation effectuée sur le site Résa971")
+      ->setBody("Votre demande de réservation a été validée par votre valideur.\n\n" .
+        "DÉTAILS DE LA RÉSERVATION\n" .
+        ($reservation->getId() ? "ID de la réservation : " . $reservation->getId() . "\n" : "") .
+        "Nouveau véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . " " . $reservation->getVehicule()->getImmatriculation() . "\n" .
+        "Date de début (inchangée) : " . $reservation->getDateDebut()->format('d/m/Y H:i') . "\n" .
+        "Date de fin (inchangée) : " . $reservation->getDateFin()->format('d/m/Y H:i') . "\n" .
+        "Utilisateur : " . $reservation->getUser() . "\n");
     return $this;
   }
 
-  public function getRecipients()
+  public function mailForEchangeVL($reservation)
   {
-    return $this->recipients;
+    $nigend = $reservation->getUser();
+    $demandeur = $this
+      ->manager
+      ->getRepository(User::class)
+      ->findOneBy(['nigend' => $nigend]);
+
+    $this->setRecipients([$demandeur]);
+
+    $this
+      ->setSubject("Modification de votre demande de réservation effectuée sur le site Résa971")
+      ->setBody("Votre demande de réservation a été validée par votre valideur.\n
+        Toutefois, le véhicule que vous aviez demandé a été échangé pour un véhicule équivalent (présence de sérigraphie ou non, nombre de place au moins égal).\n\n" .
+        "DÉTAILS DE LA RÉSERVATION\n" .
+        ($reservation->getId() ? "ID de la réservation : " . $reservation->getId() . "\n" : "") .
+        "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . " " . $reservation->getVehicule()->getImmatriculation() . "\n" .
+        "Date de début : " . $reservation->getDateDebut()->format('d/m/Y H:i') . "\n" .
+        "Date de fin : " . $reservation->getDateFin()->format('d/m/Y H:i') . "\n" .
+        "Utilisateur : " . $reservation->getUser() . "\n");
+    return $this;
   }
 
-  public function setRecipients($type)
+  public function mailForInvalidation($reservation)
+  {
+    $nigend = $reservation->getUser();
+    $demandeur = $this
+      ->manager
+      ->getRepository(User::class)
+      ->findOneBy(['nigend' => $nigend]);
+
+    $this->setRecipients([$demandeur]);
+
+    $this
+      ->setSubject("Annulation de votre demande de réservation effectuée sur le site Résa971")
+      ->setBody("Votre demande de réservation a été annulée par votre valideur.\n\n" .
+        "DÉTAILS DE LA DEMANDE\n" .
+        ($reservation->getId() ? "ID de la réservation : " . $reservation->getId() . "\n" : "") .
+        "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . " " . $reservation->getVehicule()->getImmatriculation() . "\n" .
+        "Date de début : " . $reservation->getDateDebut()->format('d/m/Y H:i') . "\n" .
+        "Date de fin : " . $reservation->getDateFin()->format('d/m/Y H:i') . "\n" .
+        "Utilisateur : " . $reservation->getUser() . "\n");
+    return $this;
+  }
+
+  public function getValideurType($reservation)
+  {
+    $vehicule = $reservation->getVehicule();
+    $type_demande = $reservation->getTypeDemande();
+
+    $valideur_type = "";
+    if ($vehicule->getRestriction()->getCode() === 'EM') {
+      $valideur_type = $this::IS_EM;
+    } else if ($vehicule->getRestriction()->getCode() === 'NON_OPE') {
+      $valideur_type = $this::IS_CSAG;
+    } else {
+      $valideur_type = $type_demande->getCode() === 'ope' ?
+        $this::IS_JUD :
+        $this::IS_CSAG;
+    }
+    return $valideur_type;
+  }
+
+  public function setValideursAsRecipient($type, $csag_en_copie = false)
   {
     $user_repo = $this->manager
       ->getRepository(User::class);
     $validateurs = [];
-    $this->recipients = [];
-    
-    // SAUF SI VL EM, VALIDATEUR = CSAG
-    if ($type !== $this::IS_EM) {
-      $validateurs = $user_repo->findBy([
-        'profil' => ['VDT', 'CSAG'],
-        'unite' => $this->getCSAGCodeUnite()
-      ]);
-    } else { //if ($type === $this::IS_EM) {
+
+    if ($type === $this::IS_EM) {
       $env_unites_em = $_ENV['APP_UNITES_EM'] ?? '';
       $raw_unites_em = explode(',', $env_unites_em);
       $unites_em = [];
@@ -98,19 +146,51 @@ class MailService
         'profil' => 'VDT',
         'unite' => $unites_em
       ]);
+    } else {
+      if ($type == $this::IS_JUD) {
+        $env_unites_pj = $_ENV['APP_UNITES_PJ'] ?? '';
+        $raw_unites_pj = explode(',', $env_unites_pj);
+        $unites_pj = [];
+        foreach ($raw_unites_pj as $code_unite) {
+          $unites_pj[] = $this->addZeros($code_unite, 8);
+        }
+
+        $validateurs = $user_repo->findBy([
+          'profil' => 'VDT',
+          'unite' => $unites_pj
+        ]);
+      } else {
+        $validateurs = $user_repo->findBy([
+          'profil' => ['VDT', 'CSAG'],
+          'unite' => $this->addZeros($_ENV['APP_CSAG_CODE_UNITE'], 8)
+        ]);
+      }
     }
-    // else{
-    //   $code_unite = $type;
-    //   $ldap = new LdapService();
-    //   $unite = $ldap->get_unite_from_ldap($code_unite);
-    //   $mail_unite = $unite[0]['mailuniteorganique'][0] ?? null;
-    // }
-    foreach ($validateurs as $validateur) {
-      $mail = $validateur->getMail();
+
+    $this->setRecipients($validateurs);
+    if ($csag_en_copie !== false) {
+      $mail_csag = $_ENV['APP_CSAG_MAIL'] ?? null;
+      if (!is_null($mail_csag)) {
+        $this->recipients[] = $mail_csag;
+      }
+    }
+
+    return $this;
+  }
+
+  public function getRecipients()
+  {
+    return $this->recipients;
+  }
+
+  public function setRecipients($users)
+  {
+    $this->recipients = [];
+    foreach ($users as $user) {
+      $mail = $user->getMail();
       if (!is_null($mail))
         $this->recipients[] = $mail;
     }
-
     return $this;
   }
 
@@ -134,11 +214,6 @@ class MailService
   {
     $this->body = $body;
     return $this;
-  }
-
-  private function isCSAG($code_unite)
-  {
-    return +$code_unite === +$this->getCSAGCodeUnite();
   }
 
   private function addZeros($str, $maxlen = 2)
