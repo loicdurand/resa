@@ -129,7 +129,7 @@ class MailService
     return $valideur_type;
   }
 
-  public function setValideursAsRecipient($type)
+  public function setValideursAsRecipient($type, $csag_en_copie = false)
   {
     $user_repo = $this->manager
       ->getRepository(User::class);
@@ -168,6 +168,12 @@ class MailService
     }
 
     $this->setRecipients($validateurs);
+    if ($csag_en_copie !== false) {
+      $mail_csag = $_ENV['APP_CSAG_MAIL'] ?? null;
+      if (!is_null($mail_csag)) {
+        $this->recipients[] = $mail_csag;
+      }
+    }
 
     return $this;
   }

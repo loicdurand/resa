@@ -163,7 +163,7 @@ class ValidationController extends AbstractController
                 true
             );
             // change le destinataire du mail pour le valideur
-            $mail->setValideursAsRecipient($mail->getValideurType($reservation));
+            $mail->setValideursAsRecipient($mail->getValideurType($reservation), "CSAG_EN_COPIE");
             SsoService::mail(
                 "[Copie]: " . $mail->getSubject(),
                 $mail->getBody(),
@@ -212,7 +212,7 @@ class ValidationController extends AbstractController
                 true
             );
             // change le destinataire du mail pour le valideur
-            $mail->setValideursAsRecipient($mail->getValideurType($reservation));
+            $mail->setValideursAsRecipient($mail->getValideurType($reservation), "CSAG_EN_COPIE");
             SsoService::mail(
                 "[Copie]: " . $mail->getSubject(),
                 $mail->getBody(),
