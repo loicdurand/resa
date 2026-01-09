@@ -57,12 +57,27 @@ class ConnexionController extends AbstractController
     // }
 
     $users = [];
+    $has_access = false;
 
     if ($this->env === 'prod') {
       $sso_user = $this->sso::user();
       $nigend = $sso_user->nigend;
       $ldap = new LdapService();
       $ldap_user = $ldap->get_user_from_ldap($nigend);
+
+      $mail_unite = $ldap_user->mail_unite;
+      $unites_perimetre = explode(',', $_ENV['APP_UNITES_PERIMETRE'] ?? '');
+
+      foreach ($unites_perimetre as $prefix) {
+        if (str_starts_with($mail_unite, $prefix)) {
+          $has_access = true;
+          break;
+        }
+      }
+
+      if (!$has_access) {
+        return $this->render('accueil/access_denied.html.twig', array_merge($this->getAppConst(), []));
+      }
 
       $user = $entityManager
         ->getRepository(User::class)
@@ -76,8 +91,9 @@ class ConnexionController extends AbstractController
         $entity = new User();
         $entity->setNigend($nigend);
         $entity->setUnite($ldap_user->unite_id);
-        $entity->setProfil($ldap_user->profil);
+        $entity->setProfil(is_null($profil) ? 'USR' : $profil->getNom());
         $entity->setDepartement($ldap_user->departement);
+        $entity->setBanned(false);
         $entityManager->persist($entity);
         $entityManager->flush();
         $user = $entity;
@@ -104,7 +120,6 @@ class ConnexionController extends AbstractController
           $entity->setDepartement($dept);
           $entityManager->persist($entity);
           $entityManager->flush();
-          $code_unite = $unite->code;
         }
       }
 
@@ -160,9 +175,15 @@ class ConnexionController extends AbstractController
         $entity->setUnite($ldap_user->unite_id);
         $entity->setProfil($ldap_user->profil);
         $entity->setDepartement($ldap_user->departement);
+        $entity->setBanned(false);
         $entityManager->persist($entity);
         $entityManager->flush();
         $user = $entity;
+      } else {
+        $has_access = !$user->isBanned();
+        if (!$has_access) {
+          return $this->render('accueil/access_denied.html.twig', array_merge($this->getAppConst(), []));
+        }
       }
 
       if ($this->app_const['APP_MACHINE'] === 'chrome') {
@@ -194,7 +215,6 @@ class ConnexionController extends AbstractController
           $entity->setDepartement($dept);
           $entityManager->persist($entity);
           $entityManager->flush();
-          $code_unite = $unite->code;
         }
       }
 

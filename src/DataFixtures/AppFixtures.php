@@ -39,6 +39,7 @@ class AppFixtures extends Fixture
             $user->setUnite($code_unite);
             $user->setProfil($profil);
             $user->setDepartement(971);
+            $user->setBanned(false);
             $manager->persist($user);
             $manager->flush();
         }

@@ -44,6 +44,12 @@ class AccueilController extends AbstractController
         ];
     }
 
+    // #[Route('/access_denied', name: 'resa_access_denied')]
+    // public function accessDenied(): Response
+    // {
+    //     $this->setAppConst();
+    // }
+
     #[Route('/', name: 'resa_accueil')]
     public function accueil(): Response
     {

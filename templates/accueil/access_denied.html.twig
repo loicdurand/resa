@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<div class="fr-grid-row">
+
+		<div class="fr-col-12 fr-text--center fr-mt-4w">
+			<h1 class="fr-h3">
+				Vous n'avez pas accès à cette application
+			</h1>
+
+			<p>
+				Le périmètre de réservation pour le pool de véhicules est ouvert en fonction de l'unité bénéficiaire, de la manière suivante:
+			</p>
+
+			<ul>
+				<li>niveau
+					<span class="bold">compagnie / SR / EDCF / AGIGN</span>
+					&rarr; pour les unités de leur périmètre et les cellules / groupes d'enquête qui leur sont rattachés,</li>
+				<li>niveau
+					<span class="bold">MPF / GIR / BGTA</span>
+					&rarr; pour ces unités,</li>
+				<li>niveau
+					<span class="bold">SAJ / OAPJR 1 et 2</span>
+					&rarr; pour les unités SOLC, SAj, BOE.</li>
+			</ul>
+
+			<p class="fr-mt-2w">
+				Veuillez prendre attache avec le gestionnaire correspondant à votre unité d'appartenance afin qu'il procède, à votre profit, à la réservation d'un véhicule.
+			</p>
+
+		</div>
+
+	</div>
+
+
+{% endblock %}

@@ -36,6 +36,9 @@ class User
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mail = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $banned = null;
+
     public function __construct()
     {
         $this->tokens = new ArrayCollection();
@@ -140,6 +143,18 @@ class User
     public function setMail(?string $mail): static
     {
         $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function isBanned(): ?bool
+    {
+        return $this->banned;
+    }
+
+    public function setBanned(?bool $banned): static
+    {
+        $this->banned = $banned;
 
         return $this;
     }
