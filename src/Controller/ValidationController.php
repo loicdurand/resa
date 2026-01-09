@@ -135,8 +135,8 @@ class ValidationController extends AbstractController
             ->getRepository(Vehicule::class)
             ->getVehiculeEquiv($id);
 
-        // if ($this->getParameter('app.env') == 'dev')
-        //     sleep(seconds: 1.5);
+        if ($this->getParameter('app.env') == 'dev')
+            sleep(seconds: 1.5);
 
         return $this->json([
             'vl' => $vl_equiv
@@ -150,8 +150,29 @@ class ValidationController extends AbstractController
         $id = $data['id'];
         $em = $doctrine->getManager();
 
-        if ($this->getParameter('app.env') == 'dev')
+        $reservation = $em->getRepository(Reservation::class)
+            ->findOneBy(['id' => $id]);
+        $mailer = new MailService($em);
+        $mail = $mailer->mailForValidation($reservation);
+        if ($this->getParameter('app.env') == 'prod') {
+            // Envoi du mail via le SSO
+            SsoService::mail(
+                $mail->getSubject(),
+                $mail->getBody(),
+                $mail->getRecipients(),
+                true
+            );
+            // change le destinataire du mail pour le valideur
+            $mail->setValideursAsRecipient($mail->getValideurType($reservation));
+            SsoService::mail(
+                "[Copie]: " . $mail->getSubject(),
+                $mail->getBody(),
+                $mail->getRecipients(),
+                true
+            );
+        } else {
             sleep(seconds: 1.5);
+        }
 
         $statut_valide = $em
             ->getRepository(StatutReservation::class)
@@ -178,8 +199,29 @@ class ValidationController extends AbstractController
         $vehicule_id = $data['vl'];
         $em = $doctrine->getManager();
 
-        if ($this->getParameter('app.env') == 'dev')
+        $reservation = $em->getRepository(Reservation::class)
+            ->findOneBy(['id' => $id]);
+        $mailer = new MailService($em);
+        $mail = $mailer->mailForEchangeVL($reservation);
+        if ($this->getParameter('app.env') == 'prod') {
+            // Envoi du mail via le SSO
+            SsoService::mail(
+                $mail->getSubject(),
+                $mail->getBody(),
+                $mail->getRecipients(),
+                true
+            );
+            // change le destinataire du mail pour le valideur
+            $mail->setValideursAsRecipient($mail->getValideurType($reservation));
+            SsoService::mail(
+                "[Copie]: " . $mail->getSubject(),
+                $mail->getBody(),
+                $mail->getRecipients(),
+                true
+            );
+        } else {
             sleep(seconds: 1.5);
+        }
 
         $statut_valide = $em
             ->getRepository(StatutReservation::class)
