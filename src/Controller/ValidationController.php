@@ -228,6 +228,14 @@ class ValidationController extends AbstractController
                 $mail->getRecipients(),
                 true
             );
+            // change le destinataire du mail pour le valideur
+            $mail->setValideursAsRecipient($mail->getValideurType($reservation));
+            SsoService::mail(
+                "[Copie]: " . $mail->getSubject(),
+                $mail->getBody(),
+                $mail->getRecipients(),
+                true
+            );
         } else {
             sleep(seconds: 1.5);
         }

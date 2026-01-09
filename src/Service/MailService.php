@@ -29,22 +29,10 @@ class MailService
 
   public function mailForReservation(Reservation $reservation)
   {
-    $vehicule = $reservation->getVehicule();
-    $type_demande = $reservation->getTypeDemande();
-
-    $recipient = "";
-    if ($vehicule->getRestriction()->getCode() === 'EM') {
-      $recipient = $this::IS_EM;
-    } else if ($vehicule->getRestriction()->getCode() === 'NON_OPE') {
-      $recipient = $this::IS_CSAG;
-    } else {
-      $recipient = $type_demande->getCode() === 'ope' ?
-        $this::IS_JUD :
-        $this::IS_CSAG;
-    }
+    $valideur_type = $this->getValideurType($reservation);
 
     $this
-      ->setRecipients($recipient)
+      ->setValideursAsRecipient($valideur_type)
       ->setSubject("Nouvelle demande de réservation effectuée sur le site Résa971")
       ->setBody("Une nouvelle demande de réservation a été effectuée.\n\n" .
         "DÉTAILS DE LA DEMANDE\n" .
@@ -58,14 +46,13 @@ class MailService
 
   public function mailForInvalidation($reservation)
   {
-    $demandeur = $reservation->getUser();
-    $mail_demandeur = $this
+    $nigend = $reservation->getUser();
+    $demandeur = $this
       ->manager
       ->getRepository(User::class)
-      ->findOneBy(['nigend' => $demandeur])
-      ->getMail();
+      ->findOneBy(['nigend' => $nigend]);
 
-    $this->recipients[] = $mail_demandeur;
+    $this->setRecipients([$demandeur]);
 
     $this
       ->setSubject("Annulation de votre demande de réservation effectuée sur le site Résa971")
@@ -79,17 +66,29 @@ class MailService
     return $this;
   }
 
-  public function getRecipients()
+  public function getValideurType($reservation)
   {
-    return $this->recipients;
+    $vehicule = $reservation->getVehicule();
+    $type_demande = $reservation->getTypeDemande();
+
+    $valideur_type = "";
+    if ($vehicule->getRestriction()->getCode() === 'EM') {
+      $valideur_type = $this::IS_EM;
+    } else if ($vehicule->getRestriction()->getCode() === 'NON_OPE') {
+      $valideur_type = $this::IS_CSAG;
+    } else {
+      $valideur_type = $type_demande->getCode() === 'ope' ?
+        $this::IS_JUD :
+        $this::IS_CSAG;
+    }
+    return $valideur_type;
   }
 
-  public function setRecipients($type)
+  public function setValideursAsRecipient($type)
   {
     $user_repo = $this->manager
       ->getRepository(User::class);
     $validateurs = [];
-    $this->recipients = [];
 
     if ($type === $this::IS_EM) {
       $env_unites_em = $_ENV['APP_UNITES_EM'] ?? '';
@@ -123,12 +122,24 @@ class MailService
       }
     }
 
-    foreach ($validateurs as $validateur) {
-      $mail = $validateur->getMail();
+    $this->setRecipients($validateurs);
+
+    return $this;
+  }
+
+  public function getRecipients()
+  {
+    return $this->recipients;
+  }
+
+  public function setRecipients($users)
+  {
+    $this->recipients = [];
+    foreach ($users as $user) {
+      $mail = $user->getMail();
       if (!is_null($mail))
         $this->recipients[] = $mail;
     }
-
     return $this;
   }
 
