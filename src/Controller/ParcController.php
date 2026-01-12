@@ -29,6 +29,7 @@ use App\Form\PhotoType;
 use App\Form\VehiculeType;
 use App\Entity\HoraireOuverture;
 use App\Entity\Restriction;
+use App\Entity\FicheSuivi;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -482,6 +483,40 @@ class ParcController extends AbstractController
                 'vehicule' => $vl
             ]
         ));
+    }
+
+    #[Route('/parc/suivi/{reservation_id}/{fiche_suivi_type_id}', name: 'resa_parc_upload_suivi', methods: ['POST'])]
+    public function upload_suivi(string $reservation_id, string $fiche_suivi_type_id, ManagerRegistry $doctrine): Response
+    {
+
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('resa_login');
+
+        $this->setAppConst();
+        $em = $doctrine->getManager();
+
+        // L'utilisateur uploade ses fiches de suivi (perception ou reintegration) via un formulaire POST, que l'on enregistre dans la fiche dans /assets/pdf/uploads/ avec un nom de fichier unique
+        $file = $this->request->files->get('fichier_suivi');
+        $filePath = $this->getParameter('kernel.project_dir') . '/assets/pdf/uploads/';
+        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $newFilename = $originalFilename . '-' . uniqid() . '.' . $file->guessExtension();
+        try {
+            $file->move($filePath, $newFilename);
+        } catch (FileException $e) {
+            return $this->json(['status' => 'error', 'message' => 'Erreur lors de l\'upload du fichier.']);
+        }
+        $reservation = $em
+            ->getRepository(Reservation::class)
+            ->findOneBy(['id' => $reservation_id]);
+
+        $suivi = new FicheSuivi();
+        $suivi->setVehicule($reservation->getVehicule());
+        $suivi->setCreatedAt(new \DateTime('now'));
+        $suivi->setPath($newFilename);
+        $suivi->setType($em->getRepository(FicheSuivi::class)->findOneBy(['id' => $fiche_suivi_type_id]));
+        $em->persist($suivi);
+        $em->flush();
+        return $this->json(['status' => 'success', 'filename' => $newFilename]);
     }
 
     #[Route('/parc/tdb/{debut}/{fin}/{affichage}', name: 'resa_parc_tdb')]

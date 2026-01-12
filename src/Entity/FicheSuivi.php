@@ -24,6 +24,10 @@ class FicheSuivi
     #[ORM\JoinColumn(nullable: false)]
     private ?Vehicule $vehicule = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TypeFicheSuivi $type = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +65,18 @@ class FicheSuivi
     public function setVehicule(?Vehicule $vehicule): static
     {
         $this->vehicule = $vehicule;
+
+        return $this;
+    }
+
+    public function getType(): ?TypeFicheSuivi
+    {
+        return $this->type;
+    }
+
+    public function setType(?TypeFicheSuivi $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }
