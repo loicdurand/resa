@@ -516,6 +516,7 @@ class ParcController extends AbstractController
             ->findOneBy(['id' => $reservation_id]);
 
         $suivi = new FicheSuivi();
+        $suivi->setReservation($reservation);
         $suivi->setVehicule($reservation->getVehicule());
         $suivi->setCreatedAt(new \DateTime('now'));
         $suivi->setPath($newFilename);
