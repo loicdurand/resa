@@ -30,6 +30,7 @@ use App\Form\VehiculeType;
 use App\Entity\HoraireOuverture;
 use App\Entity\Restriction;
 use App\Entity\FicheSuivi;
+use App\Entity\TypeFicheSuivi;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -476,11 +477,16 @@ class ParcController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findOneBy(['id' => $vehicule_id]);
 
+        $types_suivis = $em
+            ->getRepository(TypeFicheSuivi::class)
+            ->findAll();
+
         return $this->render('parc/suivi.html.twig', array_merge(
             $this->getAppConst(),
             $this->params,
             [
-                'vehicule' => $vl
+                'vehicule' => $vl,
+                'types_suivis' => $types_suivis
             ]
         ));
     }

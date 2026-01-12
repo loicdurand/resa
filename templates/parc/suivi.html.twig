@@ -85,12 +85,11 @@
 								<th>
 									Usage
 								</th>
-								<th>
-									Perception
-								</th>
-								<th>
-									Réintégration
-								</th>
+								{% for ts in types_suivis %}
+									<th>
+										{{ ts.label | capitalize }}
+									</th>
+								{% endfor %}
 							</tr>
 						</thead>
 					</a>
@@ -115,18 +114,16 @@
 							<span class="fr-badge fr-badge--info"></span>
 						{% endif %}
 					</td>
-					<td class="fr-upload-group">
-						<input class="fr-upload" aria-describedby="upload-percep-messages" type="file" id="upload-percep" name="upload">
-						<div class="fr-messages-group" id="upload-percep-messages" aria-live="polite"></div>
-					</td>
-					<td class="fr-upload-group">
-						<input class="fr-upload" aria-describedby="upload-reint-messages" type="file" id="upload-reint" name="upload">
-						<div class="fr-messages-group" id="upload-reint-messages" aria-live="polite"></div>
-					</td>
+					{% for ts in types_suivis %}
+						<td class="fr-upload-group">
+							<input class="fr-upload" aria-describedby="upload-{{res.id}}-{{ts.id}}-messages" type="file" id="upload-{{res.id}}-{{ts.id}}" name="upload-{{res.id}}-{{ts.id}}">
+							<div class="fr-messages-group" id="upload-{{res.id}}-{{ts.id}}-messages" aria-live="polite"></div>
+						</td>
+					{% endfor %}
 				</tr>
 			{% else %}
 				<tr>
-					<td colspan="6" class="text-center">
+					<td colspan="{{ (types_suivis | length) + 4}}" class="text-center">
 						Aucune réservation pour ce véhicule.
 					</td>
 				</tr>

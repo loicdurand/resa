@@ -28,6 +28,10 @@ class FicheSuivi
     #[ORM\JoinColumn(nullable: false)]
     private ?TypeFicheSuivi $type = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Reservation $reservation = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -77,6 +81,18 @@ class FicheSuivi
     public function setType(?TypeFicheSuivi $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getReservation(): ?Reservation
+    {
+        return $this->reservation;
+    }
+
+    public function setReservation(?Reservation $reservation): static
+    {
+        $this->reservation = $reservation;
 
         return $this;
     }
