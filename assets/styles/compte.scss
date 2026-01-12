@@ -56,9 +56,20 @@ form[name="photo"] {
 }
 
 #table-suivi {
-  & a[download="true"] {
-    font-size: .75rem;
-    ;
+  & td.fr-upload-group {
+    position: relative;
+
+    & button[type="button"] {
+      position: absolute;
+      right: 1px;
+      top: 1%;
+      line-height: 1.5rem;
+      background: var(--grey-3);
+      height: 98%;
+      width: 20%;
+      max-width: 2.5rem;
+    }
+
   }
 
   & .fr-badge:empty::before {
