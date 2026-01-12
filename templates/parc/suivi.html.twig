@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	{# Fil d'Arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+			Voir le fil d’Ariane
+		</button>
+		<div class="fr-collapse" id="breadcrumb-1">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_accueil') }}">
+						Accueil
+					</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_compte') }}">
+						Compte
+					</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_parc') }}">
+						Parc
+					</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" aria-current="page">
+						Suivi de véhicule
+					</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+
+	<h1>Suivi de véhicule</h1>
+
+	{% set n = vehicule.reservations|length %}
+
+	<div class="fr-table fr-table--bordered" id="table-suivi-component">
+		<div class="fr-table__wrapper">
+			<div class="fr-table__container">
+				<div class="fr-table__content">
+					<table id="table-suivi">
+						<caption>
+							{{ vehicule.marque }}
+							{{ vehicule.modele }}
+							-
+							{{ vehicule.immatriculation }}
+							<div class="fr-table__caption__desc">
+								Ce véhicule
+								{% if n == 0 %}
+									n'a encore fait l'objet d'<span class="bold">aucune réservation</span>
+								{% elseif n == 1 %}
+									a fait l'objet d'<span class="bold">une seule réservation</span>
+								{% else %}
+									a fait l'objet de
+									<span class="bold">{{ n }}
+										réservations</span>
+								{% endif %}
+								depuis son ajout au parc.
+								<ul class="fr-mt-3w">
+									<li>Télécharger une
+										<a download="true" href="" target="_self" class="fr-link fr-link--download">fiche de perception<span class="fr-link__detail">PDF – 279 ko</span>
+										</a>
+									</li>
+									<li>Télécharger une
+										<a download="true" href="" target="_self" class="fr-link fr-link--download">fiche de réintégration<span class="fr-link__detail">PDF – 279 ko</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</caption>
+						<thead>
+							<tr>
+								<th>
+									Début
+								</th>
+								<th>
+									Fin
+								</th>
+								<th>
+									Demandeur
+								</th>
+								<th>
+									Usage
+								</th>
+								<th>
+									Perception
+								</th>
+								<th>
+									Réintégration
+								</th>
+							</tr>
+						</thead>
+					</a>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for res in vehicule.reservations %}
+				<tr id="table-res-{{res.id}}">
+					<td>
+						{{ res.dateDebut |date('d/m/Y') }}&nbsp;{{ res.heureDebut}}
+					</td>
+					<td>
+						{{ res.dateFin |date('d/m/Y') }}&nbsp;{{ res.heureFin}}
+					</td>
+					<td>
+						{{ res.user }}
+					</td>
+					<td {% if res.observation is not null %} title='Observation: "{{ res.observation }}"' {% endif %}>
+						{{ res.typeDemande.libelle }}
+						{% if res.observation is not null %}
+							<span class="fr-badge fr-badge--info"></span>
+						{% endif %}
+					</td>
+					<td
+						class="fr-upload-group">
+						{# <label class="fr-label" for="upload-percep">
+													<span class="fr-hint-text">PDF uniquement - 5 Mo max</span>
+												</label> #}
+						<input class="fr-upload" aria-describedby="upload-percep-messages" type="file" id="upload-percep" name="upload">
+						<div class="fr-messages-group" id="upload-percep-messages" aria-live="polite"></div>
+					</td>
+					<td
+						class="fr-upload-group">
+						{# <label class="fr-label" for="upload-reint">
+																			<span class="fr-hint-text">PDF uniquement - 5 Mo max</span>
+																		</label> #}
+						<input class="fr-upload" aria-describedby="upload-reint-messages" type="file" id="upload-reint" name="upload">
+						<div class="fr-messages-group" id="upload-reint-messages" aria-live="polite"></div>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="6" class="text-center">
+						Aucune réservation pour ce véhicule.
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</tbody>
+</table></div></div></div></div>{% endblock %}

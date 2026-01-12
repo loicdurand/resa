@@ -81,11 +81,18 @@ class Vehicule
     #[ORM\ManyToOne]
     private ?Restriction $restriction = null;
 
+    /**
+     * @var Collection<int, FicheSuivi>
+     */
+    #[ORM\OneToMany(targetEntity: FicheSuivi::class, mappedBy: 'vehicule', orphanRemoval: true)]
+    private Collection $fiches;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
         $this->photos = new ArrayCollection();
         $this->couleur_vignette = $this->rand_dark_color();
+        $this->fiches = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -396,6 +403,36 @@ class Vehicule
     public function setRestriction(?Restriction $restriction): static
     {
         $this->restriction = $restriction;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FicheSuivi>
+     */
+    public function getFiches(): Collection
+    {
+        return $this->fiches;
+    }
+
+    public function addFich(FicheSuivi $fich): static
+    {
+        if (!$this->fiches->contains($fich)) {
+            $this->fiches->add($fich);
+            $fich->setVehicule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFich(FicheSuivi $fich): static
+    {
+        if ($this->fiches->removeElement($fich)) {
+            // set the owning side to null (unless already changed)
+            if ($fich->getVehicule() === $this) {
+                $fich->setVehicule(null);
+            }
+        }
 
         return $this;
     }

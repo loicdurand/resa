@@ -460,6 +460,30 @@ class ParcController extends AbstractController
         ));
     }
 
+    #[Route('/parc/suivi/{vehicule_id}', name: 'resa_parc_suivi')]
+    public function suivi(string $vehicule_id, ManagerRegistry $doctrine): Response
+    {
+
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('resa_login');
+
+        $this->setAppConst();
+
+        $em = $doctrine->getManager();
+
+        $vl = $em
+            ->getRepository(Vehicule::class)
+            ->findOneBy(['id' => $vehicule_id]);
+
+        return $this->render('parc/suivi.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'vehicule' => $vl
+            ]
+        ));
+    }
+
     #[Route('/parc/tdb/{debut}/{fin}/{affichage}', name: 'resa_parc_tdb')]
     public function tdb(ManagerRegistry $doctrine, \DateTime $debut, \DateTime $fin, ?string $affichage = "m"): Response
     {

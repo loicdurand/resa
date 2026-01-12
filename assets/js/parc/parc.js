@@ -5,6 +5,7 @@ console.log('=== parc ===');
 const // 
   [table] = document.getElementsByTagName('table'),
   btns = {
+    suivi: document.getElementById('suivi'),
     suppr: document.getElementById('suppr'),
     mod: document.getElementById('mod')
   },
@@ -78,6 +79,7 @@ if (table) {
 
       if (is_checked) {
         const { id: selected_vl } = parent_row.dataset;
+        btns.suivi.setAttribute('href', `/resa971/parc/suivi/${selected_vl}`);
         btns.suppr.setAttribute('href', `/resa971/parc/supprimer/${selected_vl}`);
         btns.mod.setAttribute('href', `/resa971/parc/modifier/${selected_vl}`);
       } else {
