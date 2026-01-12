@@ -61,11 +61,11 @@
 								depuis son ajout au parc.
 								<ul class="fr-mt-3w">
 									<li>Télécharger une
-										<a download="true" href="" target="_self" class="fr-link fr-link--download">fiche de perception<span class="fr-link__detail">PDF – 279 ko</span>
+										<a download="true" href="{{ path('resa_document_perception') }}" target="_self" class="fr-link fr-link--download">fiche de perception<span class="fr-link__detail">PDF – 279 ko</span>
 										</a>
 									</li>
 									<li>Télécharger une
-										<a download="true" href="" target="_self" class="fr-link fr-link--download">fiche de réintégration<span class="fr-link__detail">PDF – 279 ko</span>
+										<a download="true" href="{{ path('resa_document_reintegration') }}" target="_self" class="fr-link fr-link--download">fiche de réintégration<span class="fr-link__detail">PDF – 279 ko</span>
 										</a>
 									</li>
 								</ul>
@@ -115,19 +115,11 @@
 							<span class="fr-badge fr-badge--info"></span>
 						{% endif %}
 					</td>
-					<td
-						class="fr-upload-group">
-						{# <label class="fr-label" for="upload-percep">
-													<span class="fr-hint-text">PDF uniquement - 5 Mo max</span>
-												</label> #}
+					<td class="fr-upload-group">
 						<input class="fr-upload" aria-describedby="upload-percep-messages" type="file" id="upload-percep" name="upload">
 						<div class="fr-messages-group" id="upload-percep-messages" aria-live="polite"></div>
 					</td>
-					<td
-						class="fr-upload-group">
-						{# <label class="fr-label" for="upload-reint">
-																			<span class="fr-hint-text">PDF uniquement - 5 Mo max</span>
-																		</label> #}
+					<td class="fr-upload-group">
 						<input class="fr-upload" aria-describedby="upload-reint-messages" type="file" id="upload-reint" name="upload">
 						<div class="fr-messages-group" id="upload-reint-messages" aria-live="polite"></div>
 					</td>
