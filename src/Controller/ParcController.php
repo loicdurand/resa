@@ -477,6 +477,10 @@ class ParcController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findOneBy(['id' => $vehicule_id]);
 
+        $fiches = $em
+            ->getRepository(FicheSuivi::class)
+            ->findBy(['vehicule' => $vl]);
+
         $types_suivis = $em
             ->getRepository(TypeFicheSuivi::class)
             ->findAll();
@@ -486,6 +490,7 @@ class ParcController extends AbstractController
             $this->params,
             [
                 'vehicule' => $vl,
+                'fiches' => $fiches,
                 'types_suivis' => $types_suivis
             ]
         ));

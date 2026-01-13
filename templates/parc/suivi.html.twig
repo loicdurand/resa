@@ -115,11 +115,20 @@
 						{% endif %}
 					</td>
 					{% for ts in types_suivis %}
-						<td class="fr-upload-group">
-							<input class="fr-upload" aria-describedby="upload-{{res.id}}-{{ts.id}}-messages" type="file" id="upload-{{res.id}}-{{ts.id}}" name="upload-{{res.id}}-{{ts.id}}">
-							<div class="fr-messages-group" id="upload-{{res.id}}-{{ts.id}}-messages" aria-live="polite"></div>
-							<button type="button" class="fr-icon-upload-2-line"></button>
-						</td>
+
+						{% if fiches | filter(fiche => fiche.reservation.id == res.id and fiche.type.id == ts.id) | length > 0 %}
+							{% set fiche = fiches | filter(fiche => fiche.reservation.id == res.id and fiche.type.id == ts.id) | first %}
+							<td>
+								<a download="true" href="{{ path('resa_document_fiche',{path: fiche.path})}}" target="_self" class="fr-link fr-icon-download-line fr-link--icon-right">{{fiche.createdAt | date('d/m/Y H:i')}}
+								</a>
+							</td>
+						{% else %}
+							<td class="fr-upload-group">
+								<input class="fr-upload" aria-describedby="upload-{{res.id}}-{{ts.id}}-messages" type="file" id="upload-{{res.id}}-{{ts.id}}" name="upload-{{res.id}}-{{ts.id}}">
+								<div class="fr-messages-group" id="upload-{{res.id}}-{{ts.id}}-messages" aria-live="polite"></div>
+								<button type="button" class="fr-icon-upload-2-line"></button>
+							</td>
+						{% endif %}
 					{% endfor %}
 				</tr>
 			{% else %}

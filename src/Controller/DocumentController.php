@@ -30,4 +30,21 @@ final class DocumentController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment;filename="reintegration.pdf"');
         return $response;
     }
+
+    #[Route('/fiche/{path}', name: 'resa_document_fiche')]
+    public function fiche(string $path): Response
+    {
+
+        $filePath = $this->getParameter('kernel.project_dir') . '/assets/pdf/uploads/' . $path;
+        // Contrôle d'erreur si le fichier n'existe pas
+        if (!file_exists($filePath)) {
+            throw $this->createNotFoundException('Le fichier demandé n\'existe pas.');
+        }
+
+        $response = new Response();
+        $response->setContent(file_get_contents($filePath));
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'attachment;filename="reintegration.pdf"');
+        return $response;
+    }
 }
