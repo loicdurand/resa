@@ -502,7 +502,7 @@ class ParcController extends AbstractController
         $em = $doctrine->getManager();
 
         // L'utilisateur uploade ses fiches de suivi (perception ou reintegration) via un formulaire POST, que l'on enregistre dans la fiche dans /assets/pdf/uploads/ avec un nom de fichier unique
-        $file = $this->request->files->get('fichier_suivi');
+        $file = $this->request->files->get('file');
         $filePath = $this->getParameter('kernel.project_dir') . '/assets/pdf/uploads/';
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $newFilename = $originalFilename . '-' . uniqid() . '.' . $file->guessExtension();
@@ -520,7 +520,7 @@ class ParcController extends AbstractController
         $suivi->setVehicule($reservation->getVehicule());
         $suivi->setCreatedAt(new \DateTime('now'));
         $suivi->setPath($newFilename);
-        $suivi->setType($em->getRepository(FicheSuivi::class)->findOneBy(['id' => $fiche_suivi_type_id]));
+        $suivi->setType($em->getRepository(TypeFicheSuivi::class)->findOneBy(['id' => $fiche_suivi_type_id]));
         $em->persist($suivi);
         $em->flush();
         return $this->json(['status' => 'success', 'filename' => $newFilename]);

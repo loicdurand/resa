@@ -131,3 +131,51 @@ if (editor !== null) {
     current_image.dataset.rotation = rotation;
   }
 }
+
+// Ajout d'un évênement sur les inputs de type file pour l'upload des fiches de suivi
+const fileInputs = document.querySelectorAll('input.fr-upload');
+
+fileInputs.forEach(input => {
+  input.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    const [, reservationId, typeSuiviId] = event.target.id.split('-');
+
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('reservation_id', reservationId);
+      formData.append('type_suivi_id', typeSuiviId);
+      input.classList.add('uploaded');
+      const submit = input.nextElementSibling.nextElementSibling;
+      submit.addEventListener('click', () => {
+        axios.post(`/resa971/parc/suivi/${reservationId}/${typeSuiviId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+          .then(response => {
+            const data = response.data;
+            if (data.status === 'success') {
+              const messageGroup = document.getElementById(`upload-${reservationId}-${typeSuiviId}-messages`);
+              messageGroup.innerHTML = `<div class="fr-alert fr-alert--success" role="alert">
+                                      Fichier uploadé avec succès.
+                                    </div>`;
+            } else {
+              const messageGroup = document.getElementById(`upload-${reservationId}-${typeSuiviId}-messages`);
+              messageGroup.innerHTML = `<div class="fr-alert fr-alert--error" role="alert">
+                                      Erreur lors de l'upload du fichier.
+                                    </div>`;
+            }
+          })
+          .catch(error => {
+            const messageGroup = document.getElementById(`upload-${reservationId}-${typeSuiviId}-messages`);
+            messageGroup.innerHTML = `<div class="fr-alert fr-alert--error" role="alert">
+                                    Erreur lors de l'upload du fichier.
+                                  </div>`;
+          });
+      });
+
+
+    }
+  });
+});
