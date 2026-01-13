@@ -160,6 +160,9 @@ fileInputs.forEach(input => {
               messageGroup.innerHTML = `<div class="fr-alert fr-alert--success" role="alert">
                                       Fichier uploadé avec succès.
                                     </div>`;
+              setTimeout(() => {
+                location.reload();
+              }, 1800);
             } else {
               const messageGroup = document.getElementById(`upload-${reservationId}-${typeSuiviId}-messages`);
               messageGroup.innerHTML = `<div class="fr-alert fr-alert--error" role="alert">
