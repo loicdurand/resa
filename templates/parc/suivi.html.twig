@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	{# Fil d'Arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+			Voir le fil d’Ariane
+		</button>
+		<div class="fr-collapse" id="breadcrumb-1">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_accueil') }}">
+						Accueil
+					</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_compte') }}">
+						Compte
+					</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_parc') }}">
+						Parc
+					</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" aria-current="page">
+						Suivi de véhicule
+					</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+
+	<h1>Suivi de véhicule</h1>
+
+	{% set n = vehicule.reservations|length %}
+
+	<div class="fr-table fr-table--bordered" id="table-suivi-component">
+		<div class="fr-table__wrapper">
+			<div class="fr-table__container">
+				<div class="fr-table__content">
+					<table id="table-suivi">
+						<caption>
+							{{ vehicule.marque }}
+							{{ vehicule.modele }}
+							-
+							{{ vehicule.immatriculation }}
+							<div class="fr-table__caption__desc">
+								Ce véhicule
+								{% if n == 0 %}
+									n'a encore fait l'objet d'<span class="bold">aucune réservation</span>
+								{% elseif n == 1 %}
+									a fait l'objet d'<span class="bold">une seule réservation</span>
+								{% else %}
+									a fait l'objet de
+									<span class="bold">{{ n }}
+										réservations</span>
+								{% endif %}
+								depuis son ajout au parc.
+								<ul class="fr-mt-3w">
+									<li>Télécharger une
+										<a download="true" href="{{ path('resa_document_perception') }}" target="_self" class="fr-link fr-link--download">fiche de perception<span class="fr-link__detail">PDF – 279 ko</span>
+										</a>
+									</li>
+									<li>Télécharger une
+										<a download="true" href="{{ path('resa_document_reintegration') }}" target="_self" class="fr-link fr-link--download">fiche de réintégration<span class="fr-link__detail">PDF – 279 ko</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</caption>
+						<thead>
+							<tr>
+								<th>
+									Début
+								</th>
+								<th>
+									Fin
+								</th>
+								<th>
+									Demandeur
+								</th>
+								<th>
+									Usage
+								</th>
+								{% for ts in types_suivis %}
+									<th>
+										{{ ts.label | capitalize }}
+									</th>
+								{% endfor %}
+							</tr>
+						</thead>
+					</a>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for res in vehicule.reservations %}
+				<tr id="table-res-{{res.id}}">
+					<td>
+						{{ res.dateDebut |date('d/m/Y') }}&nbsp;{{ res.heureDebut}}
+					</td>
+					<td>
+						{{ res.dateFin |date('d/m/Y') }}&nbsp;{{ res.heureFin}}
+					</td>
+					<td>
+						{{ res.user }}
+					</td>
+					<td {% if res.observation is not null %} title='Observation: "{{ res.observation }}"' {% endif %}>
+						{{ res.typeDemande.libelle }}
+						{% if res.observation is not null %}
+							<span class="fr-badge fr-badge--info"></span>
+						{% endif %}
+					</td>
+					{% for ts in types_suivis %}
+
+						{% if fiches | filter(fiche => fiche.reservation.id == res.id and fiche.type.id == ts.id) | length > 0 %}
+							{% set fiche = fiches | filter(fiche => fiche.reservation.id == res.id and fiche.type.id == ts.id) | first %}
+							<td>
+								<a download="true" href="{{ path('resa_document_fiche',{path: fiche.path})}}" target="_self" class="fr-link fr-icon-download-line fr-link--icon-right">{{fiche.createdAt | date('d/m/Y H:i')}}
+								</a>
+							</td>
+						{% else %}
+							<td class="fr-upload-group">
+								<input class="fr-upload" aria-describedby="upload-{{res.id}}-{{ts.id}}-messages" type="file" id="upload-{{res.id}}-{{ts.id}}" name="upload-{{res.id}}-{{ts.id}}">
+								<div class="fr-messages-group" id="upload-{{res.id}}-{{ts.id}}-messages" aria-live="polite"></div>
+								<button type="button" class="fr-icon-upload-2-line"></button>
+							</td>
+						{% endif %}
+					{% endfor %}
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="{{ (types_suivis | length) + 4}}" class="text-center">
+						Aucune réservation pour ce véhicule.
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</tbody>
+</table></div></div></div></div>{% endblock %}

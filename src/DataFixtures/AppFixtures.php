@@ -18,6 +18,7 @@ use App\Entity\User;
 use App\Entity\Vehicule;
 use App\Entity\Restriction;
 use App\Entity\TypeDemande;
+use App\Entity\TypeFicheSuivi;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -289,16 +290,22 @@ class AppFixtures extends Fixture
             ['Annulée', 'Réservation annulée par la hiérachie']
         ];
 
-        foreach ($types_resas as $index => [$code, $libelle]) {
+        foreach ($types_resas as [$code, $libelle]) {
             $entity = new StatutReservation();
             $entity->setCode($code);
             $entity->setLibelle($libelle);
             $manager->persist($entity);
             $manager->flush();
-            if ($index == 0) {
-                $resa_en_attente = $entity;
-            }
         };
+
+        // TYPES DE FICHES DE SUIVI
+
+        foreach (['perception', 'reintegration'] as $type_suivi) {
+            $type = new TypeFicheSuivi();
+            $type->setLabel($type_suivi);
+            $manager->persist($type);
+            $manager->flush();
+        }
 
         $typesdemandes = [
             [
