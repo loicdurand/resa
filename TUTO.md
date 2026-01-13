@@ -1,13 +1,13 @@
-# R&#926;S&#945; 971 | Réservation de véhicule en Ligne
+# R&#926;S&#945; 971 | Réservation de véhicule en ligne
 
 
-## Description
+## Introduction
 
 Grâce à votre action quotidienne, le parc automobile de la Gendarmerie Nationale s'enrichie des véhicules saisis aux délinquants.
 
 En retour, la Gendarmerie a choisi de mettre ces véhicules à votre disposition, afin de faciliter la réalisation de vos différentes missions, qu'elles soient d'ordre opérationel ou non.
 
-Ce guide a pour but de vous accompagner dans l'utilisation du site internet de réservation, sur lequel vous pourrez également trouver les véhicules mis à votre disposition par notre CSAG. 
+Ce guide a pour but de vous accompagner dans l'utilisation du site internet de réservation, sur lequel vous pourrez également trouver les véhicules proposés par notre CSAG. 
 
 ## Périmètre de réservation
 
@@ -18,7 +18,7 @@ Le périmètre de réservation pour le pool de véhicules est fonction de l'unit
 
 Par conséquent, vous rencontrerez peut-être un message d'erreur si vous essayez de vous connecter directement au site et que vous n'êtes pas autorisés à procéder aux réservations par vous-même. 
 
-## Adresse de connexion au site (URL)
+## Accès au site
 
 La SOLC Saint-Claude et le DSOLC Baie-Mahault ont réalisé un portail regroupant les différents sites locaux réservés aux personnels du COMGENDGP.
 
@@ -34,8 +34,8 @@ La SOLC Saint-Claude et le DSOLC Baie-Mahault ont réalisé un portail regroupan
 
 Le site compte 4 profils utilisateurs différents:
 1. [UTILISATEUR](#utilisation-en-tant-quutilisateur)
-2. VALIDEUR
-3. CSAG
+2. [VALIDEUR](#utilisation-en-tant-que-valideur)
+3. [CSAG](#utilisation-en-tant-que-csag)
 4. ADMINISTRATEUR (SOLC)
 
 Comme pour la plupart des applications métier de la Gendarmerie, la première action qui vous sera demandée sera de vous connecter via le portail SSO:
@@ -160,17 +160,155 @@ Si votre demande a été validée, le véhicule vous est réservé et sera dispo
 
 À défaut, la réintégration  sera refusée et l'unité en cause devra réaliser l'entretien dans les locaux du CSAG le jour même. Une récurrence de défaut d'entretien pourra conduire à une exclusion temporaire de l'accès au pool.
 
+## Utilisation en tant que valideur
+
+À l'instar de l'[utilisateur](#utilisation-en-tant-quutilisateur), le valideur peut effectuer une demande de réservation (onglet "Recherche") et suivre son historique (onglet "Historique").
+
+Nous nous intéresserons donc à l'onglet "Mon compte" pour ce profil.
+
+![image](./assets/images/tutoriel/15_compte_valideur.png)
+
+### Distinctions selon le type de demande
+
+Le valideur d'une demande de réservation est fonction du type de demande. Il s'agit:
+
+- du **commandant de SAJ** ou de l'**OAPJR** pour les missions opérationnelles,
+
+- du **CSAG** pour le smissions de soutien ou de liaison.
+
+Lorsqu'il se rend dans l'espace dédié à la validation des demandes, **le valideur ne voit que les demandes de son ressort**.
+
+### Processus de validation d'une réservation
+
+Pour le valideur, il suffit de passer la souris au dessus de la carte d'une demande de réservation pour afficher, via 3 boutons - icônes d'action, les commandes disponibles:
+
+![image](./assets/images/tutoriel/16_menu_validations.png)
+
+Le valideur peut alors:
+
+#### Supprimer la demande: 
+
+Peu impporte la raison, le valideur peut supprimer définitivement une demande de réservation. Une fenêtre s'ouvrira pour lui demander de confirmer son action.   
+![image](./assets/images/tutoriel/17_validation_suppr.png)
+&rarr; ***Mail envoyé au demandeur*** pour lui notifier cette suppression.
+
+## Utilisation en tant que valideur
+
+#### Modifier la demande:
+
+Le valideur a la possibilité d'attribuer un autre véhicule que celui demandé. 
+Dans une fenêtre surgissante, il peut sélectionner, s'il y en a, un **autre véhicule offrant au minimum autant de places assises que le véhicule demandé** et, le cas échéant, la présence d'une sérigraphie:
+![image](./assets/images/tutoriel/18_validation_mod.png)
+
+&rarr; ***Mail envoyé au demandeur*** pour l'informer que sa demande a été validée mais que le véhicule a été modifié.
+
+#### Valider la demande
+
+Après confirmation, la demande est validée:
+![image](./assets/images/tutoriel/19_validation_valid.png)
+&rarr; ***Mail envoyé au demandeur***
+
+## Utilisation en tant que CSAG
+
+Le CSAG assure le rôle de gestionnaire du parc automobile, mais également celui de valideur pour véhicules réservés pour des missions non opérationnelles.
+![image](./assets/images/tutoriel/20_compte_csag.png)
+
+### Gestion des horaires de l'atelier
+
+La mise à jour des horaires de l'atelier est importante, car elle conditionne les horaires de perception et réintégration des véhicules.
+
+![image](./assets/images/tutoriel/21_csag_horaires.png)
+
+Dans l'image ci-dessus, en indiquant que le CSAG est ouvert de 08 heures à midi, puis de 14 heures à 17 heures durant les jours ouvrés, le gestionnaire s'assure de ne pas avoir à effectuer de perception ou de restitution en dehors de ces créneaux.
+
+**NB**: Les réintégrations ne peuvent avoir lieu qu'un quart d'heure - minimum - avant la fermeture de l'atelier, afin que les personnels du CSAG n'aient pas besoin de terminer au delà de leur horaire habituel à cause de réservations prenant fin à 17 heures "pile".
+
+#### Modification d'horaire
+
+Il suffit de survoler le planning à l'aide de sa souris pour qu'une icône "crayon" apparaisse. En cliquant sur cette icône, s'ouvre une fenêtre surgissante permettant, au choix, d'indiquer un horaire d'ouverture / fermeture de l'atelier, voire une fermeture pour la journée entière en cliquant sur la case à cocher "Fermé".
+
+![image](./assets/images/tutoriel/22_csag_horaires_saisie.png)
+
+### Gestion du parc
+
+La gestion du parc automobile incombe au CSAG.
+
+La page dédiée à cette gestion est constituée d'un tableau récapitulatif des véhicules enregistrés dans le parc, et de 4 boutons d'action:
+
+- Ajouter un véhicule
+- Modifier un véhicule
+- Supprimer un véhicule
+- Suivi du véhicule
+  
+![image](./assets/images/tutoriel/23_csag_vue_parc.png)
+
+Les boutons permettant de modifier ou de supprimer un véhicule, et celui permettant de gérer le suivi sont désactivés par défaut. Il ne s'activent qu'après sélection d'un véhicule sur lequel appliquer l'action.
+
+![image](./assets/images/tutoriel/24_csag_vue_parc_select.png)
+
+#### Ajout, modification ou suppression d'un véhciule
+
+Les formulaires dédiés sont constitués de 3 étapes:
+
+1. **Saisie des caractéristiques du véhicule**
+   
+   Seuls sont obligatoires la saisie de l'immatriculation, la marque et le modèle du véhciule. Les codes du département et de l'unité détentrices sont pré-remplis.
+
+  ![image](./assets/images/tutoriel/25_form_etape1.png)
+
+2. **Ajout de photographie(s)**
+   
+   Le gestionnaire peut sélectionner la ou les photos dont il dispose en cliquant sur le bouton "Parcourir". Il peut également, en scannant le QR-Code qui s'affiche sur la page, accéder à une interface pré-authentifiée via son téléphoe Néogend afin d'aller prendre des photos à l'aide de celui-ci. 
+   
+   ![image](./assets/images/tutoriel/26_csag_form_etape2.png)
+
+3. **Rectification de l'orientation des photos**
+   
+   Parfois, l'ajout de photos via le formulaire modifie leur orientation d'origine. Le plus souvent, celà concerne les photos prises à l'aide d'un mobile en orientation "portrait". Cette troisième étape permet de corriger l'orientation des photos avant de les sauvegarder.
+
+   ![image](./assets/images/tutoriel/27_csag_recadrage.png)
+
+#### Suivi des véhicules 
+
+L'écran de suivi des véhicule retrace l'historiques des réservations effectuées pour un véhicule donné. Il permet en outre d'insérer les fiches de perception et de restitution.
+
+Les modèles de ces fiches peuvent être téléchargés depuis cette page. 
+
+![image](./assets/images/tutoriel/28_suivi.png)
+
+### Tableau de bord
+
+Le tableau de bord permet au CSAG de visualiser les perceptions et réintégrations en cours ou à venir.
+
+**NB**: certaines demandes de réservation sont affichées de manière peu lisible (effet d'opacité). **Il s'agit des demandes qui n'ont pas encore été validées**.
+
+#### Affichage journalier
+
+Plus détaillé que les autres types d'affichage, il permet de vérifier rapidemment les différentes perceptions et réintégrations prévues sur la journée.
+
+![image](./assets/images/tutoriel/29_tdb_jour.png)
+
+#### Affichages hebdomadaire et mensuel
+
+ces affichages permettent d'anticiper les rendez-vous à venir.
+
+![image](./assets/images/tutoriel/30_tdb_mois.png)
+
+### Validation des demandes de réservation
+
+Le processus de validation est strictement le même que pour le valideur "missions opérationnelles". Seule change la visibilité des demandes selon l'usage prévu du véhicule. En conséquence, bien vouloir vous référer à la [section relative à l'utilisation en tant que valideur](#utilisation-en-tant-que-valideur) pour cette fonctionnalité.
+
 
 
 ## Licence
 
-Le site R&#926;S&#945; 971 utilise le <abbr title="Système de Design de l'État">DSFR</abbr>&copy;, qui est [sous licence ouverte Etalab 2.0](https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf). 
+Le site R&#926;S&#945; 971 utilise le <abbr title="Système de Design de l'État">Système de Design de l'État - DSFR</abbr>&copy;, qui est [sous licence ouverte Etalab 2.0](https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf). 
 
-La license utilisée par le <abbr title="Système de Design de l'État">DSFR</abbr>&copy; autorise la réutilisation libre de son code, sous réserve que cette réutilisation ne profite exclusivement qu'à un service ou une administration de l'Etat.
+La license utilisée par le <abbr title="Système de Design de l'État">DSFR</abbr>&copy; autorise la réutilisation libre de son code, sous réserve que cette réutilisation soit faite exclusivement au profit d'un service ou d'une administration de l'Etat.
 
 En réutilisant le code de R&#926;S&#945; 971 pour vos propres besoins, vous vous engagez à respecter la license Etalab 2.0, ou à retirer tout code faisant appel au DSFR&copy;.
 
-Par ailleurs, bien que ce site a été conçu dès le départ pour pouvoir être réutilisé par n'importe quel autre groupement, région ou COMGEND, des règles d'utilisation propres à notre territoire ont été ajoutées. De fait, elles demanderont probablement une adaptation à vos propres règles locales si vous souhaitez mettre en oeuvre R&#926;S&#945; 971 au sein de votre département.
+Par ailleurs, ce site a été conçu dès le départ pour pouvoir être réutilisé par n'importe quel autre groupement, région ou COMGEND. Cependant, des règles d'utilisation propres à notre territoire ont été ajoutées. De fait, elles demanderont probablement une adaptation à vos propres règles locales si vous souhaitez mettre en oeuvre R&#926;S&#945; 971 au sein de votre département.
 
 ## Contact
 Pour toute question ou suggestion, contactez la SOLC Saint-Claude (code unité 12238) ou le DSOLC Baie-Mahault (code unité 86977)

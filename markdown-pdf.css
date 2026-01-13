@@ -1,0 +1,39 @@
+/* mon-style.css - Style pro pour documentation app */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  /* color: #1f2937; */
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+h1, h2, h3 { color: #111827; }
+h1 { border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4em; }
+
+code { 
+  background: #f3f4f6; 
+  padding: 0.15em 0.35em; 
+  border-radius: 4px; 
+}
+
+pre code {
+  background: #1f2937;
+  color: #e5e7eb;
+  padding: 1em;
+  border-radius: 6px;
+}
+
+/* Pour forcer les sauts de page si besoin */
+.page-break { page-break-before: always; }
+
+/* Style des images (souvent utile pour les captures) */
+img {
+  max-width: 100%;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
