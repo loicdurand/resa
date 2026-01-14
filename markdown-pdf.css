@@ -1,4 +1,29 @@
-/* mon-style.css - Style pro pour documentation app */
+body::before {
+  content: "";
+  position: fixed;
+  /* Fixe sur toute la viewport/page */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./COMGENDGP_ecusson.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 60%;
+  /* ← Ajuste ici la taille du logo */
+  opacity: 0.08;
+  /* Valeur idéale souvent entre 0.08 et 0.18 */
+  z-index: -1;
+  /* Derrière tout le contenu */
+  pointer-events: none;
+  /* Ne gêne pas les clics si preview HTML */
+}
+
+/* Assure-toi que le contenu principal reste au-dessus */
+body>* {
+  position: relative;
+  z-index: 1;
+}
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
@@ -6,19 +31,27 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 11pt;
   line-height: 1.55;
-  /* color: #1f2937; */
+  color: #1f2937;
   max-width: 950px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-h1, h2, h3 { color: #111827; }
-h1 { border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4em; }
+h1,
+h2,
+h3 {
+  color: #111827;
+}
 
-code { 
-  background: #f3f4f6; 
-  padding: 0.15em 0.35em; 
-  border-radius: 4px; 
+h1 {
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.4em;
+}
+
+code {
+  background: #f3f4f6;
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
 }
 
 pre code {
@@ -29,11 +62,13 @@ pre code {
 }
 
 /* Pour forcer les sauts de page si besoin */
-.page-break { page-break-before: always; }
+.page-break {
+  page-break-before: always;
+}
 
 /* Style des images (souvent utile pour les captures) */
 img {
   max-width: 100%;
   border-radius: 6px;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
