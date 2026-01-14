@@ -4,8 +4,11 @@ namespace App\Form;
 
 use App\Entity\Reservation;
 use App\Entity\StatutReservation;
+use App\Entity\TypeDemande;
 use App\Entity\Vehicule;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,6 +34,22 @@ class ReservationType extends AbstractType
             ->add('statut', EntityType::class, [
                 'class' => StatutReservation::class,
                 'choice_label' => 'id',
+            ])
+            ->add('observation', TextareaType::class, [
+                'required' => false,
+                'row_attr' => ['class' => 'fr-col-12 fr-col-sm-12'],
+                'help_attr' => ['content' => 'Faculatif (255 caractères maximum).'],
+                'attr' => [
+                    'placeholder' => "Observations (aide votre valideur à apprécier l'opportunité de la demande).",
+                    'class' => 'fr-input'
+                ],
+            ])
+            ->add('type_demande', EntityType::class, [
+                'class' => TypeDemande::class,
+                'choice_label' => 'libelle',
+                'row_attr' => ['class' => 'fr-select-group fr-col-12 fr-col-sm-12'],
+                'label_attr' => ['class' => 'fr-label'],
+                'help_attr' => ['content' => 'Facultatif'],
             ])
         ;
     }

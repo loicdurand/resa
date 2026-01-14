@@ -16,12 +16,15 @@ use App\Entity\HoraireOuverture;
 use App\Entity\StatutReservation;
 use App\Entity\User;
 use App\Entity\Vehicule;
+use App\Entity\Restriction;
+use App\Entity\TypeDemande;
+use App\Entity\TypeFicheSuivi;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager): void    
+    public function load(ObjectManager $manager): void
     {
 
         // GESTION DES ROLES
@@ -37,6 +40,7 @@ class AppFixtures extends Fixture
             $user->setUnite($code_unite);
             $user->setProfil($profil);
             $user->setDepartement(971);
+            $user->setBanned(false);
             $manager->persist($user);
             $manager->flush();
         }
@@ -104,13 +108,13 @@ class AppFixtures extends Fixture
                 'nom' => 'VALIDER_RESAS',
                 'libelle' => 'Valider les réservations de véhicules',
                 'template' => 'compte/valider_resas.html.twig', //'validation_reservation',
-                'defaut' => ['SOLC', 'VDT']
+                'defaut' => ['SOLC', 'VDT', 'CSAG', 'SOLC']
             ],
             [
                 'nom' => 'RESERVER_VL',
                 'libelle' => 'Réserver un véhicule',
                 'template' => 'compte/reserver_vl.html.twig',
-                'defaut' => ['USR', 'CSAG', 'VDT', 'CDT', 'SOLC']
+                'defaut' => ['SOLC', 'VDT', 'CSAG', 'VDT', 'SOLC', 'CDT', 'USR']
             ]
         ];
 
@@ -286,16 +290,60 @@ class AppFixtures extends Fixture
             ['Annulée', 'Réservation annulée par la hiérachie']
         ];
 
-        foreach ($types_resas as $index => [$code, $libelle]) {
+        foreach ($types_resas as [$code, $libelle]) {
             $entity = new StatutReservation();
             $entity->setCode($code);
             $entity->setLibelle($libelle);
             $manager->persist($entity);
             $manager->flush();
-            if ($index == 0) {
-                $resa_en_attente = $entity;
-            }
         };
+
+        // TYPES DE FICHES DE SUIVI
+
+        foreach (['perception', 'reintegration'] as $type_suivi) {
+            $type = new TypeFicheSuivi();
+            $type->setLabel($type_suivi);
+            $manager->persist($type);
+            $manager->flush();
+        }
+
+        $typesdemandes = [
+            [
+                'code' => 'ope',
+                'libelle' => 'Opérationnel'
+            ],
+            [
+                'code' => 'non_ope',
+                'libelle' => 'Non opérationnel'
+            ]
+        ];
+        foreach ($typesdemandes as $type) {
+            $typedemande = new TypeDemande();
+            $typedemande->setCode($type['code']);
+            $typedemande->setLibelle($type['libelle']);
+            $manager->persist($typedemande);
+            $manager->flush();
+        }
+
+        $restrictions = [
+            ['NONE', 'Aucune restriction', 'Aucune restriction particulière pour ce véhicule'],
+            ['EM', 'Réservé Etat-Major', 'Ce véhicule est réservé aux unités placées dans l\'arborescence Etat-Major'],
+            ['NON_OPE', 'Avant jugement', 'Ce véhicule ne peut être utilisé qu\'à des fins de liaison, à l\'exclusion de toute autre mission.'],
+            ['ATELIER', 'En maintenance', 'Ce véhicule est actuellement en maintenance à l\'atelier']
+        ];
+
+        foreach ($restrictions as [$code, $libelle, $description]) {
+            $entity = new Restriction();
+            $entity->setCode($code);
+            $entity->setLibelle($libelle);
+            $entity->setDescription($description);
+            $manager->persist($entity);
+            $manager->flush();
+        };
+
+        $no_restriction = $manager
+            ->getRepository(Restriction::class)
+            ->findOneBy(['code' => 'NONE']);
 
         $vls = [
             [$genrs[1], $cats[3], $carbs[1], $transms[1], 'RENAULT', 'Master', '1.5 DCi', null, '2025-02-11', 7, 'GS-517-PF', 0],
@@ -340,6 +388,7 @@ class AppFixtures extends Fixture
             $VL->setSerigraphie($serig);
             $VL->setDepartement(971);
             $VL->setUnite($atelier);
+            $VL->setRestriction($no_restriction);
             $manager->persist($VL);
             $manager->flush();
         }

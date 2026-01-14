@@ -9,8 +9,8 @@ class LdapService
 
     public function __construct()
     {
-        $this->ldaphost = "ldap://ldap.gendarmerie.fr";
-        $this->ldapport = "389";
+        $this->ldaphost = $_ENV['APP_LDAP_HOST']; //  "ldap://ldap.gendarmerie.fr";
+        $this->ldapport = $_ENV['APP_LDAP_PORT']; //  "389";
     }
 
     public function ldapSearch($filter)
@@ -50,7 +50,7 @@ class LdapService
 
         // recherche du département
         $ldap_unite = $this->get_unite_from_ldap($user->unite_id);
-        $unite = $this->format_ldap_unite($ldap_unite);
+        $user->mail_unite = $ldap_unite[0]['mail'][0];
 
         $cp = $ldap_unite[0]['postalcode'][0];
         $dpt = self::getDept($cp);
@@ -59,7 +59,7 @@ class LdapService
         $mail_unite = $ldap_user[0]['mailuniteorganique'][0];
         $is_solc = str_starts_with($mail_unite, 'solc') || str_starts_with($mail_unite, 'dsolc');
         $is_csag = str_starts_with($mail_unite, 'csag');
-        $is_validateur = str_starts_with($mail_unite, 'comgend');
+        $is_validateur = (str_starts_with($mail_unite, 'saj') && $ldap_user[0]['responsabilite'][0] === 'C') || str_starts_with($mail_unite, 'comgend');
 
         if ($is_solc)
             $user->profil = 'SOLC';
