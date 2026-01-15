@@ -566,6 +566,8 @@ class ParcController extends AbstractController
         $vehicules = [];
         $ids = [];
 
+        $reservations = $this->dispatch_parc_in_tdb($doctrine, $reservations);
+
         foreach ($reservations as $reservation) {
             $vl = $reservation->getVehicule();
             if (!in_array($vl->getId(), $ids)) {
@@ -670,6 +672,83 @@ class ParcController extends AbstractController
             $AppConstName = strToUpper(str_replace('.', '_', $param));
             $this->app_const[$AppConstName] = $this->getParameter($param);
         }
+    }
+
+    private function dispatch_parc_in_tdb(ManagerRegistry $doctrine, $reservations)
+    {
+
+        $em = $doctrine->getManager();
+
+        // On a besoin de connaître le "type" de valideur (CSAG, unité PJ ou Etat-Major)
+        $filtre_validateur = "";
+
+        $nigend = $this->params['nigend'];
+
+        $user = $em->getRepository(User::class)
+            ->findOneBy(['nigend' => $this->addZeros($nigend, 8)]);
+        $code_unite = $user->getUnite();
+
+        $env_unites_pj = $_ENV['APP_UNITES_PJ'] ?? '';
+        $raw_unites_pj = explode(',', $env_unites_pj);
+        $unites_pj = [];
+        foreach ($raw_unites_pj as $code) {
+            $unites_pj[] = $this->addZeros($code, 8);
+        }
+
+        if ($user->getProfil() === "SOLC") {
+            $filtre_validateur = 'SOLC';
+        } else if (in_array($code_unite, $unites_pj)) {
+            $filtre_validateur = "PJ";
+        } else {
+            $code_unite_CSAG = $this->addZeros($_ENV['APP_CSAG_CODE_UNITE'], 8);
+            if ($code_unite == $code_unite_CSAG) {
+                $filtre_validateur = "CSAG";
+            } else {
+                $filtre_validateur = "EM";
+            }
+        }
+
+        $resas = array_filter($reservations, function ($resa) use ($filtre_validateur) {
+            if ($filtre_validateur === "SOLC")
+                return true;
+            $type_demande = $resa->getTypeDemande();
+            // si valideur PJ --> uniquement les VLs dont le demandeur a selectionné "opérationnel"
+            if ($filtre_validateur === "PJ") {
+                if ($type_demande->getCode() === "ope") {
+                    return true;
+                }
+                return false;
+            }
+            // Si valideur EM --> uniquement les VLs qui ont la restriction "Etat-Major"
+            $vl = $resa->getVehicule();
+            $restriction = $vl->getRestriction();
+            $restriction_code = $restriction->getCode();
+
+            if ($filtre_validateur === "EM") {
+                if ($restriction_code === "EM") {
+                    return true;
+                }
+                return false;
+            }
+
+            // Le valideur CSAG prend ce qu'il reste, sauf les VLs EM
+            if ($filtre_validateur === "CSAG") {
+                if ($restriction_code !== "EM") {
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        return $resas;
+    }
+
+    private function addZeros($str, $maxlen = 2)
+    {
+        $str = '' . $str;
+        while (strlen($str) < $maxlen)
+            $str = "0" . $str;
+        return $str;
     }
 
     private function horaires_to_arr(array $horaires)

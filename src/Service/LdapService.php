@@ -46,6 +46,7 @@ class LdapService
         $user->prenom = $ldap_user[0]['givenname'][0];
         $user->nigend = $ldap_user[0]['employeenumber'][0];
         $user->unite_id = $ldap_user[0]['codeunite'][0];
+        $user->mail = $ldap_user[0]['mail'][0];
         $user->profil = 'USR';
 
         // recherche du département

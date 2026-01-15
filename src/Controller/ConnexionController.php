@@ -81,7 +81,7 @@ class ConnexionController extends AbstractController
 
       $user = $entityManager
         ->getRepository(User::class)
-        ->findOneBy(['nigend' => $nigend]);
+        ->findOneBy(['nigend' => $this->addZeros($nigend, 8)]);
 
       if (is_null($user)) {
         $profil = $entityManager
@@ -93,6 +93,7 @@ class ConnexionController extends AbstractController
         $entity->setUnite($ldap_user->unite_id);
         $entity->setProfil(is_null($profil) ? 'USR' : $profil->getNom());
         $entity->setDepartement($ldap_user->departement);
+        $entity->setMail($ldap_user->mail);
         $entity->setBanned(false);
         $entityManager->persist($entity);
         $entityManager->flush();
