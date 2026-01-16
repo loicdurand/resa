@@ -60,7 +60,7 @@ class LdapService
         $mail_unite = $ldap_user[0]['mailuniteorganique'][0];
         $is_solc = str_starts_with($mail_unite, 'solc') || str_starts_with($mail_unite, 'dsolc');
         $is_csag = str_starts_with($mail_unite, 'csag');
-        $is_validateur = (str_starts_with($mail_unite, 'saj') && $ldap_user[0]['responsabilite'][0] === 'C') || str_starts_with($mail_unite, 'comgend');
+        $is_validateur = (str_starts_with($mail_unite, 'saj') && in_array(["C", "A"], $ldap_user[0]['responsabilite'][0])) || str_starts_with($mail_unite, 'comgend') || str_starts_with($mail_unite, 'sc.comgend');
 
         if ($is_solc)
             $user->profil = 'SOLC';
