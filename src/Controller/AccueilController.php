@@ -277,15 +277,18 @@ class AccueilController extends AbstractController
                         $mail->getSubject(),
                         $mail->getBody(),
                         $mail->getRecipients(),
-                        true
+                        false
                     );
                     // Envoi d'une copie au demandeur
-                    $user_mail = $reservation->getUser()->getMail();
+                    $demandeur = $this->em
+                        ->getRepository(User::class)
+                        ->findOneBy(['nigend' => $reservation->getUser()]);
+                    $user_mail = $demandeur->getMail();
                     SsoService::mail(
                         "[Copie]: " . $mail->getSubject(),
                         $mail->getBody(),
-                        $user_mail,
-                        true
+                        ['type' => 'to', 'mail' => $user_mail],
+                        false
                     );
                 }
                 $this->em->persist($reservation);

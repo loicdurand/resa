@@ -156,20 +156,24 @@ class ValidationController extends AbstractController
         $mail = $mailer->mailForValidation($reservation);
         if ($this->getParameter('app.env') == 'prod') {
             // Envoi du mail via le SSO
-            SsoService::mail(
-                $mail->getSubject(),
-                $mail->getBody(),
-                $mail->getRecipients(),
-                true
-            );
-            // change le destinataire du mail pour le valideur
-            $mail->setValideursAsRecipient($mail->getValideurType($reservation), "CSAG_EN_COPIE");
-            SsoService::mail(
-                "[Copie]: " . $mail->getSubject(),
-                $mail->getBody(),
-                $mail->getRecipients(),
-                true
-            );
+            try {
+                SsoService::mail(
+                    $mail->getSubject(),
+                    $mail->getBody(),
+                    $mail->getRecipients(),
+                    false
+                );
+                // change le destinataire du mail pour le valideur
+                $mail->setValideursAsRecipient($mail->getValideurType($reservation), "CSAG_EN_COPIE");
+                SsoService::mail(
+                    "[Copie]: " . $mail->getSubject(),
+                    $mail->getBody(),
+                    $mail->getRecipients(),
+                    false
+                );
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         } else {
             sleep(seconds: 1.5);
         }
@@ -209,7 +213,7 @@ class ValidationController extends AbstractController
                 $mail->getSubject(),
                 $mail->getBody(),
                 $mail->getRecipients(),
-                true
+                false
             );
             // change le destinataire du mail pour le valideur
             $mail->setValideursAsRecipient($mail->getValideurType($reservation), "CSAG_EN_COPIE");
@@ -217,7 +221,7 @@ class ValidationController extends AbstractController
                 "[Copie]: " . $mail->getSubject(),
                 $mail->getBody(),
                 $mail->getRecipients(),
-                true
+                false
             );
         } else {
             sleep(seconds: 1.5);
@@ -268,7 +272,7 @@ class ValidationController extends AbstractController
                 $mail->getSubject(),
                 $mail->getBody(),
                 $mail->getRecipients(),
-                true
+                false
             );
             // change le destinataire du mail pour le valideur
             $mail->setValideursAsRecipient($mail->getValideurType($reservation));
@@ -276,7 +280,7 @@ class ValidationController extends AbstractController
                 "[Copie]: " . $mail->getSubject(),
                 $mail->getBody(),
                 $mail->getRecipients(),
-                true
+                false
             );
         } else {
             sleep(seconds: 1.5);

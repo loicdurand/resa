@@ -180,7 +180,11 @@ class MailService
 
   public function getRecipients()
   {
-    return $this->recipients;
+    $out = [];
+    foreach ($this->recipients as $r) {
+      $out[] = ['type' => 'to', 'mail' => $r];
+    }
+    return $out;
   }
 
   public function setRecipients($users)

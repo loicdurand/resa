@@ -93,7 +93,10 @@ class SsoService
      */
     static public function mail($subject, $body, array $recipients, $throwExceptionIfExpired = false)
     {
-        if ($_SESSION['user']->mailTokenExp < time()) {
+        if (array_key_exists('user', $_SESSION)) {
+            if ($_SESSION['user']->mailTokenExp < time()) {
+                self::authenticate();
+            }
             if ($throwExceptionIfExpired) {
                 throw new \Exception('Jeton caduc');
             }
