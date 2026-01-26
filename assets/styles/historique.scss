@@ -42,6 +42,7 @@
           background: var(--teal-9);
           color: var(--grey-0);
         }
+
         &.annulee {
           background: var(--red-9);
           color: var(--grey-0);
@@ -51,6 +52,7 @@
 
     & .cs-img-container .cs-img {
       border-radius: 6px 0 0 0;
+      max-width: 126px;
     }
 
   }
@@ -68,6 +70,7 @@
       background: var(--teal-9);
       color: var(--grey-0);
     }
+
     &.annulee {
       background: var(--red-9);
       color: var(--grey-0);

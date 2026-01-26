@@ -44,6 +44,7 @@ const //
   step2 = document.getElementById('step-2');
 
 updater.addEventListener('update', filter);
+updater.addEventListener('change', filter);
 
 [
   document.getElementById('to-step-2-btn'), // bouton "Début" dans les filtres
@@ -51,11 +52,16 @@ updater.addEventListener('update', filter);
 ].forEach(btn => {
 
   btn?.addEventListener('click', () => {
+
     if (!init)
       init = updater.init();
 
     step1.classList.add('hidden');
     step2.classList.remove('hidden');
+
+    document.getElementById('select-from-date').dispatchEvent(new Event('change'));
+
+
   });
 });
 
@@ -183,11 +189,11 @@ function filter(e) {
         }
       } = vl,
       href = vl.getAttribute('href'),
-      [page, v_id] = href.split(/\//).filter(Boolean);
+      [, page, v_id] = href.split(/\//).filter(Boolean);
     vl.classList.remove('hidden');
     if (debut && debut !== '*')
       dates += `/${debut.replace(/\s/, 'T')}/${fin.replace(/\s/, 'T')}`;
-    vl.setAttribute('href', `/${page}/${v_id}${dates}`);
+    vl.setAttribute('href', `/resa971/${page}/${v_id}${dates}`);
 
     const // 
       resas = reservations.split('|'),
