@@ -70,6 +70,18 @@
   }
 }
 
+table .bg-red td {
+  background-color: var(--red-2) !important;
+}
+
+table .bg-green td {
+  background-color: var(--green-2) !important;
+}
+
+table .bg-grey td {
+  background-color: var(--grey-4) !important;
+}
+
 @media all and (max-width: 641px) {
   .valid-resa:hover .valid-resa--menu .fr-btn {
     margin-top: 0;

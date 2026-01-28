@@ -270,3 +270,43 @@ function filter(e) {
   });
 
 };
+
+// Tableau triable automatiquement
+document.querySelectorAll('th.sortable').forEach(headerCell => {
+  headerCell.addEventListener('click', () => {
+    const table = headerCell.closest('table');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const index = Array.from(headerCell.parentElement.children).indexOf(headerCell);
+    const type = headerCell.getAttribute('data-type');
+    const isAscending = headerCell.classList.contains('sort-asc');
+
+    // Reset des icônes/classes sur les autres colonnes
+    table.querySelectorAll('th').forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
+
+    const sortedRows = rows.sort((a, b) => {
+      let valA = a.children[index].innerText.trim();
+      let valB = b.children[index].innerText.trim();
+
+      if (type === 'date') {
+        // Conversion DD/MM/YYYY en objet Date pour comparer
+        const parseDate = (s) => {
+          const parts = s.split(' ')[0].split('/');
+          return new Date(parts[2], parts[1] - 1, parts[0]);
+        };
+        return parseDate(valA) - parseDate(valB);
+      }
+
+      return valA.localeCompare(valB, undefined, { numeric: true, sensitivity: 'base' });
+    });
+
+    if (isAscending) {
+      sortedRows.reverse();
+      headerCell.classList.add('sort-desc');
+    } else {
+      headerCell.classList.add('sort-asc');
+    }
+
+    tbody.append(...sortedRows);
+  });
+});

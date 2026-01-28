@@ -96,28 +96,18 @@ class ReservationRepository extends ServiceEntityRepository
         return $resas;
     }
 
-    //    /**
-    //     * @return Reservation[] Returns an array of Reservation objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Reservation
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findAllAfterNow(int $departement): mixed
+    {
+        $debut = (new \Datetime('now'))->format('Y-m-d');
+        return  $this->createQueryBuilder('r')
+            ->andWhere('r.date_fin >= :debut')
+            ->andWhere('v.departement= :dept')
+            ->innerJoin('r.vehicule', 'v')
+            // ->orWhere('r.date_debut <= :fin')
+            ->setParameter('dept', $departement)
+            ->setParameter('debut', value: $debut)
+            ->orderBy('r.date_debut', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

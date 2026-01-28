@@ -114,7 +114,13 @@ class AppFixtures extends Fixture
                 'nom' => 'RESERVER_VL',
                 'libelle' => 'Réserver un véhicule',
                 'template' => 'compte/reserver_vl.html.twig',
-                'defaut' => ['SOLC', 'VDT', 'CSAG', 'VDT', 'SOLC', 'CDT', 'USR']
+                'defaut' => ['SOLC', 'VDT', 'CSAG', 'CDT', 'USR']
+            ],
+            [
+                'nom' => 'SUIVRE_RESERVATIONS',
+                'libelle' => 'Suivre les réservations',
+                'template' => 'compte/suivi_resas.html.twig',
+                'defaut' => ['SOLC', 'VDT', 'CSAG', 'CDT']
             ]
         ];
 

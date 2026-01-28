@@ -88,20 +88,30 @@ class ValidationController extends AbstractController
             );
 
         $resas = array_filter($resas_en_attente, function ($resa) use ($filtre_validateur) {
-            if ($filtre_validateur === "SOLC")
-                return true;
-            $type_demande = $resa->getTypeDemande();
-            // si valideur PJ --> uniquement les VLs dont le demandeur a selectionné "opérationnel"
-            if ($filtre_validateur === "PJ") {
-                if ($type_demande->getCode() === "ope") {
-                    return true;
-                }
-                return false;
-            }
-            // Si valideur EM --> uniquement les VLs qui ont la restriction "Etat-Major"
+
             $vl = $resa->getVehicule();
             $restriction = $vl->getRestriction();
             $restriction_code = $restriction->getCode();
+
+            if ($filtre_validateur === "SOLC")
+                return true;
+
+            // $type_demande = $resa->getTypeDemande();
+            // si valideur PJ --> uniquement les VLs dont le demandeur a selectionné "opérationnel"
+
+            if ($filtre_validateur === "PJ") {
+                if ($restriction_code !== "EM") {
+                    return true;
+                }
+                // if ($type_demande->getCode() === "ope") {
+                //     return true;
+                // }
+                return false;
+            }
+            // Si valideur EM --> uniquement les VLs qui ont la restriction "Etat-Major"
+            // $vl = $resa->getVehicule();
+            // $restriction = $vl->getRestriction();
+            // $restriction_code = $restriction->getCode();
 
             if ($filtre_validateur === "EM") {
                 if ($restriction_code === "EM") {
@@ -120,6 +130,46 @@ class ValidationController extends AbstractController
             [
                 'reservations' => $resas,
                 'filtre_validateur' => $filtre_validateur
+            ]
+        ));
+    }
+
+    #[Route('/suivi', name: 'resa_suivi')]
+    public function suivi(ManagerRegistry $doctrine, RequestStack $requestStack): Response
+    {
+        if (is_null($this->params['nigend']))
+            return $this->redirectToRoute('resa_login');
+
+        $this->setAppConst();
+
+        $em = $doctrine->getManager();
+
+        $nigend = $this->params['nigend'];
+        $user = $em->getRepository(User::class)
+            ->findOneBy(['nigend' => $nigend]);
+
+        $resas = $em
+            ->getRepository(Reservation::class)
+            ->findAllAfterNow($user->getDepartement());
+
+        $nigends = [];
+        foreach ($resas as $resa) {
+            $nigend = $resa->getUser();
+            if (!array_key_exists($nigend, $nigends)) {
+                $usr = $em->getRepository(User::class)->findOneBy(['nigend' => $nigend]);
+                $mail = $usr->getMail();
+                [$uid] = preg_split("/@/", $mail);
+                $nigends[$nigend] = $uid;
+            }
+        }
+
+        return $this->render('validation/suivi.html.twig', array_merge(
+            $this->getAppConst(),
+            $this->params,
+            [
+                'reservations' => $resas,
+                'nigends' => $nigends
+                // 'filtre_validateur' => $filtre_validateur
             ]
         ));
     }

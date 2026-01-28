@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	{# Fil d'Arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+			Voir le fil d’Ariane
+		</button>
+		<div class="fr-collapse" id="breadcrumb-1">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_accueil') }}">
+						Accueil
+					</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_compte') }}">
+						Compte
+					</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" aria-current="page">
+						Suivi des réservations
+					</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+
+	<h1>
+		Suivre les réservations
+	</h1>
+
+	<div class="fr-table">
+		<div class="fr-table__wrapper">
+			<div class="fr-table__container">
+				<div class="fr-table__content">
+					<table>
+						<caption class="w100">
+							{% if reservations | length > 0 %}
+								<span id="nb">
+									{{ reservations | length }}
+								</span>
+								&nbsp;réservation<span id="nb-plur">{{ reservations | length > 1 ?'s':'' }}
+								</span>en cours ou à venir.
+							{% else %}
+								Il n'y a aucune réservation à afficher.
+							{% endif %}
+						</caption>
+						<thead>
+							<tr>
+								<th scope="col" class="sortable" data-type="date">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Début</button>
+								</th>
+								<th scope="col" class="sortable" data-type="date">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Fin</button>
+								</th>
+								<th scope="col" class="sortable" data-type="text">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Véhicule</button>
+								</th>
+								<th scope="col" class="sortable" data-type="text">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Réservé par</button>
+								</th>
+								<th scope="col" class="sortable" data-type="text">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Statut</button>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							{% for i, resa in reservations %}
+
+								{% set vl = resa.vehicule %}
+								{% set color = "normal" %}
+								{% if resa.statut.code == 'Confirmée' %}
+									{% set color = "green" %}
+								{% elseif resa.statut.code == 'Annulée'%}
+									{% set color = "red" %}
+								{% elseif resa.statut.code == 'En cours'%}
+									{% set color = "grey" %}
+								{% endif %}
+
+
+								<tr id="table-row-key-{{i}}" data-row-key="{{i}}" data-id="{{ resa.id }}" class="bg-{{ color }}">
+									<td>
+										{{date(resa.dateDebut) | date('d/m/Y')}}&nbsp;à&nbsp;{{resa.heureDebut}}
+									</td>
+									<td>
+										{{date(resa.dateFin) | date('d/m/Y')}}&nbsp;à&nbsp;{{resa.heureFin}}
+									</td>
+									<td>
+										{{ vl.marque }}
+										{{ vl.modele }}
+										-
+										{{ vl.immatriculation }}
+									</td>
+									<td>
+										{{resa.user |trim('0') }}
+										({{ nigends[resa.user] }})
+									</td>
+									{# <td>
+																																																																																																																																								@Todo
+																																																																																																																																							</td> #}
+									<td title="{{ resa.statut.libelle }}">
+										{{ resa.statut.code }}
+									</td>
+									{# <td>
+																																																																																																																																																																																																																@todo
+																																																																																																																																																																																																															</td> #}
+								</tr>
+
+							{% else %}
+
+								<tr id="table-row-key-1" data-row-key="1">
+									<td colspan="6">
+										Il n'y a aucune réservation en cours ou à venir.
+									</td>
+								</tr>
+
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
