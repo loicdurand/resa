@@ -122,6 +122,13 @@ class AccueilController extends AbstractController
                     ['departement' => $this->params['departement']]
             );
 
+        if (is_null($atelier))
+            $atelier = $this->em
+                ->getRepository(Atelier::class)
+                ->findOneBy(
+                    ['departement' => $this->params['departement']]
+                );
+
         $horaires = $this->getBaseHoraires();
 
         $base_horaires = $this->em

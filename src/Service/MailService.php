@@ -147,24 +147,25 @@ class MailService
         'unite' => $unites_em
       ]);
     } else {
-      if ($type == $this::IS_JUD) {
-        $env_unites_pj = $_ENV['APP_UNITES_PJ'] ?? '';
-        $raw_unites_pj = explode(',', $env_unites_pj);
-        $unites_pj = [];
-        foreach ($raw_unites_pj as $code_unite) {
-          $unites_pj[] = $this->addZeros($code_unite, 8);
-        }
+      $csag_en_copie = true;
+      // if ($type == $this::IS_JUD) {
+      $env_unites_pj = $_ENV['APP_UNITES_PJ'] ?? '';
+      $raw_unites_pj = explode(',', $env_unites_pj);
+      $unites_pj = [];
+      foreach ($raw_unites_pj as $code_unite) {
+        $unites_pj[] = $this->addZeros($code_unite, 8);
+      }
 
-        $validateurs = $user_repo->findBy([
-          'profil' => 'VDT',
-          'unite' => $unites_pj
-        ]);
-      } else {
+      $validateurs = $user_repo->findBy([
+        'profil' => 'VDT',
+        'unite' => $unites_pj
+      ]);
+      /*} else {
         $validateurs = $user_repo->findBy([
           'profil' => ['VDT', 'CSAG'],
           'unite' => $this->addZeros($_ENV['APP_CSAG_CODE_UNITE'], 8)
         ]);
-      }
+      }*/
     }
 
     $this->setRecipients($validateurs);

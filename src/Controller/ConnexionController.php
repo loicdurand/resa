@@ -59,6 +59,8 @@ class ConnexionController extends AbstractController
     $users = [];
     $has_access = false;
 
+    $codes_unites_em = explode(',', $_ENV['APP_UNITES_EM'] ?? '');
+
     if ($this->env === 'prod') {
       $sso_user = $this->sso::user();
       $nigend = $sso_user->nigend;
@@ -74,6 +76,9 @@ class ConnexionController extends AbstractController
           break;
         }
       }
+
+      if (in_array($ldap_user->unite_id, $unites_perimetre))
+        $has_access = true;
 
       if (!$has_access) {
         return $this->render('accueil/access_denied.html.twig', array_merge($this->getAppConst(), []));
@@ -205,7 +210,7 @@ class ConnexionController extends AbstractController
           ->getRepository(Atelier::class)
           ->findOneBy(['code_unite' => $unite]);
 
-        if (is_null($atelier)) {
+        if (is_null($atelier) && $this->env === 'prod') {
           $ldap_unite = $ldap->get_unite_from_ldap($unite);
           $unite = $ldap->format_ldap_unite($ldap_unite);
 

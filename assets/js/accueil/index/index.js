@@ -154,6 +154,8 @@ function filter(e) {
     vls = [...document.getElementsByClassName('vehicule-card--result')],
     no_result = document.getElementById('no-result');
 
+  console.log({ debut, fin, data });
+
   if (debut !== '*' && fin !== '*') {
     filtres_appliques.push(addTag(`${FR(debut)}&nbsp;&rarr;&nbsp;${FR(fin)}`));
   }
@@ -208,9 +210,21 @@ function filter(e) {
           iDebut = +debut.replace(/[^\d]/g, ''),
           iFin = +fin.replace(/[^\d]/g, ''),
           [start, end] = resa.split('_'),
-          iStart = +start.replace(/[^\d]/g, ''),
-          iEnd = +end.replace(/[^\d]/g, '');
-        if (iStart >= iDebut && iStart <= iFin || iFin >= iDebut && iEnd <= iFin) {
+          resa_start = +start.replace(/[^\d]/g, ''),
+          resa_end = +end.replace(/[^\d]/g, '');
+
+        let pas_reserve = false;
+        if (
+          // CAS 1 resa fini avant recherche
+          (resa_end <= iDebut) ||
+          // CAS 2 resa commence après recherche
+          (resa_start >= iFin)
+        ) {
+          pas_reserve = true;
+        }
+
+        if (!pas_reserve) {
+          // if (resa_start >= iDebut && resa_start <= iFin || iFin >= iDebut && resa_end <= iFin) {
           vl.classList.add('hidden');
           count_vls--;
           mem.push(vl_idx);
