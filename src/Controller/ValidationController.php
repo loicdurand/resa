@@ -153,6 +153,9 @@ class ValidationController extends AbstractController
             ->findAllAfterNow($user->getDepartement());
 
         $nigends = [];
+        $vls = [];
+        $vl_ids = [];
+
         foreach ($resas as $resa) {
             $nigend = $resa->getUser();
             if (!array_key_exists($nigend, $nigends)) {
@@ -161,6 +164,12 @@ class ValidationController extends AbstractController
                 [$uid] = preg_split("/@/", $mail);
                 $nigends[$nigend] = $uid;
             }
+            $vl = $resa->getVehicule();
+
+            if (!array_key_exists($vl->getId(), $vl_ids)) {
+                $vl_ids[] = $vl->getId();
+                $vls[] = $vl;
+            }
         }
 
         return $this->render('validation/suivi.html.twig', array_merge(
@@ -168,8 +177,14 @@ class ValidationController extends AbstractController
             $this->params,
             [
                 'reservations' => $resas,
-                'nigends' => $nigends
-                // 'filtre_validateur' => $filtre_validateur
+                'nigends' => $nigends,
+                'liste_vehicules' => $vls,
+                'restrictions' => [
+                    "NONE" => "",
+                    "EM" => "[RÉSERVÉ EM]",
+                    "NON_OPE" => "[AV. JUGEMENT]",
+                    "ATELIER" => "[Maintenance]"
+                ]
             ]
         ));
     }

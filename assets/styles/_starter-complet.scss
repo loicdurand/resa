@@ -389,7 +389,7 @@ figure {
 
 /* Table */
 
-table {
+table:not(.no-starter) {
 	border-collapse: collapse;
 	background-color: transparent;
 	width: 100%;
@@ -398,21 +398,21 @@ table {
 	margin: 30px 0 20px 0;
 }
 
-table td {
+table:not(.no-starter) td {
 	padding: 5px 5px 5px 8px;
 	background: white;
 	border-spacing: 10px;
 	text-align: center;
 }
 
-table thead td {
+table:not(.no-starter) thead td {
 	/*background: var(--red-8);*/
 	color: white;
 	border: 1px solid var(--grey-8);
 }
 
-td,
-th {
+table:not(.no-starter) td,
+table:not(.no-starter) th {
 	padding: 0;
 	line-height: 1.71428571;
 	text-align: left;

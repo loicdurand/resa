@@ -198,7 +198,7 @@ function get_option(vl) {
     "NON_OPE": "[AV. JUGEMENT]",
     "ATELIER": "[Maintenance]"
   }
-  console.log(vl.restriction_code);
+
   const  // 
     option = document.createElement('option'),
     { marque, modele, carburant, transmission, nb_places, restriction_code, restriction_libelle } = vl;

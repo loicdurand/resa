@@ -291,7 +291,7 @@ document.querySelectorAll('th.sortable').forEach(headerCell => {
       if (type === 'date') {
         // Conversion DD/MM/YYYY en objet Date pour comparer
         const parseDate = (s) => {
-          const parts = s.split(' ')[0].split('/');
+          const parts = s.replace(/\s.*$/, '').split('/');
           return new Date(parts[2], parts[1] - 1, parts[0]);
         };
         return parseDate(valA) - parseDate(valB);
@@ -309,4 +309,49 @@ document.querySelectorAll('th.sortable').forEach(headerCell => {
 
     tbody.append(...sortedRows);
   });
+});
+
+const add1Day = (date) => new Date(date.setDate(date.getDate() + 1));
+
+const filterTable = () => {
+  const valVehicule = document.getElementById('filter-vehicule').value.toLowerCase();
+  const valUser = document.getElementById('filter-user').value.toLowerCase();
+  const valDateDebut = document.getElementById('filter-datedebut').value; // Format YYYY-MM-DD
+  const valDateFin = document.getElementById('filter-datefin').value;
+
+
+  const rows = document.querySelectorAll('tbody tr:not(.no-result)'); // On ignore la ligne "aucun résultat" si elle existe
+
+  rows.forEach(row => {
+    // On récupère le texte des colonnes (index 2 pour Véhicule, 3 pour User, 0 pour Date)
+    const txtVehicule = row.children[2].dataset.vl.toLowerCase();
+    const txtUser = row.children[3].innerText.toLowerCase();
+
+    // Extraction de la date pour comparaison (on transforme JJ/MM/AAAA en objet Date)
+    const cellDateDebutParts = row.children[0].innerText.trim().replace(/\s.*$/, '').split('/');
+    const cellDateFinParts = row.children[1].innerText.trim().replace(/\s.*$/, '').split('/');
+
+    const rowDateDebut = new Date(cellDateDebutParts[2], cellDateDebutParts[1] - 1, cellDateDebutParts[0]);
+    const rowDateFin = new Date(cellDateFinParts[2], cellDateFinParts[1] - 1, cellDateFinParts[0]);
+
+    const filterDateDebut = valDateDebut ? new Date(valDateDebut) : null;
+    const filterDateFin = valDateFin ? add1Day(new Date(valDateFin)) : null;
+
+    // Conditions de visibilité
+    const matchVehicule = valVehicule === "" || txtVehicule.includes(valVehicule);
+    const matchUser = txtUser.includes(valUser);
+    const matchDateDebut = !filterDateDebut || rowDateDebut >= filterDateDebut;
+    const matchDateFin = !filterDateFin || rowDateFin <= filterDateFin;
+
+    if (matchVehicule && matchUser && matchDateDebut && matchDateFin) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
+};
+
+// On lie l'événement 'input' (clavier ou sélection date) à notre fonction
+['filter-vehicule', 'filter-user', 'filter-datedebut', 'filter-datefin'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', filterTable);
 });
