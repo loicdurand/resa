@@ -24,7 +24,7 @@ valid_resa.forEach(btn => btn.addEventListener('click', ({ target }) => {
   if (!target.classList.contains('valid-resa'))
     return false;
 
-  valid_resa_confirm.dataset.id = id; 
+  valid_resa_confirm.dataset.id = id;
 
 }));
 
@@ -193,13 +193,25 @@ function close_modale(modal_name = 'suppression') {
 }
 
 function get_option(vl) {
+  const restrictions = {
+    "EM": "[RÉSERVÉ EM]",
+    "NON_OPE": "[AV. JUGEMENT]",
+    "ATELIER": "[Maintenance]"
+  }
+  console.log(vl.restriction_code);
   const  // 
     option = document.createElement('option'),
-    { marque, modele, carburant, transmission, nb_places } = vl;
+    { marque, modele, carburant, transmission, nb_places, restriction_code, restriction_libelle } = vl;
   Object.entries({ marque, modele, carburant, transmission, nb_places }).forEach(([prop, value]) => {
     option.dataset[prop] = value;
   });
   option.value = vl.id;
-  option.innerHTML = `${vl.marque} ${vl.modele} ${vl.immatriculation} - ${vl.nb_places} places - ${vl.serigraphie ? 'sérigraphié' : 'non sérigraphié'}`;
+  let html = '';
+  if (restriction_code != "NONE") {
+    option.title = restriction_libelle;
+    html = restrictions[restriction_code] + ' ';
+  }
+  html += `${vl.marque} ${vl.modele} ${vl.immatriculation} - ${vl.nb_places} places - ${vl.serigraphie ? 'sérigraphié' : 'non sérigraphié'}`;
+  option.innerHTML = html;
   return option;
 }

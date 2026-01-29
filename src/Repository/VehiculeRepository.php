@@ -43,13 +43,16 @@ class VehiculeRepository extends ServiceEntityRepository
                 v.nb_places,
                 v.immatriculation,
                 t.code as transmission,
-                c.code as carburant
+                c.code as carburant,
+                rest.code as restriction_code,
+                rest.libelle as restriction_libelle
             FROM
                 vehicule v
             LEFT JOIN reservation r ON v.id = r.vehicule_id
             LEFT JOIN statut_reservation s ON r.statut_id = s.id
             JOIN transmission_vehicule t ON v.transmission_id = t.Id
             JOIN carburant_vehicule c ON v.carburant_id = c.id
+            JOIN restriction rest ON v.restriction_id = rest.id
             WHERE(
                 v.immatriculation != "$immat"
             AND
@@ -67,6 +70,7 @@ class VehiculeRepository extends ServiceEntityRepository
                     )
                 )
             )
+            AND rest.code != 'ATELIER'
             GROUP BY v.id
             ;
 SQL;

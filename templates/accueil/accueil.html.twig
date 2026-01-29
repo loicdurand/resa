@@ -137,11 +137,11 @@
 										{{ vehicule.modele }}
 									</span>
 								</dt>
-								{% if (vehicule.motorisation ~ vehicule.finition) is empty %}
+								{% if (vehicule.immatriculation ~ vehicule.motorisation ~ vehicule.finition) is empty %}
 									<br/>
 								{% else %}
 									<dd>
-										{{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
+										<strong>{{ vehicule.immatriculation}}</strong>&nbsp;{{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
 									</dd>
 								{% endif %}
 								<dd>
