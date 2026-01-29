@@ -1,0 +1,75 @@
+{# MODALE Début #}
+<dialog aria-labelledby="fr-modal--from-title" id="fr-modal--from" class="fr-modal" role="dialog">
+	<div class="fr-container fr-container--fluid fr-container-md">
+		<div class="fr-grid-row fr-grid-row--center">
+			<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+
+				<div class="fr-modal__body">
+					<div
+						id="step-1" class="fr-mt-1w fr-modal__content fr-grid-row">
+						{# stepper #}
+						<div id="fr-modal--from-title" class="fr-stepper fr-col-12">
+							<h2 class="fr-stepper__title">
+								Début de la réservation
+								<span class="fr-stepper__state">
+									Étape 1 sur 2
+								</span>
+							</h2>
+							<div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="2"></div>
+						</div>
+
+						<h3 class="fr-col-12 cs-date-lib" id="from-date-lib"></h3>
+
+						<div id="notice-resa-from" class="hidden fr-col-12 fr-notice fr-notice--info">
+							<div class="fr-container">
+								<div class="fr-notice__body">
+									<p>
+										<span class="fr-notice__title">Information:</span>
+										<div class="fr-notice__desc">
+											Le véhicule est déjà réservé:&nbsp;<ul id="text-resa-from"></ul>
+										</div>
+									</p>
+									<button title="Masquer le message" onclick="const notice = this.parentNode.parentNode.parentNode; notice.parentNode.removeChild(notice)" id="button-1299" class="fr-btn--close fr-btn">Masquer le message</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="fr-grid-row fr-mb-2w">
+							<div class=" fr-select-group fr-col fr-col-6 fr-pl-1w">
+								<label class="fr-label" for="select-from-heure">
+									Heure
+								</label>
+								<select class="fr-select" id="select-from-heure" name="select-from-heure"></select>
+
+							</div>
+							<div class="fr-select-group fr-select-group--disabled fr-col fr-col-6 fr-pl-1w cs-select-minutes">
+								<label class="fr-label" for="select-from-minute">
+									&nbsp;
+								</label>
+								<select class="fr-select" id="select-from-minute" name="select-from-minute">
+									{% for i in range(0, 60, APP_MINUTES_SELECT_INTERVAL) %}
+										{% if i < 60 %}
+											<option value="{{ i | length > 1 ? i : '0' ~ i }}" {{ i == 0 ? 'selected' }}>
+												{{ i | length > 1 ? i : '0' ~ i }}
+											</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+
+						<div class="cs-btns-group fr-btns-group">
+							<button id="modal-suivant" type="button" aria-controls="fr-modal--from" class="fr-btn fr-btn--tertiary-no-outline">
+								Date de fin &#8594;
+							</button>
+						</div>
+
+					</div>
+					{# fin étape DÉBUT #}
+				</div>
+
+			</div>
+		</div>
+	</div>
+</dialog>
+{# FIN MODALE Début #}

@@ -1,0 +1,47 @@
+{# MODALE avant jugement #}
+<dialog id="modal-restriction" class="fr-modal" aria-labelledby="modal-restriction-title" data-fr-concealing-backdrop="true">
+
+	<div class="fr-container fr-container--fluid fr-container-md">
+		<div class="fr-grid-row fr-grid-row--center">
+			<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+				<div class="fr-modal__body">
+
+					<div class="fr-modal__header"></div>
+
+					<div class="fr-modal__content">
+						<h2 id="modal-restriction-title" class="fr-modal__title align-left">
+							<span class="fr-icon-info-line fr-icon--lg" aria-hidden="true"></span>
+							{{ vehicule.restriction.libelle }}
+						</h2>
+						<p class="align-left">{{ vehicule.restriction.description }}</p>
+					</div>
+					<!-- fr-modal__content -->
+
+					<div class="fr-modal__footer">
+						<ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+							<li>
+								<button id="form-submit-btn" type="submit" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-left">
+									J'ai compris et je réserve
+								</button>
+							</li>
+							<li>
+								<button type="reset" aria-controls="modal-restriction" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary">Fermer</button>
+							</li>
+						</ul>
+					</div>
+					<!-- fr-modal__footer -->
+
+				</div>
+				<!-- fr-modal__body -->
+
+			</div>
+			<!-- fr-col-lg-6 -->
+
+		</div>
+		<!-- fr-grid-row -->
+
+	</div>
+	<!-- fr-container -->
+
+</dialog>
+{# FIN MODALE avant jugement #}

@@ -2,20 +2,22 @@
 
 namespace App\Controller;
 
-use App\Entity\Reservation;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 
+use App\Entity\Reservation;
 use App\Entity\HoraireOuverture;
 use App\Entity\StatutReservation;
 use App\Entity\Vehicule;
 use App\Entity\Atelier;
 use App\Entity\User;
+use App\Entity\Role;
 
 use App\Service\MailService;
 use App\Service\SsoService;
+use App\Service\LdapService;
 
 use App\Form\ReservationType;
 use Symfony\Component\HttpFoundation\Request;
@@ -272,9 +274,38 @@ class AccueilController extends AbstractController
         $form = $this->createForm(ReservationType::class, $resa);
 
         $form->handleRequest($this->request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $reservation = $form->getData();
             if (!$reservation->getId()) {
+
+                $reservation->setDemandeur($this->params['nigend']);
+                $beneficiaire = $reservation->getUser();
+                $exists = $this->em
+                    ->getRepository(User::class)
+                    ->findOneBy(['nigend' => $beneficiaire]);
+
+                if (is_null($exists)) {
+                    // Si le bénéficiaire n'existe pas, on le crée en base pour avoir son mail par la suite
+                    $ldap = new LdapService();
+                    $ldap_user  = $ldap->get_user_from_ldap($beneficiaire);
+
+                    $profil = $this->em
+                        ->getRepository(Role::class)
+                        ->findOneBy(['nom' => $ldap_user->profil]);
+
+                    $entity = new User();
+                    $entity->setNigend($beneficiaire);
+                    $entity->setUnite($ldap_user->unite_id);
+                    $entity->setProfil(is_null($profil) ? 'USR' : $profil->getNom());
+                    $entity->setDepartement($ldap_user->departement);
+                    $entity->setMail($ldap_user->mail);
+                    $entity->setBanned(false);
+                    $this->em->persist($entity);
+                    $this->em->flush();
+                }
+
+
                 // Préparation d'un objet Mail destiné au(x) validateur(s)
                 $mailer = new MailService($this->em);
                 $mail = $mailer->mailForReservation($reservation);
@@ -289,7 +320,7 @@ class AccueilController extends AbstractController
                     // Envoi d'une copie au demandeur
                     $demandeur = $this->em
                         ->getRepository(User::class)
-                        ->findOneBy(['nigend' => $reservation->getUser()]);
+                        ->findOneBy(['nigend' => $reservation->getDemandeur()]);
                     $user_mail = $demandeur->getMail();
                     SsoService::mail(
                         "[Copie]: " . $mail->getSubject(),

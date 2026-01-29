@@ -75,6 +75,50 @@ class LdapService
         return $user;
     }
 
+    public function get_user_from_ldap_by_name($lastname)
+    {
+        $filter = sprintf('(&(objectClass=person)(displayname=*%s*))', $lastname);
+
+        $ldap_user = $this->ldapSearch($filter);
+
+        if ($ldap_user === "0" || !$ldap_user)
+            return null;
+
+        $user = new \stdClass();
+        $user->nigend = $ldap_user[0]['employeenumber'][0];
+        $user->nom = $ldap_user[0]['sn'][0];
+        $user->prenom = $ldap_user[0]['givenname'][0];
+        $user->nigend = $ldap_user[0]['employeenumber'][0];
+        $user->unite_id = $ldap_user[0]['codeunite'][0];
+        $user->mail = $ldap_user[0]['mail'][0];
+        $user->profil = 'USR';
+
+        // recherche du département
+        $ldap_unite = $this->get_unite_from_ldap($user->unite_id);
+        $user->mail_unite = $ldap_unite[0]['mail'][0];
+
+        $cp = $ldap_unite[0]['postalcode'][0];
+        $dpt = self::getDept($cp);
+        $user->departement = $dpt;
+
+        $mail_unite = $ldap_user[0]['mailuniteorganique'][0];
+        $is_solc = str_starts_with($mail_unite, 'solc') || str_starts_with($mail_unite, 'dsolc');
+        $is_csag = str_starts_with($mail_unite, 'csag');
+        $is_validateur = (str_starts_with($mail_unite, 'saj') && in_array(["C", "A"], $ldap_user[0]['responsabilite'][0])) || str_starts_with($mail_unite, 'sc.comgend');
+
+        if ($is_solc)
+            $user->profil = 'SOLC';
+        else if ($is_csag)
+            $user->profil = 'CSAG';
+        else if ($is_validateur)
+            $user->profil = 'VDT';
+
+        // if ($ldap_user[0]['poste'][0] === 'chef de groupe en cybermenaces')
+        //     $user->roles[] = ['libelle' => 'chef_groupe_solc'];
+
+        return $user;
+    }
+
     public function get_unite_from_ldap($code_unite)
     {
         $filter = "(&(objectclass=organizationalUnit)(codeunite=" . ltrim($code_unite, '0') . "))";

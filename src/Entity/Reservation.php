@@ -47,6 +47,9 @@ class Reservation
     #[ORM\ManyToOne]
     private ?TypeDemande $type_demande = null;
 
+    #[ORM\Column(length: 8, nullable: true)]
+    private ?string $demandeur = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime('now', new \DateTimeZone('America/Guadeloupe'));
@@ -173,6 +176,18 @@ class Reservation
     public function setTypeDemande(?TypeDemande $type_demande): static
     {
         $this->type_demande = $type_demande;
+
+        return $this;
+    }
+
+    public function getDemandeur(): ?string
+    {
+        return $this->demandeur;
+    }
+
+    public function setDemandeur(?string $demandeur): static
+    {
+        $this->demandeur = $demandeur;
 
         return $this;
     }

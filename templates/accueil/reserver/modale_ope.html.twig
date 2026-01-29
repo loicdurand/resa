@@ -1,0 +1,86 @@
+{# MODALE opé #}
+<dialog id="modal-select_valideur" class="fr-modal" aria-labelledby="modal-select_valideur-title" data-fr-concealing-backdrop="true">
+	<div class="fr-container fr-container--fluid fr-container-lg">
+		<div class="fr-grid-row fr-grid-row--center">
+			<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+				<div class="fr-modal__body">
+					<div class="fr-modal__header"></div>
+					<!-- fr-modal__header -->
+
+					<div class="fr-modal__content">
+						<h2 id="modal-select_valideur-title" class="fr-modal__title align-left">
+							Dernière étape
+						</h2>
+
+						<div class="fr-select-group align-left">
+							<label class="fr-label" for="select-1">
+								Précisez le type de demande (opérationnel ou non)
+							</label>
+
+							{{ form_widget(form.type_demande) }}
+
+							<div class="fr-messages-group" id="select-1-messages" aria-live="polite"></div>
+						</div>
+
+						<div class="fr-input-group align-left" id="input-group-31">
+							<label class="fr-label" for="{{ field_name(form.observation) }}">
+								Observations (aide votre valideur à apprécier l'opportunité de la demande).
+							</label>
+							<textarea class="fr-input" aria-describedby="{{ field_name(form.observation) }}-messages" id="{{ field_name(form.observation) }}" name="{{ field_name(form.observation) }}" value="{{ field_value(form.observation) }}"></textarea>
+							<div class="fr-messages-group" id="{{ field_name(form.observation) }}-messages" aria-live="polite"></div>
+						</div>
+
+						<div class="fr-input-group align-left" id="input-group-31">
+							<label class="fr-label" for="select-user">
+								Je réserve pour...
+							</label>
+
+							<select class="fr-select" id="select-user">
+								<option value="me">Moi-même</option>
+								<option value="other">Un autre personnel</option>
+							</select>
+						</div>
+
+						<div class="fr-input-group relative fr-hidden" id="input-group-suggest-candidat">
+							<label class="fr-label" for="suggest-candidat">
+								Recherche d'utilisateur
+								<span class="fr-hint-text">Recherche possible par nom ou par nigend.</span>
+							</label>
+							<input class="fr-input" id="suggest-candidat" type="search" placeholder="Nom ou nigend de l'utilisateur" data-list="suggest-candidat-list">
+							<ul
+								class="fr-messages-group suggest-candidat-list" id="suggest-candidat-list" aria-live="polite"><!-- Les suggestions sont insérées ici par JavaScript -->
+							</ul>
+						</div>
+
+					</div>
+					<!-- fr-modal__content -->
+
+					<div class="fr-modal__footer">
+						<ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+							<li>
+								<button id="form-submit-btn" type="submit" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-left">
+									Je réserve
+								</button>
+							</li>
+							<li>
+								<button type="reset" aria-controls="modal-select_valideur" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary">
+									Fermer
+								</button>
+							</li>
+						</ul>
+					</div>
+					<!-- fr-modal__footer -->
+
+				</div>
+				<!-- fr-modal__body -->
+
+			</div>
+			<!--fr-col-lg-6 -->
+
+		</div>
+		<!--fr-grid-row -->
+
+	</div>
+	<!--fr-container -->
+</dialog>
+{# FIN MODALE opé #}

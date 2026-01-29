@@ -20,10 +20,10 @@ new Router('/', {
   '/resa971/parc': () => {
     import('./js/parc/parc');
   },
-  '/resa971/compte':()=>{
+  '/resa971/compte': () => {
     import('./js/compte/compte');
   },
-  '/resa971/validation':()=>{
+  '/resa971/validation': () => {
     import('./js/compte/validation');
   },
   '/resa971': () => {

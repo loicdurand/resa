@@ -3,7 +3,11 @@ import { time } from '../../lib/utils';
 import Periode from './Periode';
 import ModalManager from './ModalManager';
 
+import autocomplete from '../../lib/autocomplete-candidats';
+
 console.log('=== reserver ===');
+
+autocomplete();
 
 // Effet au scroll permettant de fixer les champs "Début: __ -> Fin: __" sur le heut de l'écran
 window.addEventListener('scroll', () => {

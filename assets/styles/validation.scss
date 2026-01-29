@@ -82,6 +82,26 @@ table .bg-grey td {
   background-color: var(--grey-4) !important;
 }
 
+/* AUTOCOMPLETE CANDIDATS */
+ul.suggest-candidat-list {
+  position: absolute;
+  z-index: 10000;
+  border: 1px solid;
+  width: 100%;
+  list-style-type: none;
+  padding: 0;
+  margin-top: 0;
+
+  li {
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    list-style-type: none;
+    padding: 8px 12px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+  }
+}
+
 @media all and (max-width: 641px) {
   .valid-resa:hover .valid-resa--menu .fr-btn {
     margin-top: 0;

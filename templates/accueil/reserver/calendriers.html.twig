@@ -1,0 +1,122 @@
+{# CALENDRIERS #}
+<div
+	id="calendars-container">
+	{# source: https://gist.github.com/aknosis/3932192 #}
+	{% set time = "now"| date('Y-m-15') | date_modify('-1 months')| date("U") %}
+	{% for i in range(0,APP_LIMIT_RESA_MONTHS) %}
+		{% set time =  time | date_modify('+1 months') %}
+		<table>
+			<thead>
+				{% if loop.first %}
+					<tr class="cs-row-days">
+						<th width="15%" id="th-LU" data-horaires="{{ horaires.LU }}">
+							Lu<span class="hide-s">ndi</span>
+						</th>
+						<th width="15%" id="th-MA" data-horaires="{{ horaires.MA }}">
+							Ma<span class="hide-s">rdi</span>
+						</th>
+						<th width="16%" id="th-ME" data-horaires="{{ horaires.ME }}">
+							Me<span class="hide-s">rcredi</span>
+						</th>
+						<th width="15%" id="th-JE" data-horaires="{{ horaires.JE }}">
+							Je<span class="hide-s">udi</span>
+						</th>
+						<th width="15%" id="th-VE" data-horaires="{{ horaires.VE }}">
+							Ve<span class="hide-s">ndredi</span>
+						</th>
+						<th width="12%" id="th-SA" data-horaires="{{ horaires.SA }}">
+							Sa<span class="hide-s">medi</span>
+						</th>
+						<th width="12%" id="th-DI" data-horaires="{{ horaires.DI }}">
+							Di<span class="hide-s">manche</span>
+						</th>
+					</tr>
+				{% endif %}
+				<tr>
+					{% set trans_day_hash = { 
+                    "January": "Janvier", 
+                    "February": "Février", 
+                    "March": "Mars", 
+                    "April": "Avril", 
+                    "May": "Mai", 
+                    "June": "Juin", 
+                    "July": "Juillet" ,
+                    "August":"Août",
+                    "September":"Septembre",
+                    "October":"Octobre",
+                    "November":"Novembre",
+                    "December":"Décembre"
+                } %}
+					{% set days_list = [
+                  'LU','MA','ME','JE','VE','SA','DI'
+                ] %}
+					<th colspan="7">
+						{{ trans_day_hash[time|date('F')] }}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					{% set daysInMonth = time|date('t') %}
+					{% set startDow = time|date('F 1\\s\\t Y')|date('N') - 1 %}
+					{% set dow = startDow %}
+					{% for day in range(1,daysInMonth) %}
+						{% if loop.first and startDow != 0 %}
+							<td colspan="{{ startDow }}"></td>
+						{% endif %}
+						{% set curr_date = time|date('Y-m-' ~ (day|length > 1 ? day: '0'~day) ~ ' 23:59:00')|date('U') %}
+						{% set before_now = curr_date <= ('now'|date('Y-m-d 00:00:00')|date('U') )? true : false %}
+						{% set after_limit = curr_date > (max|date('Y-m-d 00:00:00')|date('U') )? true : false %}
+						{% set csag_ferme =  horaires[days_list[dow]] == '' %}
+						<td class="target">
+							<div class="relative">
+
+								{% set striked = false %}
+								{% set striked_debut = false %}
+								{% set striked_fin = false %}
+								{% set mems = [] %}
+
+								{% for i, reservation in vehicule.reservations %}
+									{% if 
+                              curr_date|date('Y-m-d')|date('U') >= date(reservation.dateDebut)|date('Y-m-d')|date('U') 
+                                and 
+                              curr_date|date('Y-m-d')|date('U') <= date(reservation.dateFin)|date('Y-m-d')|date('U') 
+                              %}
+
+										{% set striked_debut = (curr_date | date('Y-m-d')) == (date(reservation.dateDebut)|date('Y-m-d')) ? reservation.heureDebut : false %}
+										{% set striked_fin = (curr_date | date('Y-m-d')) == (date(reservation.dateFin)|date('Y-m-d')) ? reservation.heureFin : false %}
+										{# {% set striked = striked_debut or striked_fin ? false : true %} #}
+										{% set striked = true %}
+
+										{% set mem = [] %}
+										{% set mem = mem|merge([{'debut': striked_debut, 'fin': striked_fin}]) %}
+										{% set mems = mems|merge(mem) %}
+
+									{% endif %}
+								{% endfor %}
+
+								<div {% for i, mem in mems %} data-resa_ {{i}} _debut="{{ mem.debut }}" data-resa_ {{i}} _fin="{{ mem.fin }}" {% endfor %} {{striked_debut ? 'data-heure_debut=' ~ striked_debut }} {{striked_fin ? 'data-heure_fin=' ~ striked_fin }} data-ref="{{ days_list[dow] }}" {{ (striked and striked_debut == false and striked_fin == false) or before_now or after_limit or csag_ferme ? '' : ' aria-controls="fr-modal--from" data-fr-opened="false"' }} class="cs-td-daynum{{ striked ? ' striked' }}{{ before_now ? ' before_now' }}{{ after_limit ? ' after_limit' }}{{ csag_ferme ? ' csag_ferme' }}{{ striked_debut ? ' striked_debut' }}{{ striked_fin ? ' striked_fin' }}" data-date="{{ time|date('Y-m-' ~ (day|length > 1 ? day : '0' ~ day)) }}" title="{{ striked ? "Il y a une ou plusieurs réservations à cette date." : striked_debut or striked_fin ? "Le véhicule est réservé une partie de la journée" : before_now ? " Date passée": after_limit ? " Vous ne pouvez réserver au delà de " ~ limit_resa: csag_ferme ? " En dehors des horaires d'ouverture du CSAG" : ' ' }}">
+									{{ day }}
+								</div>
+								<div>
+									{# day content here #}
+								</div>
+							</div>
+						</td>
+						{% if loop.last and dow != 6 %}
+							<td colspan="{{ 6 - dow }}">
+								&nbsp;
+							</td>
+						{% endif %}
+						{% if dow == 6 %}
+							{% set dow = 0 %}
+						</tr>
+						<tr>
+						{% else %}
+							{% set dow = dow + 1 %}
+					{% endif %}
+				{% endfor %}
+			</tr>
+		</tbody>
+	</table>
+{% endfor %}</div>{# FIN CALENDRIERS #}
