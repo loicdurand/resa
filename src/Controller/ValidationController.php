@@ -51,7 +51,7 @@ class ValidationController extends AbstractController
         // On a besoin de connaître le "type" de valideur (CSAG, unité PJ ou Etat-Major)
         $filtre_validateur = "";
 
-        $nigend = $this->params['nigend'];
+        $nigend = $this->addZeros($this->params['nigend'], 8);
         $user = $em->getRepository(User::class)
             ->findOneBy(['nigend' => $nigend]);
         $code_unite = $user->getUnite();
@@ -63,10 +63,16 @@ class ValidationController extends AbstractController
             $unites_pj[] = $this->addZeros($code, 8);
         }
 
-        if ($user->getProfil() === "SOLC") {
-            $filtre_validateur = 'SOLC';
-        } else if (in_array($code_unite, $unites_pj)) {
+        $env_force_vdts_pj = $_ENV['FORCE_NIGENDS_AS_VDT_PJ'] ?? '';
+        $nigends_forces = [];
+        foreach (explode(',', $env_force_vdts_pj) as $ngd) {
+            $nigends_forces[] = $this->addZeros($ngd, 8);
+        }
+
+        if (in_array($nigend, $nigends_forces) || in_array($code_unite, $unites_pj)) {
             $filtre_validateur = "PJ";
+        } elseif ($user->getProfil() === "SOLC") {
+            $filtre_validateur = 'SOLC';
         } else {
             $code_unite_CSAG = $this->addZeros($_ENV['APP_CSAG_CODE_UNITE'], 8);
             if ($code_unite == $code_unite_CSAG) {
