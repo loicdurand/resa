@@ -59,7 +59,7 @@ class ConnexionController extends AbstractController
     $users = [];
     $has_access = false;
 
-    $codes_unites_em = explode(',', $_ENV['APP_UNITES_EM'] ?? '');
+    // $codes_unites_em = explode(',', $_ENV['APP_UNITES_EM'] ?? '');
 
     if ($this->env === 'prod') {
       $sso_user = $this->sso::user();
