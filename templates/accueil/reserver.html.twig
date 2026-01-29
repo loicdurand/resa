@@ -288,11 +288,13 @@
 			<p class="cs-informations">
 				Informations
 			</p>
-			<ul>
-				<li>
+			<p class="fr-mt-2w">
+				{% if vehicule.observation %}
+					{{ vehicule.observation}}
+				{% else %}
 					Néant
-				</li>
-			</ul>
+				{% endif %}
+			</p>
 		</div>
 		{# FIN INFORMATIONS #}
 
