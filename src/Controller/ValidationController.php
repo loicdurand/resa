@@ -166,7 +166,7 @@ class ValidationController extends AbstractController
             }
             $vl = $resa->getVehicule();
 
-            if (!array_key_exists($vl->getId(), $vl_ids)) {
+            if (!in_array($vl->getId(), $vl_ids)) {
                 $vl_ids[] = $vl->getId();
                 $vls[] = $vl;
             }

@@ -62,91 +62,83 @@
 				<div class="fr-table__content">
 					<table class="no-starter">
 						<caption class="w100">
-							{% if reservations | length > 0 %}
-								<span id="nb">
-									{{ reservations | length }}
-								</option>
-							</span>
-							&nbsp;réservation<span id="nb-plur">{{ reservations | length > 1 ?'s':'' }}
-							</span>en cours ou à venir.
-						{% else %}
-							Il n'y a aucune réservation à afficher.
-						{% endif %}
-					</caption>
-					<thead>
-						<tr>
-							<th scope="col" class="sortable" data-type="date">
-								<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Début</button>
-							</th>
-							<th scope="col" class="sortable" data-type="date">
-								<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Fin</button>
-							</th>
-							<th scope="col" class="sortable" data-type="text">
-								<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Véhicule</button>
-							</th>
-							<th scope="col" class="sortable" data-type="text">
-								<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Réservé par</button>
-							</th>
-							<th scope="col" class="sortable" data-type="text">
-								<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Statut</button>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-
-						{% for i, resa in reservations %}
-
-							{% set vl = resa.vehicule %}
-							{% set color = "normal" %}
-							{% if resa.statut.code == 'Confirmée' %}
-								{% set color = "green" %}
-							{% elseif resa.statut.code == 'Annulée'%}
-								{% set color = "red" %}
-							{% elseif resa.statut.code == 'En cours'%}
-								{% set color = "grey" %}
-							{% endif %}
-
-
-							<tr id="table-row-key-{{i}}" data-row-key="{{i}}" data-id="{{ resa.id }}" class="bg-{{ color }}">
-								<td>
-									{{date(resa.dateDebut) | date('d/m/Y')}}&nbsp;à&nbsp;{{resa.heureDebut}}
-								</td>
-								<td>
-									{{date(resa.dateFin) | date('d/m/Y')}}&nbsp;à&nbsp;{{resa.heureFin}}
-								</td>
-								<td data-vl="{{ resa.vehicule.id }}">
-									{{ vl.marque }}
-									{{ vl.modele }}
-									-
-									{{ vl.immatriculation }}
-								</td>
-								<td>
-									{{resa.user |trim('0') }}
-									({{ nigends[resa.user] }})
-								</td>
-								{# <td>
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																										@Todo
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									</td> #}
-								<td title="{{ resa.statut.libelle }}">
-									{{ resa.statut.code }}
-								</td>
-								{# <td>
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		@todo
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	</td> #}
+							{{ reservations | length }}&nbsp;réservation{{ reservations | length > 1 ?'s':'' }}&nbsp;en cours ou à venir.
+						</caption>
+						<thead>
+							<tr>
+								<th scope="col" class="sortable" data-type="date">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Début</button>
+								</th>
+								<th scope="col" class="sortable" data-type="date">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Fin</button>
+								</th>
+								<th scope="col" class="sortable" data-type="text">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Véhicule</button>
+								</th>
+								<th scope="col" class="sortable" data-type="text">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Réservé par</button>
+								</th>
+								<th scope="col" class="sortable" data-type="text">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Statut</button>
+								</th>
 							</tr>
+						</thead>
+						<tbody>
 
-						{% else %}
+							{% for i, resa in reservations %}
 
-							<tr id="table-row-key-1" data-row-key="1">
-								<td colspan="6">
-									Il n'y a aucune réservation en cours ou à venir.
-								</td>
-							</tr>
+								{% set vl = resa.vehicule %}
+								{% set color = "normal" %}
+								{% if resa.statut.code == 'Confirmée' %}
+									{% set color = "green" %}
+								{% elseif resa.statut.code == 'Annulée'%}
+									{% set color = "red" %}
+								{% elseif resa.statut.code == 'En cours'%}
+									{% set color = "grey" %}
+								{% endif %}
 
-						{% endfor %}
-					</tbody>
-				</table>
+
+								<tr id="table-row-key-{{i}}" data-row-key="{{i}}" data-id="{{ resa.id }}" class="bg-{{ color }}">
+									<td>
+										{{date(resa.dateDebut) | date('d/m/Y')}}&nbsp;à&nbsp;{{resa.heureDebut}}
+									</td>
+									<td>
+										{{date(resa.dateFin) | date('d/m/Y')}}&nbsp;à&nbsp;{{resa.heureFin}}
+									</td>
+									<td data-vl="{{ resa.vehicule.id }}">
+										{{ vl.marque }}
+										{{ vl.modele }}
+										-
+										{{ vl.immatriculation }}
+									</td>
+									<td>
+										{{resa.user |trim('0') }}
+										({{ nigends[resa.user] }})
+									</td>
+									{# <td>
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			@Todo
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		</td> #}
+									<td title="{{ resa.statut.libelle }}">
+										{{ resa.statut.code }}
+									</td>
+									{# <td>
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											@todo
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																										</td> #}
+								</tr>
+
+							{% else %}
+
+								<tr id="table-row-key-1" data-row-key="1">
+									<td colspan="6">
+										Il n'y a aucune réservation en cours ou à venir.
+									</td>
+								</tr>
+
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>{% endblock %}
+{% endblock %}
