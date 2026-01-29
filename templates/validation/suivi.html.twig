@@ -44,7 +44,7 @@
 		</div>
 		<div class="fr-col-12 fr-col-sm-4 fr-col-md-3">
 			<label class="fr-label" for="filter-user">Utilisateur</label>
-			<input class="fr-input" type="text" id="filter-user" placeholder="Nom ou Nigend...">
+			<input class="fr-input" type="text" id="filter-user" placeholder="Nigend ou prenom.nom">
 		</div>
 		<div class="fr-col-12 fr-col-sm-4 fr-col-md-3">
 			<label class="fr-label" for="filter-datedebut">Période (à partir du ...)</label>
@@ -116,14 +116,14 @@
 										({{ nigends[resa.user] }})
 									</td>
 									{# <td>
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			@Todo
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		</td> #}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																												@Todo
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											</td> #}
 									<td title="{{ resa.statut.libelle }}">
 										{{ resa.statut.code }}
 									</td>
 									{# <td>
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											@todo
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																										</td> #}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				@todo
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			</td> #}
 								</tr>
 
 							{% else %}
