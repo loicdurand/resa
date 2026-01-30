@@ -75,6 +75,9 @@ class UserSearchController extends AbstractController
 
         $suggestions = [];
         foreach ($results as $entry) {
+            if (empty($entry['nigend']))
+                continue;
+
             [$uid] = preg_split("/@/", $entry['mail'][0]);
             $suggestions[] = [
                 'label' =>  $entry['nigend'][0] . ' - ' . $uid,
@@ -145,12 +148,7 @@ class UserSearchController extends AbstractController
                     }
                 } else {
                     foreach (['displayName', 'employeeNumber', 'mail', 'postalCode', 'employeeType', 'title', 'specialite'] as $attr) {
-                        if ($attr === "postalCode") {
-                            $at = $entry->getAttribute($attr);
-                            $postcode = $at[0];
-                            $dptCode = str_starts_with($postcode, '97') ? substr($postcode, 0, 3) : substr($postcode, 0, 2);
-                            $attributes[$attr] = [$dptCode];
-                        } else if ($attr === "employeeNumber") {
+                        if ($attr === "employeeNumber") {
                             $attributes["nigend"] = $entry->getAttribute($attr) ?? [];
                         } else {
                             $attributes[strtolower($attr)] = $entry->getAttribute($attr) ?? [];

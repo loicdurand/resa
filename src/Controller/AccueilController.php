@@ -303,6 +303,9 @@ class AccueilController extends AbstractController
                     $entity->setBanned(false);
                     $this->em->persist($entity);
                     $this->em->flush();
+                    $exists = $this->em
+                        ->getRepository(User::class)
+                        ->findOneBy(['nigend' => $beneficiaire]);
                 }
 
 
@@ -321,7 +324,7 @@ class AccueilController extends AbstractController
                     $demandeur = $this->em
                         ->getRepository(User::class)
                         ->findOneBy(['nigend' => $reservation->getDemandeur()]);
-                    $user_mail = $demandeur->getMail();
+                    $user_mail = $exists->getMail();
                     SsoService::mail(
                         "[Copie]: " . $mail->getSubject(),
                         $mail->getBody(),

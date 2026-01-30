@@ -134,6 +134,7 @@ class ValidationController extends AbstractController
             $this->getAppConst(),
             $this->params,
             [
+                'profil' => $user->getProfil(),
                 'reservations' => $resas,
                 'filtre_validateur' => $filtre_validateur
             ]
