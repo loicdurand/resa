@@ -176,8 +176,12 @@ class ValidationController extends AbstractController
             $nigend = $resa->getUser();
             if (!array_key_exists($nigend, $nigends)) {
                 $usr = $em->getRepository(User::class)->findOneBy(['nigend' => $nigend]);
-                $mail = $usr->getMail();
-                [$uid] = preg_split("/@/", $mail);
+                if (!is_null($usr)) {
+                    $mail = $usr->getMail();
+                    [$uid] = preg_split("/@/", $mail);
+                } else {
+                    $uid = '';
+                }
                 $nigends[$nigend] = $uid;
             }
             $vl = $resa->getVehicule();
