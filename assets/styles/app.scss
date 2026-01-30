@@ -55,6 +55,11 @@ body.container .debug {
     }
 }
 
+.clip {
+    max-width: 30ch;
+    overflow: hidden;
+}
+
 .cs-main {
     margin-top: 10.5rem !important;
 }

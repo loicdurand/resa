@@ -355,3 +355,20 @@ const filterTable = () => {
 ['filter-vehicule', 'filter-user', 'filter-datedebut', 'filter-datefin'].forEach(id => {
   document.getElementById(id)?.addEventListener('input', filterTable);
 });
+
+const checkboxes = document.querySelectorAll('#restrictions-form [type="checkbox"]');
+checkboxes.forEach(checkbox => {
+  checkbox.addEventListener('change', ({ currentTarget: { checked, id } }) => {
+    const checkeds = [...checkboxes].filter(chx => chx.checked).map(chx => chx.id.replace(/.*-/g, ''));
+    const rows = document.querySelectorAll('tbody tr:not(.no-result)');
+    console.log(checkeds);
+    rows.forEach(row => {
+      if (!checkeds.length || checkeds.includes(row.dataset.restriction)) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    })
+
+  })
+});

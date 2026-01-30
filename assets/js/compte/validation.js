@@ -209,7 +209,8 @@ function get_option(vl) {
   const restrictions = {
     "EM": "[RÉSERVÉ EM]",
     "NON_OPE": "[AV. JUGEMENT]",
-    "ATELIER": "[Maintenance]"
+    "ATELIER": "[Maintenance]",
+    "DOTATION": "[DOTATION]"
   }
 
   const  // 

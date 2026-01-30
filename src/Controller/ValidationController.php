@@ -162,6 +162,15 @@ class ValidationController extends AbstractController
         $nigends = [];
         $vls = [];
         $vl_ids = [];
+        $restrs = [];
+
+        $restrictions = [
+            "NONE" => "Après jugement",
+            "EM" => "Réservé État-Major",
+            "NON_OPE" => "Avant jugement",
+            "ATELIER" => "Maintenance",
+            "DOTATION" => "Dotation"
+        ];
 
         foreach ($resas as $resa) {
             $nigend = $resa->getUser();
@@ -177,6 +186,11 @@ class ValidationController extends AbstractController
                 $vl_ids[] = $vl->getId();
                 $vls[] = $vl;
             }
+
+            $restr = $vl->getRestriction();
+            if (!in_array($restr, $restrs)) {
+                $restrs[$restr->getCode()] = $restrictions[$restr->getCode()];
+            }
         }
 
         return $this->render('validation/suivi.html.twig', array_merge(
@@ -186,12 +200,8 @@ class ValidationController extends AbstractController
                 'reservations' => $resas,
                 'nigends' => $nigends,
                 'liste_vehicules' => $vls,
-                'restrictions' => [
-                    "NONE" => "",
-                    "EM" => "[RÉSERVÉ EM]",
-                    "NON_OPE" => "[AV. JUGEMENT]",
-                    "ATELIER" => "[Maintenance]"
-                ]
+                'restrictions' => $restrictions,
+                'unique_restrictions' => $restrs
             ]
         ));
     }
