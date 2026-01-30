@@ -236,13 +236,13 @@ class ValidationController extends AbstractController
                     false
                 );
                 // change le destinataire du mail pour le valideur
-                $mail->setValideursAsRecipient($mail->getValideurType($reservation), "CSAG_EN_COPIE");
-                SsoService::mail(
-                    "[Copie]: " . $mail->getSubject(),
-                    $mail->getBody(),
-                    $mail->getRecipients(),
-                    false
-                );
+                // $mail->setValideursAsRecipient($mail->getValideurType($reservation), "CSAG_EN_COPIE");
+                // SsoService::mail(
+                //     "[Copie]: " . $mail->getSubject(),
+                //     $mail->getBody(),
+                //     $mail->getRecipients(),
+                //     false
+                // );
             } catch (\Throwable $th) {
                 //throw $th;
             }
@@ -288,13 +288,13 @@ class ValidationController extends AbstractController
                 false
             );
             // change le destinataire du mail pour le valideur
-            $mail->setValideursAsRecipient($mail->getValideurType($reservation), "CSAG_EN_COPIE");
-            SsoService::mail(
-                "[Copie]: " . $mail->getSubject(),
-                $mail->getBody(),
-                $mail->getRecipients(),
-                false
-            );
+            // $mail->setValideursAsRecipient($mail->getValideurType($reservation), "CSAG_EN_COPIE");
+            // SsoService::mail(
+            //     "[Copie]: " . $mail->getSubject(),
+            //     $mail->getBody(),
+            //     $mail->getRecipients(),
+            //     false
+            // );
         } else {
             sleep(seconds: 1.5);
         }
@@ -347,13 +347,13 @@ class ValidationController extends AbstractController
                 false
             );
             // change le destinataire du mail pour le valideur
-            $mail->setValideursAsRecipient($mail->getValideurType($reservation));
-            SsoService::mail(
-                "[Copie]: " . $mail->getSubject(),
-                $mail->getBody(),
-                $mail->getRecipients(),
-                false
-            );
+            // $mail->setValideursAsRecipient($mail->getValideurType($reservation));
+            // SsoService::mail(
+            //     "[Copie]: " . $mail->getSubject(),
+            //     $mail->getBody(),
+            //     $mail->getRecipients(),
+            //     false
+            // );
         } else {
             sleep(seconds: 1.5);
         }
