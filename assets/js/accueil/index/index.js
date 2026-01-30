@@ -357,6 +357,12 @@ const filterTable = () => {
 });
 
 const checkboxes = document.querySelectorAll('#restrictions-form [type="checkbox"]');
+
+if (checkboxes.length) {
+  document.body.classList.remove('container');
+  [...document.getElementsByClassName('fr-container')].forEach(elt => elt.classList.add('plus-large'));
+}
+
 checkboxes.forEach(checkbox => {
   checkbox.addEventListener('change', ({ currentTarget: { checked, id } }) => {
     const checkeds = [...checkboxes].filter(chx => chx.checked).map(chx => chx.id.replace(/.*-/g, ''));

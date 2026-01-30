@@ -438,14 +438,16 @@ table:not(.no-starter) th {
 /* site centré dans la page, occupe toute la largeur jusqu'à 1240px */
 
 .container {
-	// max-width: 1240px;
+	max-width: 1240px;
 	margin: auto;
 
 	// padding: 15px;
-	& .fr-container {
-		max-width: 90rem;
-	}
 }
+
+.fr-container.plus-large {
+	max-width: 100rem;
+}
+
 
 /* permet de placer les élements .col* côte à côte sans que le conteneur ne prenne une hauteur de 0 */
 
