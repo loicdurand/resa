@@ -73,6 +73,9 @@ modif_resa.forEach(btn => btn.addEventListener('click', ({ target }) => {
 
   axios.post('/resa971/validation/vehicules', { id })
     .then(({ status, data = {} }) => {
+      if (status != 200)
+        location.reload();
+
       const vls = data.vl;
       select_vl.innerHTML = '';
       if (vls.length) {
@@ -82,6 +85,10 @@ modif_resa.forEach(btn => btn.addEventListener('click', ({ target }) => {
         select_vl.innerHTML = '<option value="" disabled selected>Aucun véhicule équivalent trouvé</option>';
         modif_resa_confirm.disabled = true;
       }
+    })
+    .catch(err => {
+      loader.classList.remove('loading');
+      location.reload();
     });
 }));
 
@@ -102,6 +109,9 @@ modif_resa_confirm.addEventListener('click', ({ target }) => {
 
   axios.post('/resa971/validation/modif', { id, vl: selected.value })
     .then(({ status, data = {} }) => {
+      if (status != 200)
+        location.reload();
+
       loader.classList.remove('loading');
       const // 
         vl = selected.dataset,
@@ -137,6 +147,7 @@ modif_resa_confirm.addEventListener('click', ({ target }) => {
     })
     .catch(err => {
       loader.classList.remove('loading');
+      location.reload();
     });
 });
 
@@ -160,7 +171,8 @@ annul_resa_confirm.addEventListener('click', ({ target: { dataset: { id } } }) =
 
   axios.post('/resa971/validation/suppr', { id })
     .then(({ status, data = {} }) => {
-
+      if (status != 200)
+        location.reload();
       loader.classList.remove('loading');
       const statuts = ctnr.querySelectorAll('.en.attente');
       statuts.forEach(elt => {
@@ -180,6 +192,7 @@ annul_resa_confirm.addEventListener('click', ({ target: { dataset: { id } } }) =
     })
     .catch(err => {
       loader.classList.remove('loading');
+      location.reload();
     });
 });
 

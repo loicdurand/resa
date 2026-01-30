@@ -224,6 +224,18 @@ class ValidationController extends AbstractController
 
         $reservation = $em->getRepository(Reservation::class)
             ->findOneBy(['id' => $id]);
+
+        $statut_valide = $em
+            ->getRepository(StatutReservation::class)
+            ->findOneBy(['code' => 'Confirmée']);
+
+        $reservation = $em->getRepository(Reservation::class)
+            ->findOneBy(['id' => $id]);
+
+        $reservation->setStatut($statut_valide);
+        $em->persist($reservation);
+        $em->flush();
+
         $mailer = new MailService($em);
         $mail = $mailer->mailForValidation($reservation);
         if ($this->getParameter('app.env') == 'prod') {
@@ -250,17 +262,6 @@ class ValidationController extends AbstractController
             sleep(seconds: 1.5);
         }
 
-        $statut_valide = $em
-            ->getRepository(StatutReservation::class)
-            ->findOneBy(['code' => 'Confirmée']);
-
-        $reservation = $em->getRepository(Reservation::class)
-            ->findOneBy(['id' => $id]);
-
-        $reservation->setStatut($statut_valide);
-        $em->persist($reservation);
-        $em->flush();
-
         return $this->json([
             'id' => $reservation->getId(),
             'statut' => $reservation->getStatut()->getCode()
@@ -277,6 +278,24 @@ class ValidationController extends AbstractController
 
         $reservation = $em->getRepository(Reservation::class)
             ->findOneBy(['id' => $id]);
+
+        $statut_valide = $em
+            ->getRepository(StatutReservation::class)
+            ->findOneBy(['code' => 'Confirmée']);
+
+        $vl = $em
+            ->getRepository(Vehicule::class)
+            ->findOneBy(['id' => $vehicule_id]);
+
+        $reservation = $em->getRepository(Reservation::class)
+            ->findOneBy(['id' => $id]);
+
+        $reservation->setStatut($statut_valide);
+        $reservation->setVehicule($vl);
+
+        $em->persist($reservation);
+        $em->flush();
+
         $mailer = new MailService($em);
         $mail = $mailer->mailForEchangeVL($reservation);
         if ($this->getParameter('app.env') == 'prod') {
@@ -299,23 +318,6 @@ class ValidationController extends AbstractController
             sleep(seconds: 1.5);
         }
 
-        $statut_valide = $em
-            ->getRepository(StatutReservation::class)
-            ->findOneBy(['code' => 'Confirmée']);
-
-        $vl = $em
-            ->getRepository(Vehicule::class)
-            ->findOneBy(['id' => $vehicule_id]);
-
-        $reservation = $em->getRepository(Reservation::class)
-            ->findOneBy(['id' => $id]);
-
-        $reservation->setStatut($statut_valide);
-        $reservation->setVehicule($vl);
-
-        $em->persist($reservation);
-        $em->flush();
-
         return $this->json([
             'id' => $reservation->getId(),
             'statut' => $reservation->getStatut()->getCode()
@@ -335,6 +337,10 @@ class ValidationController extends AbstractController
 
         $reservation = $em->getRepository(Reservation::class)
             ->findOneBy(['id' => $id]);
+
+        $reservation->setStatut($statut_annulee);
+        $em->persist($reservation);
+        $em->flush();
 
         $mailer = new MailService($em);
         $mail = $mailer->mailForInvalidation($reservation);
@@ -357,10 +363,6 @@ class ValidationController extends AbstractController
         } else {
             sleep(seconds: 1.5);
         }
-
-        $reservation->setStatut($statut_annulee);
-        $em->persist($reservation);
-        $em->flush();
 
         return $this->json([
             'id' => $reservation->getId(),
