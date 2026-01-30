@@ -205,19 +205,10 @@
 
 				<div id="form-submit-ctnr" class="{{filtered ? '' : 'hidden ' }}fr-btns-group--right fr-mt-2w fr-mr-1w">
 					<div>
-						{% if vehicule.restriction.code == 'NONE' or vehicule.restriction.code == 'EM' %}
 
-							<button id="form-submit-btn" aria-controls="modal-select_valideur" data-fr-opened="false" type="button" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-right">
-								Je réserve
-							</button>
-
-						{% else %}
-
-							<button id="form-submit-btn" aria-controls="modal-restriction" data-fr-opened="false" type="button" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-right">
-								Je réserve
-							</button>
-
-						{% endif %}
+						<button id="form-submit-btn" aria-controls="modal-select_valideur" data-fr-opened="false" type="button" class="fr-btn fr-btn--md fr-fi-arrow-right-line fr-btn--icon-right">
+							Je réserve
+						</button>
 
 					</div>
 				</div>
@@ -227,7 +218,7 @@
 
 		{{ include('accueil/reserver/modale_ope.html.twig')}}
 
-		{{ include('accueil/reserver/modale_avant_jugement.html.twig')}}
+		{# {{ include('accueil/reserver/modale_avant_jugement.html.twig')}} #}
 
 		{{ form_end(form) }}
 
