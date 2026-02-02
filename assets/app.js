@@ -26,6 +26,9 @@ new Router('/', {
   '/resa971/validation': () => {
     import('./js/compte/validation');
   },
+  '/resa971/suivi': () => {
+    import('./js/compte/suivi');
+  },
   '/resa971': () => {
     import('./js/accueil/index/index');
   }

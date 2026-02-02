@@ -1,0 +1,74 @@
+{# modale #}
+<dialog aria-labelledby="cs-modale-suivi-title" id="cs-modale-suivi" class="fr-modal" role="dialog">
+	<div class="fr-container fr-container--fluid fr-container-md">
+		<div class="fr-grid-row fr-grid-row--center">
+			<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+				<div class="fr-modal__body">
+					<div class="fr-modal__header">
+						<button class="fr-btn--close fr-btn" aria-controls="cs-modale-suivi">
+							Fermer
+						</button>
+					</div>
+					<div class="fr-modal__content">
+						<h2 id="cs-modale-suivi-title" class="fr-modal__title">
+							<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+							Modification
+							<span id="modal-jour"></span>
+						</h2>
+
+						<p>Vous souhaitez modifier l'observation laissée par la personne à l'origine de cette réservation, à savoir:</p>
+						<figure class="fr-quote fr-quote--column">
+							<blockquote>
+								<p class="fr-text--md">«&nbsp;<span id="modale-suivi--observation"></span>&nbsp;»</p>
+							</blockquote>
+							<figcaption>
+								<ul class="fr-quote__source">
+									<li id="modale-suivi--beneficiaire">Réservation faite par:
+										<span id="modale-suivi--demandeur"></span>
+									</li>
+									<li>Bénéficiaire du véhicule:
+										<span id="modale-suivi--user"></span>
+									</li>
+								</ul>
+								<div class="fr-quote__image">
+									<img class="fr-responsive-img" id="modale-suivi--img" src="" alt="Image du véhicule réservé"/>
+								</div>
+							</figcaption>
+						</figure>
+
+						<p class="fr-mt-2w">Votre observation remplacera celle figurant dans le présent suivi. L'observation originale est conservée en base de données, pour mémoire.</p>
+
+						<div class="fr-input-group" id="input-group-observ_valideur">
+							<label class="fr-label" for="input-observ_valideur">
+								Saisissez VOTRE observation:
+							</label>
+							<textarea class="fr-input" aria-describedby="input-observ_valideur-messages" id="input-observ_valideur"></textarea>
+							<div class="fr-messages-group" id="input-observ_valideur-messages" aria-live="polite"></div>
+						</div>
+
+					</div>
+
+					<div class="fr-modal__footer">
+						<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+							<button id="submit-observ_valideur" type="button" disabled class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">
+								Sauvegarder
+								<div class="loader hidden" id="submit-observ_valideur--loader">
+									<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewbox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+										<path opacity="1" fill="#fff" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+																																																																																																																																																																																																																																																																	            s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+																																																																																																																																																																																																																																																																	          c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
+										<path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+																																																																																																																																																																																																																																																																																																							            C22.32,8.481,24.301,9.057,26.013,10.047z">
+											<animateTransform attributetype="xml" attributename="transform" type="rotate" from="0 20 20" to="360 20 20" dur="0.5s" repeatcount="indefinite"/>
+										</path>
+									</svg>
+								</div>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</dialog>
+{# fin modale #}

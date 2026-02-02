@@ -83,7 +83,7 @@
 		<div class="fr-table__wrapper">
 			<div class="fr-table__container">
 				<div class="fr-table__content">
-					<table class="no-starter">
+					<table class="no-starter cs-table-horaires">
 						<caption class="w100">
 							{{ reservations | length }}&nbsp;réservation{{ reservations | length > 1 ?'s':'' }}&nbsp;en cours ou à venir.
 						</caption>
@@ -143,14 +143,15 @@
 										-
 										{{ vl.immatriculation }}
 									</td>
-									<td class="clip">
-
-										{% if resa.observation | length >= 30 %}
-											<abbr title="{{ resa.observation }}">{{ resa.observation }}</abbr>
-										{% else %}
-											{{ resa.observation }}
-										{% endif %}
-
+									<td>
+										{% set observation = resa.observationValideur is not null ? resa.observationValideur : resa.observation %}
+										<button type="button" data-fr-opened="false" aria-controls="cs-modale-suivi" class="fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line" data-id="{{resa.id}}" data-user="{{resa.user|trim('0')}}&nbsp;({{ nigends[resa.user] }})" data-demandeur="{{resa.user != resa.demandeur and resa.demandeur is not null ? resa.demandeur|trim('0') ~ ' ('~ nigends[resa.demandeur]~')':''}}" data-img="{{ resa.vehicule.photos | length ? asset('images/uploads/' ~ resa.vehicule.photos[0].path) : asset('images/no_image.jpg') }}" data-observation="{{ resa.observation }}">
+											{% if observation | length >= 23 %}
+												<abbr id="observation-resa-{{resa.id}}" class="clip" title="{{ observation }}">{{ observation }}</abbr>
+											{% else %}
+												<span id="observation-resa-{{resa.id}}">{{ observation }}</span>
+											{% endif %}
+										</button>
 									</td>
 
 									<td>
@@ -167,8 +168,8 @@
 									</td>
 
 									{# <td>
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																								@todo
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							</td> #}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									@todo
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																								</td> #}
 								</tr>
 
 							{% else %}
@@ -186,4 +187,7 @@
 			</div>
 		</div>
 	</div>
+
+	{{ include('validation/suivi/modale_suivi.html.twig') }}
+
 {% endblock %}

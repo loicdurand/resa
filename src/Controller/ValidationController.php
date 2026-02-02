@@ -405,6 +405,26 @@ class ValidationController extends AbstractController
         ]);
     }
 
+    #[Route('/validation/changementobservation', name: 'resa_changementobservation', methods: ['POST'])]
+    public function changementobservation(ManagerRegistry $doctrine, RequestStack $requestStack)
+    {
+        $data = (array) json_decode($this->request->getContent());
+        $id = $data['id'];
+        $msg = $data['msg'];
+        $em = $doctrine->getManager();
+        $reservation = $em->getRepository(Reservation::class)
+            ->findOneBy(['id' => $id]);
+
+        if ($msg != "")
+            $reservation->setObservationValideur($msg);
+        $em->persist($reservation);
+        $em->flush();
+
+        return $this->json([
+            'id' => $reservation->getId()
+        ]);
+    }
+
     /**
      * Utils
      */

@@ -53,6 +53,9 @@ class Reservation
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $message_valideur = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $observation_valideur = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime('now', new \DateTimeZone('America/Guadeloupe'));
@@ -203,6 +206,18 @@ class Reservation
     public function setMessageValideur(?string $message_valideur): static
     {
         $this->message_valideur = $message_valideur;
+
+        return $this;
+    }
+
+    public function getObservationValideur(): ?string
+    {
+        return $this->observation_valideur;
+    }
+
+    public function setObservationValideur(?string $observation_valideur): static
+    {
+        $this->observation_valideur = $observation_valideur;
 
         return $this;
     }

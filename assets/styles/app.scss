@@ -56,8 +56,9 @@ body.container .debug {
 }
 
 .clip {
-    max-width: 30ch;
+    max-width: 23ch;
     overflow: hidden;
+    display: block;
 }
 
 .cs-main {
