@@ -324,8 +324,8 @@ const filterTable = () => {
 
   rows.forEach(row => {
     // On récupère le texte des colonnes (index 2 pour Véhicule, 3 pour User, 0 pour Date)
-    const txtVehicule = row.children[2].dataset.vl.toLowerCase();
-    const txtUser = row.children[3].innerText.toLowerCase();
+    const txtVehicule = row.children[3].dataset.vl.toLowerCase();
+    const txtUser = row.children[5].innerText.toLowerCase(); console.log(txtUser);
 
     // Extraction de la date pour comparaison (on transforme JJ/MM/AAAA en objet Date)
     const cellDateDebutParts = row.children[0].innerText.trim().replace(/\s.*$/, '').split('/');

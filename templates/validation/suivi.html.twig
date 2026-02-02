@@ -95,6 +95,9 @@
 								<th scope="col" class="sortable" data-type="date">
 									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Fin</button>
 								</th>
+								<th scope="col" class="sortable">
+									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Restriction</button>
+								</th>
 								<th scope="col" class="sortable" data-type="text">
 									<button type="button" class="fr-btn--tertiary-no-outline fr-icon-arrow-up-down-line fr-btn--icon-right">Véhicule</button>
 								</th>
@@ -131,6 +134,9 @@
 									<td>
 										{{date(resa.dateFin) | date('d/m/Y')}}&nbsp;{{resa.heureFin}}
 									</td>
+									<td>
+										{{ restrictions[vl.restriction.code] }}
+									</td>
 									<td data-vl="{{ resa.vehicule.id }}">
 										{{ vl.marque }}
 										{{ vl.modele }}
@@ -161,8 +167,8 @@
 									</td>
 
 									{# <td>
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				@todo
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			</td> #}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																													@todo
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																												</td> #}
 								</tr>
 
 							{% else %}

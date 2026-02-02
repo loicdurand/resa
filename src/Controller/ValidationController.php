@@ -169,7 +169,8 @@ class ValidationController extends AbstractController
             "EM" => "Réservé État-Major",
             "NON_OPE" => "Avant jugement",
             "ATELIER" => "Maintenance",
-            "DOTATION" => "Dotation"
+            "DOTATION" => "Dotation",
+            "APR_JGT" => "Après jugement"
         ];
 
         foreach ($resas as $resa) {
