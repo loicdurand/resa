@@ -102,12 +102,13 @@ modif_resa_confirm.addEventListener('click', ({ target }) => {
   const //
     selected = select_vl.options[select_vl.selectedIndex],
     ctnr = document.getElementById(`valid-resa-${id}`),
+    msg = document.getElementById('msg-demandeur--confirm').value,
     loader = ctnr.querySelector('.loader');
   loader.classList.remove('hidden');
   loader.classList.add('loading');
   close_modale('modification');
 
-  axios.post('/resa971/validation/modif', { id, vl: selected.value })
+  axios.post('/resa971/validation/modif', { id, vl: selected.value, msg })
     .then(({ status, data = {} }) => {
       if (status != 200)
         location.reload();
@@ -164,12 +165,13 @@ annul_resa.forEach(btn => btn.addEventListener('click', ({ target }) => {
 annul_resa_confirm.addEventListener('click', ({ target: { dataset: { id } } }) => {
   const // 
     ctnr = document.getElementById(`valid-resa-${id}`),
+    msg = document.getElementById('msg-demandeur--delete').value,
     loader = ctnr.querySelector('.loader');
   loader.classList.remove('hidden');
   loader.classList.add('loading');
   close_modale('suppression');
 
-  axios.post('/resa971/validation/suppr', { id })
+  axios.post('/resa971/validation/suppr', { id, msg })
     .then(({ status, data = {} }) => {
       if (status != 200)
         location.reload();
@@ -210,7 +212,8 @@ function get_option(vl) {
     "EM": "[RÉSERVÉ EM]",
     "NON_OPE": "[AV. JUGEMENT]",
     "ATELIER": "[Maintenance]",
-    "DOTATION": "[DOTATION]"
+    "DOTATION": "[DOTATION]",
+    "APR_JGT": "[APR. JUGEMENT]"
   }
 
   const  // 

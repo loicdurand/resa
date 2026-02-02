@@ -302,6 +302,7 @@ class ValidationController extends AbstractController
         $data = (array) json_decode($this->request->getContent());
         $id = $data['id'];
         $vehicule_id = $data['vl'];
+        $msg = $data['msg'];
         $em = $doctrine->getManager();
 
         $reservation = $em->getRepository(Reservation::class)
@@ -320,6 +321,8 @@ class ValidationController extends AbstractController
 
         $reservation->setStatut($statut_valide);
         $reservation->setVehicule($vl);
+        if ($msg != "")
+            $reservation->setMessageValideur($msg);
 
         $em->persist($reservation);
         $em->flush();
@@ -357,6 +360,7 @@ class ValidationController extends AbstractController
     {
         $data = (array) json_decode($this->request->getContent());
         $id = $data['id'];
+        $msg = $data['msg'];
         $em = $doctrine->getManager();
 
         $statut_annulee = $em
@@ -367,11 +371,14 @@ class ValidationController extends AbstractController
             ->findOneBy(['id' => $id]);
 
         $reservation->setStatut($statut_annulee);
+        if ($msg != "")
+            $reservation->setMessageValideur($msg);
         $em->persist($reservation);
         $em->flush();
 
         $mailer = new MailService($em);
         $mail = $mailer->mailForInvalidation($reservation);
+        dd($mail);
         if ($this->getParameter('app.env') == 'prod') {
             // Envoi du mail via le SSO
             SsoService::mail(

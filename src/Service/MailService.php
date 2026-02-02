@@ -69,6 +69,7 @@ class MailService
   public function mailForEchangeVL($reservation)
   {
     $nigend = $reservation->getUser();
+    $message = $reservation->getMessageValideur();
     $demandeur = $this
       ->manager
       ->getRepository(User::class)
@@ -78,20 +79,24 @@ class MailService
 
     $this
       ->setSubject("Modification de votre demande de réservation effectuée sur le site Résa971")
-      ->setBody("Votre demande de réservation a été validée par votre valideur.\n
+      ->setBody(
+        "Votre demande de réservation a été validée par votre valideur.\n
         Toutefois, le véhicule que vous aviez demandé a été échangé pour un véhicule équivalent (présence de sérigraphie ou non, nombre de place au moins égal).\n\n" .
-        "DÉTAILS DE LA RÉSERVATION\n" .
-        ($reservation->getId() ? "ID de la réservation : " . $reservation->getId() . "\n" : "") .
-        "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . " " . $reservation->getVehicule()->getImmatriculation() . "\n" .
-        "Date de début : " . $reservation->getDateDebut()->format('d/m/Y H:i') . "\n" .
-        "Date de fin : " . $reservation->getDateFin()->format('d/m/Y H:i') . "\n" .
-        "Utilisateur : " . $reservation->getUser() . "\n");
+          "DÉTAILS DE LA RÉSERVATION\n" .
+          ($reservation->getId() ? "ID de la réservation : " . $reservation->getId() . "\n" : "") .
+          "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . " " . $reservation->getVehicule()->getImmatriculation() . "\n" .
+          "Date de début : " . $reservation->getDateDebut()->format('d/m/Y H:i') . "\n" .
+          "Date de fin : " . $reservation->getDateFin()->format('d/m/Y H:i') . "\n" .
+          "Utilisateur : " . $reservation->getUser() . "\n" .
+          (is_null($message || $message == "") ? "" : "\nMessage de votre valideur : \"$message\"")
+      );
     return $this;
   }
 
   public function mailForInvalidation($reservation)
   {
     $nigend = $reservation->getUser();
+    $message = $reservation->getMessageValideur();
     $demandeur = $this
       ->manager
       ->getRepository(User::class)
@@ -101,13 +106,16 @@ class MailService
 
     $this
       ->setSubject("Annulation de votre demande de réservation effectuée sur le site Résa971")
-      ->setBody("Votre demande de réservation a été annulée par votre valideur.\n\n" .
-        "DÉTAILS DE LA DEMANDE\n" .
-        ($reservation->getId() ? "ID de la réservation : " . $reservation->getId() . "\n" : "") .
-        "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . " " . $reservation->getVehicule()->getImmatriculation() . "\n" .
-        "Date de début : " . $reservation->getDateDebut()->format('d/m/Y H:i') . "\n" .
-        "Date de fin : " . $reservation->getDateFin()->format('d/m/Y H:i') . "\n" .
-        "Utilisateur : " . $reservation->getUser() . "\n");
+      ->setBody(
+        "Votre demande de réservation a été annulée par votre valideur.\n\n" .
+          "DÉTAILS DE LA DEMANDE\n" .
+          ($reservation->getId() ? "ID de la réservation : " . $reservation->getId() . "\n" : "") .
+          "Véhicule : " . $reservation->getVehicule()->getMarque() . " " . $reservation->getVehicule()->getModele() . " " . $reservation->getVehicule()->getImmatriculation() . "\n" .
+          "Date de début : " . $reservation->getDateDebut()->format('d/m/Y H:i') . "\n" .
+          "Date de fin : " . $reservation->getDateFin()->format('d/m/Y H:i') . "\n" .
+          "Utilisateur : " . $reservation->getUser() . "\n" .
+          (is_null($message || $message == "") ? "" : "\nMessage de votre valideur : \"$message\"")
+      );
     return $this;
   }
 
