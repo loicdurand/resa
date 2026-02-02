@@ -5,7 +5,7 @@ console.log('=== compte ===');
 
 const // 
   profil_ctnr = document.getElementById('debug-profil'),
-  profil = profil_ctnr.innerText.trim();
+  profil = profil_ctnr?.innerText.trim();
 if (profil == 'CSAG') {
 
   const // 

@@ -1,4 +1,4 @@
-<div	class="fr-summary"	role="navigation">
+<div class="fr-summary" role="navigation">
 	<p>
 		Définir les horaires de l'atelier a pour principal effet d'empêcher les utilisateurs de réserver un véhicule en dehors de ces horaires.
 	</p>
@@ -7,42 +7,42 @@
 	{% set days_list = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'] %}
 	{% set creneau = 'AM' %}
 
-	<div	class="fr-table">
-		<div	class="fr-table__wrapper">
-			<div	class="fr-table__container">
-				<div	class="fr-table__content">
-					<table	class="cs-table-horaires">
+	<div class="fr-table">
+		<div class="fr-table__wrapper">
+			<div class="fr-table__container">
+				<div class="fr-table__content">
+					<table class="cs-table-horaires no-starter">
 						<caption>
 							Gestion des horaires:
 						</caption>
 						<thead>
 							<tr>
 								<th></th>
-								<th	scope="col"	colspan="2">
+								<th scope="col" colspan="2">
 									MATIN
 								</th>
 								<th></th>
-								<th	scope="col"	colspan="2">
+								<th scope="col" colspan="2">
 									APRÈS-MIDI
 								</th>
 							</tr>
 						</thead>
 						<tbody>
 							{% for i, day_code in days_code_list %}
-								<tr	id="table-no-scroll-row-key-1"	data-row-key="{{ i }}">
-									<th	scope="row">
+								<tr id="table-no-scroll-row-key-1" data-row-key="{{ i }}">
+									<th scope="row">
 										{{ days_list[i] }}
 									</th>
 									<td>
 
 										{% set horaire = horaires | find((h,_) => h.jour == day_code and h.creneau == 'AM') %}
 
-										<button	data-creneau="AM"	data-jour="{{ days_code_list[i] }}"	data-fr-opened="false"	aria-controls="cs-modale-horaires"	class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
+										<button data-creneau="AM" data-jour="{{ days_code_list[i] }}" data-fr-opened="false" aria-controls="cs-modale-horaires" class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
 											{{ horaire.debut is defined ? horaire.debut : '__' }}
 										</button>
 									</td>
 									<td>
-										<button	data-creneau="AM"	data-jour="{{ days_code_list[i] }}"	data-fr-opened="false"	aria-controls="cs-modale-horaires"	class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
+										<button data-creneau="AM" data-jour="{{ days_code_list[i] }}" data-fr-opened="false" aria-controls="cs-modale-horaires" class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
 											{{ horaire.fin is defined ? horaire.fin : '__' }}
 										</button>
 									</td>
@@ -53,12 +53,12 @@
 										-
 									</td>
 									<td>
-										<button	data-creneau="PM"	data-jour="{{ days_code_list[i] }}"	data-fr-opened="false"	aria-controls="cs-modale-horaires"	class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
+										<button data-creneau="PM" data-jour="{{ days_code_list[i] }}" data-fr-opened="false" aria-controls="cs-modale-horaires" class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
 											{{ horaire.debut is defined ? horaire.debut : '__' }}
 										</button>
 									</td>
 									<td>
-										<button	data-creneau="PM"	data-jour="{{ days_code_list[i] }}"	data-fr-opened="false"	aria-controls="cs-modale-horaires"	class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
+										<button data-creneau="PM" data-jour="{{ days_code_list[i] }}" data-fr-opened="false" aria-controls="cs-modale-horaires" class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-right cs-btn--icon-on-hover fr-icon-edit-line">
 											{{ horaire.fin is defined ? horaire.fin : '__' }}
 										</button>
 									</td>
@@ -72,67 +72,66 @@
 	</div>
 
 	{# modale #}
-	<dialog	aria-labelledby="cs-modale-horaires-title"	id="cs-modale-horaires"	class="fr-modal"	role="dialog">
-		<div	class="fr-container fr-container--fluid fr-container-md">
-			<div	class="fr-grid-row fr-grid-row--center">
-				<div	class="fr-col-12 fr-col-md-8 fr-col-lg-6">
-					<div	class="fr-modal__body">
+	<dialog aria-labelledby="cs-modale-horaires-title" id="cs-modale-horaires" class="fr-modal" role="dialog">
+		<div class="fr-container fr-container--fluid fr-container-md">
+			<div class="fr-grid-row fr-grid-row--center">
+				<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+					<div class="fr-modal__body">
 						{{ form_start(form) }}
-						<div	class="fr-modal__header">
-							<button	class="fr-btn--close fr-btn"	aria-controls="cs-modale-horaires">
+						<div class="fr-modal__header">
+							<button class="fr-btn--close fr-btn" aria-controls="cs-modale-horaires">
 								Fermer
 							</button>
 						</div>
-						<div	class="fr-modal__content">
-							<h1	id="cs-modale-horaires-title"	class="fr-modal__title">
-								<span	class="fr-icon-arrow-right-line fr-icon--lg"></span>
+						<div class="fr-modal__content">
+							<h1 id="cs-modale-horaires-title" class="fr-modal__title">
+								<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
 								Horaires
-								<span	id="modal-jour"></span>
+								<span id="modal-jour"></span>
 							</h1>
-							<div	class="fr-grid-row fr-grid-row--gutters">
+							<div class="fr-grid-row fr-grid-row--gutters">
 
-								<fieldset	class="partie-1 fr-fieldset fr-col-12 fr-mb-1w fr-mt-2w"	id="checkboxes"	aria-labelledby="checkboxes-legend checkboxes-messages">
-									<div	class="fr-fieldset__element">
-										<div	class="fr-checkbox-group">
-											<input	name="csag-ferme"	id="csag-ferme"	type="checkbox"	aria-describedby="csag-ferme-messages">
-												<label	class="fr-label"	for="csag-ferme">
-													Fermé
-												</label>
-												<div	class="fr-messages-group"	id="csag-ferme-messages"	aria-live="assertive"></div>
-											</div>
+								<fieldset class="partie-1 fr-fieldset fr-col-12 fr-mb-1w fr-mt-2w" id="checkboxes" aria-labelledby="checkboxes-legend checkboxes-messages">
+									<div class="fr-fieldset__element">
+										<div class="fr-checkbox-group">
+											<input name="csag-ferme" id="csag-ferme" type="checkbox" aria-describedby="csag-ferme-messages">
+											<label class="fr-label" for="csag-ferme">
+												Fermé
+											</label>
+											<div class="fr-messages-group" id="csag-ferme-messages" aria-live="assertive"></div>
 										</div>
-									</fieldset>
-
-										<div	class="fr-col-6">
-											{{ form_label(form.debut) }}
-											{{ form_widget(form.debut) }}
-										</div>
-										<div	class="fr-col-6">
-											{{ form_label(form.fin) }}
-											{{ form_widget(form.fin) }}
-										</div>
-								</div>
-
-								<div	class="hidden">
-
-									<input	id="form-field--jour"	type="hidden"	name="{{ field_name(form.jour) }}"	value="{{ field_value(form.jour) }}"	class="form-control">
-										<input	id="form-field--creneau"	type="hidden"	name="{{ field_name(form.creneau) }}"	value="{{ field_value(form.creneau) }}"	class="form-control">
-											<input	id="form-field--code_unite"	type="hidden"	name="{{ field_name(form.code_unite) }}"	value="{{ field_value(form.code_unite) }}"	class="form-control"></div>
-
-										</div>
-										<div	class="fr-modal__footer fr-mb-6w">
-											<div	class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-												<button	type="submit"	class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">
-													Sauvegarder
-												</button>
-											</div>
-										</div>
-										{{ form_end(form) }}
 									</div>
+								</fieldset>
+
+								<div class="fr-col-6">
+									{{ form_label(form.debut) }}
+									{{ form_widget(form.debut) }}
+								</div>
+								<div class="fr-col-6">
+									{{ form_label(form.fin) }}
+									{{ form_widget(form.fin) }}
 								</div>
 							</div>
+
+							<div class="hidden">
+
+								<input id="form-field--jour" type="hidden" name="{{ field_name(form.jour) }}" value="{{ field_value(form.jour) }}" class="form-control">
+								<input id="form-field--creneau" type="hidden" name="{{ field_name(form.creneau) }}" value="{{ field_value(form.creneau) }}" class="form-control">
+								<input id="form-field--code_unite" type="hidden" name="{{ field_name(form.code_unite) }}" value="{{ field_value(form.code_unite) }}" class="form-control"></div>
+
 						</div>
-					</dialog>
-				{# fin modale #}
+						<div class="fr-modal__footer fr-mb-6w">
+							<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+								<button type="submit" class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">
+									Sauvegarder
+								</button>
+							</div>
+						</div>
+						{{ form_end(form) }}
+					</div>
 				</div>
-				
+			</div>
+		</div>
+	</dialog>
+	{# fin modale #}
+</div>

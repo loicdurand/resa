@@ -91,6 +91,15 @@ class CompteController extends AbstractController
         ];
 
         if (!is_null($permission)) {
+            if (is_null($unite)) {
+                $dpt = $this->session->get('HTTP_DEPARTEMENT');
+                $unite =  $em
+                    ->getRepository(Atelier::class)
+                    ->findOneBy([
+                        'departement' => $dpt,
+                        'nom_court' => 'CSAG ' . $dpt
+                    ]);
+            }
             $horaires = $unite->getHorairesOuverture();
             $horaire = new HoraireOuverture();
             $horaire->setCodeUnite($unite);
