@@ -202,6 +202,15 @@ class AccueilController extends AbstractController
             }
         }
 
+        $badge_classes = [
+            "NONE" => "",
+            "EM" => "info",
+            "NON_OPE" => "warning",
+            "ATELIER" => "",
+            "DOTATION" => "green-menthe",
+            "APR_JGT" => "blue-ecume"
+        ];
+
         return $this->render('accueil/accueil.html.twig', array_merge(
             $this->getAppConst(),
             $this->params,
@@ -212,7 +221,8 @@ class AccueilController extends AbstractController
                 'dates' => $dates,
                 'dates_fin' => $dates_fin,
                 'last_date' => $last_date,
-                'unites' => $unites
+                'unites' => $unites,
+                'badge_classes' => $badge_classes
             ]
         ));
     }

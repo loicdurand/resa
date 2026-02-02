@@ -173,8 +173,7 @@
 
 						<div class="cs-restriction_ctnr">
 							{% if vehicule.restriction is not empty and vehicule.restriction.code != "NONE" %}
-								{% set badge_class = vehicule.restriction.code != "NON_OPE" ? 'info' : 'warning' %}
-								<span class="cs-restriction fr-badge fr-badge--sm fr-badge--{{ badge_class }} fr-icon-information-line fr-badge--icon-left" title="Des restrictions s'appliquent à ce véhicule.">
+								<span class="cs-restriction fr-badge fr-badge--sm fr-badge--{{ badge_classes[vehicule.restriction.code] }} fr-icon-information-line fr-badge--icon-left" title="Des restrictions s'appliquent à ce véhicule.">
 									{{ vehicule.restriction.libelle}}
 								</span>
 							{% endif %}

@@ -129,10 +129,10 @@
 
 								<tr id="table-row-key-{{i}}" data-row-key="{{i}}" data-id="{{ resa.id }}" data-restriction="{{resa.vehicule.restriction.code}}" class="bg-{{ color }}">
 									<td>
-										{{date(resa.dateDebut) | date('d/m/Y')}}&nbsp;{{resa.heureDebut}}
+										{{date(resa.dateDebut) | date('d/m')}}&nbsp;{{resa.heureDebut}}
 									</td>
 									<td>
-										{{date(resa.dateFin) | date('d/m/Y')}}&nbsp;{{resa.heureFin}}
+										{{date(resa.dateFin) | date('d/m')}}&nbsp;{{resa.heureFin}}
 									</td>
 									<td>
 										{{ restrictions[vl.restriction.code] }}
@@ -155,7 +155,7 @@
 
 									<td>
 										{% if resa.user != resa.demandeur and resa.demandeur is not null %}
-											par&nbsp;{{resa.user |trim('0') }}&nbsp;({{ nigends[resa.user] }})&nbsp;pour&nbsp;{{resa.demandeur|trim('0')}}({{ nigends[resa.demandeur] }})
+											par&nbsp;{{resa.demandeur|trim('0')}}({{ nigends[resa.demandeur] }})&nbsp;pour&nbsp;{{resa.user |trim('0') }}&nbsp;({{ nigends[resa.user] }})
 										{% else %}
 											par&nbsp;{{resa.user |trim('0') }}
 											({{ nigends[resa.user] }})
@@ -167,8 +167,8 @@
 									</td>
 
 									{# <td>
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																													@todo
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																												</td> #}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																															@todo
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																														</td> #}
 								</tr>
 
 							{% else %}
