@@ -39,6 +39,9 @@ class User
     #[ORM\Column(nullable: true)]
     private ?bool $banned = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $em_uniquement = null;
+
     public function __construct()
     {
         $this->tokens = new ArrayCollection();
@@ -155,6 +158,18 @@ class User
     public function setBanned(?bool $banned): static
     {
         $this->banned = $banned;
+
+        return $this;
+    }
+
+    public function isEmUniquement(): ?bool
+    {
+        return $this->em_uniquement;
+    }
+
+    public function setEmUniquement(?bool $em_uniquement): static
+    {
+        $this->em_uniquement = $em_uniquement;
 
         return $this;
     }

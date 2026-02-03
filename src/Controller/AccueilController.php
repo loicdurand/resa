@@ -56,6 +56,8 @@ class AccueilController extends AbstractController
     public function accueil(): Response
     {
 
+        $em_uniquement = false;
+
         if (is_null($this->params['nigend']))
             return $this->redirectToRoute('resa_login');
 
@@ -64,6 +66,9 @@ class AccueilController extends AbstractController
         $curr_user = $this->em
             ->getRepository(User::class)
             ->findOneBy(['nigend' => $this->params['nigend']]);
+
+        if ($curr_user->isEmUniquement())
+            $em_uniquement = true;
 
         $env_vars = $this->getAppConst();
         $liste_unites_em = $env_vars['APP_UNITES_EM'] ?? [];
@@ -74,13 +79,16 @@ class AccueilController extends AbstractController
             ->getRepository(Vehicule::class)
             ->findBy(['departement' => $this->params['departement']]);
 
-        $vehicules = array_filter($vehicules, function ($vl) use ($unites_em, $curr_unite) {
+        $vehicules = array_filter($vehicules, function ($vl) use ($unites_em, $curr_unite, $em_uniquement) {
             // On enlève les VLs en maintenance
             if ($vl->getRestriction()->getCode() === 'ATELIER')
                 return false;
             // Si VL Etat-Major, on vérifie que l'utilisateur appartient à une unité EM
             if ($vl->getRestriction()->getCode() === 'EM')
-                return in_array($curr_unite, $unites_em);
+                return $em_uniquement || in_array($curr_unite, $unites_em);
+
+            if ($em_uniquement)
+                return false;
             return true;
         });
 
@@ -290,7 +298,7 @@ class AccueilController extends AbstractController
             if (!$reservation->getId()) {
 
                 $reservation->setDemandeur($this->params['nigend']);
-                $beneficiaire = $reservation->getUser();
+                $beneficiaire = $this->addZeros($reservation->getUser(), 8);
                 $exists = $this->em
                     ->getRepository(User::class)
                     ->findOneBy(['nigend' => $beneficiaire]);

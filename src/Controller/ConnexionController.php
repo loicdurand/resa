@@ -58,6 +58,7 @@ class ConnexionController extends AbstractController
 
     $users = [];
     $has_access = false;
+    $em_uniquement = false;
 
     // $codes_unites_em = explode(',', $_ENV['APP_UNITES_EM'] ?? '');
 
@@ -77,10 +78,23 @@ class ConnexionController extends AbstractController
         }
       }
 
-      if (in_array($ldap_user->unite_id, $unites_perimetre))
-        $has_access = true;
+      // if (in_array($ldap_user->unite_id, $unites_perimetre))
+      //   $has_access = true;
 
+      // Exception d'accès pour les unités Etat-Major, mais seulement pour les VLs Etat-Major
       if (!$has_access) {
+        $unites_EM = explode(',', $_ENV['APP_UNITES_EM'] ?? '');
+        foreach ($unites_EM as $code_unite) {
+          if ($ldap_user->unite_id === $this->addZeros($code_unite, 8)) {
+            $has_access = true;
+            $em_uniquement = true;
+            break;
+          }
+        }
+      }
+
+
+      if (!$has_access && !$em_uniquement) {
         return $this->render('accueil/access_denied.html.twig', array_merge($this->getAppConst(), []));
       }
 
@@ -129,6 +143,16 @@ class ConnexionController extends AbstractController
         }
       }
 
+      if ($em_uniquement) {
+        // si l'User a accès global, on retire la restriction Etat-Major, s'il l'avait
+        if ($has_access)
+          $user->setEmUniquement(false);
+        else
+          $user->setEmUniquement(true);
+        $entityManager->persist($user);
+        $entityManager->flush();
+      }
+
       // En session, on ne garde que les infos qui se trouvaient autrefois dans le Zend_Registry
       $this->session->set('HTTP_NIGEND', $nigend);
       $this->session->set('HTTP_UNITE', $unite);
@@ -154,43 +178,47 @@ class ConnexionController extends AbstractController
       $data = $form->getData();
       $nigend = $data->getNigend();
 
-      if ($this->env === 'prod') {
-        $ldap = new LdapService();
-        $ldap_user = $ldap->get_user_from_ldap($nigend);
-      }
+      // if ($this->env === 'prod') {
+      //   $ldap = new LdapService();
+      //   $ldap_user = $ldap->get_user_from_ldap($nigend);
+      // }
 
-      if (is_null($ldap_user) && $this->app_const['APP_MACHINE'] !== 'chrome') {
-        return $this->render('accueil/login.html.twig', array_merge($this->getAppConst(), [
-          'form' => $form,
-          'users' => $users,
-          'result' => false
-        ]));
-      }
+      // if (is_null($ldap_user) && $this->app_const['APP_MACHINE'] !== 'chrome') {
+      //   return $this->render('accueil/login.html.twig', array_merge($this->getAppConst(), [
+      //     'form' => $form,
+      //     'users' => $users,
+      //     'result' => false
+      //   ]));
+      // }
 
       $user = $entityManager
         ->getRepository(User::class)
         ->findOneBy(['nigend' => $nigend]);
 
-      if (is_null($user)) {
-        $profil = $entityManager
-          ->getRepository(Role::class)
-          ->findOneBy(['nom' => $ldap_user->profil]);
-
-        $entity = new User();
-        $entity->setNigend($nigend);
-        $entity->setUnite($ldap_user->unite_id);
-        $entity->setProfil($ldap_user->profil);
-        $entity->setDepartement($ldap_user->departement);
-        $entity->setBanned(false);
-        $entityManager->persist($entity);
-        $entityManager->flush();
-        $user = $entity;
-      } else {
-        $has_access = !$user->isBanned();
-        if (!$has_access) {
-          return $this->render('accueil/access_denied.html.twig', array_merge($this->getAppConst(), []));
-        }
+      if (!is_null($user) && $user->isEmUniquement() || $em_uniquement) {
+        $em_uniquement = true;
       }
+
+      // if (is_null($user)) {
+      //   $profil = $entityManager
+      //     ->getRepository(Role::class)
+      //     ->findOneBy(['nom' => $ldap_user->profil]);
+
+      //   $entity = new User();
+      //   $entity->setNigend($nigend);
+      //   $entity->setUnite($ldap_user->unite_id);
+      //   $entity->setProfil($ldap_user->profil);
+      //   $entity->setDepartement($ldap_user->departement);
+      //   $entity->setBanned(false);
+      //   $entityManager->persist($entity);
+      //   $entityManager->flush();
+      //   $user = $entity;
+      // } else {
+
+      if (!$has_access && !$em_uniquement) {
+        return $this->render('accueil/access_denied.html.twig', array_merge($this->getAppConst(), []));
+      }
+      // }
 
       if ($this->app_const['APP_MACHINE'] === 'chrome') {
         $ldap_user = new \stdClass();
@@ -211,6 +239,7 @@ class ConnexionController extends AbstractController
           ->findOneBy(['code_unite' => $unite]);
 
         if (is_null($atelier) && $this->env === 'prod') {
+          $ldap = new LdapService();
           $ldap_unite = $ldap->get_unite_from_ldap($unite);
           $unite = $ldap->format_ldap_unite($ldap_unite);
 
@@ -223,6 +252,12 @@ class ConnexionController extends AbstractController
           $entityManager->flush();
         }
       }
+
+      if ($em_uniquement)
+        $user->setEmUniquement(true);
+      $entityManager->persist($user);
+      $entityManager->flush();
+
 
       // En session, on ne garde que les infos qui se trouvaient autrefois dans le Zend_Registry
       $this->session->set('HTTP_NIGEND', $nigend);
