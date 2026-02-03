@@ -167,7 +167,7 @@ class ValidationController extends AbstractController
         $restrictions = [
             "NONE" => "Après jugement",
             "EM" => "Réservé État-Major",
-            "NON_OPE" => "Avant jugement",
+            "AVT_JGT" => "Avant jugement",
             "ATELIER" => "Maintenance",
             "DOTATION" => "Dotation",
             "APR_JGT" => "Après jugement"

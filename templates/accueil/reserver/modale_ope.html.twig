@@ -13,7 +13,7 @@
 						</h2>
 
 						{% if vehicule.restriction.code != 'NONE' and vehicule.restriction is not empty %}
-							{% set badge_class = vehicule.restriction.code != "NON_OPE" ? 'info' : 'warning' %}
+							{% set badge_class = vehicule.restriction.code != "AVT_JGT" ? 'info' : 'warning' %}
 							<dd>
 								<div class="fr-alert fr-alert--{{ badge_class }} fr-mb-2w">
 									<h3 style=";font-size: 1rem !important;" class="fr-alert__title">{{ vehicule.restriction.description }}</h3>

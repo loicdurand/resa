@@ -210,7 +210,7 @@ function close_modale(modal_name = 'suppression') {
 function get_option(vl) {
   const restrictions = {
     "EM": "[RÉSERVÉ EM]",
-    "NON_OPE": "[AV. JUGEMENT]",
+    "AVT_JGT": "[AV. JUGEMENT]",
     "ATELIER": "[Maintenance]",
     "DOTATION": "[DOTATION]",
     "APR_JGT": "[APR. JUGEMENT]"

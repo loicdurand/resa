@@ -213,7 +213,7 @@ class AccueilController extends AbstractController
         $badge_classes = [
             "NONE" => "",
             "EM" => "info",
-            "NON_OPE" => "warning",
+            "AVT_JGT" => "warning",
             "ATELIER" => "",
             "DOTATION" => "green-menthe",
             "APR_JGT" => "blue-ecume"

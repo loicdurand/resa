@@ -127,7 +127,7 @@ class MailService
     $valideur_type = "";
     if ($vehicule->getRestriction()->getCode() === 'EM') {
       $valideur_type = $this::IS_EM;
-    } else if ($vehicule->getRestriction()->getCode() === 'NON_OPE') {
+    } else if ($vehicule->getRestriction()->getCode() === 'AVT_JGT') {
       $valideur_type = $this::IS_CSAG;
     } else {
       $valideur_type = $type_demande->getCode() === 'ope' ?
