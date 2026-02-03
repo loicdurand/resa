@@ -59,6 +59,7 @@ class ReservationRepository extends ServiceEntityRepository
     {
         $resas = $this->createQueryBuilder('r')
             ->andWhere('r.user = :nigend')
+            ->orWhere('r.demandeur = :nigend')
             ->setParameter('nigend', $nigend)
             ->orderBy('r.date_debut', 'ASC')
             ->getQuery()
