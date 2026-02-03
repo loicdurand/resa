@@ -99,6 +99,50 @@ class ReservationRepository extends ServiceEntityRepository
         return $resas;
     }
 
+    public function findByNigends($nigends)
+    {
+        $resas = $this->createQueryBuilder('r')
+            ->andWhere('r.user IN (:nigends)')
+            ->orWhere('r.demandeur IN (:nigends)')
+            ->setParameter('nigends', $nigends)
+            ->orderBy('r.date_debut', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $em = $this->getEntityManager();
+
+        $statut_termine = $em
+            ->getRepository(StatutReservation::class)
+            ->findOneBy(['code' => 'Terminée']);
+
+        $statut_en_cours = $em
+            ->getRepository(StatutReservation::class)
+            ->findOneBy(['code' => 'En cours']);
+
+        $now = new \DateTime('now');
+        foreach ($resas as $resa) {
+            $statut = $resa->getStatut()->getCode();
+            if ($statut === 'Terminée')
+                continue;
+
+            $date_debut = new \DateTime($resa->getDateDebut()->format('Y-m-d') . ' ' . $resa->getHeureDebut() . ':00');
+            $date_fin = new \DateTime($resa->getDateFin()->format('Y-m-d') . ' ' . $resa->getHeureFin() . ':00');
+            if ($date_fin->format('U') < $now->format('U')) {
+                $resa->setStatut($statut_termine);
+                $em->persist($resa);
+                $em->flush();
+            } else if ($date_debut->format('U') < $now->format('U') && $date_fin->format('U') > $now->format('U')) {
+                if ($statut !== 'En attente') {
+                    $resa->setStatut($statut_en_cours);
+                    $em->persist($resa);
+                    $em->flush();
+                }
+            }
+        }
+
+        return $resas;
+    }
+
     public function findAllAfterNow(int $departement): mixed
     {
         $debut = (new \Datetime('now'))->format('Y-m-d');

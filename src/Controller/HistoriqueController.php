@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Reservation;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,15 +70,56 @@ class HistoriqueController extends AbstractController
         $this->setAppConst();
 
         $nigend = $this->params['nigend'];
+        $unite = $this->params['unite'];
+        $nigends = [];
+
+        $camarades = $this->em
+            ->getRepository(User::class)
+            ->findBy(['unite' => $unite]);
+
+        foreach ($camarades as $camarade) {
+            if (!array_key_exists($camarade->getNigend(), $nigends)) {
+                $nigends[] = $camarade->getNigend();
+            }
+        }
+
         $resas = $this->em
             ->getRepository(Reservation::class)
-            ->findByNigend($nigend);
+            ->findByNigends($nigends);
+
+        $nigends = [];
+        foreach ($resas as $resa) {
+            $nigend = $resa->getUser();
+            if (!array_key_exists($nigend, $nigends)) {
+                $usr = $this->em->getRepository(User::class)->findOneBy(['nigend' => $nigend]);
+                if (!is_null($usr)) {
+                    $mail = $usr->getMail();
+                    [$uid] = preg_split("/@/", $mail);
+                } else {
+                    $uid = '';
+                }
+                $nigends[$nigend] = $uid;
+            }
+
+            $nigend = $resa->getDemandeur();
+            if (!array_key_exists($nigend, $nigends)) {
+                $usr = $this->em->getRepository(User::class)->findOneBy(['nigend' => $nigend]);
+                if (!is_null($usr)) {
+                    $mail = $usr->getMail();
+                    [$uid] = preg_split("/@/", $mail);
+                } else {
+                    $uid = '';
+                }
+                $nigends[$nigend] = $uid;
+            }
+        }
 
         return $this->render('historique/historique.html.twig', array_merge(
             $this->getAppConst(),
             $this->params,
             [
                 'reservations' => $resas,
+                'nigends' => $nigends
             ]
         ));
     }

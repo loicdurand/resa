@@ -2,298 +2,323 @@
 
 {% block body %}
 
-  {# Fil d'Arianne #}
-  <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
-    <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
-      Voir le fil d’Ariane
-    </button>
-    <div class="fr-collapse" id="breadcrumb-1">
-      <ol class="fr-breadcrumb__list">
-        <li>
-          <a class="fr-breadcrumb__link" href="{{ path('resa_accueil') }}">
-            Accueil
-          </a>
-        </li>
-        <li>
-          <a class="fr-breadcrumb__link" href="{{ path('resa_historique') }}" aria-current="page">
-            Historique
-          </a>
-        </li>
-      </ol>
-    </div>
-  </nav>
+	{# Fil d'Arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+			Voir le fil d’Ariane
+		</button>
+		<div class="fr-collapse" id="breadcrumb-1">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_accueil') }}">
+						Accueil
+					</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_historique') }}" aria-current="page">
+						Historique des réservations de mon unité
+					</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
 
-  <h1>
-    Historique
-    <span class="hide-s hide-m">
-      &nbsp;de mes réservations
-    </span>
-  </h1>
+	<h1>
+		Réservations de mon unité
+	</h1>
 
-  <div class="fr-tabs">
-    <ul class="fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
-      <li role="presentation">
-        <button id="tabpanel-futures" class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left" tabindex="0" role="tab" aria-selected="true" aria-controls="tabpanel-futures-panel">
-          <span class="hide-s hide-m">
-            Mes réservations&nbsp;
-          </span>
-          à venir
-        </button>
-      </li>
-      <li role="presentation">
-        <button id="tabpanel-passees" {{ reservations | length == 0 ? 'disabled' }} class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left" tabindex="-1" role="tab" aria-selected="false" aria-controls="tabpanel-passees-panel">
-          <span class="hide-s hide-m">
-            Mes réservations&nbsp;
-          </span>
-          passées
-        </button>
-      </li>
-    </ul>
+	<div class="fr-tabs">
+		<ul class="fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
+			<li role="presentation">
+				<button id="tabpanel-futures" class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left" tabindex="0" role="tab" aria-selected="true" aria-controls="tabpanel-futures-panel">
+					<span class="hide-s hide-m">
+						Mes réservations&nbsp;
+					</span>
+					à venir
+				</button>
+			</li>
+			<li role="presentation">
+				<button id="tabpanel-passees" {{ reservations | length == 0 ? 'disabled' }} class="fr-tabs__tab fr-icon-checkbox-line fr-tabs__tab--icon-left" tabindex="-1" role="tab" aria-selected="false" aria-controls="tabpanel-passees-panel">
+					<span class="hide-s hide-m">
+						Mes réservations&nbsp;
+					</span>
+					passées
+				</button>
+			</li>
+		</ul>
 
-    {% set passees = [] %}
+		{% set passees = [] %}
 
-    <div id="tabpanel-futures-panel" class="fr-tabs__panel fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tabpanel-futures" tabindex="0">
-      <div class="fr-container">
-        {# RÉSERVATIONS FUTURES #}
-        {% for i, reservation in reservations %}
-          {% if( reservation.dateFin | date('U')) >= ('now'|date('U')) %}
-            {% set vehicule = reservation.vehicule %}
-            <div class="fr-grid-row cs-border cursor-initial fr-mb-1w" href="{{ path('resa_historique') }}">
-              <div class="fr-col-12">
-                <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
-                  <figure class="cs-img-container left">
-                    <img class="cs-img" src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}" alt="{{ vehicule.marque ~ ' ' ~ vehicule.modele }}">
-                      <figcaption class="hidden">
-                        Image principale du véhicule
-                      </figcaption>
-                    </figure>
+		<div id="tabpanel-futures-panel" class="fr-tabs__panel fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tabpanel-futures" tabindex="0">
+			<div
+				class="fr-container">
+				{# RÉSERVATIONS FUTURES #}
+				{% for i, reservation in reservations %}
+					{% if( reservation.dateFin | date('U')) >= ('now'|date('U')) %}
+						{% set vehicule = reservation.vehicule %}
+						<div class="fr-grid-row cs-border cursor-initial fr-mb-1w" href="{{ path('resa_historique') }}">
+							<div class="fr-col-12">
+								<div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
+									<figure class="cs-img-container cs-in-historique left">
+										<img class="cs-img" src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}" alt="{{ vehicule.marque ~ ' ' ~ vehicule.modele }}">
+										<figcaption class="hidden">
+											Image principale du véhicule
+										</figcaption>
+									</figure>
 
-                    <div class="left cs-descr-container">
+									<div class="left cs-descr-container">
 
-                      <p class="fr-tag cs-resa-statut {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
-                        {{ reservation.statut.code }}
-                      </p>
+										<p class="fr-tag cs-resa-statut fr-mt-6w {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}">
+											<span class="fr-text--xs">
+												Réservé par&nbsp;
+												{% set demandeur = reservation.demandeur is not null ? reservation.demandeur : reservation.user %}
+												{% set demandeur_uid = nigends[demandeur] != '' ? ' (' ~ nigends[demandeur] ~ ')' : '' %}
+											</span><!-- -->{{ demandeur == nigend ? 'Vous' | upper : demandeur | trim('0', 'left') ~ demandeur_uid }}
+											{% if reservation.demandeur is not null and reservation.user != reservation.demandeur   %}
+												<span class="fr-text--xs">
+													&nbsp;pour&nbsp;
+													{% set user_uid = nigends[reservation.user] != '' ? ' (' ~ nigends[reservation.user] ~ ')' : '' %}
+												</span><!-- -->{{ reservation.user == nigend ? 'Vous' | upper : reservation.user | trim('0', 'left') ~ user_uid }}
+											{% endif %}
+										</p>
 
-                      {% set vehicule = reservation.vehicule %}
+										<p class="fr-tag cs-resa-statut {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
+											{{ reservation.statut.code }}
+										</p>
 
-                      <dl>
-                        <dt class="cs-marque">
-                          {{ vehicule.marque }}
-                          &nbsp;
-                          <span class="cs-modele">
-                            {{ vehicule.modele }}
-                          </span>
-                        </dt>
-                        {% if (vehicule.motorisation ~ vehicule.finition) is empty %}
-                          <br/>
-                        {% else %}
-                          <dd>
-                            {{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
-                          </dd>
-                        {% endif %}
-                        <dd>
-                          <ul class="fr-tags-group cs-tags">
-                            <li>
-                              <p class="fr-tag fr-tag--sm">
-                                {{ vehicule.transmission.code }}
-                              </p>
-                            </li>
-                            <li>
-                              <p class="fr-tag fr-tag--sm">
-                                {{ vehicule.carburant.libelle }}
-                              </p>
-                            </li>
-                          </ul>
-                        </dd>
-                        <dd title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
-                          {% for i in range(1, vehicule.NbPlaces) %}
-                            <i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
-                          {% endfor %}
-                        </dd>
-                      </dl>
+										{% set vehicule = reservation.vehicule %}
 
-                    </div>
-                  </div>
-                </div>
-                <div class="cs-from-to fr-col-12 center {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
-                  <p>
-                    Du
-                    <span>
-                      {{ reservation.dateDebut | date('d/m/Y') }}
-                      à
-                      {{ reservation.heureDebut }}
-                    </span>
-                    <br>
-                      au
-                      <span>
-                        {{ reservation.dateFin | date('d/m/Y') }}
-                        à
-                        {{ reservation.heureFin }}
-                      </span>
-                    </p>
-                  </div>
-                </div>
+										<dl>
+											<dt class="cs-marque">
+												{{ vehicule.marque }}
+												&nbsp;
+												<span class="cs-modele">
+													{{ vehicule.modele }}
+												</span>
+											</dt>
+											{% if (vehicule.motorisation ~ vehicule.finition) is empty %}
+												<br/>
+											{% else %}
+												<dd>
+													{{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
+												</dd>
+											{% endif %}
+											<dd>
+												<ul class="fr-tags-group cs-tags">
+													<li>
+														<p class="fr-tag fr-tag--sm">
+															{{ vehicule.transmission.code }}
+														</p>
+													</li>
+													<li>
+														<p class="fr-tag fr-tag--sm">
+															{{ vehicule.carburant.libelle }}
+														</p>
+													</li>
+												</ul>
+											</dd>
+											<dd title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
+												{% for i in range(1, vehicule.NbPlaces) %}
+													<i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
+												{% endfor %}
+											</dd>
+										</dl>
 
-              {% else %}
-                {% set passees = passees | merge([i]) %}
-              {% endif %}
+									</div>
+								</div>
+							</div>
+							<div class="cs-from-to fr-col-12 center {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
+								<p>
+									Du
+									<span>
+										{{ reservation.dateDebut | date('d/m/Y') }}
+										à
+										{{ reservation.heureDebut }}
+									</span>
+									<br>
+									au
+									<span>
+										{{ reservation.dateFin | date('d/m/Y') }}
+										à
+										{{ reservation.heureFin }}
+									</span>
+								</p>
+							</div>
+						</div>
 
-            {% else %}
-              <div class="fr-grid-row cs-border cursor-initial">
-                <div class="fr-col-12">
-                  <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
-                    <figure class="cs-img-container left">
-                      <img class="cs-img" src="{{ asset('images/no_image.jpg') }}" alt="Aucune image d'illustration">
-                        <figcaption class="hidden">
-                          Image principale du véhicule
-                        </figcaption>
-                      </figure>
+					{% else %}
+						{% set passees = passees | merge([i]) %}
+					{% endif %}
 
-                      <div class="left cs-descr-container">
+				{% else %}
+					<div class="fr-grid-row cs-border cursor-initial">
+						<div class="fr-col-12">
+							<div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
+								<figure class="cs-img-container cs-in-historique left">
+									<img class="cs-img" src="{{ asset('images/no_image.jpg') }}" alt="Aucune image d'illustration">
+									<figcaption class="hidden">
+										Image principale du véhicule
+									</figcaption>
+								</figure>
 
-                        <dl>
-                          <dt class="cs-marque">
-                            Aucun résultat
-                          </dt>
-                          <dd>
-                            <h3 class="fr-mb-0w">
-                              Vous n'avez pas encore effectué de réservation.
-                            </h3>
-                          </dd>
-                          <dd>
-                            <a href="{{ path('resa_accueil') }}" class="cs-go cs-go-histo fr-link fr-icon-arrow-right-line fr-link--icon-right" data-fr-js-link-actionee="true">
-                              Réserver un véhicule
-                            </a>
-                          </dd>
-                        </dl>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endfor %}
+								<div class="left cs-descr-container">
 
-            {# PAS DE RÉSA À VENIR MAIS RÉSAS PASSÉES #}
-            {% if (passees | length) == (reservations | length) and (passees | length > 0) %}
-              <div class="cs-noborder cursor-initial">
-                <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow cs-no-result">
+									<dl>
+										<dt class="cs-marque">
+											Aucun résultat
+										</dt>
+										<dd>
+											<h3 class="fr-mb-0w">
+												Vous n'avez pas encore effectué de réservation.
+											</h3>
+										</dd>
+										<dd>
+											<a href="{{ path('resa_accueil') }}" class="cs-go cs-go-histo fr-link fr-icon-arrow-right-line fr-link--icon-right" data-fr-js-link-actionee="true">
+												Réserver un véhicule
+											</a>
+										</dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
 
-                  {# <figure class="cs-img-container left">
-                    <img class="cs-img" src="{{ asset('images/no_image.jpg') }}" alt="Aucune image d'illustration">
-                      <figcaption class="hidden">
-                        Aucune image d'illustration
-                      </figcaption>
-                    </figure> #}
+			{# PAS DE RÉSA À VENIR MAIS RÉSAS PASSÉES #}
+			{% if (passees | length) == (reservations | length) and (passees | length > 0) %}
+				<div class="cs-noborder cursor-initial">
+					<div
+						class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow cs-no-result">
 
-                    <div class="left cs-descr-container">
-                      <dl>
-                        <dt class="cs-marque">
-                          Aucun résultat
-                        </dt>
-                        <dd>
-                          {# <h3> #}
-                            Vous n'avez pas de réservation à venir.
-                          {# </h3> #}
-                        </dd>
-                      </dl>
-                    </div>
+						{# <figure class="cs-img-container left">
+																																																																																										                    <img class="cs-img" src="{{ asset('images/no_image.jpg') }}" alt="Aucune image d'illustration">
+																																																																																										                      <figcaption class="hidden">
+																																																																																										                        Aucune image d'illustration
+																																																																																										                      </figcaption>
+																																																																																										                    </figure> #}
 
-                  </div>
-                </div>
-              {% endif %}
-            {# FIN PAS DE RÉSA À VENIR MAIS RÉSAS PASSÉES #}
+						<div class="left cs-descr-container">
+							<dl>
+								<dt class="cs-marque">
+									Aucun résultat
+								</dt>
+								<dd>
+									{# <h3> #}
+									Vous n'avez pas de réservation à venir.
+									{# </h3> #}
+								</dd>
+							</dl>
+						</div>
 
-            </div>
-          </div>
+					</div>
+				</div>
+			{% endif %}
+			{# FIN PAS DE RÉSA À VENIR MAIS RÉSAS PASSÉES #}
 
-          <div id="tabpanel-passees-panel" class="fr-tabs__panel" role="tabpanel" aria-labelledby="tabpanel-passees" tabindex="0">
-            <div class="fr-container">
-              {# RÉSERVATIONS PASSÉES #}
-              {% for i in passees %}
+		</div>
+	</div>
 
-                {% set reservation = reservations[i] %}
-                {% set vehicule = reservation.vehicule %}
+	<div id="tabpanel-passees-panel" class="fr-tabs__panel" role="tabpanel" aria-labelledby="tabpanel-passees" tabindex="0">
+		<div
+			class="fr-container">
+			{# RÉSERVATIONS PASSÉES #}
+			{% for i in passees %}
 
-                <div class="fr-grid-row cs-border fr-mb-1w" href="{{ path('resa_historique') }}">
-                  <div class="fr-col-12">
-                    <div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
-                      <figure class="cs-img-container left">
-                        <img class="cs-img" src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}" alt="{{ vehicule.marque ~ ' ' ~ vehicule.modele }}">
-                          <figcaption class="hidden">
-                            Image principale du véhicule
-                          </figcaption>
-                        </figure>
+				{% set reservation = reservations[i] %}
+				{% set vehicule = reservation.vehicule %}
 
-                        <div class="left cs-descr-container">
+				<div class="fr-grid-row cs-border fr-mb-1w" href="{{ path('resa_historique') }}">
+					<div class="fr-col-12">
+						<div class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow">
+							<figure class="cs-img-container cs-in-historique left">
+								<img class="cs-img" src="{{ vehicule.photos | length ? asset('images/uploads/' ~ vehicule.photos[0].path) : asset('images/no_image.jpg') }}" alt="{{ vehicule.marque ~ ' ' ~ vehicule.modele }}">
+								<figcaption class="hidden">
+									Image principale du véhicule
+								</figcaption>
+							</figure>
 
-                          <p class="fr-tag cs-resa-statut {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
-                            {{ reservation.statut.code }}
-                          </p>
+							<div class="left cs-descr-container">
 
-                          {% set vehicule = reservation.vehicule %}
+								<p class="fr-tag cs-resa-statut fr-mt-6w {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}">
+									<span class="fr-text--xs">
+										Réservé par&nbsp;
+										{% set demandeur = reservation.demandeur is not null ? reservation.demandeur : reservation.user %}
+										{% set demandeur_uid = nigends[demandeur] != '' ? ' (' ~ nigends[demandeur] ~ ')' : '' %}
+									</span><!-- -->{{ demandeur == nigend ? 'Vous' | upper : demandeur | trim('0', 'left') ~ demandeur_uid }}
+									{% if reservation.demandeur is not null and reservation.user != reservation.demandeur   %}
+										<span class="fr-text--xs">
+											&nbsp;pour&nbsp;
+											{% set user_uid = nigends[reservation.user] != '' ? ' (' ~ nigends[reservation.user] ~ ')' : '' %}
+										</span><!-- -->{{ reservation.user == nigend ? 'Vous' | upper : reservation.user | trim('0', 'left') ~ user_uid }}
+									{% endif %}
+								</p>
 
-                          <dl>
-                            <dt class="cs-marque">
-                              {{ vehicule.marque }}
-                              &nbsp;
-                              <span class="cs-modele">
-                                {{ vehicule.modele }}
-                              </span>
-                            </dt>
-                            {% if (vehicule.motorisation ~ vehicule.finition) is empty %}
-                              <br/>
-                            {% else %}
-                              <dd>
-                                {{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
-                              </dd>
-                            {% endif %}
-                            <dd>
-                              <ul class="fr-tags-group cs-tags">
-                                <li>
-                                  <p class="fr-tag fr-tag--sm">
-                                    {{ vehicule.transmission.code }}
-                                  </p>
-                                </li>
-                                <li>
-                                  <p class="fr-tag fr-tag--sm">
-                                    {{ vehicule.carburant.libelle }}
-                                  </p>
-                                </li>
-                              </ul>
-                            </dd>
-                            <dd title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
-                              {% for i in range(1, vehicule.NbPlaces) %}
-                                <i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
-                              {% endfor %}
-                            </dd>
-                          </dl>
+								<p class="fr-tag cs-resa-statut {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
+									{{ reservation.statut.code }}
+								</p>
 
-                        </div>
-                      </div>
-                    </div>
-                    <div class="cs-from-to fr-col-12 center {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
-                      <p>
-                        Du
-                        <span class="bold">
-                          {{ reservation.dateDebut | date('d/m/Y') }}
-                          à
-                          {{ reservation.heureDebut }}
-                        </span>
-                        <br>
-                          au
-                          <span class="bold">
-                            {{ reservation.dateFin | date('d/m/Y') }}
-                            à
-                            {{ reservation.heureFin }}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
+								{% set vehicule = reservation.vehicule %}
 
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
+								<dl>
+									<dt class="cs-marque">
+										{{ vehicule.marque }}
+										&nbsp;
+										<span class="cs-modele">
+											{{ vehicule.modele }}
+										</span>
+									</dt>
+									{% if (vehicule.motorisation ~ vehicule.finition) is empty %}
+										<br/>
+									{% else %}
+										<dd>
+											{{ vehicule.motorisation ~ ' ' ~ vehicule.finition }}
+										</dd>
+									{% endif %}
+									<dd>
+										<ul class="fr-tags-group cs-tags">
+											<li>
+												<p class="fr-tag fr-tag--sm">
+													{{ vehicule.transmission.code }}
+												</p>
+											</li>
+											<li>
+												<p class="fr-tag fr-tag--sm">
+													{{ vehicule.carburant.libelle }}
+												</p>
+											</li>
+										</ul>
+									</dd>
+									<dd title="{{ vehicule.NbPlaces }} place{{ vehicule.NbPlaces > 1 ? 's' : '' }}">
+										{% for i in range(1, vehicule.NbPlaces) %}
+											<i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
+										{% endfor %}
+									</dd>
+								</dl>
 
-          {% endblock %}
-          
+							</div>
+						</div>
+					</div>
+					<div class="cs-from-to fr-col-12 center {{ reservation.statut.code | lower | replace({ 'é':'e' }) }}" title="{{ reservation.statut.libelle }}">
+						<p>
+							Du
+							<span class="bold">
+								{{ reservation.dateDebut | date('d/m/Y') }}
+								à
+								{{ reservation.heureDebut }}
+							</span>
+							<br>
+							au
+							<span class="bold">
+								{{ reservation.dateFin | date('d/m/Y') }}
+								à
+								{{ reservation.heureFin }}
+							</span>
+						</p>
+					</div>
+				</div>
+
+			{% endfor %}
+		</div>
+	</div>
+</div>{% endblock %}

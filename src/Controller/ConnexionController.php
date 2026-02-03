@@ -195,6 +195,10 @@ class ConnexionController extends AbstractController
         ->getRepository(User::class)
         ->findOneBy(['nigend' => $nigend]);
 
+      if ($this->env !== 'prod' && !is_null($user)) {
+        $has_access = !$user->isBanned();
+      }
+
       if (!is_null($user) && $user->isEmUniquement() || $em_uniquement) {
         $em_uniquement = true;
       }

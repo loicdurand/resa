@@ -156,6 +156,10 @@
         position: relative;
         z-index: -1;
 
+        &.cs-in-historique {
+            z-index: 0;
+        }
+
         & .cs-img {
             width: 150%;
             height: auto;
