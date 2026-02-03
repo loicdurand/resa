@@ -59,8 +59,8 @@ updater.addEventListener('change', filter);
     step1.classList.add('hidden');
     step2.classList.remove('hidden');
 
-    document.getElementById('select-from-date').dispatchEvent(new Event('change'));
-
+    if (btn.id !== 'btn-go-step2')
+      document.getElementById('select-from-date').dispatchEvent(new Event('change'));
 
   });
 });
@@ -154,8 +154,6 @@ function filter(e) {
     vls = [...document.getElementsByClassName('vehicule-card--result')],
     no_result = document.getElementById('no-result');
 
-  console.log({ debut, fin, data });
-
   if (debut !== '*' && fin !== '*') {
     filtres_appliques.push(addTag(`${FR(debut)}&nbsp;&rarr;&nbsp;${FR(fin)}`));
   }
@@ -192,6 +190,7 @@ function filter(e) {
       } = vl,
       href = vl.getAttribute('href'),
       [, page, v_id] = href.split(/\//).filter(Boolean);
+    console.log({ debut, fin });
     vl.classList.remove('hidden');
     if (debut && debut !== '*')
       dates += `/${debut.replace(/\s/, 'T')}/${fin.replace(/\s/, 'T')}`;

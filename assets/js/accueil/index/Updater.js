@@ -128,7 +128,7 @@ export default class Updater extends Emitter {
           this.is_init = this.init();
 
         target.classList.toggle('selected');
-        const values = btns.filter(btn => btn.classList.contains('selected')).map(({value})=>value);
+        const values = btns.filter(btn => btn.classList.contains('selected')).map(({ value }) => value);
         this.evtEmitter.dataset.unite = values.length ? values : '*';
         this.evtEmitter.dispatchEvent(this.update);
       })
@@ -363,13 +363,15 @@ export default class Updater extends Emitter {
 
   addDays({ target }) {
 
-    const [, , part] = target.id.split(/-/);
+    const [, from_or_to, part] = target.id.split(/-/);
 
     if (part === 'date') {
       const //
         option = target.children[target.selectedIndex],
         heures_ouverture = this.get_heures_ouverture(option);
       ['debut', 'fin'].forEach(creneau => {
+        if (from_or_to == 'to' && creneau == 'debut')
+          return false;
         this.modale[creneau].heure.length = 0;
         const heures = heures_ouverture[creneau];
         for (let i = heures[0]; i <= heures[heures.length - 1] && i < 50; i++) {
