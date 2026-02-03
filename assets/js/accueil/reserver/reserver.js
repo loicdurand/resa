@@ -131,6 +131,9 @@ new Periode()
       if (field === 'heure')
         modal.manage_minutes(heure_debut, select.minute[periode]);
 
+      if (!select.minute[periode].options[select.minute[periode].selectedIndex])
+        return false;
+
       const // 
         affichage = document.querySelector(`#select-${periode}-date--target .cs-from-to-value--heure`),
         { value: minute_debut } = select.minute[periode].options[select.minute[periode].selectedIndex],
