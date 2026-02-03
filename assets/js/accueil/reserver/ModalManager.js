@@ -137,6 +137,7 @@ export default class ModalManager {
 
   addOptions(select, nbs, disabledNbs = []) {
     select.options.length = 0;
+    nbs = [...new Set(nbs)];
     nbs.forEach(nb => {
       const // 
         n = addZeros(nb),
@@ -212,16 +213,21 @@ export default class ModalManager {
     list.innerHTML = '';
     notice.classList.remove('hidden');
     heures.forEach(({ debut, fin }) => {
+      debut = debut.replaceAll(/"/g, '');
+      fin = fin.replaceAll(/"/g, '');
+
       const // 
-        heure_debut = debut != '00:00' ? debut : false,
-        heure_fin = fin != '23:59' ? fin : false,
+        heure_debut = debut != '00:00' && debut ? debut : false,
+        heure_fin = fin != '23:59' && fin ? fin : false,
         li = document.createElement('li');
-      if (heure_debut && heure_fin)
+
+      if (heure_debut && heure_fin) {
         li.innerText = `de ${heure_debut} à ${heure_fin}`;
-      else if (heure_debut)
+      } else if (heure_debut) {
         li.innerText = `à partir de ${heure_debut}`;
-      else
+      } else {
         li.innerText = `jusqu'à ${heure_fin}`;
+      }
       list.appendChild(li);
     });
 
