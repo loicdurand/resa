@@ -130,12 +130,40 @@ class ValidationController extends AbstractController
             return true;
         });
 
+        $nigends = [];
+        foreach ($resas as $resa) {
+            $nigend = $resa->getUser();
+            if (!array_key_exists($nigend, $nigends)) {
+                $usr = $em->getRepository(User::class)->findOneBy(['nigend' => $nigend]);
+                if (!is_null($usr)) {
+                    $mail = $usr->getMail();
+                    [$uid] = preg_split("/@/", $mail);
+                } else {
+                    $uid = '';
+                }
+                $nigends[$nigend] = $uid;
+            }
+
+            $nigend = $resa->getDemandeur();
+            if (!array_key_exists($nigend, $nigends)) {
+                $usr = $em->getRepository(User::class)->findOneBy(['nigend' => $nigend]);
+                if (!is_null($usr)) {
+                    $mail = $usr->getMail();
+                    [$uid] = preg_split("/@/", $mail);
+                } else {
+                    $uid = '';
+                }
+                $nigends[$nigend] = $uid;
+            }
+        }
+
         return $this->render('validation/validation.html.twig', array_merge(
             $this->getAppConst(),
             $this->params,
             [
                 'profil' => $user->getProfil(),
                 'reservations' => $resas,
+                'nigends' => $nigends,
                 'filtre_validateur' => $filtre_validateur
             ]
         ));
