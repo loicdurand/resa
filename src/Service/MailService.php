@@ -150,10 +150,24 @@ class MailService
       foreach ($raw_unites_em as $code_unite) {
         $unites_em[] = $this->addZeros($code_unite, 8);
       }
-      $validateurs = $user_repo->findBy([
+      $valideurs = $user_repo->findBy([
         'profil' => 'VDT',
         'unite' => $unites_em
       ]);
+
+      $env_vdt_pj = $_ENV['FORCE_NIGENDS_AS_VDT_PJ'] ?? '';
+      $raw_vdt_pj = explode(',', $env_vdt_pj);
+      $vdts_pj = [];
+      foreach ($raw_vdt_pj as $vdt) {
+        $vdts_pj[] = $this->addZeros($vdt, 8);
+      }
+
+      $validateurs = array_filter($valideurs, function ($vdt) use ($vdts_pj) {
+        if (in_array($vdt->getNigend(), $vdts_pj)) {
+          return false;
+        }
+        return true;
+      });
     } else {
       $csag_en_copie = true;
       // if ($type == $this::IS_JUD) {
