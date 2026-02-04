@@ -87,12 +87,16 @@ class Vehicule
     #[ORM\OneToMany(targetEntity: FicheSuivi::class, mappedBy: 'vehicule', orphanRemoval: true)]
     private Collection $fiches;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
         $this->photos = new ArrayCollection();
         $this->couleur_vignette = $this->rand_dark_color();
         $this->fiches = new ArrayCollection();
+        $this->createdAt = new \DateTime('now', new \DateTimeZone('America/Guadeloupe'));
     }
 
     public function getId(): ?int
@@ -433,6 +437,18 @@ class Vehicule
                 $fich->setVehicule(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(): static
+    {
+        $this->createdAt = new \DateTime('now');
 
         return $this;
     }
