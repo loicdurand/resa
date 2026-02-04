@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Entity\User;
+use App\Entity\StatutReservation;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -123,6 +124,62 @@ class HistoriqueController extends AbstractController
             ]
         ));
     }
+
+    #[Route('/historique/annuler', name: 'resa_historique_annuler', methods: ['POST'])]
+    public function historique_annuler(ManagerRegistry $doctrine)
+    {
+        $data = (array) json_decode($this->request->getContent());
+        $id = $data['id'];
+        $msg = $data['msg'];
+
+        $statut_annule_usr = $this->em
+            ->getRepository(StatutReservation::class)
+            ->findOneBy(['code' => 'Annulée (USR)']);
+
+        $reservation = $this->em
+            ->getRepository(Reservation::class)
+            ->findOneBy(['id' => $id]);
+
+        // La réservation est-elle en cours ?
+        $deb = new \DateTime($reservation->getDateDebut()->format('Y-m-d') . ' ' . $reservation->getHeureDebut() . ':00');
+        $fin = new \DateTime($reservation->getDateFin()->format('Y-m-d') . ' ' . $reservation->getHeureFin() . ':00');
+        $now = new \DateTime('now');
+        if ($now >= $deb && $now <= $fin) {
+            $timezone = new \DateTimeZone('America/Guadeloupe');
+            $now->setTimezone($timezone);
+            $reservation->setDateFin($now);
+            $reservation->setHeureFin($now->format('h:i'));
+        }
+
+        $reservation->setStatut($statut_annule_usr);
+        if ($msg != '') {
+            $obs = ' // ' . $reservation->getObservation();
+            $msg_len = strlen($msg);
+            $obs_len = strlen($obs);
+            if ($msg_len + $obs_len >= 255) {
+                if ($msg_len >= 255)
+                    $msg = substr($msg, 0, 254);
+                else
+                    $msg = $msg . substr($obs, 0, $msg_len -  254 - 4);
+            } else {
+                $msg = $msg . $obs;
+            }
+
+            $reservation->setObservation($msg);
+        }
+
+        $this->em->persist($reservation);
+        $this->em->flush();
+
+        if ($this->getParameter('app.env') == 'dev')
+            sleep(seconds: 1.5);
+
+        return $this->json([
+            'id' => $reservation->getId(),
+            'statut' => $reservation->getStatut()->getCode()
+        ]);
+    }
+
 
     /**
      * Utils

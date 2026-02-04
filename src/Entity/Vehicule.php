@@ -251,7 +251,7 @@ class Vehicule
     {
         foreach ($this->reservations as $resa) {
             $statut = $resa->getStatut();
-            if ($statut->getCode() == 'Annulée')
+            if (str_starts_with($statut->getCode(), 'Annulée'))
                 $this->removeReservation($resa);
         }
         return $this->reservations;

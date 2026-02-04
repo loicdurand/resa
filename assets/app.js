@@ -14,6 +14,9 @@ new Router('/', {
   '/resa971/reserver': () => {
     import('./js/accueil/reserver/reserver');
   },
+  '/resa971/historique': () => {
+    import('./js/historique/historique');
+  },
   '/resa971/parc/tdb': () => {
     import('./js/parc/tdb');
   },

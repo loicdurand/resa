@@ -25,6 +25,7 @@ class ReservationRepository extends ServiceEntityRepository
         return  $this->createQueryBuilder('r')
             ->andWhere('r.date_fin >= :debut', 'r.date_debut <= :fin')
             ->andWhere('r.statut != 5')
+            ->andWhere('r.statut != 6')
             ->andWhere('v.departement = :dept')
             ->innerJoin('r.vehicule', 'v')
             // ->orWhere('r.date_debut <= :fin')

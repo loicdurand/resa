@@ -57,6 +57,12 @@
 
   }
 
+  & .historique-menu {
+    position: absolute;
+    bottom: -1rem;
+    right: 0;
+  }
+
   & .cs-from-to {
     background-color: var(--grey-4);
     max-height: 2.5em;

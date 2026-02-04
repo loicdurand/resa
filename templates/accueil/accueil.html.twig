@@ -117,7 +117,9 @@
 			{% for n, vehicule in vehicules %}
 				{% set resas = '' %}
 				{% for reservation in vehicule.reservations %}
+				    {% if reservation.statut.code != 'Annulée (USR)' and reservation.statut.code != 'Annulée' %}
 					{% set resas = resas ~ (reservation.dateDebut|date('Y-m-d h:i:00')) ~ '_' ~ (reservation.dateFin|date('Y-m-d h:i:00')) ~ (loop.last ? '' :'|') %}
+				    {% endif %}
 				{% endfor %}
 
 				<a	{% if vehicule.restriction is not empty and vehicule.restriction.code != "NONE" %} title="{{vehicule.restriction.description}}" {% endif %}  data-reservations="{{ resas }}"	href="{{ path('resa_reserver', { vl_id: vehicule.id }) }}"	class="vehicule-card vehicule-card--result cs-card fr-col-sm-12 fr-mb-2w hoverable shadow"	data-index="{{ n }}" data-unite={{ vehicule.unite.codeUnite }}	data-categorie="{{ vehicule.categorie.libelle }}"	data-serigraphie="{{ vehicule.serigraphie ? 'Oui' : 'Non' }}"	data-transmission="{{ vehicule.transmission.code }}"	data-nbplaces="{{ vehicule.NbPlaces }}">
