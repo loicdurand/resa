@@ -32,6 +32,9 @@ new Router('/', {
   '/resa971/suivi': () => {
     import('./js/compte/suivi');
   },
+  '/resa971/stats': () => {
+    import('./js/stats/stats');
+  },
   '/resa971': () => {
     import('./js/accueil/index/index');
   }

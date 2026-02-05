@@ -79,17 +79,25 @@ export default class ModalManager {
         let // 
           iDebut = ModalManager.int(heure_debut),  // ex: 08:00 -> 800
           iFin = ModalManager.int(heure_fin);      // ex: 17:30 -> 1730
+
         // si période == début, on peut réserver au moins 15mn avant une réservation
         if (this.periode === 'from')
           iDebut -= iDebut % 100 ? (40 + 15) : 15; // ex: 800 -> 745, 730 -> 715
-        else
-          iDebut += ('' + iDebut).endsWith('45') ? (40 + 15) : 15; // ex: 845 -> 900, 730 -> 745
+        // else
+        //   iDebut += ('' + iDebut).endsWith('45') ? (40 + 15) : 15; // ex: 845 -> 900, 730 -> 745
 
         nbs = heures
           .map(h => {
-            const iHeure = this.periode === 'from' ? +h * 100 + 45 : +h * 100 // ex: 8 -> 845, 10 -> 1045;
-            if (iHeure >= iDebut && iHeure < iFin)
-              disabledNbs.push(h);
+            if (this.periode === 'from') {
+              const iHeure = +h * 100 + 45  // ex: 8 -> 845, 10 -> 1045;
+              if (iHeure >= iDebut && iHeure < iFin)
+                disabledNbs.push(h);
+            } else {
+              const iHeure = +h * 100 // ex: 8 -> 800, 10 -> 1000;
+
+              if (iHeure >= iDebut && iHeure < iFin)
+                disabledNbs.push(h);
+            }
           });
 
       });
@@ -124,9 +132,16 @@ export default class ModalManager {
 
       nbs = minutes
         .map(m => {
-          const iHeure = h * 100 + +m // ex: 8 -> 845, 10 -> 1045;
-          if (iHeure > iDebut && iHeure < iFin)
-            disabledNbs.push(m);
+          if (this.periode === 'debut') {
+            const iHeure = h * 100 + +m // ex: 8 -> 845, 10 -> 1045;
+            if (iHeure > iDebut && iHeure < iFin)
+              disabledNbs.push(m);
+          } else {
+            const iHeure = h * 100 + +m // ex: 8 -> 845, 10 -> 1045;
+            if (iHeure > iDebut && iHeure < iFin)
+              disabledNbs.push(m);
+
+          }
         });
 
     });
@@ -152,16 +167,25 @@ export default class ModalManager {
   getResas(dataset) {
     const heures = [];
 
-    if (dataset.resa_999_debut)
-      return this.periode === 'to' ?
-        [{ debut: dataset.resa_999_debut, fin: '23:59' }] :
-        [{ debut: '00:00', fin: dataset.resa_999_fin }];
+    if (dataset.resa_999_debut) {
+      if (dataset.resa_999_debut.replaceAll(/"/g, ''))
+        return this.periode === 'to' ?
+          [{ debut: dataset.resa_999_debut.replaceAll(/"/g, ''), fin: '23:59' }] :
+          [{ debut: '00:00', fin: dataset.resa_999_fin.replaceAll(/"/g, '') }];
+    }
 
     for (let prop in dataset) {
       if (/resa_[\d+]_debut/.test(prop)) {
         const [, index, period] = prop.split('_');
-        heures.push({ debut: dataset[prop] || '00:00', fin: dataset[`resa_${index}_fin`] || '23:59' });
+        const value_debut = dataset[prop].replaceAll(/"/g, '');
+        const value_fin = dataset[`resa_${index}_fin`].replaceAll(/"/g, '');
+        heures.push({ debut: value_debut || '00:00', fin: value_fin || '23:59' });
       }
+      // else if (/resa_[\d+]_fin/.test(prop)) {
+      //   const [, index, period] = prop.split('_');
+      //   const value_debut = dataset[prop].replaceAll(/"/g, '');
+      //   const value_fin = dataset[`resa_${index}_fin`].replaceAll(/"/g, '');
+      // }
     }
     return heures;
   }

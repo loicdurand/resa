@@ -126,6 +126,7 @@ new Periode()
   ['from', 'to'].forEach(periode => {
     select[field][periode].addEventListener('change', ({ target: { value } }) => {
 
+      modal.setPeriode(periode);
       const { value: heure_debut } = select.heure[periode].options[select.heure[periode].selectedIndex] || { value: '08' };
 
       if (field === 'heure')

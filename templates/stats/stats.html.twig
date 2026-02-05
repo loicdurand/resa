@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques - R&#926;S&#945;971!
+{% endblock %}
+
+{% block body %}
+
+	{# Fil d'Arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+			Voir le fil d’Ariane
+		</button>
+		<div class="fr-collapse" id="breadcrumb-1">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_accueil') }}">
+						Accueil
+					</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" href="{{ path('resa_stats') }}" aria-current="page">
+						Statistiques
+					</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+
+	<div class="stats-dashboard dashboard">
+		<h1>Statistiques de l'application
+		</h1>
+
+		<div class="fr-alert fr-alert--error fr-alert--sm fr-mb-4w">
+			<p>Cette page est en construction. Les données affichées ne correspondent pas à la réalité...</p>
+		</div>
+
+		<div class="kpi-container">
+			<div class="card kpi">
+				<h3>Total Véhicules</h3>
+				<p id="totalVehicles">--</p>
+			</div>
+			<div class="card kpi">
+				<h3>Disponibilité Moyenne</h3>
+				<p id="avgAvailability" class="warning">-- %</p>
+			</div>
+			<div class="card kpi">
+				<h3>Durée Moyenne de Réservation</h3>
+				<p id="avgDuration">-- jours</p>
+			</div>
+		</div>
+
+		<div class="chart-grid">
+			<div class="card">
+				<canvas id="evolutionChart"></canvas>
+			</div>
+			<div class="card">
+				<canvas id="distributionChart"></canvas>
+			</div>
+		</div>
+	</div>
+
+</body></html>{% endblock %}

@@ -1,0 +1,55 @@
+.stats-dashboard {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7f6;
+    color: #333;
+    margin: 20px;
+
+    .dashboard {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .kpi-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .kpi {
+        text-align: center;
+    }
+
+    .kpi h3 {
+        margin: 0;
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .kpi p {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin: 10px 0 0 0;
+        color: #2c3e50;
+    }
+
+    .chart-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 20px;
+    }
+
+    .warning {
+        color: #e74c3c !important;
+    }
+
+    /* Pour souligner le problème */
+
+}
