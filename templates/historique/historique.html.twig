@@ -122,6 +122,14 @@
 													<i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
 												{% endfor %}
 											</dd>
+											<dd class="observation" style=";margin-top:-1em;">
+												Observation:
+												{% if reservation.observation is empty %}
+													Néant
+												{% else %}
+													<span class="bold">"{{ reservation.observation }}"</span>
+												{% endif %}
+											</dd>
 										</dl>
 
 									</div>
@@ -163,18 +171,18 @@
 								</button>
 							</li>
 							{# <li class="center">
-																																																																	<button data-fr-opened="false" data-id="{{ reservation.id }}" aria-controls="fr-modal-modification" class="modif-resa fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-ball-pen-line">
-																																																																		Modifier
-																																																																		<span class="hide-m hide-l hide-xl">
-																																																																			.
-																																																																		</span>
-																																																																	</button>
-																																																																</li> #}
+																																																																																																				<button data-fr-opened="false" data-id="{{ reservation.id }}" aria-controls="fr-modal-modification" class="modif-resa fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-ball-pen-line">
+																																																																																																					Modifier
+																																																																																																					<span class="hide-m hide-l hide-xl">
+																																																																																																						.
+																																																																																																					</span>
+																																																																																																				</button>
+																																																																																																			</li> #}
 							{# <li class="center">
-																																																																	<button data-fr-opened="false" data-id="{{ reservation.id }}" aria-controls="fr-modal-confirmation" class="valid-resa fr-btn fr-btn--primary fr-btn--icon-left fr-icon-checkbox-circle-line">
-																																																																		Valider
-																																																																	</button>
-																																																																</li> #}
+																																																																																																				<button data-fr-opened="false" data-id="{{ reservation.id }}" aria-controls="fr-modal-confirmation" class="valid-resa fr-btn fr-btn--primary fr-btn--icon-left fr-icon-checkbox-circle-line">
+																																																																																																					Valider
+																																																																																																				</button>
+																																																																																																			</li> #}
 						</ul>
 					</div>
 
@@ -229,11 +237,11 @@
 				class="vehicule-card vehicule-card--result cs-card cs-histo-card fr-mb-2w hoverable shadow cs-no-result">
 
 				{# <figure class="cs-img-container left">
-																																																																																																																																											                    <img class="cs-img" src="{{ asset('images/no_image.jpg') }}" alt="Aucune image d'illustration">
-																																																																																																																																											                      <figcaption class="hidden">
-																																																																																																																																											                        Aucune image d'illustration
-																																																																																																																																											                      </figcaption>
-																																																																																																																																											                    </figure> #}
+																																																																																																																																																															                    <img class="cs-img" src="{{ asset('images/no_image.jpg') }}" alt="Aucune image d'illustration">
+																																																																																																																																																															                      <figcaption class="hidden">
+																																																																																																																																																															                        Aucune image d'illustration
+																																																																																																																																																															                      </figcaption>
+																																																																																																																																																															                    </figure> #}
 
 				<div class="left cs-descr-container">
 					<dl>
@@ -327,6 +335,14 @@
 								{% for i in range(1, vehicule.NbPlaces) %}
 									<i class="cs-user-icon fr-btn fr-icon-user-line fr-btn--icon-left"></i>
 								{% endfor %}
+							</dd>
+							<dd class="observation" style=";margin-top:-1em;">
+								Observation:
+								{% if reservation.observation is empty %}
+									Néant
+								{% else %}
+									<span class="bold">"{{ reservation.observation }}"</span>
+								{% endif %}
 							</dd>
 						</dl>
 

@@ -89,14 +89,12 @@ const filterTable = () => {
 
 const checkboxes = document.querySelectorAll('#restrictions-form [type="checkbox"]');
 
-if (checkboxes.length) {
-    document.body.classList.remove('container');
-    [...document.getElementsByClassName('fr-container')].forEach(elt => elt.classList.add('plus-large'));
-}
-
 checkboxes.forEach(checkbox => {
+
     checkbox.addEventListener('change', ({ currentTarget: { checked, id } }) => {
-        const checkeds = [...checkboxes].filter(chx => chx.checked).map(chx => chx.id.replace(/.*-/g, ''));
+        const are_checked = [...checkboxes].filter(chx => chx.checked);
+        localStorage.setItem('resa971_suivi_are-checked', are_checked.map(chx => chx.id).join('|'));
+        const checkeds = are_checked.map(chx => chx.id.replace(/.*-/g, ''));
         const rows = document.querySelectorAll('tbody tr:not(.no-result)');
         rows.forEach(row => {
             if (!checkeds.length || checkeds.includes(row.dataset.restriction)) {
@@ -108,6 +106,21 @@ checkboxes.forEach(checkbox => {
 
     })
 });
+
+if (checkboxes.length) {
+    document.body.classList.remove('container');
+    [...document.getElementsByClassName('fr-container')].forEach(elt => elt.classList.add('plus-large'));
+
+    const stored = localStorage.getItem('resa971_suivi_are-checked');
+    if (stored !== null) {
+        const ids = stored.split('|');
+        ids.forEach(id => {
+            const chx = document.getElementById(id);
+            chx.checked = true;
+            chx.dispatchEvent(new Event('change'));
+        })
+    }
+}
 
 const modale_suivi = document.getElementById('cs-modale-suivi');
 const beneficiaire = document.getElementById('modale-suivi--beneficiaire');

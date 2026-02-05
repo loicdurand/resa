@@ -80,28 +80,21 @@ SQL;
         return $result->fetchAllAssociative();
     }
 
-    //    /**
-    //     * @return Vehicule[] Returns an array of Vehicule objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('v.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getStockByMonths()
+    {
+        $sql = "
+            SELECT 
+                DATE_FORMAT(v.created_at, '%Y-%m') AS mois, 
+                COUNT(v.id) AS nouveaux_vehicules,
+                SUM(COUNT(v.id)) OVER (ORDER BY DATE_FORMAT(v.created_at, '%Y-%m')) AS stock_total
+            FROM vehicule v
+            GROUP BY mois
+            ORDER BY mois;
+        ";
 
-    //    public function findOneBySomeField($value): ?Vehicule
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $resultSet = $this->conn->executeQuery($sql, []);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $resultSet->fetchAllAssociative();
+    }
 }

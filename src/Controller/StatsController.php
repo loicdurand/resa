@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Validator\Constraints\Json;
 
+use App\Repository\VehiculeRepository;
+
 final class StatsController extends AbstractController
 {
     private $app_const;
@@ -49,10 +51,19 @@ final class StatsController extends AbstractController
     }
 
     #[Route('/stats/getdata', name: 'resa_stats_getdata', methods: ['GET'])]
-    public function getdata(): JsonResponse
+    public function getdata(ManagerRegistry $manager): JsonResponse
     {
 
-        // SELECT DATE_FORMAT(v.created_at, '%Y-%m') AS mois, COUNT(id) AS nouveaux_vehicules, SUM(COUNT(id)) OVER (ORDER BY DATE_FORMAT(created_at, '%Y-%m')) AS stock_total FROM vehicule v GROUP BY mois ORDER BY mois; 
+        $labels = [];
+        $evolutionVehicules = [];
+        $vehiculesReserves = [];
+
+        $vl_repo = new VehiculeRepository($manager);
+        $stocks = $vl_repo->getStockByMonths();
+
+        foreach ($stocks as $data) {
+        }
+
         sleep(0.5);
         return new JsonResponse([
             'labels' => ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6'],
