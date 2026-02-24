@@ -406,7 +406,7 @@ class ValidationController extends AbstractController
 
         $mailer = new MailService($em);
         $mail = $mailer->mailForInvalidation($reservation);
-        dd($mail);
+        //dd($mail);
         if ($this->getParameter('app.env') == 'prod') {
             // Envoi du mail via le SSO
             SsoService::mail(

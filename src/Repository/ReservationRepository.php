@@ -84,12 +84,12 @@ class ReservationRepository extends ServiceEntityRepository
 
             $date_debut = new \DateTime($resa->getDateDebut()->format('Y-m-d') . ' ' . $resa->getHeureDebut() . ':00');
             $date_fin = new \DateTime($resa->getDateFin()->format('Y-m-d') . ' ' . $resa->getHeureFin() . ':00');
-            if ($date_fin->format('U') < $now->format('U')) {
+            if ($date_fin->format('U') < $now->format('U') && !str_starts_with($statut, 'Annulée')) {
                 $resa->setStatut($statut_termine);
                 $em->persist($resa);
                 $em->flush();
             } else if ($date_debut->format('U') < $now->format('U') && $date_fin->format('U') > $now->format('U')) {
-                if ($statut !== 'En attente') {
+                if ($statut == 'Confirmée') {
                     $resa->setStatut($statut_en_cours);
                     $em->persist($resa);
                     $em->flush();
@@ -128,12 +128,12 @@ class ReservationRepository extends ServiceEntityRepository
 
             $date_debut = new \DateTime($resa->getDateDebut()->format('Y-m-d') . ' ' . $resa->getHeureDebut() . ':00');
             $date_fin = new \DateTime($resa->getDateFin()->format('Y-m-d') . ' ' . $resa->getHeureFin() . ':00');
-            if ($date_fin->format('U') < $now->format('U')) {
+            if ($date_fin->format('U') < $now->format('U') && !str_starts_with($statut, 'Annulée')) {
                 $resa->setStatut($statut_termine);
                 $em->persist($resa);
                 $em->flush();
             } else if ($date_debut->format('U') < $now->format('U') && $date_fin->format('U') > $now->format('U')) {
-                if ($statut !== 'En attente') {
+                if ($statut == 'Confirmée') {
                     $resa->setStatut($statut_en_cours);
                     $em->persist($resa);
                     $em->flush();

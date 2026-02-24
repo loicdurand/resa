@@ -1,0 +1,46 @@
+{# modal ->  Catégorie: _ _ #}
+<dialog aria-labelledby="fr-modal--categorie" role="dialog" id="fr-modal--categorie" class="fr-modal cs-modal-from-left">
+	<div class="fr-container fr-container--fluid">
+		<div class="fr-grid-row fr-grid-row--center">
+			<div class="fr-col-12">
+				<div class="fr-modal__body">
+					<div class="fr-modal__header">
+						<button class="fr-btn--close fr-btn" title="Fermer la fenêtre modale" aria-controls="fr-modal--categorie"></button>
+					</div>
+					<div class="fr-modal__content">
+						<h1 id="fr-modal--categorie" class="fr-modal__title">
+							<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+							Catégorie
+						</h1>
+						<ul class="fr-btns-group">
+							<li>
+								<button class="cs-btn" data-categorie="*" aria-controls="fr-modal--categorie">
+									<figure>
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor">
+											<path d="M5.46257 4.43262C7.21556 2.91688 9.5007 2 12 2C17.5228 2 22 6.47715 22 12C22 14.1361 21.3302 16.1158 20.1892 17.7406L17 12H20C20 7.58172 16.4183 4 12 4C9.84982 4 7.89777 4.84827 6.46023 6.22842L5.46257 4.43262ZM18.5374 19.5674C16.7844 21.0831 14.4993 22 12 22C6.47715 22 2 17.5228 2 12C2 9.86386 2.66979 7.88416 3.8108 6.25944L7 12H4C4 16.4183 7.58172 20 12 20C14.1502 20 16.1022 19.1517 17.5398 17.7716L18.5374 19.5674Z"></path>
+										</svg>
+										<figcaption>
+											Toutes les catégories
+										</figcaption>
+									</figure>
+								</button>
+							</li>
+							{% for categorie in categories | sort((a, b) => a.id <=> b.id) %}
+								<li>
+									<button class="cs-btn" data-categorie="{{ categorie.libelle }}" aria-controls="fr-modal--categorie">
+										<figure>
+											<img src="{{ asset('images/icons/'~categorie.illustration) }}" alt="{{ categorie.libelle }}">
+											<figcaption>
+												{{ categorie.libelle }}
+											</figcaption>
+										</figure>
+									</button>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</dialog>

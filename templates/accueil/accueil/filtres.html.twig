@@ -1,0 +1,56 @@
+{# Filtres de recherche #}
+<div
+	id="hideOnScroll" class="cs-filtres-container cs-recherche">
+
+	{# DE ... -> À ... #}
+	<div class="cs-btn-ctnr cs-date-ctnr">
+		<button id="to-step-1-btn" class="cs-btn cs-btn-from-to cs-btn--left" data-fr-opened="false" aria-controls="fr-modal--from-to">
+			<span class="cs-from-to">
+				Début
+			</span>
+			<span id="select-from-date--target" class="cs-from-to-value">
+				<span class="hide-s hide-m">
+					__
+					{# Aujourd'hui #}
+				</span>
+				<span class="hide-l hide-xl">
+					__
+					{# Aujourd'hui #}
+				</span>
+				<span id="select-from-heure--target"></span>
+			</span>
+		</button>
+		<div class="separator"></div>
+		<button id="to-step-2-btn" class="cs-btn cs-btn-from-to cs-btn--right" data-fr-opened="false" aria-controls="fr-modal--from-to">
+			<span class=" cs-from-to">
+				Fin
+			</span>
+			<span id="select-to-date--target" class="cs-from-to-value">
+				<span class="hide-s hide-m">
+					__
+					{# Demain #}
+				</span>
+				<span class="hide-l hide-xl">
+					__
+					{# Demain #}
+				</span>
+				<span id="select-to-heure--target"></span>
+			</span>
+		</button>
+	</div>
+
+	{# TAGS #}
+	<div class="cs-btn-ctnr cs-tags-ctnr">
+		<button class="cs-btn cs-btn-tag cs-btn-tag--left" data-fr-opened="false" aria-controls="fr-modal--categorie">
+			<span class="cs-tag">
+				Catégorie
+			</span>
+		</button>
+		<button class="cs-btn cs-btn-tag cs-btn-tag--right" data-fr-opened="false" aria-controls="fr-modal--autres-filtres">
+			<span class="cs-tag fr-btn--icon-left fr-icon-equalizer-line">
+				Filtres
+			</span>
+		</button>
+	</div>
+
+</div>

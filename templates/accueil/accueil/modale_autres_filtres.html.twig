@@ -1,0 +1,110 @@
+{# modal -> Autres filtres: _ _ #}
+<dialog aria-labelledby="fr-modal--autres-filtres" role="dialog" id="fr-modal--autres-filtres" class="fr-modal cs-modal-from-right">
+	<div class="fr-container fr-container--fluid">
+		<div class="fr-grid-row fr-grid-row--center">
+			<div class="fr-col-12">
+				<div class="fr-modal__body">
+					<div class="fr-modal__header">
+						<button class="fr-btn--close fr-btn" title="Fermer la fenêtre modale" aria-controls="fr-modal--autres-filtres"></button>
+					</div>
+					<div class="fr-modal__content">
+						<h1 id="fr-modal--autres-filtres" class="fr-modal__title">
+							<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+							Filtres
+						</h1>
+
+						<fieldset class="fr-fieldset" id="radio--unite" aria-labelledby="radio--unite-legend">
+							<legend class="fr-fieldset__legend--bold fr-fieldset__legend" id="radio--unite-legend">
+								Localisation du véhicule
+							</legend>
+							<div class="fr-fieldset__element">
+								<ul class="fr-tags-group">
+									{% for unite in unites %}
+										<li>
+											<button type="button" value={{unite.codeUnite}} class="fr-tag fr-tag--sm fr-fi-map-pin-2-fill fr-tag--icon-left cs-location-tag cs-location-tag--selectable">{{unite.nomCourt}}</a>
+										</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</fieldset>
+
+						<fieldset class="fr-fieldset" id="radio--serigraphie" aria-labelledby="radio--serigraphie-legend">
+							<legend class="fr-fieldset__legend--bold fr-fieldset__legend" id="radio--serigraphie-legend">
+								Sérigraphie
+							</legend>
+							<div class="fr-fieldset__element">
+								<div class="fr-radio-group">
+									<input type="radio" id="radio--serigraphie-1" checked name="radio--serigraphie" value="*">
+									<label class="fr-label" for="radio--serigraphie-1">
+										Indifférent
+									</label>
+								</div>
+							</div>
+							<div class="fr-fieldset__element">
+								<div class="fr-radio-group">
+									<input type="radio" id="radio--serigraphie-2" name="radio--serigraphie" value="Oui">
+									<label class="fr-label" for="radio--serigraphie-2">
+										Oui
+									</label>
+								</div>
+							</div>
+							<div class="fr-fieldset__element">
+								<div class="fr-radio-group">
+									<input type="radio" id="radio--serigraphie-3" name="radio--serigraphie" value="Non">
+									<label class="fr-label" for="radio--serigraphie-3">
+										Non
+									</label>
+								</div>
+							</div>
+							<div class="fr-messages-group" id="radio--serigraphie-messages" aria-live="assertive"></div>
+						</fieldset>
+
+						<div class="fr-input-group fr-grid-row">
+							<label class="fr-label bold fr-mb-1w" for="input--nb-places">
+								Nombre de places (minimum)
+								<span class="fr-hint-text fw-initial">
+									Sélectionnez &lt; 2 ou &gt; 9 pour réinitialiser.
+								</span>
+							</label>
+							<div class="cs-nb-places--container">
+								<button id="cs-nb-places--button-subtract" class="fr-btn fr-icon-subtract-line cs-nb-places--button cs-nb-places--button-subtract" title="Diminuer">
+									Diminuer
+								</button>
+								<input class="fr-input cs-nb-places--input" readonly disabled value="Indifférent" type="text" id="input--nb-places" name="input--nb-places">
+								<button id="cs-nb-places--button-add" class="fr-btn cs-nb-places--button cs-nb-places--button-add fr-icon-add-line" title="Augmenter">
+									Augmenter
+								</button>
+							</div>
+						</div>
+
+						{% if transmissions|length > 1 %}
+							<fieldset class="fr-fieldset" id="radio--transmission" aria-labelledby="radio--transmission-legend">
+								<legend class="fr-fieldset__legend--bold fr-fieldset__legend" id="radio--transmission-legend">
+									Transmission
+								</legend>
+								<div class="fr-fieldset__element">
+									<div class="fr-radio-group">
+										<input type="radio" id="radio--transmission-any" checked name="radio--transmission" value="*">
+										<label class="fr-label" for="radio--transmission-any">
+											Indifférent
+										</label>
+									</div>
+								</div>
+								{% for i, transmission in transmissions %}
+									<div class="fr-fieldset__element">
+										<div class="fr-radio-group">
+											<input type="radio" id="radio--transmission-{{ i }}" name="radio--transmission" value="{{ transmission.code }}">
+											<label class="fr-label" for="radio--transmission-{{ i }}">
+												{{ transmission.libelle }}
+											</label>
+										</div>
+									</div>
+								{% endfor %}
+							</fieldset>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</dialog>

@@ -192,9 +192,9 @@ function filter(e) {
       [, page, v_id] = href.split(/\//).filter(Boolean);
     console.log({ debut, fin });
     vl.classList.remove('hidden');
-    if (debut && debut !== '*')
-      dates += `/${debut.replace(/\s/, 'T')}/${fin.replace(/\s/, 'T')}`;
-    vl.setAttribute('href', `/resa971/${page}/${v_id}${dates}`);
+    // if (debut && debut !== '*')
+    //   dates += `/${debut.replace(/\s/, 'T')}/${fin.replace(/\s/, 'T')}`;
+    vl.setAttribute('href', `/resa971/${page}/${v_id}`); //${dates}`);
 
     const // 
       resas = reservations.split('|'),
