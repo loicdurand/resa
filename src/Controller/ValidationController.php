@@ -193,7 +193,7 @@ class ValidationController extends AbstractController
         $restrs = [];
 
         $restrictions = [
-            "NONE" => "Après jugement",
+            "NONE" => "Aucune restriction",
             "EM" => "Réservé État-Major",
             "AVT_JGT" => "Avant jugement",
             "ATELIER" => "Maintenance",
@@ -234,7 +234,7 @@ class ValidationController extends AbstractController
             }
 
             $restr = $vl->getRestriction();
-            if (!in_array($restr, $restrs)) {
+            if (!in_array($restr->getCode(), $restrs)) {
                 $restrs[$restr->getCode()] = $restrictions[$restr->getCode()];
             }
         }
