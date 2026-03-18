@@ -32,9 +32,10 @@
 						</div>
 
 						<div class="fr-input-group align-left" id="input-group-31">
-							<label class="fr-label" for="{{ field_name(form.observation) }}">
+							<!--<label class="fr-label" for="{{ field_name(form.observation) }}">
 								Observations (aide votre valideur à apprécier l'opportunité de la demande).
-							</label>
+							</label>-->
+							{{ form_label(form.observation) }}
 							<textarea class="fr-input" aria-describedby="{{ field_name(form.observation) }}-messages" id="{{ field_name(form.observation) }}" name="{{ field_name(form.observation) }}" value="{{ field_value(form.observation) }}"></textarea>
 							<div class="fr-messages-group" id="{{ field_name(form.observation) }}-messages" aria-live="polite"></div>
 						</div>

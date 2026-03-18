@@ -36,11 +36,12 @@ class ReservationType extends AbstractType
                 'choice_label' => 'id',
             ])
             ->add('observation', TextareaType::class, [
+                'label' => "Observations - Ex: motif et lieu de déplacement",
                 'required' => false,
                 'row_attr' => ['class' => 'fr-col-12 fr-col-sm-12'],
-                'help_attr' => ['content' => 'Faculatif (255 caractères maximum).'],
+                'help_attr' => ['content' => 'Aide votre valideur à apprécier l\'opportunité de la demande. Faculatif (255 caractères maximum).'],
                 'attr' => [
-                    'placeholder' => "Observations (aide votre valideur à apprécier l'opportunité de la demande).",
+                    // 'placeholder' => "Observations (aide votre valideur à apprécier l'opportunité de la demande - Ex: motif et lieu de déplacement).",
                     'class' => 'fr-input'
                 ],
             ])
