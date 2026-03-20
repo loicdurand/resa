@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,14 +41,14 @@ class ConnexionController extends AbstractController
   }
 
   #[Route('/logout', name: 'resa_logout')]
-  public function logout()
+  public function logout(): RedirectResponse
   {
     $this->session->clear();
     return $this->redirectToRoute('resa_login');
   }
 
   #[Route('/connexion', name: 'resa_login')]
-  public function login(EntityManagerInterface $entityManager)
+  public function login(EntityManagerInterface $entityManager): Response|RedirectResponse
   {
     $this->setAppConst();
 
@@ -68,7 +70,31 @@ class ConnexionController extends AbstractController
       $ldap = new LdapService();
       $ldap_user = $ldap->get_user_from_ldap($nigend);
 
-      $mail_unite = $ldap_user->mail_unite;
+      // pour certains personnels, le LDAP renvoie null. On se base donc sur le SSO, qui renvoie le nom de l'unité pour déterminer la valeur $mail_unite
+      $mail_unite ='';
+      $profil='';
+      $dpt ='';
+      $unite_id = '';
+      $mail='';
+
+      if(is_null($ldap_user)){
+          $unite = $sso_user->unite;
+          // on convertit le nom en toutes lettes en adresse mail; Ex: DSOLC BAIE-MAHAULT devient dsolc.baie-mhault@gendarmerie.interieur.gouv.fr
+          $mail_unite = strtolower($unite);
+          $mail_unite = str_replace(' ', '.', $mail_unite);
+          $mail_unite .= '@gendarmerie.interieur.gouv.fr';
+          $profil = 'USR';
+          $unite_id = $this->addZeros($sso_user->codeUnite, 8);
+          $dpt = $sso_user->dptUnite;
+           $mail = $sso_user->mail;
+      }else{
+          $mail_unite = $ldap_user->mail_unite;
+          $profil= $ldap_user->profil;
+          $dpt = $ldap_user->departement;
+          $unite_id = $ldap_user->unite_id;
+          $mail=$ldap_user->mail;
+      }
+
       $unites_perimetre = explode(',', $_ENV['APP_UNITES_PERIMETRE'] ?? '');
 
       foreach ($unites_perimetre as $prefix) {
@@ -78,6 +104,12 @@ class ConnexionController extends AbstractController
         }
       }
 
+      $nigend_forces = explode(',', $_ENV['NIGEND_FORCES'] ?? '');
+
+      foreach ($nigend_forces as $nigend_force) {
+        $has_access = true;
+      }
+
       // if (in_array($ldap_user->unite_id, $unites_perimetre))
       //   $has_access = true;
 
@@ -85,7 +117,7 @@ class ConnexionController extends AbstractController
       if (!$has_access) {
         $unites_EM = explode(',', $_ENV['APP_UNITES_EM'] ?? '');
         foreach ($unites_EM as $code_unite) {
-          if ($ldap_user->unite_id === $this->addZeros($code_unite, 8)) {
+          if ($unite_id === $this->addZeros($code_unite, 8)) {
             $has_access = true;
             $em_uniquement = true;
             break;
@@ -105,14 +137,14 @@ class ConnexionController extends AbstractController
       if (is_null($user)) {
         $profil = $entityManager
           ->getRepository(Role::class)
-          ->findOneBy(['nom' => $ldap_user->profil]);
+          ->findOneBy(['nom' => $profil]);
 
         $entity = new User();
         $entity->setNigend($nigend);
-        $entity->setUnite($ldap_user->unite_id);
+        $entity->setUnite($unite_id);
         $entity->setProfil(is_null($profil) ? 'USR' : $profil->getNom());
-        $entity->setDepartement($ldap_user->departement);
-        $entity->setMail($ldap_user->mail);
+        $entity->setDepartement($dpt);
+        $entity->setMail($mail);
         $entity->setBanned(false);
         $entityManager->persist($entity);
         $entityManager->flush();
@@ -282,7 +314,7 @@ class ConnexionController extends AbstractController
     ));
   }
 
-  private function addZeros($str, $maxlen = 2)
+  private function addZeros($str, $maxlen = 2): string
   {
     $str = '' . $str;
     while (strlen($str) < $maxlen)
@@ -295,7 +327,7 @@ class ConnexionController extends AbstractController
     return $this->app_const;
   }
 
-  private function setAppConst()
+  private function setAppConst(): void
   {
     $this->app_const = [];
     //dd($this->getParameter('app.max_resa_duration'));
