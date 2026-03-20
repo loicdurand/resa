@@ -1,0 +1,9 @@
+{
+  "symfony.enabled": true,
+  "indexer.exclude_patterns": [
+    "/vendor/**/Tests/**/*",
+    "/vendor/**/tests/**/*",
+    "/var/cache/**/*",
+    "/vendor/composer/**/*"
+  ]
+}
